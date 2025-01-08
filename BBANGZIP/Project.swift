@@ -39,8 +39,8 @@ let infoPlist: [String: Plist.Value] = [
 
 private let settings = Settings.settings(configurations: [
     .debug(name: .debug, xcconfig:
-            .relativeToRoot("BBANGZIP/Resources/Secrets.xcconfig")),
-    .release(name: .release, xcconfig: .relativeToRoot("BBANGZIP/Resources/Secrets.xcconfig")),
+            .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig")),
+    .release(name: .release, xcconfig: .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig")),
 ])
 
 let project = Project(
