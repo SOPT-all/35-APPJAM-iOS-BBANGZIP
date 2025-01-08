@@ -23,73 +23,125 @@ public enum BbangFont {
     
     public var size: CGFloat {
         switch self {
-        case .title1: return 36
-        case .title2: return 28
-        case .title3: return 24
-        case .heading1: return 22
-        case .heading2: return 20
-        case .headline1: return 18
-        case .headline2: return 17
-        case .body1: return 16
-        case .body2: return 15
-        case .label1: return 14
-        case .label2: return 13
-        case .caption1: return 12
-        case .caption2: return 11
+        case .title1:
+            return 36
+        case .title2:
+            return 28
+        case .title3:
+            return 24
+        case .heading1:
+            return 22
+        case .heading2:
+            return 20
+        case .headline1:
+            return 18
+        case .headline2:
+            return 17
+        case .body1:
+            return 16
+        case .body2:
+            return 15
+        case .label1:
+            return 14
+        case .label2:
+            return 13
+        case .caption1:
+            return 12
+        case .caption2:
+            return 11
         }
     }
     
     public var lineHeight: CGFloat {
         switch self {
-        case .title1: return 48
-        case .title2: return 38
-        case .title3: return 32
-        case .heading1: return 30
-        case .heading2: return 28
-        case .headline1: return 26
-        case .headline2: return 24
-        case .body1: return 24
-        case .body2: return 22
-        case .label1: return 20
-        case .label2: return 18
-        case .caption1: return 16
-        case .caption2: return 14
+        case .title1:
+            return 48
+        case .title2:
+            return 38
+        case .title3:
+            return 32
+        case .heading1:
+            return 30
+        case .heading2:
+            return 28
+        case .headline1:
+            return 26
+        case .headline2:
+            return 24
+        case .body1:
+            return 24
+        case .body2:
+            return 22
+        case .label1:
+            return 20
+        case .label2:
+            return 18
+        case .caption1:
+            return 16
+        case .caption2:
+            return 14
         }
     }
     
     public var letterSpacing: CGFloat {
         switch self {
-        case .title1: return -0.027
-        case .title2: return -0.0236
-        case .title3: return -0.023
-        case .heading1: return -0.0194
-        case .heading2: return -0.012
-        case .headline1: return -0.002
-        case .headline2: return 0
-        case .body1: return 0.0057
-        case .body2: return 0.0096
-        case .label1: return 0.0145
-        case .label2: return 0.0194
-        case .caption1: return 0.0252
-        case .caption2: return 0.0311
+        case .title1:
+            return -0.027
+        case .title2:
+            return -0.0236
+        case .title3:
+            return -0.023
+        case .heading1:
+            return -0.0194
+        case .heading2:
+            return -0.012
+        case .headline1:
+            return -0.002
+        case .headline2:
+            return 0
+        case .body1:
+            return 0.0057
+        case .body2:
+            return 0.0096
+        case .label1:
+            return 0.0145
+        case .label2:
+            return 0.0194
+        case .caption1:
+            return 0.0252
+        case .caption2:
+            return 0.0311
         }
     }
     
     public var swiftUIFont: Font {
         switch self {
-        case .title1: return BBANGZIPFontFamily.Pretendard.bold.swiftUIFont(size: self.size)
-        case .title2: return BBANGZIPFontFamily.Pretendard.semiBold.swiftUIFont(size: self.size)
-        case .title3: return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
-        case .heading1: return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
-        case .heading2: return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
-        case .headline1: return BBANGZIPFontFamily.Pretendard.regular.swiftUIFont(size: self.size)
-        case .headline2: return BBANGZIPFontFamily.Pretendard.regular.swiftUIFont(size: self.size)
-        case .body1: return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
-        case .body2: return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
-        case .label1: return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
-        case .label2: return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
-        case .caption1: return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
-        case .caption2: return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
+        case .title1:
+            return BBANGZIPFontFamily.Pretendard.bold.swiftUIFont(size: self.size)
+        case .title2:
+            return BBANGZIPFontFamily.Pretendard.semiBold.swiftUIFont(size: self.size)
+        case .title3:
+            return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
+        case .heading1:
+            return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
+        case .heading2:
+            return BBANGZIPFontFamily.Pretendard.medium.swiftUIFont(size: self.size)
+        case .headline1:
+            return BBANGZIPFontFamily.Pretendard.regular.swiftUIFont(size: self.size)
+        case .headline2:
+            return BBANGZIPFontFamily.Pretendard.regular.swiftUIFont(size: self.size)
+        case .body1:
+            return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
+        case .body2:
+            return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
+        case .label1:
+            return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
+        case .label2:
+            return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
+        case .caption1:
+            return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
+        case .caption2:
+            return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
         }
     }
 }
