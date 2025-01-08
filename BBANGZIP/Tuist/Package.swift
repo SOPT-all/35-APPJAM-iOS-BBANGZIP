@@ -12,13 +12,14 @@ let packageSettings = PackageSettings(
     ]
 )
 #endif
+
 let kakaoVersion = "2.23.0"
 let alamofireVersion = "5.10.2"
 
 let package = Package(
     name: "BBANGZIP",
     dependencies: [
-        .package(url: "https://github.com/kakao/kakao-ios-sdk", exact: Version(kakaoVersion)!),
-        .package(url: "https://github.com/Alamofire/Alamofire", exact: Version(alamofireVersion)!)
+        .package(url: "https://github.com/kakao/kakao-ios-sdk", .upToNextMajor(from: Version(kakaoVersion)!)),
+        .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: Version(alamofireVersion)!)),
     ]
 )
