@@ -1,4 +1,5 @@
 import ProjectDescription
+import ProjectDescriptionHelpers
 
 let infoPlist: [String: Plist.Value] = [
     "CFBundleDisplayName": "제 과제 빵점",
@@ -33,9 +34,9 @@ let infoPlist: [String: Plist.Value] = [
     ],
     "UIUserInterfaceStyle": "Light",
     "UISupportedInterfaceOrientations": [
-        "UIInterfaceOrientationPortait"
+        "UIInterfaceOrientationPortrait"
     ]
-]      
+]
 
 private let settings = Settings.settings(configurations: [
     .debug(name: .debug, xcconfig:
@@ -43,34 +44,35 @@ private let settings = Settings.settings(configurations: [
     .release(name: .release, xcconfig: .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig")),
 ])
 
-let project = Project(
-    name: "BBANGZIP",
-    targets: [
-        .target(
-            name: "BBANGZIP",
-            destinations: [.iPhone],
-            product: .app,
-            bundleId: "io.tuist.BBANGZIP",
-            infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["BBANGZIP/Sources/**"],
-            resources: ["BBANGZIP/Resources/**"],
-            dependencies: [
-                .external(name: "Alamofire", condition: .none),
-                .external(name: "KakaoSDKAuth", condition: .none),
-                .external(name: "KakaoSDKCommon", condition: .none),
-                .external(name: "KakaoSDKUser", condition: .none),
-            ],
-            settings: settings
-        ),
-        .target(
-            name: "BBANGZIPTests",
-            destinations: .iOS,
-            product: .unitTests,
-            bundleId: "io.tuist.BBANGZIPTests",
-            infoPlist: .default,
-            sources: ["BBANGZIP/Tests/**"],
-            resources: [],
-            dependencies: [.target(name: "BBANGZIP")]
-        ),
+private let moduleName = "BBANGZIP"
+
+let project = Project.makeModule(
+    name: moduleName,
+    destinations: [.iPhone],
+    product: .app,
+    bundleId: "io.tuist.BBANGZIP",
+    infoPlist: .extendingDefault(with: infoPlist),
+    sources: ["BBANGZIP/Sources/**"],
+    resources: ["BBANGZIP/Resources/**"],
+    dependencies: [
+        .external(name: "Alamofire", condition: .none),
+        .external(name: "KakaoSDKAuth", condition: .none),
+        .external(name: "KakaoSDKCommon", condition: .none),
+        .external(name: "KakaoSDKUser", condition: .none),
+    ],
+    
+    settings: settings
+)
+
+let testTarget = Project.makeModule(
+    name: "\(moduleName)Tests",
+    destinations: .iOS,
+    product: .unitTests,
+    bundleId: "\(moduleName)Tests",
+    infoPlist: .default,
+    sources: ["BBANGZIP/Tests/**"],
+    resources: [],
+    dependencies: [
+        .target(name: moduleName)
     ]
 )
