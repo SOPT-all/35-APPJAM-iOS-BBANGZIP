@@ -38,10 +38,12 @@ let infoPlist: [String: Plist.Value] = [
     ]
 ]
 
-private let settings = Settings.settings(configurations: [
+private let settings = Settings.settings(
+    base: ["SWIFT_VERSION": "6.0"],
+    configurations: [
     .debug(name: .debug, xcconfig:
             .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig")),
-    .release(name: .release, xcconfig: .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig")),
+    .release(name: .release, xcconfig: .relativeToRoot("BBANGZIP/Resources/Config/Secrets.xcconfig"))
 ])
 
 private let moduleName = "BBANGZIP"
@@ -60,7 +62,6 @@ let project = Project.makeModule(
         .external(name: "KakaoSDKCommon", condition: .none),
         .external(name: "KakaoSDKUser", condition: .none),
     ],
-    
     settings: settings
 )
 
