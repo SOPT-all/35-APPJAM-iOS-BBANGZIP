@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct OutlinedButton: ButtonStyle {
+struct BasicButton: ButtonStyle {
     
     var fontType = BbangFont.body2
     var verticalPadding: CGFloat = 9
