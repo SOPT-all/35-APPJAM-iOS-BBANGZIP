@@ -11,14 +11,19 @@ import SwiftUI
 struct BasicButton: ButtonStyle {
     
     var fontType = BbangFont.body2
+    var textColor = Color("PrimaryNormal")
     var verticalPadding: CGFloat = 9
+    var buttonColor = Color(.clear)
     var customCornerRadius: CGFloat = 16
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: fontType)
+            .foregroundStyle(textColor)
             .padding(.init(vertical: verticalPadding))
             .frame(maxWidth: .infinity)
+            .background(buttonColor)
+            .cornerRadius(customCornerRadius)
             .overlay(RoundedRectangle(cornerRadius: customCornerRadius)
                 .stroke(Color("LineStrong"), lineWidth: 1)
             )
