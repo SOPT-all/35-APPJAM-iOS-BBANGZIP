@@ -16,14 +16,8 @@ struct MainView: View {
             List(viewModel.coffees, id: \.id) {
                 Text($0.title)
             }
-            .onAppear(perform: {
-                Task {
-                    await viewModel.asyncFetchData()
-                }
-            })
         }
     }
-    
 }
 
 #Preview {
