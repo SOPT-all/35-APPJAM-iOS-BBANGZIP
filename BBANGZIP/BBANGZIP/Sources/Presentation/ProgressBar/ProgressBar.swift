@@ -54,14 +54,7 @@ struct ProgressBar: View {
             }
             .padding(.bottom, 8)
         }
-        .progressViewStyle(ProgressBarStyle())
-    }
-}
-
-struct ProgressBarStyle: ProgressViewStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        ProgressView(configuration)
-            .progressViewStyle(LinearProgressViewStyle(tint: Color(BBANGZIPAsset.Assets.statusPositive.color)))
+        .progressViewStyle(LinearProgressViewStyle(tint: Color(BBANGZIPAsset.Assets.statusPositive.color)))
     }
 }
 
