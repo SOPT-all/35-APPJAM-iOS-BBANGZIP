@@ -30,39 +30,38 @@ struct ProgressBar: View {
     
     var body: some View {
         ProgressView(value: category.percentage) {
+            
             HStack {
-                ProgressBarCapsule(step: 1)
+                StepCircle(step: 1)
                 
                 Spacer()
                 
-                ProgressBarCapsule(step: 2)
+                StepCircle(step: 2)
                 
                 Spacer()
                 
-                ProgressBarCapsule(step: 3)
+                StepCircle(step: 3)
             }
-            .padding(.leading, 7)
-            .padding(.trailing, 6.5)
             .padding(.bottom, 8)
         }
         .progressViewStyle(ProgressBarStyle())
     }
 }
 
-struct ProgressBarCapsule: View {
+struct StepCircle: View {
     var step: Int
     
     var body: some View {
-        BbangText(
-            "\(step)",
-            fontType: .caption2,
-            color: Color(BBANGZIPAsset.Assets.staticWhite.color)
-        )
-        .background(
-            Capsule()
-                .fill(Color(BBANGZIPAsset.Assets.statusPositive.color))
-                .frame(width: 20, height: 20)
-        )
+        Circle()
+            .overlay {
+                BbangText(
+                    "\(step)",
+                    fontType: .caption2,
+                    color: Color(BBANGZIPAsset.Assets.staticWhite.color)
+                )
+            }
+            .foregroundStyle(Color(BBANGZIPAsset.Assets.statusPositive.color))
+            .frame(width: 20, height: 20)
     }
 }
 
