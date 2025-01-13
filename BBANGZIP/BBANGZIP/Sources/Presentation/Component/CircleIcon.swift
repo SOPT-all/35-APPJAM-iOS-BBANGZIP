@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct CircleIcon: View {
-    let iconName: String
+    private let name: String
     
     init(iconName: String) {
-        self.iconName = iconName
+        self.name = iconName
     }
     
     var body: some View {
@@ -21,7 +21,7 @@ struct CircleIcon: View {
                 .stroke(Color("LineNormal"), lineWidth: 1)
                 .frame(width: 40, height: 40)
             
-            Image(iconName)
+            Image(name)
                 .resizable()
                 .frame(width: 20, height: 20)
                 .scaledToFill()
