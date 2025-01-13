@@ -18,7 +18,7 @@ struct CircleIcon: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(Color("LineNormal"), lineWidth: 1)
+                .stroke(Color(.lineNormal), lineWidth: 1)
                 .frame(width: 40, height: 40)
             
             Image(name)
