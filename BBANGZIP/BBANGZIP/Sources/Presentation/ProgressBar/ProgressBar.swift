@@ -58,24 +58,6 @@ struct ProgressBar: View {
     }
 }
 
-struct StepCircle: View {
-    var step: Int
-    var complete: Bool = true
-    
-    var body: some View {
-        Circle()
-            .overlay {
-                BbangText(
-                    "\(step)",
-                    fontType: .caption2,
-                    color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
-                )
-            }
-            .foregroundStyle(complete ? Color(BBANGZIPAsset.Assets.statusPositive.color) : Color(BBANGZIPAsset.Assets.fillAlternative.color))
-            .frame(width: 20, height: 20)
-    }
-}
-
 struct ProgressBarStyle: ProgressViewStyle {
     func makeBody(configuration: Configuration) -> some View {
         ProgressView(configuration)
