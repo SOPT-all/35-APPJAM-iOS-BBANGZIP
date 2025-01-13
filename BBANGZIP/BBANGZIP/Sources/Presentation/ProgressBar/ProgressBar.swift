@@ -29,54 +29,40 @@ struct ProgressBar: View {
     var category: Step = .First
     
     var body: some View {
-        ProgressView(value: 1) {
+        ProgressView(value: category.percentage) {
             HStack {
-                BbangText(
-                    "1",
-                    fontType: .caption2,
-                    color: Color(BBANGZIPAsset.Assets.staticWhite.color)
-                )
-                .background(
-                    Capsule()
-                        .fill(Color(BBANGZIPAsset.Assets.statusPositive.color))
-                        .frame(width: 20, height: 20)
-                )
+                ProgressBarCapsule(step: 1)
                 
                 Spacer()
                 
-                if category.percentage > 0.04 {
-                    BbangText(
-                        "2",
-                        fontType: .caption2,
-                        color: Color(BBANGZIPAsset.Assets.staticWhite.color)
-                    )
-                    .background(
-                        Capsule()
-                            .fill(Color(BBANGZIPAsset.Assets.statusPositive.color))
-                            .frame(width: 20, height: 20)
-                    )
-                }
+                ProgressBarCapsule(step: 2)
                 
                 Spacer()
                 
-                if category.percentage > 0.5 {
-                    BbangText(
-                        "3",
-                        fontType: .caption2,
-                        color: Color(BBANGZIPAsset.Assets.staticWhite.color)
-                    )
-                    .background(
-                        Capsule()
-                            .fill(Color(BBANGZIPAsset.Assets.statusPositive.color))
-                            .frame(width: 20, height: 20)
-                    )
-                } 
+                ProgressBarCapsule(step: 3)
             }
             .padding(.leading, 7)
             .padding(.trailing, 6.5)
             .padding(.bottom, 8)
         }
         .progressViewStyle(ProgressBarStyle())
+    }
+}
+
+struct ProgressBarCapsule: View {
+    var step: Int
+    
+    var body: some View {
+        BbangText(
+            "\(step)",
+            fontType: .caption2,
+            color: Color(BBANGZIPAsset.Assets.staticWhite.color)
+        )
+        .background(
+            Capsule()
+                .fill(Color(BBANGZIPAsset.Assets.statusPositive.color))
+                .frame(width: 20, height: 20)
+        )
     }
 }
 
