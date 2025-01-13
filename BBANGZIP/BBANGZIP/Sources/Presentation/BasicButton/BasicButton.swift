@@ -8,46 +8,42 @@
 
 import SwiftUI
 
-struct BasicButton: ButtonStyle {
-    
-    var fontType = BbangFont.body2
-    var textColor = Color("PrimaryNormal")
-    var verticalPadding: CGFloat = 9
-    var buttonColor = Color(.clear)
-    var customCornerRadius: CGFloat = 16
-    
+struct OutlinedMediumButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .applyFont(font: fontType)
-            .foregroundStyle(textColor)
-            .padding(.init(vertical: verticalPadding))
+            .applyFont(font: .body2)
+            .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+            .padding(.vertical, 9)
             .frame(maxWidth: .infinity)
-            .background(buttonColor)
-            .cornerRadius(customCornerRadius)
-            .overlay(RoundedRectangle(cornerRadius: customCornerRadius)
-                .stroke(Color("LineStrong"), lineWidth: 1)
+            .cornerRadius(16)
+            .overlay(RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(BBANGZIPAsset.Assets.lineStrong.color), lineWidth: 1)
             )
     }
 }
 
-extension EdgeInsets {
-    var verticalInset: CGFloat { self.top + self.bottom }
-    
-    static func vertical(_ vertical: CGFloat, left: CGFloat = 0, right: CGFloat = 0) -> UIEdgeInsets {
-        UIEdgeInsets(
-            top: vertical,
-            left: left,
-            bottom: vertical,
-            right: right
-        )
+struct OutlinedLargeButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .applyFont(font: .body1)
+            .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .cornerRadius(24)
+            .overlay(RoundedRectangle(cornerRadius: 24)
+                .stroke(Color(BBANGZIPAsset.Assets.lineStrong.color), lineWidth: 1)
+            )
     }
-    
-    init(vertical: CGFloat = 0) {
-        self = EdgeInsets(
-            top: vertical,
-            leading: 0,
-            bottom: vertical,
-            trailing: 0
-        )
+}
+
+struct SolidButton: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .applyFont(font: .body1)
+            .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+            .cornerRadius(24)
     }
 }
