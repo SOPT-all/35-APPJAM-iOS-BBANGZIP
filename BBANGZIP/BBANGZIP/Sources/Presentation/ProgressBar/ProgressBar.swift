@@ -36,11 +36,21 @@ struct ProgressBar: View {
                 
                 Spacer()
                 
-                StepCircle(step: 2)
+                if category != .First {
+                    StepCircle(step: 2)
+                }
+                else {
+                    StepCircle(step: 2, complete: false)
+                }
                 
                 Spacer()
                 
-                StepCircle(step: 3)
+                if category == .Third {
+                    StepCircle(step: 3)
+                }
+                else {
+                    StepCircle(step: 3, complete: false)
+                }
             }
             .padding(.bottom, 8)
         }
@@ -50,6 +60,7 @@ struct ProgressBar: View {
 
 struct StepCircle: View {
     var step: Int
+    var complete: Bool = true
     
     var body: some View {
         Circle()
@@ -57,10 +68,10 @@ struct StepCircle: View {
                 BbangText(
                     "\(step)",
                     fontType: .caption2,
-                    color: Color(BBANGZIPAsset.Assets.staticWhite.color)
+                    color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
                 )
             }
-            .foregroundStyle(Color(BBANGZIPAsset.Assets.statusPositive.color))
+            .foregroundStyle(complete ? Color(BBANGZIPAsset.Assets.statusPositive.color) : Color(BBANGZIPAsset.Assets.fillAlternative.color))
             .frame(width: 20, height: 20)
     }
 }
