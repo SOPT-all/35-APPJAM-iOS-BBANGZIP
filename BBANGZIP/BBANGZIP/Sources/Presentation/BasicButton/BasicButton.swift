@@ -47,3 +47,28 @@ struct SolidButton: ButtonStyle {
             .cornerRadius(24)
     }
 }
+
+struct SolidIconButton: ButtonStyle {
+    var systemName: String
+    
+    func makeBody(configuration: Configuration) -> some View {
+        
+        return HStack (spacing: 6) {
+            Spacer()
+            
+            configuration.label
+                .applyFont(font: .body1)
+                .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
+                .padding(.vertical, 16)
+            
+            Image(systemName: systemName)
+                .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
+                .padding(.vertical, 18)
+            
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+        .cornerRadius(24)
+    }
+}
