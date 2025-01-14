@@ -139,7 +139,7 @@ extension BbangDefaultRouter: Router {
         }
     }
     
-    var parameters: [String: Any] {
+    var parameters: [String : any Sendable] {
         switch self {
         case .kakaoLogin:
             return [:]
