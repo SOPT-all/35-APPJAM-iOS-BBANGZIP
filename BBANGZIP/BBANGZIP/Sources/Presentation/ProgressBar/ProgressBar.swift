@@ -8,10 +8,10 @@
 
 import SwiftUI
 
-enum Step {
-    case First
-    case Second
-    case Third
+enum Step: Int{
+    case First = 1
+    case Second = 2
+    case Third = 3
     
     var percentage: CGFloat {
         switch self {
@@ -26,38 +26,27 @@ enum Step {
 }
 
 struct ProgressBar: View {
-    var category: Step = .First
+    private let category: Step
+    
+    init(category: Step) {
+        self.category = category
+    }
     
     var body: some View {
-        ProgressView(value: category.percentage) {
-            
+        ProgressView(value: category.percentage) {            
             HStack {
-                StepCircle(step: 1)
+                StepCircle(step: category, complete: true)
                 
                 Spacer()
                 
-                if category != .First {
-                    StepCircle(step: 2)
-                }
-                else {
-                    StepCircle(step: 2, complete: false)
-                }
+                StepCircle(step: category, complete: category != .First)
                 
                 Spacer()
                 
-                if category == .Third {
-                    StepCircle(step: 3)
-                }
-                else {
-                    StepCircle(step: 3, complete: false)
-                }
+                StepCircle(step: category, complete: category == .Third)
             }
             .padding(.bottom, 8)
         }
         .progressViewStyle(LinearProgressViewStyle(tint: Color(BBANGZIPAsset.Assets.statusPositive.color)))
     }
-}
-
-#Preview {
-    ProgressBar()
 }

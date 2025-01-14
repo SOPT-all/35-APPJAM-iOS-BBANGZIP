@@ -9,14 +9,19 @@
 import SwiftUI
 
 struct StepCircle: View {
-    var step: Int
-    var complete: Bool = true
+    private let step: Step
+    private let complete: Bool
+    
+    init(step: Step, complete: Bool) {
+        self.step = step
+        self.complete = complete
+    }
     
     var body: some View {
         Circle()
             .overlay {
                 BbangText(
-                    "\(step)",
+                    "\(step.rawValue)",
                     fontType: .caption2,
                     color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
                 )
