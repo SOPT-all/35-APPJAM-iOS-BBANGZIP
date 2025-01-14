@@ -16,20 +16,22 @@ struct CircleIcon: View {
     }
     
     var body: some View {
-        ZStack {
-            Circle()
-                .stroke(Color(.lineNormal), lineWidth: 1)
-                .frame(width: 40, height: 40)
-            
-            Image(name)
-                .resizable()
-                .frame(width: 20, height: 20)
-                .scaledToFill()
+        GeometryReader { geometry in
+            ZStack {
+                Circle()
+                    .stroke(Color(.lineNormal), lineWidth: 1)
+                
+                Image(name)
+                    .resizable()
+                    .scaledToFill()
+                    .padding(geometry.size.width * 0.25)
+            }
         }
-        .frame(width: 40, height: 40)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
 
 #Preview {
     CircleIcon(iconName: "bubble")
+        .frame(width: 40, height: 40)
 }
