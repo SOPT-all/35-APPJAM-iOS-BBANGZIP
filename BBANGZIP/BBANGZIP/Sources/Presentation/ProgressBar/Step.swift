@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum Step: Int{
+enum Step: Int {
     case First = 1
     case Second = 2
     case Third = 3

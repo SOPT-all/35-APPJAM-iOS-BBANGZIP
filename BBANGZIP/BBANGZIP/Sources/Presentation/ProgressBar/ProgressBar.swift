@@ -9,11 +9,7 @@
 import SwiftUI
 
 struct ProgressBar: View {
-    private let category: Step
-    
-    init(category: Step) {
-        self.category = category
-    }
+    @Binding var category: Step
     
     var body: some View {
         ProgressView(value: category.percentage) {            
