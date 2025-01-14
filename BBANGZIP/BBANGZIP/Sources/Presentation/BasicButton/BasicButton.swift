@@ -52,8 +52,7 @@ struct SolidIconButton: ButtonStyle {
     var systemName: String
     
     func makeBody(configuration: Configuration) -> some View {
-        
-        return HStack (spacing: 6) {
+        HStack (spacing: 6) {
             Spacer()
             
             configuration.label
