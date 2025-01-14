@@ -8,23 +8,6 @@
 
 import SwiftUI
 
-enum Step: Int{
-    case First = 1
-    case Second = 2
-    case Third = 3
-    
-    var percentage: CGFloat {
-        switch self {
-        case .First:
-            0.04
-        case .Second:
-            0.5
-        case .Third:
-            1
-        }
-    }
-}
-
 struct ProgressBar: View {
     private let category: Step
     
