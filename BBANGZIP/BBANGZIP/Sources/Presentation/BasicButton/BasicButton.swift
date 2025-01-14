@@ -1,5 +1,5 @@
 //
-//  OutlinedButton.swift
+//  BasicButton.swift
 //  BBANGZIP
 //
 //  Created by 최유빈 on 1/12/25.
