@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case kakaoLogin
+    case signup(dto: signInRequestDTO)
     case getRefreshToken
     case logout
     case withDraw
@@ -43,7 +43,7 @@ extension BbangDefaultRouter: Router {
     
     var path: String {
         switch self {
-        case .kakaoLogin:
+        case .signup(let signInRequest):
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -95,7 +95,8 @@ extension BbangDefaultRouter: Router {
     var method: HTTPMethod {
         switch self {
         case
-                .kakaoLogin,
+                .signup,
+                .getRefreshToken,
                 .onBoarding,
                 .addSubject,
                 .addStudyScope,
@@ -105,7 +106,6 @@ extension BbangDefaultRouter: Router {
             return .post
             
         case
-                .getRefreshToken,
                 .subjectFiltering,
                 .testSelect,
                 .motivationMessage,
@@ -130,18 +130,20 @@ extension BbangDefaultRouter: Router {
         }
     }
     
-    var headers: [String : String] {
-        switch self {
-        default:
-            [
-                "Content-Type": "application/json"
-            ]
-        }
+    var headers: [String : String]? {
+      switch self {
+      case .signup(let signInRequest):
+        return [
+          "Content-Type": "application/json",
+          "Authorization": "Bearer\(signInRequest.authorization)"
+        ]
+      default: return .none
+      }
     }
     
     var parameters: [String : any Sendable] {
         switch self {
-        case .kakaoLogin:
+        case .signup:
             return [:]
         case .getRefreshToken:
             return [:]
@@ -192,7 +194,7 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .kakaoLogin:
+        case .signup:
             return URLEncoding.default
         default:
             return JSONEncoding.default
