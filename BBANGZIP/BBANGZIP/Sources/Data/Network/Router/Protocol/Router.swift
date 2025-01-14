@@ -6,8 +6,9 @@
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
-import Alamofire
 import Foundation
+
+import Alamofire
 
 protocol Router {
     var baseURL: String { get }
@@ -19,7 +20,6 @@ protocol Router {
 }
 
 extension Router {
-    
     func asURLRequest() throws -> URLRequest {
         guard let url = URL(string: baseURL + path) else {
             throw RouterError.invalidURL
@@ -38,5 +38,4 @@ extension Router {
         
         return request
     }
-    
 }
