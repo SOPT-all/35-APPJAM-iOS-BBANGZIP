@@ -8,30 +8,61 @@
 import SwiftUI
 
 struct MainView: View {
-    
-    @ObservedObject var viewModel: MainViewModel
-    
     var body: some View {
-        VStack {
-            List(viewModel.coffees, id: \.id) {
-                Text($0.title)
-            }
-            .onAppear(perform: {
-                Task {
-                    await viewModel.asyncFetchData()
+        TabView {
+            HomeView()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
                 }
-            })
+            
+            MenuView()
+                .tabItem {
+                    Image(systemName: "cup.and.saucer.fill")
+                    Text("Menu")
+                }
+            
+            ProfileView()
+                .tabItem {
+                    Image(systemName: "person.fill")
+                    Text("Profile")
+                }
         }
     }
-    
 }
 
-#Preview {
-    MainView(
-        viewModel: MainViewModel(
-            useCase: DefaultFetchLatteCoffeeUseCase(
-                coffeeRepository: DefaultCoffeeRepository()
-            )
-        )
-    )
+struct HomeView: View {
+    var body: some View {
+        NavigationView {
+            Text("Welcome to the Coffee App!")
+                .font(.headline)
+                .navigationTitle("Home")
+        }
+    }
+}
+
+struct MenuView: View {
+    var body: some View {
+        NavigationView {
+            Text("Explore our menu here.")
+                .font(.headline)
+                .navigationTitle("Menu")
+        }
+    }
+}
+
+struct ProfileView: View {
+    var body: some View {
+        NavigationView {
+            Text("Your profile information.")
+                .font(.headline)
+                .navigationTitle("Profile")
+        }
+    }
+}
+
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
+    }
 }
