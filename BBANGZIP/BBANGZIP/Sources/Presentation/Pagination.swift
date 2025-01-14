@@ -9,21 +9,21 @@
 import SwiftUI
 
 struct Pagination: View {
-    private let totalPage: Int
-    private let nowPage: Int
+    private let total: Int
+    private let now: Int
     
     init(totalPage: Int, nowPage: Int) {
-        self.totalPage = totalPage
-        self.nowPage = nowPage
+        self.total = totalPage
+        self.now = nowPage
     }
     
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(1..<totalPage+1, id: \.self) { index in
+            ForEach(1..<total+1, id: \.self) { index in
                 Circle()
-                    .fill(index == nowPage ? Color(.materialDimmer) : Color(.materialDimmer).opacity(0.16))
+                    .fill(index == now ? Color(.materialDimmer) : Color(.materialDimmer).opacity(0.16))
                     .frame(width: 6, height: 6)
-                    .padding(.trailing, index == totalPage ? 0 : 8)
+                    .padding(.trailing, index == total ? 0 : 8)
             }
         }
     }
