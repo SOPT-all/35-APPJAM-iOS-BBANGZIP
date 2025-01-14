@@ -14,7 +14,7 @@ protocol Router {
     var baseURL: String { get }
     var path: String { get }
     var method: HTTPMethod { get }
-    var headers: [String: String] { get }
+    var headers: [String: String]? { get }
     var parameters: [String: Sendable] { get }
     var encoding: ParameterEncoding? { get }
 }
@@ -26,7 +26,7 @@ extension Router {
         }
         var request = URLRequest(url: url)
         request.method = method
-        request.headers = HTTPHeaders(headers)
+        request.headers = HTTPHeaders(headers ?? [:])
         
         if let encoding = encoding {
             do {

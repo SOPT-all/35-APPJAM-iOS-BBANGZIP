@@ -135,7 +135,7 @@ extension BbangDefaultRouter: Router {
       case .signup(let signInRequest):
         return [
           "Content-Type": "application/json",
-          "Authorization": "Bearer\(signInRequest.authorization)"
+          "Authorization": "Bearer \(signInRequest.authorization)"
         ]
       default: return .none
       }
