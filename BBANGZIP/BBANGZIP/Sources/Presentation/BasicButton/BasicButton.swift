@@ -49,7 +49,11 @@ struct SolidButton: ButtonStyle {
 }
 
 struct SolidIconButton: ButtonStyle {
-    var systemName: String
+    private let systemName: String
+    
+    init(systemName: String) {
+        self.systemName = systemName
+    }
     
     func makeBody(configuration: Configuration) -> some View {
         HStack (spacing: 6) {
