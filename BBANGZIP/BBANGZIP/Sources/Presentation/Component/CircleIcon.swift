@@ -30,8 +30,3 @@ struct CircleIcon: View {
         .aspectRatio(1, contentMode: .fit)
     }
 }
-
-#Preview {
-    CircleIcon(iconName: "bubble")
-        .frame(width: 40, height: 40)
-}
