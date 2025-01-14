@@ -19,13 +19,10 @@ final class MainViewModel: ObservableObject {
     func asyncFetchData() async {
         do {
             let modelList = try await fetchSortedCoffeeUseCase.execute()
-            Task { @MainActor in
-                self.coffees = modelList
-            }
+            self.coffees = modelList
         } catch {
             // TODO: error 처리
             dump(error)
         }
     }
-    
 }
