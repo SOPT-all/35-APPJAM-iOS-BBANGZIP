@@ -17,6 +17,8 @@ enum BottomSheetType: Int {
     
     func view() -> AnyView {
         switch self {
+            
+        // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
         case .revert:
             return AnyView(Text("미완료 상태로 되돌릴까요?"))
         case .sort:
@@ -45,7 +47,7 @@ struct BottomSheet: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            if (isShowing) {
+            if isShowing {
                 Color.black
                     .opacity(0.3)
                     .ignoresSafeArea()
@@ -100,8 +102,13 @@ extension View {
 }
 
 struct RoundedCorners: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
+    private var radius: CGFloat = .infinity
+    private var corners: UIRectCorner = .allCorners
+    
+    init(radius: CGFloat, corners: UIRectCorner) {
+        self.radius = radius
+        self.corners = corners
+    }
     
     func path(in rect: CGRect) -> Path {
         let path = UIBezierPath(
