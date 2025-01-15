@@ -8,39 +8,6 @@
 
 import SwiftUI
 
-enum BottomSheetType: Int {
-    case revert
-    case sort
-    case withdraw
-    case detailBadge
-    case congratsBadge
-    case examDate
-    case studyFinishDate
-    case changeSemester
-    
-    func view() -> AnyView {
-        switch self {
-            // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
-        case .revert:
-            AnyView(Text("미완료 상태로 되돌릴까요?"))
-        case .sort:
-            AnyView(Text("최근 등록 순"))
-        case .withdraw:
-            AnyView(Text("정말 탈퇴하시겠어요?"))
-        case .detailBadge:
-            AnyView(Text("배지 달성 조건과 리워드"))
-        case .congratsBadge:
-            AnyView(Text("배지를 획득했어요!"))
-        case .examDate:
-            AnyView(Text("시험이 언제인가요?"))
-        case .studyFinishDate:
-            AnyView(Text("언제까지 공부할까요?"))
-        case .changeSemester:
-            AnyView(Text("어떤 학기로 변경할까요?"))
-        }
-    }
-}
-
 struct BottomSheet<Content: View>: View {
     @Binding private var isShowing: Bool
     private let height: Int
