@@ -11,7 +11,7 @@ import SwiftUI
 struct OutlinedMediumButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .applyFont(font: .body2)
+            .applyFont(font: .body2Bold)
             .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
             .padding(.vertical, 9)
             .frame(maxWidth: .infinity)
@@ -25,7 +25,7 @@ struct OutlinedMediumButton: ButtonStyle {
 struct OutlinedLargeButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .applyFont(font: .body1)
+            .applyFont(font: .body1Bold)
             .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
@@ -39,7 +39,7 @@ struct OutlinedLargeButton: ButtonStyle {
 struct SolidButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .applyFont(font: .body1)
+            .applyFont(font: .body1Bold)
             .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity)
@@ -60,7 +60,7 @@ struct SolidIconButton: ButtonStyle {
             Spacer()
             
             configuration.label
-                .applyFont(font: .body1)
+                .applyFont(font: .body1Bold)
                 .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
                 .padding(.vertical, 16)
             
