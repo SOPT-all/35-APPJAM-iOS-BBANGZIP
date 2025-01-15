@@ -9,25 +9,28 @@
 import SwiftUI
 
 struct Balloon: View {
+    enum BalloonMode {
+        case top
+        case bottom
+    }
+    
     private let text: String
     private let leftIcon: String?
     private let rightIcon: String?
+    private let balloonMode: BalloonMode
     
-    init(text: String, leftIcon: String? = nil, rightIcon: String? = nil) {
+    init(text: String, leftIcon: String? = nil, rightIcon: String? = nil, balloonMode: BalloonMode = .top) {
         self.text = text
         self.leftIcon = leftIcon
         self.rightIcon = rightIcon
+        self.balloonMode = balloonMode
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Image(.balloonTip)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.backgroundAccent))
-                    .padding(.leading, 24)
-                
-                Spacer()
+            
+            if balloonMode == .top {
+                topBalloonTip
             }
             
             HStack(spacing: 6) {
@@ -55,14 +58,42 @@ struct Balloon: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(.backgroundAccent))
+                    .fill(Color(.staticWhite))
             )
             .shadow(color: Color(.staticBlack).opacity(0.25), radius: 4, y: 4)
+            
+            if balloonMode == .bottom {
+                bottomBalloonTip
+            }
         }
     }
+    
+    private var topBalloonTip: some View {
+        HStack {
+            Image(.balloonTip)
+                .renderingMode(.template)
+                .foregroundStyle(Color(.staticWhite))
+                .padding(.leading, 24)
+            
+            Spacer()
+        }
+    }
+    
+    private var bottomBalloonTip: some View {
+        HStack {
+            Image(.balloonTip)
+                .renderingMode(.template)
+                .foregroundStyle(Color(.staticWhite))
+                .padding(.leading, 24)
+            
+            Spacer()
+        }
+        .rotationEffect(.degrees(180))
+    }
+
 }
 
 #Preview {
-    Balloon(text: "사장님의 과제 빵점 탈출을 응원해요!", leftIcon: "bubble", rightIcon: "bubble")
+    Balloon(text: "사장님의 과제 빵점 탈출을 응원해요!", leftIcon: "bubble", rightIcon: "bubble", balloonMode: .bottom)
         .padding(.horizontal, 20)
 }
