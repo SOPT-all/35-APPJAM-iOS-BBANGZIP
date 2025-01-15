@@ -131,64 +131,39 @@ extension BbangDefaultRouter: Router {
     }
     
     var headers: [String : String]? {
-      switch self {
-      case .signup(let signInRequest):
-        return [
-          "Content-Type": "application/json",
-          "Authorization": "Bearer \(signInRequest.authorization)"
-        ]
-      default: return .none
-      }
+        switch self {
+        case .signup(let signInRequest):
+            return [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(signInRequest.authorization)"
+            ]
+        default:
+            return [
+                "Conttent-Type": "application/json"
+            ]
+        }
     }
     
-    var parameters: [String : any Sendable] {
+    var parameters: [String: Any]? {
         switch self {
-        case .signup:
-            return [:]
-        case .getRefreshToken:
-            return [:]
-        case .logout:
-            return [:]
-        case .withDraw:
-            return [:]
-        case .onBoarding:
-            return [:]
-        case .subjectFiltering:
-            return [:]
+        case .signup(let dto):
+            return dto.asDictionary()
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
-        case .addSubject:
-            return [:]
-        case .motivationMessage(let subjectID, let options):
-            return ["subjectID": subjectID, "options": options]
-        case .addStudyScope:
-            return [:]
-        case .deleteStudyScope:
-            return [:]
-        case .deleteSubject:
-            return [:]
-        case .studyCompleteCheck(let pieceID):
+        case .motivationMessage(
+            let subjectID,
+            let options
+        ):
+            return [
+                "subjectID": subjectID,
+                "options": options
+            ]
+        case .studyCompleteCheck(let pieceID), .notCompletedCheck(let pieceID):
             return ["pieceID": pieceID]
-        case .notCompletedCheck(let pieceID):
-            return ["pieceID": pieceID]
-        case .sortedTodoList:
-            return [:]
-        case .sortedDelayedTodoList:
-            return [:]
-        case .addTodoList:
-            return [:]
-        case .addTodo:
-            return [:]
-        case .addDelayedTodoToToday:
-            return [:]
-        case .hideTodo:
-            return [:]
-        case .myPageStatus:
-            return [:]
-        case .aquireBadge:
-            return [:]
         case .badgeDetail(let badgeID):
             return ["badgeID": badgeID]
+        default:
+            return nil
         }
     }
     
@@ -199,5 +174,19 @@ extension BbangDefaultRouter: Router {
         default:
             return JSONEncoding.default
         }
+    }
+}
+
+extension Encodable {
+    func asDictionary() -> [String: Any]? {
+        guard let data = try? JSONEncoder().encode(self) else { return nil }
+        
+        return (
+            try? JSONSerialization.jsonObject(
+                with: data,
+                options: .allowFragments
+            )
+        )
+        as? [String: Any]
     }
 }

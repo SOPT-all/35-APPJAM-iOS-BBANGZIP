@@ -10,7 +10,7 @@ import Foundation
 
 import Alamofire
 
-class BbangMonitor: EventMonitor, @unchecked Sendable {
+final class BbangMonitor: EventMonitor, @unchecked Sendable {
     let queue = DispatchQueue(label: "myNetworkLogger")
     
     func requestDidFinish(_ request: Request) {
