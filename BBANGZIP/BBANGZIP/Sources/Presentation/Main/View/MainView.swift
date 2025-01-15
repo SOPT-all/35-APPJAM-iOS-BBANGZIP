@@ -20,7 +20,6 @@ struct MainView: View {
                 
                 Spacer()
             }
-            .navigationTitle("Home")
         }
     }
 }
