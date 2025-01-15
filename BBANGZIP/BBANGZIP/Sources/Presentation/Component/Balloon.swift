@@ -89,6 +89,7 @@ struct Balloon: View {
             Spacer()
         }
         .rotationEffect(.degrees(180))
+        .scaleEffect(x: -1, y: 1)
     }
 
 }
