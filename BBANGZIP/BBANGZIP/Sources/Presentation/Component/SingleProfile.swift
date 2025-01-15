@@ -29,7 +29,6 @@ struct SingleProfile: View {
             .overlay(
                 Circle()
                     .stroke(outlined ? Color(.lineNormal) : Color.clear, lineWidth: 1)
-                
             )
     }
 }
@@ -40,6 +39,5 @@ struct SingleProfile: View {
         SingleProfile(size: .large, outlined: false)
         SingleProfile(size: .medium, outlined: true)
         SingleProfile(size: .medium, outlined: false)
-        
     }
 }
