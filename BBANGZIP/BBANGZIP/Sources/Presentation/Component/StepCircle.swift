@@ -22,7 +22,7 @@ struct StepCircle: View {
             .overlay {
                 BbangText(
                     "\(step.rawValue)",
-                    fontType: .caption2,
+                    fontType: .caption2Bold,
                     color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
                 )
             }
