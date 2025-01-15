@@ -8,12 +8,28 @@
 
 import SwiftUI
 
+enum Process {
+    case Select
+    case Check
+}
+
 struct StudyCard: View {
+    private let process: Process
     @State var isCompleted = false
+    @State var isSelected = false
+    
+    init(process: Process) {
+        self.process = process
+    }
     
     var body: some View {
         Button {
-            isCompleted.toggle()
+            switch process {
+            case .Select:
+                isSelected.toggle()
+            case .Check:
+                isCompleted.toggle()
+            }
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
@@ -58,6 +74,7 @@ struct StudyCard: View {
                     }
                     .padding(.top, 4)
                 }
+                .opacity(isCompleted ? 0.4 : 1)
                 
                 Spacer()
                 
@@ -67,12 +84,19 @@ struct StudyCard: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 16)
         }
-        .buttonStyle(StudyCardButtonStyle(isCompleted: $isCompleted))
+        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected))
         .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
-    StudyCard()
-        .padding(.horizontal, 20)
+    VStack {
+        StudyCard(process: .Select)
+            .padding(.horizontal, 20)
+        
+        StudyCard(process: .Check)
+            .padding(.horizontal, 20)
+        
+        Spacer()
+    }
 }
