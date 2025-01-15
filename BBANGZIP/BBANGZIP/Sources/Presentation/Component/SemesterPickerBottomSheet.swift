@@ -44,13 +44,6 @@ struct SemesterPickerBottomSheet: View {
                     .pickerStyle(WheelPickerStyle())
                     .padding(.trailing, -15)
                     .clipped()
-                    .customCornerRadius(
-                        60,
-                        corners: [
-                            .topLeft,
-                            .bottomLeft
-                        ]
-                    )
                     Picker(selection: $selectedSemester, label: Text("")) {
                         ForEach(semesters, id: \.self) { semester in
                             CustomText(semester,
@@ -61,13 +54,6 @@ struct SemesterPickerBottomSheet: View {
                     }
                     .pickerStyle(WheelPickerStyle())
                     .padding(.leading, -15)
-                    .customCornerRadius(
-                        24,
-                        corners: [
-                            .topRight,
-                            .bottomRight
-                        ]
-                    )
                     .clipped()
                 }
             }
