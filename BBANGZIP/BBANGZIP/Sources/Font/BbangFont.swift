@@ -139,9 +139,9 @@ public enum BbangFont {
         case .label2:
             return BBANGZIPFontFamily.Pretendard.light.swiftUIFont(size: self.size)
         case .caption1:
-            return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
+            return BBANGZIPFontFamily.Pretendard.bold.swiftUIFont(size: self.size)
         case .caption2:
-            return BBANGZIPFontFamily.Pretendard.extraLight.swiftUIFont(size: self.size)
+            return BBANGZIPFontFamily.Pretendard.bold.swiftUIFont(size: self.size)
         }
     }
 }
