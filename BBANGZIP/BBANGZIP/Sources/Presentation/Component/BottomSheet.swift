@@ -14,6 +14,9 @@ enum BottomSheetType: Int {
     case withdraw
     case detailBadge
     case congratsBadge
+    case examDate
+    case studyFinishDate
+    case changeSemester
     
     func view() -> AnyView {
         switch self {
@@ -29,6 +32,12 @@ enum BottomSheetType: Int {
             return AnyView(Text("배지 달성 조건과 리워드"))
         case .congratsBadge:
             return AnyView(Text("배지를 획득했어요!"))
+        case .examDate:
+            return AnyView(Text("시험이 언제인가요?"))
+        case .studyFinishDate:
+            return AnyView(Text("언제까지 공부할까요?"))
+        case .changeSemester:
+            return AnyView(Text("어떤 학기로 변경할까요?"))
         }
     }
 }
