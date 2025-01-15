@@ -17,12 +17,14 @@ struct StudyCard: View {
                     fontType: .caption2,
                     color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
                 )
+                .padding(.leading, 4)
                 
                 BbangText(
                     "경제통계학",
                     fontType: .caption1,
                     color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
                 )
+                .padding(.leading, 4)
                 
                 BbangText(
                     "540p - 540p",
@@ -30,6 +32,7 @@ struct StudyCard: View {
                     color: Color(BBANGZIPAsset.Assets.labelNormal.color)
                 )
                 .padding(.top, 2)
+                .padding(.leading, 4)
                 
                 HStack(spacing: 8) {
                     BbangText (
@@ -50,10 +53,22 @@ struct StudyCard: View {
                 }
                 .padding(.top, 4)
             }
+            Spacer()
+            
+            CheckBox(isChecked: true)
+                .padding(.bottom, 50)
         }
+        .padding(.vertical, 10)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity)
+        .background(RoundedRectangle(cornerRadius: 24)
+            .fill(BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor))
+        .overlay(RoundedRectangle(cornerRadius: 24)
+            .stroke(BBANGZIPAsset.Assets.lineAlternative.swiftUIColor, lineWidth: 1))
     }
 }
 
 #Preview {
     StudyCard()
+        .padding(.horizontal, 20)
 }
