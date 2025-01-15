@@ -13,12 +13,12 @@ struct SemesterPickerBottomSheet: View {
     @Binding var selectedYear: Int
     @Binding var selectedSemester: String
     
-    let years = [
+    private let years = [
         2025,
         2026,
         2027
     ]
-    let semesters = [
+    private let semesters = [
         "1학기",
         "2학기",
         "여름학기",

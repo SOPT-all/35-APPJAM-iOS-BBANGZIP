@@ -14,17 +14,20 @@ struct ExamPickerBottomSheet: View {
     @State private var selectedMonth: Int
     @State private var selectedDay: Int
     
-    let years = Array(2021...2028)
-    let months = Array(1...12)
+    private let years = Array(2021...2028)
+    private let months = Array(1...12)
     
     var days: [Int] {
-        calculateDaysInMonth(year: selectedYear, month: selectedMonth)
+        calculateDaysInMonth(
+            year: selectedYear,
+            month: selectedMonth
+        )
     }
     
-    let today: Date = Date()
-    let currentYear: Int
-    let currentMonth: Int
-    let currentDay: Int
+    private let today: Date = Date()
+    private let currentYear: Int
+    private let currentMonth: Int
+    private let currentDay: Int
     
     init(
         isPresented: Binding<Bool>,
