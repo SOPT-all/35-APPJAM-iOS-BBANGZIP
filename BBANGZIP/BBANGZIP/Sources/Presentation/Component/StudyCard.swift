@@ -55,20 +55,23 @@ struct StudyCard: View {
             }
             Spacer()
             
-            CheckBox(isChecked: true)
+            CheckBox(isChecked: false)
                 .padding(.bottom, 50)
         }
         .padding(.vertical, 10)
         .padding(.horizontal, 16)
         .frame(maxWidth: .infinity)
-        .background(RoundedRectangle(cornerRadius: 24)
-            .fill(BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor))
         .overlay(RoundedRectangle(cornerRadius: 24)
             .stroke(BBANGZIPAsset.Assets.lineAlternative.swiftUIColor, lineWidth: 1))
     }
 }
 
 #Preview {
-    StudyCard()
-        .padding(.horizontal, 20)
+    Button {
+        
+    } label: {
+        StudyCard()
+    }
+    .padding(.horizontal, 20)
+    .buttonStyle(StudyCardButtonStyle())
 }
