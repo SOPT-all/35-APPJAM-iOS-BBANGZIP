@@ -144,7 +144,7 @@ extension BbangDefaultRouter: Router {
         }
     }
     
-    var parameters: [String: Any]? {
+    var parameters: [String : any Sendable]? {
         switch self {
         case .signup(let dto):
             return dto.asDictionary()
@@ -178,15 +178,10 @@ extension BbangDefaultRouter: Router {
 }
 
 extension Encodable {
-    func asDictionary() -> [String: Any]? {
+    func asDictionary() -> [String : any Sendable]? {
         guard let data = try? JSONEncoder().encode(self) else { return nil }
         
-        return (
-            try? JSONSerialization.jsonObject(
-                with: data,
-                options: .allowFragments
-            )
-        )
-        as? [String: Any]
+        return (try? JSONSerialization.jsonObject(with: data, options: .allowFragments))
+        as? [String : any Sendable]
     }
 }
