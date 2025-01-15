@@ -9,17 +9,18 @@
 import SwiftUI
 
 struct Balloon: View {
-    enum BalloonMode {
-        case top
-        case bottom
-    }
     
     private let text: String
     private let leftIcon: String?
     private let rightIcon: String?
     private let balloonMode: BalloonMode
     
-    init(text: String, leftIcon: String? = nil, rightIcon: String? = nil, balloonMode: BalloonMode = .top) {
+    init(
+        text: String,
+        leftIcon: String? = nil,
+        rightIcon: String? = nil,
+        balloonMode: BalloonMode = .top
+    ) {
         self.text = text
         self.leftIcon = leftIcon
         self.rightIcon = rightIcon
@@ -43,7 +44,11 @@ struct Balloon: View {
                         .frame(width: 16, height: 16)
                 }
                 
-                BbangText(text, fontType: .body1, color: Color(.labelNormal))
+                BbangText(
+                    text,
+                    fontType: .body1,
+                    color: Color(.labelNormal)
+                )
                 
                 if let rightIcon = rightIcon {
                     Image(rightIcon)
@@ -88,8 +93,7 @@ struct Balloon: View {
             
             Spacer()
         }
-        .rotationEffect(.degrees(180))
-        .scaleEffect(x: -1, y: 1)
+        .scaleEffect(x: 1, y: -1)
     }
 
 }
