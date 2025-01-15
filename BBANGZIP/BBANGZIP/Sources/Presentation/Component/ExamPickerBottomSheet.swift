@@ -18,11 +18,13 @@ struct ExamPickerBottomSheet: View {
     let months = Array(1...12)
     
     var days: [Int] {
-        calculateDaysInMonth(
-            year: selectedYear,
-            month: selectedMonth
-        )
+        calculateDaysInMonth(year: selectedYear, month: selectedMonth)
     }
+    
+    let today: Date = Date()
+    let currentYear: Int
+    let currentMonth: Int
+    let currentDay: Int
     
     init(
         isPresented: Binding<Bool>,
@@ -34,6 +36,20 @@ struct ExamPickerBottomSheet: View {
         self._selectedYear = State(initialValue: selectedYear)
         self._selectedMonth = State(initialValue: selectedMonth)
         self._selectedDay = State(initialValue: selectedDay)
+        
+        let calendar = Calendar.current
+        self.currentYear = calendar.component(
+            .year,
+            from: Date()
+        )
+        self.currentMonth = calendar.component(
+            .month,
+            from: Date()
+        )
+        self.currentDay = calendar.component(
+            .day,
+            from: Date()
+        )
     }
     
     var body: some View {
@@ -47,7 +63,11 @@ struct ExamPickerBottomSheet: View {
                     selection: $selectedYear,
                     label: Text("")
                 ) {
-                    ForEach(years, id: \.self) { year in
+                    ForEach(
+                        years.filter {
+                            $0 >= currentYear
+                        },
+                        id: \.self) { year in
                         CustomText("\(year)년",
                                    fontType: .heading2Bold,
                                    color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
@@ -66,7 +86,7 @@ struct ExamPickerBottomSheet: View {
                     label: Text("")
                 ) {
                     ForEach(
-                        months,
+                        validMonths,
                         id: \.self
                     ) { month in
                         CustomText("\(month)월",
@@ -83,8 +103,11 @@ struct ExamPickerBottomSheet: View {
                     updateSelectedDay()
                 }
                 
-                Picker(selection: $selectedDay, label: Text("")) {
-                    ForEach(days, id: \.self) { day in
+                Picker(
+                    selection: $selectedDay,
+                    label: Text("")
+                ) {
+                    ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
                         CustomText("\(day)일",
                                    fontType: .heading2Bold,
                                    color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
@@ -108,6 +131,22 @@ struct ExamPickerBottomSheet: View {
             .padding(.horizontal)
         }
         .padding()
+    }
+    
+    private var validMonths: [Int] {
+        if selectedYear == currentYear {
+            return months.filter { $0 >= currentMonth }
+        }
+        
+        return months
+    }
+    
+    private func isValidDay(_ day: Int) -> Bool {
+        if selectedYear == currentYear, selectedMonth == currentMonth {
+            return day >= currentDay
+        }
+        
+        return true
     }
     
     private func updateSelectedDay() {
@@ -134,6 +173,7 @@ struct ExamPickerBottomSheet: View {
            ) {
             return Array(range)
         }
+        
         return []
     }
 }
