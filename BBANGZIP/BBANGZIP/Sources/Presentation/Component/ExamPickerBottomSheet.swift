@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct ExamPickerBottomSheet: View {
-    @Binding var isPresented: Bool
+    @Binding private var isPresented: Bool
     @State private var selectedYear: Int
     @State private var selectedMonth: Int
     @State private var selectedDay: Int
     
-    let years = Array(2021...2027)
+    let years = Array(2021...2028)
     let months = Array(1...12)
     
     var days: [Int] {
@@ -68,11 +68,11 @@ struct ExamPickerBottomSheet: View {
                             $0 >= currentYear
                         },
                         id: \.self) { year in
-                        CustomText("\(year)년",
-                                   fontType: .heading2Bold,
-                                   color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                        .tag(year)
-                    }
+                            CustomText("\(year)년",
+                                       fontType: .heading2Bold,
+                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
+                            .tag(year)
+                        }
                 }
                 .pickerStyle(WheelPickerStyle())
                 .padding(.trailing, -25)
