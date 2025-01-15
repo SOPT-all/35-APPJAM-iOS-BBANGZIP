@@ -22,16 +22,28 @@ struct PushIcon: View {
             .fill(type.color)
             .frame(width: 20, height: 20)
             .overlay(
-                CustomFont("\(number)", fontType: .caption2Bold)
-                    .foregroundColor(BBANGZIPAsset.Assets.staticWhite.swiftUIColor)
+                CustomText(
+                    "\(number)",
+                    fontType: .caption2Bold,
+                    color:(BBANGZIPAsset.Assets.staticWhite.swiftUIColor)
+                )
             )
     }
 }
 
 #Preview {
     VStack(spacing: 10) {
-        PushIcon(number: 1, type: .black)
-        PushIcon(number: 2, type: .yellow)
-        PushIcon(number: 6, type: .orange)
+        PushIcon(
+            number: 1,
+            type: .black
+        )
+        PushIcon(
+            number: 2,
+            type: .yellow
+        )
+        PushIcon(
+            number: 6,
+            type: .orange
+        )
     }
 }
