@@ -37,20 +37,14 @@ struct BottomSheet<Content: View>: View {
                         isShowing.toggle()
                     }
                 
-                VStack() {
+                VStack {
                     RoundedRectangle(cornerRadius: 2.5)
-                        .fill(Color(.interactionInactive))
-                        .frame(
-                            width: 36,
-                            height: 5
-                        )
+                        .fill(Color.gray)
+                        .frame(width: 36, height: 5)
                         .padding(.top, 8)
                         .gesture(
                             DragGesture()
-                                .updating($dragPosition) {
-                                    value,
-                                    state,
-                                    transaction in
+                                .updating($dragPosition) { value, state, _ in
                                     state = value.translation.height
                                     withAnimation(.easeOut(duration: 0.2)) {
                                         currentHeight = max(CGFloat(height) - value.translation.height, 100)
@@ -60,13 +54,9 @@ struct BottomSheet<Content: View>: View {
                                     if value.translation.height > CGFloat(height) * 0.5 {
                                         withAnimation {
                                             isShowing = false
-                                            print("Go Down")
-                                            print(currentHeight)
                                         }
                                     } else {
                                         withAnimation {
-                                            print("Stay")
-                                            print(currentHeight)
                                             currentHeight = CGFloat(height)
                                         }
                                     }
@@ -79,52 +69,34 @@ struct BottomSheet<Content: View>: View {
                 }
                 .frame(height: currentHeight)
                 .frame(maxWidth: .infinity)
-                .background(
-                    Color(.backgroundNormal)
-                )
-                .cornerRadius(
-                    48,
-                    corners: [
-                        .topLeft,
-                        .topRight
-                    ]
-                )
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    x: 0,
-                    y: -4
-                )
+                .background(Color.white)
+                .cornerRadius(20, corners: [.topLeft, .topRight])
+                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: -4)
                 .transition(.move(edge: .bottom))
                 .onAppear {
                     currentHeight = CGFloat(height)
                 }
             }
         }
-        .frame(
-            maxWidth: .infinity,
-            maxHeight: .infinity,
-            alignment: .bottom
-        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .ignoresSafeArea()
-        .animation(
-            .easeInOut,
-            value: isShowing
-        )
+        .animation(.easeInOut, value: isShowing)
     }
 }
 
 extension View {
-    func cornerRadius(
-        _ radius: CGFloat,
-        corners: UIRectCorner
+    func bottomSheet<Content: View>(
+        isShowing: Binding<Bool>,
+        height: Int,
+        @ViewBuilder content: @escaping () -> Content
     ) -> some View {
-        clipShape(
-            RoundedCorners(
-                radius: radius,
-                corners: corners
-            )
-        )
+        BottomSheet(isShowing: isShowing, height: height, content: content)
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorners(radius: radius, corners: corners))
     }
 }
 
@@ -132,10 +104,7 @@ struct RoundedCorners: Shape {
     private let radius: CGFloat
     private let corners: UIRectCorner
     
-    init(
-        radius: CGFloat = .infinity,
-        corners: UIRectCorner = .allCorners
-    ) {
+    init(radius: CGFloat, corners: UIRectCorner) {
         self.radius = radius
         self.corners = corners
     }
@@ -144,13 +113,8 @@ struct RoundedCorners: Shape {
         let path = UIBezierPath(
             roundedRect: rect,
             byRoundingCorners: corners,
-            cornerRadii: CGSize(
-                width: radius,
-                height: radius
-            )
+            cornerRadii: CGSize(width: radius, height: radius)
         )
-        
         return Path(path.cgPath)
     }
 }
-
