@@ -22,27 +22,27 @@ enum BottomSheetType: Int {
         switch self {
         // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
         case .revert:
-            return AnyView(Text("미완료 상태로 되돌릴까요?"))
+            AnyView(Text("미완료 상태로 되돌릴까요?"))
         case .sort:
-            return AnyView(Text("최근 등록 순"))
+            AnyView(Text("최근 등록 순"))
         case .withdraw:
-            return AnyView(Text("정말 탈퇴하시겠어요?"))
+            AnyView(Text("정말 탈퇴하시겠어요?"))
         case .detailBadge:
-            return AnyView(Text("배지 달성 조건과 리워드"))
+            AnyView(Text("배지 달성 조건과 리워드"))
         case .congratsBadge:
-            return AnyView(Text("배지를 획득했어요!"))
+            AnyView(Text("배지를 획득했어요!"))
         case .examDate:
-            return AnyView(Text("시험이 언제인가요?"))
+            AnyView(Text("시험이 언제인가요?"))
         case .studyFinishDate:
-            return AnyView(Text("언제까지 공부할까요?"))
+            AnyView(Text("언제까지 공부할까요?"))
         case .changeSemester:
-            return AnyView(Text("어떤 학기로 변경할까요?"))
+            AnyView(Text("어떤 학기로 변경할까요?"))
         }
     }
 }
 
 struct BottomSheet<Content: View>: View {
-    @Binding var isShowing: Bool
+    @Binding private var isShowing: Bool
     private let height: Int
     private let content: () -> Content
     
