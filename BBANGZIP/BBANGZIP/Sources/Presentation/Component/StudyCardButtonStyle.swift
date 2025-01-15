@@ -9,18 +9,24 @@
 import SwiftUI
 
 struct StudyCardButtonStyle: ButtonStyle {
+    @Binding var isCompleted: Bool
+    
     func makeBody(configuration: Configuration) -> some View {
-        if configuration.isPressed {
+        if !isCompleted {
             configuration
                 .label
                 .background(RoundedRectangle(cornerRadius: 24)
-                    .fill(BBANGZIPAsset.Assets.backgroundAlternative.swiftUIColor))
+                    .fill(configuration.isPressed ? BBANGZIPAsset.Assets.backgroundAlternative.swiftUIColor : BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor))
+                .overlay(RoundedRectangle(cornerRadius: 24)
+                    .stroke(BBANGZIPAsset.Assets.lineAlternative.swiftUIColor, lineWidth: 1))
         }
         else {
             configuration
                 .label
                 .background(RoundedRectangle(cornerRadius: 24)
-                    .fill(BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor))
+                    .fill(configuration.isPressed ? BBANGZIPAsset.Assets.backgroundAlternative.swiftUIColor : BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor))
+                .overlay(RoundedRectangle(cornerRadius: 24)
+                    .stroke(BBANGZIPAsset.Assets.lineStrong.swiftUIColor, lineWidth: 3))
         }
     }
 }
