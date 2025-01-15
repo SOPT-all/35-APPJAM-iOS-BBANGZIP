@@ -9,25 +9,13 @@
 import SwiftUI
 
 struct PushIcon: View {
-    enum IconType {
-        case black
-        case yellow
-        case orange
-        
-        var color: Color {
-            switch self {
-            case .black:
-                return BBANGZIPAsset.Assets.statusPositive.swiftUIColor
-            case .yellow:
-                return BBANGZIPAsset.Assets.statusCautionary.swiftUIColor
-            case .orange:
-                return BBANGZIPAsset.Assets.statusDestructive.swiftUIColor
-            }
-        }
-    }
+    private let number: Int
+    private let type: IconType
     
-    let number: Int
-    let type: IconType
+    init(number: Int, type: IconType) {
+        self.number = number
+        self.type = type
+    }
     
     var body: some View {
         Circle()
@@ -37,8 +25,9 @@ struct PushIcon: View {
                 height: 20
             )
             .overlay(
-                Text("\(number)")
-                    .font(BbangFont.caption2.swiftUIFont)
+                BbangText("\(number)",
+                           BbangText(<#T##title: String##String#>, fontType: <#T##CustomFont#>))
+                
                     .foregroundColor(BBANGZIPAsset.Assets.staticWhite.swiftUIColor)
             )
     }
