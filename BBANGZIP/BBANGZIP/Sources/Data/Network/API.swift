@@ -14,7 +14,11 @@ class API {
     static let session: Session = {
         let configuration = URLSessionConfiguration.af.default
         let apiLogger = BbangMonitor()
-        return Session(configuration: configuration, eventMonitors: [apiLogger])
+        
+        return Session(
+            configuration: configuration,
+            eventMonitors: [apiLogger]
+        )
     }()
 }
 

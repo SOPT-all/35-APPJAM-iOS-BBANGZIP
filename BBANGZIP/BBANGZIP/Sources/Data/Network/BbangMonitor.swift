@@ -16,7 +16,6 @@ class BbangMonitor: EventMonitor, @unchecked Sendable {
     func requestDidFinish(_ request: Request) {
         print("🥨 NETWORK Reqeust LOG")
         print(request.description)
-        
         print(
             "URL: " + (request.request?.url?.absoluteString ?? "")  + "\n"
             + "Method: " + (request.request?.httpMethod ?? "") + "\n"
@@ -53,7 +52,11 @@ extension Data {
               let prettyPrintedString = NSString(
                 data: data,
                 encoding: String.Encoding.utf8.rawValue
-              ) else { return nil }
+              )
+        else {
+            return nil
+        }
+        
         return prettyPrintedString as String
     }
 }
