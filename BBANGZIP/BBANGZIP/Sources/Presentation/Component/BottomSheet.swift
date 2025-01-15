@@ -20,7 +20,6 @@ enum BottomSheetType: Int {
     
     func view() -> AnyView {
         switch self {
-            
         // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
         case .revert:
             return AnyView(Text("미완료 상태로 되돌릴까요?"))
@@ -43,10 +42,11 @@ enum BottomSheetType: Int {
 }
 
 struct BottomSheet<Content: View>: View {
-    
     @Binding var isShowing: Bool
     private let height: Int
     private let content: () -> Content
+    
+    @GestureState private var dragPosition = CGFloat.zero
     
     init(
         isShowing: Binding<Bool>,
@@ -71,8 +71,27 @@ struct BottomSheet<Content: View>: View {
                 VStack() {
                     RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color(.interactionInactive))
-                        .frame(width: 36, height: 5)
+                        .frame(
+                            width: 36,
+                            height: 5
+                        )
                         .padding(.top, 8)
+                        .gesture(
+                            DragGesture()
+                                .updating($dragPosition) {
+                                    value,
+                                    state,
+                                    transaction in
+                                    state = value.translation.height
+                                }
+                                .onEnded { value in
+                                    if value.translation.height > 100 {
+                                        withAnimation {
+                                            isShowing = false
+                                        }
+                                    }
+                                }
+                        )
                     
                     content()
                     
@@ -83,7 +102,13 @@ struct BottomSheet<Content: View>: View {
                 .background(
                     Color(.backgroundNormal)
                 )
-                .cornerRadius(48, corners: [.topLeft, .topRight])
+                .cornerRadius(
+                    48,
+                    corners: [
+                        .topLeft,
+                        .topRight
+                    ]
+                )
                 .shadow(
                     color: Color(.staticBlack).opacity(0.25),
                     radius: 4,
@@ -99,12 +124,18 @@ struct BottomSheet<Content: View>: View {
             alignment: .bottom
         )
         .ignoresSafeArea()
-        .animation(.easeInOut, value: isShowing)
+        .animation(
+            .easeInOut,
+            value: isShowing
+        )
     }
 }
 
 extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+    func cornerRadius(
+        _ radius: CGFloat,
+        corners: UIRectCorner
+    ) -> some View {
         clipShape(
             RoundedCorners(
                 radius: radius,
@@ -127,8 +158,12 @@ struct RoundedCorners: Shape {
         let path = UIBezierPath(
             roundedRect: rect,
             byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
+            cornerRadii: CGSize(
+                width: radius,
+                height: radius
+            )
         )
+        
         return Path(path.cgPath)
     }
 }
