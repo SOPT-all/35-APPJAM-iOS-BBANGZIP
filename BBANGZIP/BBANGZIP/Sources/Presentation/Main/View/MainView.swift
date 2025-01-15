@@ -7,25 +7,25 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct MainView: View {
-    
-    @ObservedObject var viewModel: MainViewModel
-    
     var body: some View {
-        VStack {
-            List(viewModel.coffees, id: \.id) {
-                Text($0.title)
+        NavigationView {
+            VStack {
+                Text("Welcome")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                
+                Spacer()
             }
         }
     }
 }
 
-#Preview {
-    MainView(
-        viewModel: MainViewModel(
-            useCase: DefaultFetchLatteCoffeeUseCase(
-                coffeeRepository: DefaultCoffeeRepository()
-            )
-        )
-    )
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainView()
+    }
 }
