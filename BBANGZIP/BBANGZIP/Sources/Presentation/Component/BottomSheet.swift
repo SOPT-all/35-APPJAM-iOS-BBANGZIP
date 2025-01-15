@@ -66,7 +66,7 @@ struct BottomSheet: View {
                 .frame(height: CGFloat(height))
                 .frame(maxWidth: .infinity)
                 .background(
-                    Color(uiColor: .white)
+                    Color(.backgroundNormal)
                 )
                 .cornerRadius(48, corners: [.topLeft, .topRight])
                 .shadow(
