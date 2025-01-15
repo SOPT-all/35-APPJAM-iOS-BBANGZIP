@@ -33,13 +33,17 @@ enum BottomSheetType: Int {
     }
 }
 
-struct BottomSheet: View {
+struct BottomSheet<Content: View>: View {
     
     @Binding var isShowing: Bool
     private let height: Int
-    private var content: AnyView
+    private let content: () -> Content
     
-    init(isShowing: Binding<Bool>, height: Int, content: AnyView) {
+    init(
+        isShowing: Binding<Bool>,
+        height: Int,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
         self._isShowing = isShowing
         self.height = height
         self.content = content
@@ -61,7 +65,7 @@ struct BottomSheet: View {
                         .frame(width: 36, height: 5)
                         .padding(.top, 8)
                     
-                    content
+                    content()
                     
                     Spacer()
                 }
