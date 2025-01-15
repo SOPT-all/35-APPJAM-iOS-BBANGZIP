@@ -174,7 +174,7 @@ extension View {
     }
 }
 
-struct BbangText: View {
+struct CustomText: View {
     private let title: String
     private let fontType: CustomFont
     private let color: Color?
