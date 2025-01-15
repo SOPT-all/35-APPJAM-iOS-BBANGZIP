@@ -20,7 +20,7 @@ enum BottomSheetType: Int {
     
     func view() -> AnyView {
         switch self {
-        // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
+            // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
         case .revert:
             AnyView(Text("미완료 상태로 되돌릴까요?"))
         case .sort:
@@ -47,6 +47,7 @@ struct BottomSheet<Content: View>: View {
     private let content: () -> Content
     
     @GestureState private var dragPosition = CGFloat.zero
+    @State private var currentHeight: CGFloat
     
     init(
         isShowing: Binding<Bool>,
@@ -56,6 +57,7 @@ struct BottomSheet<Content: View>: View {
         self._isShowing = isShowing
         self.height = height
         self.content = content
+        self._currentHeight = State(initialValue: CGFloat(height))
     }
     
     var body: some View {
@@ -83,11 +85,22 @@ struct BottomSheet<Content: View>: View {
                                     state,
                                     transaction in
                                     state = value.translation.height
+                                    withAnimation(.easeOut(duration: 0.2)) {
+                                        currentHeight = max(CGFloat(height) - value.translation.height, 100)
+                                    }
                                 }
                                 .onEnded { value in
-                                    if value.translation.height > 100 {
+                                    if value.translation.height > CGFloat(height) * 0.5 {
                                         withAnimation {
                                             isShowing = false
+                                            print("Go Down")
+                                            print(currentHeight)
+                                        }
+                                    } else {
+                                        withAnimation {
+                                            print("Stay")
+                                            print(currentHeight)
+                                            currentHeight = CGFloat(height)
                                         }
                                     }
                                 }
@@ -97,7 +110,7 @@ struct BottomSheet<Content: View>: View {
                     
                     Spacer()
                 }
-                .frame(height: CGFloat(height))
+                .frame(height: currentHeight)
                 .frame(maxWidth: .infinity)
                 .background(
                     Color(.backgroundNormal)
@@ -116,6 +129,9 @@ struct BottomSheet<Content: View>: View {
                     y: -4
                 )
                 .transition(.move(edge: .bottom))
+                .onAppear {
+                    currentHeight = CGFloat(height)
+                }
             }
         }
         .frame(
@@ -146,10 +162,13 @@ extension View {
 }
 
 struct RoundedCorners: Shape {
-    private var radius: CGFloat = .infinity
-    private var corners: UIRectCorner = .allCorners
+    private let radius: CGFloat
+    private let corners: UIRectCorner
     
-    init(radius: CGFloat, corners: UIRectCorner) {
+    init(
+        radius: CGFloat = .infinity,
+        corners: UIRectCorner = .allCorners
+    ) {
         self.radius = radius
         self.corners = corners
     }
