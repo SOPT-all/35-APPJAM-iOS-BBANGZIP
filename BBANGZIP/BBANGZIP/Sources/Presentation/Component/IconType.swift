@@ -13,7 +13,7 @@ enum IconType {
     case yellow
     case orange
     
-    private var color: Color {
+    var color: Color {
         switch self {
         case .black:
             return BBANGZIPAsset.Assets.statusPositive.swiftUIColor
