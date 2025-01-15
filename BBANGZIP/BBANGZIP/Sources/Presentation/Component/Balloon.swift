@@ -44,9 +44,9 @@ struct Balloon: View {
                         .frame(width: 16, height: 16)
                 }
                 
-                BbangText(
+                CustomText(
                     text,
-                    fontType: .body1,
+                    fontType: .body1Bold,
                     color: Color(.labelNormal)
                 )
                 
