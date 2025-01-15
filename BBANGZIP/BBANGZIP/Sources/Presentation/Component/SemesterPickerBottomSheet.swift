@@ -13,56 +13,80 @@ struct SemesterPickerBottomSheet: View {
     @Binding var selectedYear: Int
     @Binding var selectedSemester: String
     
-    let years = [2025, 2026, 2027]
-    let semesters = ["1학기", "2학기", "여름학기"]
+    let years = [
+        2025,
+        2026,
+        2027
+    ]
+    let semesters = [
+        "1학기",
+        "2학기",
+        "여름학기",
+        "겨울학기"
+    ]
     
     var body: some View {
-        if isPresented {
-            VStack(spacing: 16) {
-                Text("어떤 학기로 변경할까요?")
-                    .font(.headline)
-                    .padding(.top)
-                
-                HStack {
-                    Picker("년도", selection: $selectedYear) {
+        VStack(spacing: 16) {
+            CustomText("어떤 학기로 변경할까요?",
+                       fontType: .headline1Medium,
+                       color: (BBANGZIPAsset.Assets.labelNeutral.swiftUIColor)
+            )
+            GeometryReader { geometry in
+                HStack(spacing: 0) {
+                    Picker(selection: $selectedYear, label: Text("")) {
                         ForEach(years, id: \.self) { year in
-                            Text("\(year)년").tag(year)
+                            CustomText("\(year)년",
+                                       fontType: .heading2Bold,
+                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
+                            .tag(year)
                         }
                     }
                     .pickerStyle(WheelPickerStyle())
-                    
-                    Picker("학기", selection: $selectedSemester) {
+                    .padding(.trailing, -15)
+                    .clipped()
+                    .customCornerRadius(
+                        60,
+                        corners: [
+                            .topLeft,
+                            .bottomLeft
+                        ]
+                    )
+                    Picker(selection: $selectedSemester, label: Text("")) {
                         ForEach(semesters, id: \.self) { semester in
-                            Text(semester).tag(semester)
+                            CustomText(semester,
+                                       fontType: .heading2Bold,
+                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
+                            .tag(semester)
                         }
                     }
                     .pickerStyle(WheelPickerStyle())
+                    .padding(.leading, -15)
+                    .customCornerRadius(
+                        24,
+                        corners: [
+                            .topRight,
+                            .bottomRight
+                        ]
+                    )
+                    .clipped()
                 }
-                .frame(height: 150)
-                
-                Button(action: {
-                    withAnimation {
-                        isPresented = false
-                    }
-                }) {
-                    Text("학기 변경하기")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.black)
-                        .cornerRadius(10)
-                }
-                .padding(.horizontal)
             }
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(radius: 20)
+            .frame(height: 212)
+            .padding(20)
+            
+            Button(action: {
+                withAnimation {
+                    isPresented = false
+                }
+            }) {
+                Text("학기 변경하기")
+            }
+            .buttonStyle(SolidButton())
             .padding(.horizontal)
-            .padding(.bottom, 50)
         }
+        .padding()
     }
 }
-
 
 #Preview {
     @State var isPresented = true
