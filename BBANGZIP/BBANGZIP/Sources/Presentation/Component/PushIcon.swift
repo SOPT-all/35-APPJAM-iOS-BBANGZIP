@@ -25,13 +25,17 @@ struct PushIcon: View {
             }
         }
     }
+    
     let number: Int
     let type: IconType
     
     var body: some View {
         Circle()
             .fill(type.color)
-            .frame(width: 20, height: 20)
+            .frame(
+                width: 20,
+                height: 20
+            )
             .overlay(
                 Text("\(number)")
                     .font(BbangFont.caption2.swiftUIFont)
@@ -42,8 +46,17 @@ struct PushIcon: View {
 
 #Preview {
     VStack(spacing: 10) {
-        PushIcon(number: 1, type: .black)
-        PushIcon(number: 2, type: .yellow)
-        PushIcon(number: 6, type: .orange)
+        PushIcon(
+            number: 1,
+            type: .black
+        )
+        PushIcon(
+            number: 2,
+            type: .yellow
+        )
+        PushIcon(
+            number: 6,
+            type: .orange
+        )
     }
 }
