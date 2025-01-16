@@ -12,7 +12,6 @@ struct BottomSheet<Content: View>: View {
     @Binding private var isShowing: Bool
     private let height: Int
     private let content: () -> Content
-    
     @GestureState private var dragPosition = CGFloat.zero
     @State private var currentHeight: CGFloat
     
@@ -74,7 +73,7 @@ struct BottomSheet<Content: View>: View {
                 .frame(maxWidth: .infinity)
                 .background(Color(.backgroundNormal))
                 .cornerRadius(
-                    20,
+                    48,
                     corners: [
                         .topLeft,
                         .topRight
@@ -132,7 +131,10 @@ struct RoundedCorners: Shape {
     private let radius: CGFloat
     private let corners: UIRectCorner
     
-    init(radius: CGFloat, corners: UIRectCorner) {
+    init(
+        radius: CGFloat,
+        corners: UIRectCorner
+    ) {
         self.radius = radius
         self.corners = corners
     }

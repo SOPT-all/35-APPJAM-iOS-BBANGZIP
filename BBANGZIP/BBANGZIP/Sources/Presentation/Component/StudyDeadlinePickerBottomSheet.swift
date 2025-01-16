@@ -39,20 +39,18 @@ struct StudyDeadlinePickerBottomSheet: View {
         self._selectedYear = State(initialValue: selectedYear)
         self._selectedMonth = State(initialValue: selectedMonth)
         self._selectedDay = State(initialValue: selectedDay)
-        
         let calendar = Calendar.current
-        self.currentYear = calendar.component(
-            .year,
-            from: Date()
+        let components = calendar.dateComponents(
+            [
+                .year,
+                .month,
+                .day
+            ],
+            from: today
         )
-        self.currentMonth = calendar.component(
-            .month,
-            from: Date()
-        )
-        self.currentDay = calendar.component(
-            .day,
-            from: Date()
-        )
+        self.currentYear = components.year ?? selectedYear
+        self.currentMonth = components.month ?? selectedMonth
+        self.currentDay = components.day ?? selectedDay
     }
     
     var body: some View {
@@ -174,6 +172,7 @@ struct StudyDeadlinePickerBottomSheet: View {
            ) {
             return Array(range)
         }
+        
         return []
     }
 }

@@ -39,20 +39,18 @@ struct ExamPickerBottomSheet: View {
         self._selectedYear = State(initialValue: selectedYear)
         self._selectedMonth = State(initialValue: selectedMonth)
         self._selectedDay = State(initialValue: selectedDay)
-        
         let calendar = Calendar.current
-        self.currentYear = calendar.component(
-            .year,
-            from: Date()
+        let components = calendar.dateComponents(
+            [
+                .year,
+                .month,
+                .day
+            ],
+            from: today
         )
-        self.currentMonth = calendar.component(
-            .month,
-            from: Date()
-        )
-        self.currentDay = calendar.component(
-            .day,
-            from: Date()
-        )
+        self.currentYear = components.year ?? selectedYear
+        self.currentMonth = components.month ?? selectedMonth
+        self.currentDay = components.day ?? selectedDay
     }
     
     var body: some View {
@@ -179,18 +177,4 @@ struct ExamPickerBottomSheet: View {
         
         return []
     }
-}
-
-#Preview {
-    @State var isPresented = true
-    @State var selectedYear = Calendar.current.component(.year, from: Date())
-    @State var selectedMonth = Calendar.current.component(.month, from: Date())
-    @State var selectedDay = Calendar.current.component(.day, from: Date())
-    
-    return ExamPickerBottomSheet(
-        isPresented: $isPresented,
-        selectedYear: selectedYear,
-        selectedMonth: selectedMonth,
-        selectedDay: selectedDay
-    )
 }
