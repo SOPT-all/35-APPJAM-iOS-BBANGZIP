@@ -11,20 +11,15 @@ import SwiftUI
 struct StudyCard: View {
     @State var isCompleted = false
     @State var isSelected = false
-    let state: ButtonState
-    
-    init(state: ButtonState) {
-        self.state = state
-    }
+    @Binding var state: ButtonState
     
     var body: some View {
         Button {
             switch state {
-            case .base: break
+            case .base:
+                isCompleted.toggle()
             case .selectable:
                 isSelected.toggle()
-            case .isCompleted:
-                isCompleted.toggle()
             }
         } label: {
             HStack {
@@ -75,22 +70,5 @@ struct StudyCard: View {
         }
         .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected, state: state))
         .frame(maxWidth: .infinity)
-    }
-}
-
-#Preview {
-    VStack {
-        let state: ButtonState
-        
-        StudyCard(state: .base)
-            .padding(.horizontal, 20)
-        
-        StudyCard(state: .isCompleted)
-            .padding(.horizontal, 20)
-        
-        StudyCard(state: .selectable)
-            .padding(.horizontal, 20)
-        
-        Spacer()
     }
 }

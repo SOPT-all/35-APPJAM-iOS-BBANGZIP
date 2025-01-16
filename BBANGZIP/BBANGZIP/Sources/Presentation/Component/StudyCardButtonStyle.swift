@@ -11,12 +11,11 @@ import SwiftUI
 enum ButtonState {
     case base
     case selectable
-    case isCompleted
 }
 
 struct StudyCardButtonStyle: ButtonStyle {
     @Binding var isSelected: Bool
-    var state: ButtonState
+    let state: ButtonState
     
     func makeBody(configuration: Configuration) -> some View {
         configuration
@@ -29,7 +28,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     
     private func backgroundColor(state: ButtonState, isPressed: Bool) -> Color  {
         switch state {
-        case .base, .isCompleted:
+        case .base:
             isPressed ? BBANGZIPAsset.Assets.labelNormal.swiftUIColor.opacity(0.12) : BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor
         case .selectable:
             isPressed ? BBANGZIPAsset.Assets.labelNormal.swiftUIColor.opacity(0.12) : BBANGZIPAsset.Assets.backgroundAlternative.swiftUIColor
@@ -38,7 +37,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     
     private func borderColor(state: ButtonState) -> Color {
         switch state {
-        case .base, .isCompleted:
+        case .base:
             BBANGZIPAsset.Assets.lineAlternative.swiftUIColor
         case .selectable:
             isSelected ? BBANGZIPAsset.Assets.lineStrong.swiftUIColor : BBANGZIPAsset.Assets.lineAlternative.swiftUIColor
@@ -47,7 +46,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     
     private func borderWidth(state: ButtonState) -> CGFloat {
         switch state {
-        case .base, .isCompleted:
+        case .base:
             1
         case .selectable:
             isSelected ? 3 : 1
@@ -62,3 +61,5 @@ struct StudyCardButtonStyle: ButtonStyle {
 // pressed시 : labelNormal.opacity(0.12) / lineStrong, 3    -> configuration.isPressed == true
 // 완료 선택 시 : backgroundNormal / lineAlternative, 1 / VStack.opacity(0.4) -> isCompleted
 
+// base -> (touch) -> isCompleted
+// base -> case = selectable -> (touch) -> isSelected
