@@ -66,7 +66,7 @@ struct ExamPickerBottomSheet: View {
         CustomText(
             "시험이 언제인가요?",
             fontType: .headline1Medium,
-            color: (BBANGZIPAsset.Assets.labelNeutral.swiftUIColor)
+            color: Color(.labelNeutral)
         )
     }
     
@@ -86,11 +86,12 @@ struct ExamPickerBottomSheet: View {
                     $0 >= currentYear
                 },
                 id: \.self) { year in
-                CustomText("\(year)년",
-                           fontType: .heading2Bold,
-                           color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                .tag(year)
-            }
+                    CustomText("\(year)년",
+                               fontType: .heading2Bold,
+                               color: Color(.labelStrong)
+                    )
+                    .tag(year)
+                }
         }
         .pickerStyle(WheelPickerStyle())
         .padding(.trailing, -25)
@@ -107,7 +108,8 @@ struct ExamPickerBottomSheet: View {
             ForEach(validMonths, id: \.self) { month in
                 CustomText("\(month)월",
                            fontType: .heading2Bold,
-                           color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
+                           color: Color(.labelStrong)
+                )
                 .tag(month)
             }
         }
@@ -127,7 +129,8 @@ struct ExamPickerBottomSheet: View {
             ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
                 CustomText("\(day)일",
                            fontType: .heading2Bold,
-                           color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
+                           color: Color(.labelStrong)
+                )
                 .tag(day)
             }
         }

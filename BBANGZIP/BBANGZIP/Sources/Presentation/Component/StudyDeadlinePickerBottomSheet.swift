@@ -55,83 +55,106 @@ struct StudyDeadlinePickerBottomSheet: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            CustomText("언제까지 공부할까요?",
-                       fontType: .headline1Medium,
-                       color: (BBANGZIPAsset.Assets.labelNeutral.swiftUIColor)
-            )
-            HStack(spacing: 0) {
-                Picker(
-                    selection: $selectedYear,
-                    label: Text("")
-                ) {
-                    ForEach(
-                        years.filter {
-                            $0 >= currentYear
-                        },
-                        id: \.self) { year in
-                            CustomText("\(year)년",
-                                       fontType: .heading2Bold,
-                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                            .tag(year)
-                        }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .padding(.trailing, -25)
-                .clipped()
-                .onChange(of: selectedYear) { _ in
-                    updateSelectedDay()
-                }
-                
-                Picker(
-                    selection: $selectedMonth,
-                    label: Text("")
-                ) {
-                    ForEach(
-                        validMonths,
-                        id: \.self
-                    ) { month in
-                        CustomText("\(month)월",
-                                   fontType: .heading2Bold,
-                                   color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                        .tag(month)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .padding(.leading, -25)
-                .padding(.trailing, -25)
-                .clipped()
-                .onChange(of: selectedMonth) { _ in
-                    updateSelectedDay()
-                }
-                
-                Picker(
-                    selection: $selectedDay,
-                    label: Text("")
-                ) {
-                    ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
-                        CustomText("\(day)일",
-                                   fontType: .heading2Bold,
-                                   color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                        .tag(day)
-                    }
-                }
-                .pickerStyle(WheelPickerStyle())
-                .padding(.leading, -25)
-                .clipped()
-            }
-            .padding(.horizontal, 20)
-            
-            Button(action: {
-                withAnimation {
-                    isPresented = false
-                }
-            }) {
-                Text("공부 기한 입력하기")
-            }
-            .buttonStyle(SolidButton())
-            .padding(.horizontal)
+            headerView
+            pickersView
+            actionButton
+        }
+    }
+    
+    private var headerView: some View {
+        CustomText("언제까지 공부할까요?",
+                   fontType: .headline1Medium,
+                   color: Color(.labelNeutral))
+    }
+    
+    private var pickersView: some View {
+        HStack(spacing: 0) {
+            yearPicker
+            monthPicker
+            dayPicker
         }
         .padding()
+    }
+    
+    private var yearPicker: some View {
+        Picker(
+            selection: $selectedYear,
+            label: Text("")
+        ) {
+            ForEach(
+                years.filter {
+                    $0 >= currentYear
+                },
+                id: \.self) { year in
+                    CustomText("\(year)년",
+                               fontType: .heading2Bold,
+                               color: Color(.labelStrong))
+                    .tag(year)
+                }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(.trailing, -25)
+        .clipped()
+        .onChange(
+            of: selectedYear
+        ) { _ in
+            updateSelectedDay()
+        }
+    }
+    
+    private var monthPicker: some View {
+        Picker(
+            selection: $selectedMonth,
+            label: Text("")
+        ) {
+            ForEach(
+                validMonths,
+                id: \.self
+            ) { month in
+                CustomText("\(month)월",
+                           fontType: .heading2Bold,
+                           color: Color(.labelStrong))
+                .tag(month)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(.leading, -25)
+        .padding(.trailing, -25)
+        .clipped()
+        .onChange(
+            of: selectedMonth
+        ) { _ in
+            updateSelectedDay()
+        }
+    }
+    
+    private var dayPicker: some View {
+        Picker(
+            selection: $selectedDay,
+            label: Text("")
+        ) {
+            ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
+                CustomText("\(day)일",
+                           fontType: .heading2Bold,
+                           color: Color(.labelStrong))
+                .tag(day)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(.leading, -25)
+        .clipped()
+    }
+    
+    private var actionButton: some View {
+        Button(action: {
+            withAnimation {
+                isPresented = false
+            }
+        }) {
+            Text("공부 기한 입력하기")
+        }
+        .buttonStyle(SolidButton())
+        .padding(.horizontal)
     }
     
     private var validMonths: [Int] {
@@ -170,6 +193,7 @@ struct StudyDeadlinePickerBottomSheet: View {
             in: .month,
             for: date
            ) {
+            
             return Array(range)
         }
         
