@@ -12,7 +12,6 @@ struct BottomSheet<Content: View>: View {
     @Binding private var isShowing: Bool
     private let height: Int
     private let content: () -> Content
-    @GestureState private var dragPosition = CGFloat.zero
     @State private var currentHeight: CGFloat
     
     init(
@@ -33,7 +32,9 @@ struct BottomSheet<Content: View>: View {
                     .opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        isShowing.toggle()
+                        withAnimation {
+                            isShowing.toggle()
+                        }
                     }
                 
                 VStack {
@@ -44,32 +45,12 @@ struct BottomSheet<Content: View>: View {
                             height: 5
                         )
                         .padding(.top, 8)
-                        .gesture(
-                            DragGesture()
-                                .updating($dragPosition) { value, state, _ in
-                                    state = value.translation.height
-                                    withAnimation(.easeOut(duration: 0.2)) {
-                                        currentHeight = max(CGFloat(height) - value.translation.height, 100)
-                                    }
-                                }
-                                .onEnded { value in
-                                    if value.translation.height > CGFloat(height) * 0.5 {
-                                        withAnimation {
-                                            isShowing = false
-                                        }
-                                    } else {
-                                        withAnimation {
-                                            currentHeight = CGFloat(height)
-                                        }
-                                    }
-                                }
-                        )
                     
                     content()
                     
                     Spacer()
                 }
-                .frame(height: currentHeight)
+                .frame(height: CGFloat(height))
                 .frame(maxWidth: .infinity)
                 .background(Color(.backgroundNormal))
                 .cornerRadius(
@@ -88,14 +69,18 @@ struct BottomSheet<Content: View>: View {
                     y: -4
                 )
                 .transition(.move(edge: .bottom))
-                .onAppear {
-                    currentHeight = CGFloat(height)
-                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity,
+            alignment: .bottom
+        )
         .ignoresSafeArea()
-        .animation(.easeInOut, value: isShowing)
+        .animation(
+            .easeInOut,
+            value: isShowing
+        )
     }
 }
 
