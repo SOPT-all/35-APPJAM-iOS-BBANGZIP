@@ -17,7 +17,7 @@ struct ExamPickerBottomSheet: View {
     private let years = Array(2021...2028)
     private let months = Array(1...12)
     
-    var days: [Int] {
+    private var days: [Int] {
         calculateDaysInMonth(
             year: selectedYear,
             month: selectedMonth

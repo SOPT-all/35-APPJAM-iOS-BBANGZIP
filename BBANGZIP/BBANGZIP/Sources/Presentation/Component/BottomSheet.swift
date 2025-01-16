@@ -39,8 +39,11 @@ struct BottomSheet<Content: View>: View {
                 
                 VStack {
                     RoundedRectangle(cornerRadius: 2.5)
-                        .fill(Color.gray)
-                        .frame(width: 36, height: 5)
+                        .fill(Color(.interactionInactive))
+                        .frame(
+                            width: 36,
+                            height: 5
+                        )
                         .padding(.top, 8)
                         .gesture(
                             DragGesture()
@@ -69,9 +72,22 @@ struct BottomSheet<Content: View>: View {
                 }
                 .frame(height: currentHeight)
                 .frame(maxWidth: .infinity)
-                .background(Color.white)
-                .cornerRadius(20, corners: [.topLeft, .topRight])
-                .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: -4)
+                .background(Color(.backgroundNormal))
+                .cornerRadius(
+                    20,
+                    corners: [
+                        .topLeft,
+                        .topRight
+                    ]
+                )
+                .shadow(
+                    color: Color.black.opacity(
+                        0.2
+                    ),
+                    radius: 4,
+                    x: 0,
+                    y: -4
+                )
                 .transition(.move(edge: .bottom))
                 .onAppear {
                     currentHeight = CGFloat(height)
@@ -90,13 +106,25 @@ extension View {
         height: Int,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
-        BottomSheet(isShowing: isShowing, height: height, content: content)
+        BottomSheet(
+            isShowing: isShowing,
+            height: height,
+            content: content
+        )
     }
 }
 
 extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorners(radius: radius, corners: corners))
+    func cornerRadius(
+        _ radius: CGFloat,
+        corners: UIRectCorner
+    ) -> some View {
+        clipShape(
+            RoundedCorners(
+                radius: radius,
+                corners: corners
+            )
+        )
     }
 }
 
@@ -113,7 +141,10 @@ struct RoundedCorners: Shape {
         let path = UIBezierPath(
             roundedRect: rect,
             byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
+            cornerRadii: CGSize(
+                width: radius,
+                height: radius
+            )
         )
         return Path(path.cgPath)
     }
