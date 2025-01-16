@@ -37,10 +37,30 @@ enum BottomSheetType: Int {
                     from: Date()
                 )
             )
-            // TODO: 다른 케이스 여기에 추가
+        case .studyFinishDate:
+            StudyDeadlinePickerBottomSheet(
+                isPresented: isPresented,
+                selectedYear: Calendar.current.component(
+                    .year,
+                    from: Date()
+                ),
+                selectedMonth: Calendar.current.component(
+                    .month,
+                    from: Date()
+                ),
+                selectedDay: Calendar.current.component(
+                    .day,
+                    from: Date()
+                )
+            )
+        case .changeSemester:
+            SemesterPickerBottomSheet(
+                isPresented: isPresented,
+                selectedYear: .constant(2025),
+                selectedSemester: .constant("1학기")
+            )
         default:
             Text("아직 구현되지 않은 뷰입니다.")
         }
     }
 }
-
