@@ -12,7 +12,10 @@ struct SingleProfile: View {
     private let size: SingleProfileSize
     private let outlined: Bool
     
-    init(size: SingleProfileSize, outlined: Bool) {
+    init(
+        size: SingleProfileSize,
+        outlined: Bool
+    ) {
         self.size = size
         self.outlined = outlined
     }
@@ -28,7 +31,10 @@ struct SingleProfile: View {
             .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(outlined ? Color(.lineNormal) : Color.clear, lineWidth: 1)
+                    .stroke(
+                        outlined ? Color(.lineNormal) : Color.clear,
+                        lineWidth: 1
+                    )
             )
     }
 }
