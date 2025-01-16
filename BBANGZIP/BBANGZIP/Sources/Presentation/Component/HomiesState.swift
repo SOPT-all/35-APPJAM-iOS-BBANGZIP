@@ -12,4 +12,22 @@ enum HomiesState {
     case basic
     case checked
     case holding
+    
+    var backgroundColor: Color {
+        switch self {
+        case .basic:
+            return Color(.backgroundNormal)
+        case .checked, .holding:
+            return Color(.backgroundAlternative)
+        }
+    }
+
+    var borderColor: Color {
+        switch self {
+        case .checked:
+            return Color(.lineStrong)
+        default:
+            return Color.clear
+        }
+    }
 }

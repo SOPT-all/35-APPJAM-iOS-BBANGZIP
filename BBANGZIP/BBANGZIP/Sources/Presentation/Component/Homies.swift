@@ -23,28 +23,46 @@ struct Homies: View {
         self.name = name
     }
     
+    private var friendName: some View {
+        HStack(spacing: 3.2) {
+            CustomText(
+                name,
+                fontType: .headline1Bold,
+                color: Color(
+                    .labelNormal
+                )
+            )
+            
+            CustomText(
+                "사장님",
+                fontType: .caption2Bold,
+                color: Color(
+                    .labelAlternative
+                )
+            )
+        }
+    }
+    
+    private var backgroundView: some View {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(state.backgroundColor)
+                .shadow(
+                    color: Color(.staticBlack).opacity(0.25),
+                    radius: 4,
+                    y: 4
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(state.borderColor, lineWidth: 3)
+                )
+        }
+    
     var body: some View {
         HStack(spacing: 0) {
             profile
                 .padding(.trailing, 16)
             
-            HStack(spacing: 3.2) {
-                CustomText(
-                    name,
-                    fontType: .headline1Bold,
-                    color: Color(
-                        .labelNormal
-                    )
-                )
-                
-                CustomText(
-                    "사장님",
-                    fontType: .caption2Bold,
-                    color: Color(
-                        .labelAlternative
-                    )
-                )
-            }
+            friendName
             
             Spacer()
             
@@ -53,20 +71,7 @@ struct Homies: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.all, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(state == HomiesState.basic ? Color(.backgroundNormal)
-                      : Color(.backgroundAlternative))
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    y: 4
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(state == HomiesState.checked ? Color(.lineStrong) : Color.clear, lineWidth: 3)
-                )
-        )
+        .background(backgroundView)
     }
 }
 
