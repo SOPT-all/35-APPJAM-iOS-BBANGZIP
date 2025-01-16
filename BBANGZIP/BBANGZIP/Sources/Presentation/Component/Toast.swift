@@ -12,7 +12,7 @@ struct Toast: Equatable {
     var firstLineText: String
     var secondLineText: String?
     var type: ToastType
-    var startFrom: CGFloat
+    var bottomPadding: CGFloat
     
     init ( _ firstLineText: String,
            secondLineText: String? = nil,
@@ -22,7 +22,7 @@ struct Toast: Equatable {
         self.firstLineText = firstLineText
         self.secondLineText = secondLineText
         self.type = type
-        self.startFrom = startFrom
+        self.bottomPadding = startFrom
     }
 }
 
