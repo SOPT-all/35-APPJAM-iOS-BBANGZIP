@@ -13,19 +13,22 @@ struct StudyCard: View {
     @State var isCompleted = false
     @State var isSelected = false
     @Binding var modifiable: Bool
+    @State var type: StudyCardType = .Manage
     
     var body: some View {
         Button {
             modifiable ? isSelected.toggle() : isCompleted.toggle()
         } label: {
-            HStack {
+            HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    BbangText(
-                        "\(studyData.subjectName) / \(studyData.examName)",
-                        fontType: .caption2,
-                        color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
-                    )
-                    .padding(.leading, 4)
+                    if type == .Todo {
+                        BbangText(
+                            "\(studyData.subjectName) / \(studyData.examName)",
+                            fontType: .caption2,
+                            color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
+                        )
+                        .padding(.leading, 4)
+                    }
                     
                     BbangText(
                         studyData.studyContents,
@@ -58,7 +61,6 @@ struct StudyCard: View {
                 Spacer()
                 
                 CheckBox(isCompleted: isCompleted)
-                    .padding(.bottom, 50)
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 16)
@@ -67,3 +69,4 @@ struct StudyCard: View {
         .frame(maxWidth: .infinity)
     }
 }
+
