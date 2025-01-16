@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ToastModifier: ViewModifier {
     @Binding var toast: Toast?
-    @State private var workItem: DispatchWorkItem?
+    @State private var task: Task<Void, Never>?
     
     func body(content: Content) -> some View {
         content
@@ -39,14 +39,12 @@ struct ToastModifier: ViewModifier {
     
     private func showToast() {
         guard toast != nil else { return }
-                
-        workItem?.cancel()
-        workItem = DispatchWorkItem {
-            dismissToast()
-        }
         
-        if let workItem = workItem {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: workItem)
+        task?.cancel()
+        
+        task = Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            dismissToast()
         }
     }
     
@@ -55,8 +53,8 @@ struct ToastModifier: ViewModifier {
             toast = nil
         }
         
-        workItem?.cancel()
-        workItem = nil
+        task?.cancel()
+        task = nil
     }
     
 }
