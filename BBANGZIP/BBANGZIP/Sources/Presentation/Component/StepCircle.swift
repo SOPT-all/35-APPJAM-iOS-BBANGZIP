@@ -20,9 +20,9 @@ struct StepCircle: View {
     var body: some View {
         Circle()
             .overlay {
-                BbangText(
+                CustomText(
                     "\(step.rawValue)",
-                    fontType: .caption2,
+                    fontType: .caption2Bold,
                     color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
                 )
             }
