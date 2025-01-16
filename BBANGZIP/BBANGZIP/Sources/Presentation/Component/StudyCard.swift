@@ -11,20 +11,14 @@ import SwiftUI
 struct StudyCard: View {
     @State var isCompleted = false
     @State var isSelected = false
-    @Binding var state: ButtonState
+    @Binding var modifiable: Bool
     
     var body: some View {
         Button {
-            switch state {
-            case .base:
-                isCompleted.toggle()
-            case .selectable:
-                isSelected.toggle()
-            }
+            modifiable ? isSelected.toggle() : isCompleted.toggle()
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    
                     BbangText(
                         "과목이름 / 중간고사",
                         fontType: .caption2,
@@ -68,7 +62,7 @@ struct StudyCard: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 16)
         }
-        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected, state: state))
+        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected, modifiable: $modifiable))
         .frame(maxWidth: .infinity)
     }
 }
