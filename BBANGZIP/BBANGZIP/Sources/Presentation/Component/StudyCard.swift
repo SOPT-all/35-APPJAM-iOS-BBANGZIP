@@ -22,24 +22,24 @@ struct StudyCard: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
                     if type == .Todo {
-                        BbangText(
+                        CustomText(
                             "\(studyData.subjectName) / \(studyData.examName)",
-                            fontType: .caption2,
+                            fontType: .caption2Medium,
                             color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
                         )
                         .padding(.leading, 4)
                     }
                     
-                    BbangText(
+                    CustomText(
                         studyData.studyContents,
-                        fontType: .caption1,
+                        fontType: .caption1Medium,
                         color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
                     )
                     .padding(.leading, 4)
                     
-                    BbangText(
+                    CustomText(
                         "\(studyData.startPage)p - \(studyData.finishPage)",
-                        fontType: .label1,
+                        fontType: .label1Bold,
                         color: Color(BBANGZIPAsset.Assets.labelNormal.color)
                     )
                     .padding(.top, 2)
@@ -48,9 +48,9 @@ struct StudyCard: View {
                     HStack(spacing: 8) {
                         Chip(remainingDays: studyData.remainingDays)
                         
-                        BbangText (
+                        CustomText (
                             "\(studyData.deadline) 까지",
-                            fontType: .caption1,
+                            fontType: .caption1Bold,
                             color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
                         )
                     }

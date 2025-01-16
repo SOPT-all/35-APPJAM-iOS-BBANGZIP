@@ -16,9 +16,9 @@ struct Chip: View {
     }
     
     var body: some View {
-        BbangText (
+        CustomText (
             "D\(remainingDays)",
-            fontType: .caption1,
+            fontType: .caption1Medium,
             color: Color(BBANGZIPAsset.Assets.staticWhite.color)
         )
         .padding(.vertical, 2)
