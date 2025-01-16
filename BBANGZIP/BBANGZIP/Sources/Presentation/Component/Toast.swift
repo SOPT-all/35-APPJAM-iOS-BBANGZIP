@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct Toast: Equatable {
-    var firstLineText: String
-    var secondLineText: String?
-    var type: ToastType
-    var bottomPadding: CGFloat
+    let firstLineText: String
+    let secondLineText: String?
+    let type: ToastType
+    let bottomPadding: CGFloat
     
     init ( _ firstLineText: String,
            secondLineText: String? = nil,

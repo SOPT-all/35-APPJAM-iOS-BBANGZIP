@@ -27,10 +27,10 @@ struct ToastModifier: ViewModifier {
                         .transition(.opacity)
                     }
                 }
-                    .animation(
-                        .spring(),
-                        value: toast
-                    )
+                .animation(
+                    .spring,
+                    value: toast
+                )
             )
             .onChange(of: toast) { value in
                 showToast()
@@ -39,9 +39,7 @@ struct ToastModifier: ViewModifier {
     
     private func showToast() {
         guard toast != nil else { return }
-        
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        
+                
         workItem?.cancel()
         workItem = DispatchWorkItem {
             dismissToast()
@@ -60,7 +58,7 @@ struct ToastModifier: ViewModifier {
         workItem?.cancel()
         workItem = nil
     }
-
+    
 }
 
 extension View {
