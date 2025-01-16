@@ -8,31 +8,28 @@
 
 import SwiftUI
 
-enum Process {
-    case Select
-    case Check
-}
-
 struct StudyCard: View {
-    private let process: Process
     @State var isCompleted = false
     @State var isSelected = false
+    let state: ButtonState
     
-    init(process: Process) {
-        self.process = process
+    init(state: ButtonState) {
+        self.state = state
     }
     
     var body: some View {
         Button {
-            switch process {
-            case .Select:
+            switch state {
+            case .base: break
+            case .selectable:
                 isSelected.toggle()
-            case .Check:
+            case .isCompleted:
                 isCompleted.toggle()
             }
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
+                    
                     BbangText(
                         "과목이름 / 중간고사",
                         fontType: .caption2,
@@ -56,15 +53,7 @@ struct StudyCard: View {
                     .padding(.leading, 4)
                     
                     HStack(spacing: 8) {
-                        BbangText (
-                            "D-14",
-                            fontType: .caption1,
-                            color: Color(BBANGZIPAsset.Assets.staticWhite.color)
-                        )
-                        .padding(.vertical, 2)
-                        .padding(.horizontal, 12)
-                        .background(Capsule()
-                            .fill(Color(BBANGZIPAsset.Assets.labelAlternative.color)))
+                        Chip()
                         
                         BbangText (
                             "2025년 11월 5일 까지",
@@ -84,17 +73,22 @@ struct StudyCard: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 16)
         }
-        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected))
+        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected, state: state))
         .frame(maxWidth: .infinity)
     }
 }
 
 #Preview {
     VStack {
-        StudyCard(process: .Select)
+        let state: ButtonState
+        
+        StudyCard(state: .base)
             .padding(.horizontal, 20)
         
-        StudyCard(process: .Check)
+        StudyCard(state: .isCompleted)
+            .padding(.horizontal, 20)
+        
+        StudyCard(state: .selectable)
             .padding(.horizontal, 20)
         
         Spacer()
