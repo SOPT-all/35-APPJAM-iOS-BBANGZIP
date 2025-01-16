@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct StudyCard: View {
+    private let studyData = SampleStudyData.sampleStudy
     @State var isCompleted = false
     @State var isSelected = false
     @Binding var modifiable: Bool
@@ -20,21 +21,21 @@ struct StudyCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     BbangText(
-                        "과목이름 / 중간고사",
+                        "\(studyData.subjectName) / \(studyData.examName)",
                         fontType: .caption2,
                         color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
                     )
                     .padding(.leading, 4)
                     
                     BbangText(
-                        "경제통계학",
+                        studyData.studyContents,
                         fontType: .caption1,
                         color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
                     )
                     .padding(.leading, 4)
                     
                     BbangText(
-                        "540p - 540p",
+                        "\(studyData.startPage)p - \(studyData.finishPage)",
                         fontType: .label1,
                         color: Color(BBANGZIPAsset.Assets.labelNormal.color)
                     )
@@ -42,10 +43,10 @@ struct StudyCard: View {
                     .padding(.leading, 4)
                     
                     HStack(spacing: 8) {
-                        Chip()
+                        Chip(remainingDays: studyData.remainingDays)
                         
                         BbangText (
-                            "2025년 11월 5일 까지",
+                            "\(studyData.deadline) 까지",
                             fontType: .caption1,
                             color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
                         )

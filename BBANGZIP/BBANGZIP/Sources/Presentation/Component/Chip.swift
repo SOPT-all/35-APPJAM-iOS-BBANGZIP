@@ -9,9 +9,15 @@
 import SwiftUI
 
 struct Chip: View {
+    private let remainingDays: Int
+    
+    init(remainingDays: Int) {
+        self.remainingDays = remainingDays
+    }
+    
     var body: some View {
         BbangText (
-            "D-14",
+            "D\(remainingDays)",
             fontType: .caption1,
             color: Color(BBANGZIPAsset.Assets.staticWhite.color)
         )
@@ -20,8 +26,4 @@ struct Chip: View {
         .background(Capsule()
             .fill(Color(BBANGZIPAsset.Assets.labelAlternative.color)))
     }
-}
-
-#Preview {
-    Chip()
 }
