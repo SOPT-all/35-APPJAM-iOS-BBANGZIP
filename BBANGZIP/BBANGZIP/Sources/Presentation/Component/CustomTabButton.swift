@@ -12,6 +12,14 @@ struct CustomTabButton: View {
     private(set) var tab: Tab
     @Binding var selected: Tab
     
+    init(
+        tab: Tab,
+        selected: Binding<Tab>
+    ) {
+        self.tab = tab
+        self._selected = selected
+    }
+    
     var body: some View {
         Button {
             selected = tab

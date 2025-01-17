@@ -11,6 +11,10 @@ import SwiftUI
 struct CustomTabBar: View {
     @Binding var selected: Tab
     
+    init(selected: Binding<Tab>) {
+        self._selected = selected
+    }
+    
     var body: some View {
         HStack {
             CustomTabButton(
