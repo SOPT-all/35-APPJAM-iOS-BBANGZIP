@@ -15,12 +15,16 @@ struct WelcomeView: View {
                 CustomText(
                     "제 과제 빵점에 오신 것을\n환영합니다!",
                     fontType: .title2Bold,
-                    color: Color(
-                        .labelNormal
-                    )
+                    color: Color(.labelNormal)
                 )
-                .padding(.top, 121)
-                .padding(.bottom, 36)
+                .padding(
+                    .top,
+                    121
+                )
+                .padding(
+                    .bottom,
+                    36
+                )
                 
                 Spacer()
             }
@@ -32,7 +36,10 @@ struct WelcomeView: View {
             }
             .buttonStyle(SolidIconButton(imageName: "chevronRightThickSmall"))
         }
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
         
     }
 }
