@@ -33,8 +33,11 @@ struct ProgressBar: View {
                     complete: category == .Third
                 )
             }
-            .padding(.bottom, 8)
+            .padding(
+                .bottom,
+                8
+            )
         }
-        .progressViewStyle(LinearProgressViewStyle(tint: Color(BBANGZIPAsset.Assets.statusPositive.color)))
+        .progressViewStyle(LinearProgressViewStyle(tint: Color(.statusPositive)))
     }
 }

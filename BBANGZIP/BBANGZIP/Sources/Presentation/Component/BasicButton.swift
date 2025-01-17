@@ -12,12 +12,15 @@ struct OutlinedMediumButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body2Bold)
-            .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
-            .padding(.vertical, 9)
+            .foregroundStyle(Color(.primaryNormal))
+            .padding(
+                .vertical,
+                9
+            )
             .frame(maxWidth: .infinity)
             .cornerRadius(16)
             .overlay(RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(BBANGZIPAsset.Assets.lineStrong.color), lineWidth: 1)
+                .stroke(Color(.lineStrong), lineWidth: 1)
             )
     }
 }
@@ -26,12 +29,15 @@ struct OutlinedLargeButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body1Bold)
-            .foregroundStyle(Color(BBANGZIPAsset.Assets.primaryNormal.color))
-            .padding(.vertical, 16)
+            .foregroundStyle(Color(.primaryNormal))
+            .padding(
+                .vertical,
+                16
+            )
             .frame(maxWidth: .infinity)
             .cornerRadius(24)
             .overlay(RoundedRectangle(cornerRadius: 24)
-                .stroke(Color(BBANGZIPAsset.Assets.lineStrong.color), lineWidth: 1)
+                .stroke(Color(.lineStrong), lineWidth: 1)
             )
     }
 }
@@ -40,10 +46,13 @@ struct SolidButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body1Bold)
-            .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
-            .padding(.vertical, 16)
+            .foregroundStyle(Color(.staticWhite))
+            .padding(
+                .vertical,
+                16
+            )
             .frame(maxWidth: .infinity)
-            .background(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+            .background(Color(.primaryNormal))
             .cornerRadius(24)
     }
 }
@@ -61,17 +70,23 @@ struct SolidIconButton: ButtonStyle {
             
             configuration.label
                 .applyFont(font: .body1Bold)
-                .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
-                .padding(.vertical, 16)
+                .foregroundStyle(Color(.staticWhite))
+                .padding(
+                    .vertical,
+                    16
+                )
             
             Image(systemName: systemName)
-                .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
-                .padding(.vertical, 18)
+                .foregroundStyle(Color(.staticWhite))
+                .padding(
+                    .vertical,
+                    18
+                )
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .background(Color(BBANGZIPAsset.Assets.primaryNormal.color))
+        .background(Color(.primaryNormal))
         .cornerRadius(24)
     }
 }

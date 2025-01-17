@@ -18,10 +18,10 @@ struct CheckBox: View {
     var body: some View {
         Image(.checkIcon)
             .renderingMode(.template)
-            .foregroundStyle(isCompleted ? BBANGZIPAsset.Assets.staticWhite.swiftUIColor : .clear)
+            .foregroundStyle(isCompleted ? Color(.staticWhite) : .clear)
             .padding(2)
             .background(RoundedRectangle(cornerRadius: 12)
-                .fill(isCompleted ? BBANGZIPAsset.Assets.secondaryNormal.swiftUIColor : BBANGZIPAsset.Assets.fillStrong.swiftUIColor))
+                .fill(isCompleted ? Color(.secondaryNormal) : Color(.fillStrong)))
     }
 }
 

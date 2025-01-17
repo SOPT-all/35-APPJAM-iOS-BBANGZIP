@@ -39,8 +39,14 @@ struct StudyCard: View {
                 
                 CheckBox(isCompleted: modifiable ? false : isCompleted)
             }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 16)
+            .padding(
+                .vertical,
+                10
+            )
+            .padding(
+                .horizontal,
+                16
+            )
         }
         .buttonStyle(
             StudyCardButtonStyle(
@@ -68,7 +74,10 @@ struct StudyCard: View {
                     fontType: .caption2Medium,
                     color: Color(.labelAssistive)
                 )
-                .padding(.leading, 4)
+                .padding(
+                    .leading,
+                    4
+                )
             }
             
             CustomText(
@@ -76,15 +85,24 @@ struct StudyCard: View {
                 fontType: .caption1Medium,
                 color: Color(.labelAlternative)
             )
-            .padding(.leading, 4)
+            .padding(
+                .leading,
+                4
+            )
             
             CustomText(
                 "\(studyData.startPage)p - \(studyData.finishPage)",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )
-            .padding(.top, 2)
-            .padding(.leading, 4)
+            .padding(
+                .top,
+                2
+            )
+            .padding(
+                .leading,
+                4
+            )
             
             HStack(spacing: 8) {
                 Chip(remainingDays: studyData.remainingDays)
@@ -95,7 +113,10 @@ struct StudyCard: View {
                     color: Color(.labelAlternative)
                 )
             }
-            .padding(.top, 4)
+            .padding(
+                .top,
+                4
+            )
         }
     }
 }
