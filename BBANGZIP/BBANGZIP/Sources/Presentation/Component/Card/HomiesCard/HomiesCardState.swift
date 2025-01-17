@@ -1,5 +1,5 @@
 //
-//  HomiesState.swift
+//  HomiesCardState.swift
 //  BBANGZIP
 //
 //  Created by 김송희 on 1/16/25.
@@ -8,23 +8,28 @@
 
 import SwiftUI
 
-enum HomiesState {
-    case basic
-    case checked
-    case holding
+protocol CardState {
+    var backgroundColor: Color { get }
+    var borderColor: Color { get }
+}
+
+enum HomiesCardState: CardState {
+    case cardDefault
+    case selected
+    case selectable
     
     var backgroundColor: Color {
         switch self {
-        case .basic:
+        case .cardDefault:
             Color(.backgroundNormal)
-        case .checked, .holding:
+        case .selected, .selectable:
             Color(.backgroundAlternative)
         }
     }
 
     var borderColor: Color {
         switch self {
-        case .checked:
+        case .selected:
             Color(.lineStrong)
         default:
             Color.clear
