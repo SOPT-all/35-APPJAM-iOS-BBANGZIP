@@ -9,11 +9,14 @@
 import SwiftUI
 
 struct StudyManageView: View {
+    @State var isShowingBottomSheet = false
+    @State private var selectedBottomSheetType: BottomSheetType? = .changeSemester
+    
     var body: some View {
         VStack {
             HStack {
                 Button {
-                    
+                    isShowingBottomSheet = true
                 } label: {
                     HStack(spacing: 4) {
                         CustomText(
@@ -58,10 +61,6 @@ struct StudyManageView: View {
                         "어떤 과목을 공부해 볼까요?",
                         fontType: .headline2Bold,
                         color: Color(.labelAlternative)
-                    )
-                    .padding(
-                        .leading,
-                        8
                     )
                     
                     Spacer()
@@ -147,16 +146,27 @@ struct StudyManageView: View {
             )
             .padding(
                 .leading,
-                21
+                20
             )
             .padding(
                 .trailing,
-                18
+                20
             )
             
             Spacer()
             
         }
+        .overlay(
+                bottomSheet(
+                    isShowing: $isShowingBottomSheet,
+                    height: 453
+                ) {
+                    if let type = selectedBottomSheetType {
+                        type.contentView(isPresented: $isShowingBottomSheet)
+                    }
+                }
+            
+        )
     }
 }
 
