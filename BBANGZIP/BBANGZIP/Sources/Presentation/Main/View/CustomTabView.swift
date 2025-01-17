@@ -130,14 +130,3 @@ struct CustomTabView: View {
 #Preview {
     CustomTabView()
 }
-
-//.tabItem {
-//    Image(.subjectManage)
-//        .renderingMode(.template)
-//        .foregroundStyle(Color(.labelAssistive))
-//    CustomText(
-//        "과목 관리",
-//        fontType: .caption1Bold,
-//        color: Color(.labelAssistive)
-//    )
-//}
