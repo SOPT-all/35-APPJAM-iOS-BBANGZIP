@@ -49,10 +49,10 @@ struct SolidButton: ButtonStyle {
 }
 
 struct SolidIconButton: ButtonStyle {
-    private let systemName: String
+    private let imageName: String
     
-    init(systemName: String) {
-        self.systemName = systemName
+    init(imageName: String) {
+        self.imageName = imageName
     }
     
     func makeBody(configuration: Configuration) -> some View {
@@ -64,7 +64,8 @@ struct SolidIconButton: ButtonStyle {
                 .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
                 .padding(.vertical, 16)
             
-            Image(systemName: systemName)
+            Image(imageName)
+                .renderingMode(.template)
                 .foregroundStyle(Color(BBANGZIPAsset.Assets.staticWhite.color))
                 .padding(.vertical, 18)
             
