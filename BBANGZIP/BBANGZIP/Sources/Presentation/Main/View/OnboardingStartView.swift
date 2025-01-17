@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct WelcomeView: View {
+struct OnboardingStartView: View {
     var body: some View {
         VStack {
             HStack {
@@ -45,5 +45,5 @@ struct WelcomeView: View {
 }
 
 #Preview {
-    WelcomeView()
+    OnboardingStartView()
 }
