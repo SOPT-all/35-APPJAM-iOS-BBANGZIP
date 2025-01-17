@@ -25,7 +25,7 @@ struct PushIcon: View {
                 CustomText(
                     "\(number)",
                     fontType: .caption2Bold,
-                    color:(BBANGZIPAsset.Assets.staticWhite.swiftUIColor)
+                    color: Color(.staticWhite)
                 )
             )
     }
