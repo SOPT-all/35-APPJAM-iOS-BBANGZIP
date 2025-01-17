@@ -12,9 +12,18 @@ struct TestView: View {
     @State private var isBottomSheetPresented = false
     @State private var bottomSheetType: BottomSheetType? = .examDate
     
-    @State private var selectedYear = Calendar.current.component(.year, from: Date())
-    @State private var selectedMonth = Calendar.current.component(.month, from: Date())
-    @State private var selectedDay = Calendar.current.component(.day, from: Date())
+    @State private var selectedYear = Calendar.current.component(
+        .year,
+        from: Date()
+    )
+    @State private var selectedMonth = Calendar.current.component(
+        .month,
+        from: Date()
+    )
+    @State private var selectedDay = Calendar.current.component(
+        .day,
+        from: Date()
+    )
     @State private var selectedSemester = "1학기"
     
     var body: some View {

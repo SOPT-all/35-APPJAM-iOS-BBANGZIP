@@ -21,9 +21,18 @@ enum BottomSheetType: Int {
     @MainActor @ViewBuilder
     func contentView(isPresented: Binding<Bool>) -> some View {
         let currentDate = Date()
-        let currentYear = Calendar.current.component(.year, from: currentDate)
-        let currentMonth = Calendar.current.component(.month, from: currentDate)
-        let currentDay = Calendar.current.component(.day, from: currentDate)
+        let currentYear = Calendar.current.component(
+            .year,
+            from: currentDate
+        )
+        let currentMonth = Calendar.current.component(
+            .month,
+            from: currentDate
+        )
+        let currentDay = Calendar.current.component(
+            .day,
+            from: currentDate
+        )
         
         switch self {
         case .examDate:

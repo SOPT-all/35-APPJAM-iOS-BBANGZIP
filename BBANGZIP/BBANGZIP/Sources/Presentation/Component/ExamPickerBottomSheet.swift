@@ -69,7 +69,10 @@ struct ExamPickerBottomSheet: View {
             monthPicker
             dayPicker
         }
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
     }
     
     private var yearPicker: some View {
@@ -77,13 +80,14 @@ struct ExamPickerBottomSheet: View {
             selection: $selectedYear,
             label: Text("")
         ) {
-            ForEach(years.filter {$0 >= currentYear},id: \.self) { year in
+            ForEach(
+                years.filter { $0 >= currentYear },
+                id: \.self
+            ) { year in
                 CustomText(
                     "\(year)년",
                     fontType: .heading2Bold,
-                    color: Color(
-                        .labelStrong
-                    )
+                    color: Color(.labelStrong)
                 )
                 .tag(year)
             }
@@ -114,8 +118,14 @@ struct ExamPickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.leading, -25)
-        .padding(.trailing, -25)
+        .padding(
+            .leading,
+            -25
+        )
+        .padding(
+            .trailing,
+            -25
+        )
         .clipped()
         .onChange(of: selectedMonth) { _ in
             updateSelectedDay()
@@ -131,9 +141,7 @@ struct ExamPickerBottomSheet: View {
                 calculateDaysInMonth(
                     year: selectedYear,
                     month: selectedMonth
-                ).filter {
-                    isValidDay($0)
-                },
+                ).filter { isValidDay($0) },
                 id: \.self
             ) { day in
                 CustomText(
