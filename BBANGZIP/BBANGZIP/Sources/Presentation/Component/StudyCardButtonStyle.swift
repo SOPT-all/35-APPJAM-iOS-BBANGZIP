@@ -22,7 +22,8 @@ struct StudyCardButtonStyle: ButtonStyle {
             .label
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(backgroundColor(isPressed: configuration.isPressed)))
+                    .fill(backgroundColor(isPressed: configuration.isPressed))
+                    .shadow(color: Color(.staticBlack).opacity(0.25), radius: 4, y: 4))
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(borderColor(), lineWidth: borderWidth()))
