@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct OpenCongratsView: View {
+struct OnboardingCompleteView: View {
     var body: some View {
         VStack {
             HStack {
@@ -49,7 +49,7 @@ struct OpenCongratsView: View {
             Button("빵점 탈출하러 가기") {
                 // TODO: 버튼 터치 시 화면 전환 로직 추가 필요
             }
-            .buttonStyle(SolidIconButton(imageName: "chevronRightThickSmall"))
+            .buttonStyle(SolidIconButton(buttonImage: Image(.chevronRightThickSmall)))
             .padding(
                 .horizontal,
                 4
@@ -63,5 +63,5 @@ struct OpenCongratsView: View {
 }
 
 #Preview {
-    OpenCongratsView()
+    OnboardingCompleteView()
 }
