@@ -23,19 +23,19 @@ struct StudyCardButtonStyle: ButtonStyle {
     
     private func backgroundColor(isPressed: Bool) -> Color  {
         if modifiable {
-            isPressed ? BBANGZIPAsset.Assets.labelNormal.swiftUIColor.opacity(0.12) : BBANGZIPAsset.Assets.backgroundAlternative.swiftUIColor
+            isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundAlternative)
         }
         else {
-            isPressed ? BBANGZIPAsset.Assets.labelNormal.swiftUIColor.opacity(0.12) : BBANGZIPAsset.Assets.backgroundNormal.swiftUIColor
+            isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundNormal)
         }
     }
     
     private func borderColor() -> Color {
         if modifiable {
-            isSelected ? BBANGZIPAsset.Assets.lineStrong.swiftUIColor : BBANGZIPAsset.Assets.lineAlternative.swiftUIColor
+            isSelected ? Color(.lineStrong) : Color(.lineAlternative)
         }
         else {
-            BBANGZIPAsset.Assets.lineAlternative.swiftUIColor
+            Color(.lineAlternative)
         }
     }
     

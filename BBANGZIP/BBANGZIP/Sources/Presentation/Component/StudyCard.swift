@@ -25,7 +25,7 @@ struct StudyCard: View {
                         CustomText(
                             "\(studyData.subjectName) / \(studyData.examName)",
                             fontType: .caption2Medium,
-                            color: Color(BBANGZIPAsset.Assets.labelAssistive.color)
+                            color: Color(.labelAssistive)
                         )
                         .padding(.leading, 4)
                     }
@@ -33,14 +33,14 @@ struct StudyCard: View {
                     CustomText(
                         studyData.studyContents,
                         fontType: .caption1Medium,
-                        color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
+                        color: Color(.labelAlternative)
                     )
                     .padding(.leading, 4)
                     
                     CustomText(
                         "\(studyData.startPage)p - \(studyData.finishPage)",
                         fontType: .label1Bold,
-                        color: Color(BBANGZIPAsset.Assets.labelNormal.color)
+                        color: Color(.labelNormal)
                     )
                     .padding(.top, 2)
                     .padding(.leading, 4)
@@ -51,7 +51,7 @@ struct StudyCard: View {
                         CustomText (
                             "\(studyData.deadline) 까지",
                             fontType: .caption1Bold,
-                            color: Color(BBANGZIPAsset.Assets.labelAlternative.color)
+                            color: Color(.labelAlternative)
                         )
                     }
                     .padding(.top, 4)
@@ -65,7 +65,12 @@ struct StudyCard: View {
             .padding(.vertical, 10)
             .padding(.horizontal, 16)
         }
-        .buttonStyle(StudyCardButtonStyle(isSelected: $isSelected, modifiable: $modifiable))
+        .buttonStyle(
+            StudyCardButtonStyle(
+                isSelected: $isSelected,
+                modifiable: $modifiable
+            )
+        )
         .frame(maxWidth: .infinity)
     }
 }

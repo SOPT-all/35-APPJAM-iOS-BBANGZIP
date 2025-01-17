@@ -19,11 +19,11 @@ struct Chip: View {
         CustomText (
             "D\(remainingDays)",
             fontType: .caption1Medium,
-            color: Color(BBANGZIPAsset.Assets.staticWhite.color)
+            color: Color(.staticWhite)
         )
         .padding(.vertical, 2)
         .padding(.horizontal, 12)
         .background(Capsule()
-            .fill(Color(BBANGZIPAsset.Assets.labelAlternative.color)))
+            .fill(Color(.labelAlternative)))
     }
 }
