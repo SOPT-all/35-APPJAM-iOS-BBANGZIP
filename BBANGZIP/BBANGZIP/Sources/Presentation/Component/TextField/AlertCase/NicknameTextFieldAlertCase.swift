@@ -1,5 +1,5 @@
 //
-//  TextFieldAnnounce.swift
+//  NicknameTextFieldAlertCase.swift
 //  BBANGZIP
 //
 //  Created by 조성민 on 1/17/25.

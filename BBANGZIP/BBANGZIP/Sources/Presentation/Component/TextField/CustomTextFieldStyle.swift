@@ -57,6 +57,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                 }
             }
             .frame(height: 56)
+            
             if let alertText = alertCase?.alertText {
                 CustomText(
                     alertText,
