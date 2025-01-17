@@ -12,7 +12,10 @@ struct StudyCardButtonStyle: ButtonStyle {
     private let isSelected: Bool
     private let modifiable: Bool
     
-    init(isSelected: Bool, modifiable: Bool) {
+    init(
+        isSelected: Bool,
+        modifiable: Bool
+    ) {
         self.isSelected = isSelected
         self.modifiable = modifiable
     }
@@ -23,33 +26,35 @@ struct StudyCardButtonStyle: ButtonStyle {
             .background(
                 RoundedRectangle(cornerRadius: 24)
                     .fill(backgroundColor(isPressed: configuration.isPressed))
-                    .shadow(color: Color(.staticBlack).opacity(0.25), radius: 4, y: 4))
+                    .shadow(
+                        color: Color(.staticBlack).opacity(0.25),
+                        radius: 4,
+                        y: 4
+                    )
+            )
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
-                    .stroke(borderColor(), lineWidth: borderWidth()))
+                    .stroke(
+                        borderColor(),
+                        lineWidth: borderWidth()
+                    )
+            )
     }
     
     private func backgroundColor(isPressed: Bool) -> Color  {
-        if modifiable {
-            isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundAlternative)
-        } else {
-            isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundNormal)
-        }
+        let isAblePressedColor = isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundAlternative)
+        let isDisablePressedColor = isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundNormal)
+        
+        return modifiable ? isAblePressedColor : isDisablePressedColor
     }
     
     private func borderColor() -> Color {
-        if modifiable {
-            isSelected ? Color(.lineStrong) : Color(.lineAlternative)
-        } else {
-            Color(.lineAlternative)
-        }
+        let isSelectedColor = isSelected ? Color(.lineStrong) : Color(.lineAlternative)
+        
+        return modifiable ? isSelectedColor : Color(.lineAlternative)
     }
     
     private func borderWidth() -> CGFloat {
-        if modifiable {
-            3
-        } else {
-            1
-        }
+        modifiable ? 1 : 3
     }
 }

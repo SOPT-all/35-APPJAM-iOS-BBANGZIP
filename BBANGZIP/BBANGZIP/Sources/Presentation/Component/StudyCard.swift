@@ -52,7 +52,10 @@ struct StudyCard: View {
     }
     
     var StudyDataArea: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(
+            alignment: .leading,
+            spacing: 2
+        ) {
             if !isManage {
                 CustomText(
                     "\(studyData.subjectName) / \(studyData.examName)",
