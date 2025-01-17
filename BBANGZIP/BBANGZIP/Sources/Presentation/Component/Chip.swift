@@ -23,7 +23,8 @@ struct Chip: View {
         )
         .padding(.vertical, 2)
         .padding(.horizontal, 12)
-        .background(Capsule()
-            .fill(Color(.labelAlternative)))
+        .background(
+            Capsule()
+                .fill(Color(.labelAlternative)))
     }
 }

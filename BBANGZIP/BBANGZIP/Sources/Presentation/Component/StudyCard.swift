@@ -48,7 +48,7 @@ struct StudyCard: View {
                     HStack(spacing: 8) {
                         Chip(remainingDays: studyData.remainingDays)
                         
-                        CustomText (
+                        CustomText(
                             "\(studyData.deadline) 까지",
                             fontType: .caption1Bold,
                             color: Color(.labelAlternative)

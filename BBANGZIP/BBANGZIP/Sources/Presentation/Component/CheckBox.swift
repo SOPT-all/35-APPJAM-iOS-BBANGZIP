@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CheckBox: View {
-    private let isCompleted: Bool
+    @Binding private var isCompleted: Bool
     
     init(isCompleted: Bool) {
         self.isCompleted = isCompleted
@@ -20,8 +20,9 @@ struct CheckBox: View {
             .renderingMode(.template)
             .foregroundStyle(isCompleted ? Color(.staticWhite) : .clear)
             .padding(2)
-            .background(RoundedRectangle(cornerRadius: 12)
-                .fill(isCompleted ? Color(.secondaryNormal) : Color(.fillStrong)))
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isCompleted ? Color(.secondaryNormal) : Color(.fillStrong)))
     }
 }
 

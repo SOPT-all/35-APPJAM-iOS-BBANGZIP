@@ -15,10 +15,12 @@ struct StudyCardButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration
             .label
-            .background(RoundedRectangle(cornerRadius: 24)
-                .fill(backgroundColor(isPressed: configuration.isPressed)))
-            .overlay(RoundedRectangle(cornerRadius: 24)
-                .stroke(borderColor(), lineWidth: borderWidth()))
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(backgroundColor(isPressed: configuration.isPressed)))
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(borderColor(), lineWidth: borderWidth()))
     }
     
     private func backgroundColor(isPressed: Bool) -> Color  {

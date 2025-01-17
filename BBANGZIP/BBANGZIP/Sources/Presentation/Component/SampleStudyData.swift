@@ -19,8 +19,7 @@ struct SampleStudyData {
 }
 
 extension SampleStudyData {
-    static let sampleStudy: SampleStudyData =
-    SampleStudyData(
+    static let sampleStudy: SampleStudyData = SampleStudyData(
         subjectName: "경제통계학개론",
         examName: "중간고사",
         studyContents: "[경영] 통계 PPT 1과",
