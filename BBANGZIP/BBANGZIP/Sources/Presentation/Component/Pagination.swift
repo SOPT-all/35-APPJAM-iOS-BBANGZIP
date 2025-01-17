@@ -24,7 +24,7 @@ struct Pagination: View {
                 id: \.self
             ) { index in
                 Circle()
-                    .fill(index == current ? Color(.materialDimmer) : Color(.materialDimmer).opacity(0.16))
+                    .fill(Color(.materialDimmer).opacity(index == current ? 1 : 0.16))
                     .frame(
                         width: 6,
                         height: 6
