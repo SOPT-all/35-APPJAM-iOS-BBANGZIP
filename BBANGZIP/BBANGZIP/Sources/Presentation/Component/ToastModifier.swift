@@ -25,7 +25,10 @@ struct ToastModifier: ViewModifier {
                             Spacer()
                             
                             ToastView(toast: toast)
-                                .padding(.bottom, toast.bottomPadding)
+                                .padding(
+                                    .bottom,
+                                    toast.bottomPadding
+                                )
                         }
                         .transition(.opacity)
                     }

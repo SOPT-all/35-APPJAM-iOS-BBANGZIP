@@ -49,8 +49,14 @@ struct ToastView: View {
                 )
             }
         }
-        .padding(.horizontal, toast.type.horizontalInset)
-        .padding(.vertical, toast.type.verticalInset)
+        .padding(
+            .horizontal,
+            toast.type.horizontalInset
+        )
+        .padding(
+            .vertical,
+            toast.type.verticalInset
+        )
         .background(
             RoundedRectangle(cornerRadius: toast.type.radius)
                 .fill(Color(.labelAlternative))
