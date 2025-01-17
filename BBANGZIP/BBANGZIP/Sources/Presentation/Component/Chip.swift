@@ -2,7 +2,7 @@
 //  Chip.swift
 //  BBANGZIP
 //
-//  Created by 최유빈 on 1/16/25.
+//  Created by 송여경 on 1/17/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
@@ -17,7 +17,7 @@ struct Chip: View {
     
     var body: some View {
         CustomText (
-            "D\(remainingDays)",
+            "D - \(remainingDays)",
             fontType: .caption1Medium,
             color: Color(.staticWhite)
         )
@@ -33,4 +33,8 @@ struct Chip: View {
             Capsule()
                 .fill(Color(.labelAlternative)))
     }
+}
+
+#Preview {
+    Chip(remainingDays: 10)
 }
