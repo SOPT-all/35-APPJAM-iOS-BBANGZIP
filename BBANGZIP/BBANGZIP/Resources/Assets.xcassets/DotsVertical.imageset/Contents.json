@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "BallonTip.png",
+      "filename" : "DotsVertical.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "BallonTip@2x.png",
+      "filename" : "DotsVertical@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "BallonTip@3x.png",
+      "filename" : "DotsVertical@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
