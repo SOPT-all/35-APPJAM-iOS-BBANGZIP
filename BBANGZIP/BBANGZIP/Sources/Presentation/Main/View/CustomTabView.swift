@@ -19,28 +19,30 @@ struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
     
     var body: some View {
-        ZStack {
-            TabView(selection: $selected) {
-                Group {
-                    Text("과목 관리")
-                        .tag(Tab.subjectManage)
-                    
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                    
-                    Text("이웃 목록")
-                        .tag(Tab.networking)
-                    
-                    Text("마이페이지")
-                        .tag(Tab.mypage)
+        GeometryReader { geometry in
+            ZStack {
+                TabView(selection: $selected) {
+                    Group {
+                        Text("과목 관리")
+                            .tag(Tab.subjectManage)
+                        
+                        Text("오늘 할 일")
+                            .tag(Tab.todo)
+                        
+                        Text("이웃 목록")
+                            .tag(Tab.networking)
+                        
+                        Text("마이페이지")
+                            .tag(Tab.mypage)
+                    }
+                    .toolbar(.hidden, for: .tabBar)
                 }
-                .toolbar(.hidden, for: .tabBar)
-            }
-            
-            VStack {
-                Spacer()
                 
-                tabBar
+                VStack {
+                    Spacer()
+                    
+                    tabBar
+                }
             }
         }
     }
@@ -124,6 +126,24 @@ struct CustomTabView: View {
         }
         .padding(.horizontal, 12)
         .padding(.top, 12)
+        .background(
+            Color(.backgroundNormal)
+                .clipShape(
+                    UnevenRoundedRectangle(
+                        cornerRadii: RectangleCornerRadii(
+                            topLeading: 32,
+                            bottomLeading: 0,
+                            bottomTrailing: 0,
+                            topTrailing: 32
+                        )
+                    )
+                )
+                .shadow(
+                    color: Color(.staticBlack).opacity(0.25),
+                    radius: 4,
+                    y: -4
+                )
+        )
     }
 }
 
