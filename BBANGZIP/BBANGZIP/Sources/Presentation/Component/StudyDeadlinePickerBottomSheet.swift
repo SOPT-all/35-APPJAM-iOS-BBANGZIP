@@ -88,7 +88,10 @@ struct StudyDeadlinePickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.trailing, -25)
+        .padding(
+            .trailing,
+            -25
+        )
         .clipped()
         .onChange(
             of: selectedYear
@@ -115,8 +118,14 @@ struct StudyDeadlinePickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.leading, -25)
-        .padding(.trailing, -25)
+        .padding(
+            .leading,
+            -25
+        )
+        .padding(
+            .trailing,
+            -25
+        )
         .clipped()
         .onChange(
             of: selectedMonth
@@ -148,7 +157,10 @@ struct StudyDeadlinePickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.leading, -25)
+        .padding(
+            .leading,
+            -25
+        )
         .clipped()
     }
     

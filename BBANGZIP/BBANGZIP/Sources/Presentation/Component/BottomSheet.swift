@@ -32,9 +32,7 @@ struct BottomSheet<Content: View>: View {
                     .opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation {
-                            isShowing.toggle()
-                        }
+                        withAnimation { isShowing.toggle() }
                     }
                 
                 VStack {
@@ -44,7 +42,10 @@ struct BottomSheet<Content: View>: View {
                             width: 36,
                             height: 5
                         )
-                        .padding(.top, 8)
+                        .padding(
+                            .top,
+                            8
+                        )
                     
                     content()
                     
@@ -61,9 +62,7 @@ struct BottomSheet<Content: View>: View {
                     ]
                 )
                 .shadow(
-                    color: Color.black.opacity(
-                        0.2
-                    ),
+                    color: Color.black.opacity(0.2),
                     radius: 4,
                     x: 0,
                     y: -4

@@ -9,9 +9,9 @@
 import SwiftUI
 
 struct SemesterPickerBottomSheet: View {
-    @Binding var isPresented: Bool
-    @Binding var selectedYear: Int
-    @Binding var selectedSemester: String
+    @Binding private var isPresented: Bool
+    @Binding private var selectedYear: Int
+    @Binding private var selectedSemester: String
     
     private let years = Array(2025...2027)
     private let semesters = [
@@ -20,6 +20,16 @@ struct SemesterPickerBottomSheet: View {
         "여름학기",
         "겨울학기"
     ]
+    
+    init(
+        isPresented: Binding<Bool>,
+        selectedYear: Binding<Int>,
+        selectedSemester: Binding<String>
+    ) {
+        self._isPresented = isPresented
+        self._selectedYear = selectedYear
+        self._selectedSemester = selectedSemester
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -31,9 +41,10 @@ struct SemesterPickerBottomSheet: View {
     }
     
     private var headerView: some View {
-        CustomText("어떤 학기로 변경할까요?",
-                   fontType: .headline1Medium,
-                   color: Color(.labelNeutral)
+        CustomText(
+            "어떤 학기로 변경할까요?",
+            fontType: .headline1Medium,
+            color: Color(.labelNeutral)
         )
     }
     
@@ -66,7 +77,10 @@ struct SemesterPickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.trailing, -15)
+        .padding(
+            .trailing,
+            -15
+        )
         .clipped()
     }
     
@@ -88,7 +102,10 @@ struct SemesterPickerBottomSheet: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
-        .padding(.leading, -15)
+        .padding(
+            .leading,
+            -15
+        )
         .clipped()
     }
     
@@ -103,16 +120,4 @@ struct SemesterPickerBottomSheet: View {
         .buttonStyle(SolidButton())
         .padding(.horizontal)
     }
-}
-
-#Preview {
-    @State var isPresented = true
-    @State var selectedYear = 2025
-    @State var selectedSemester = "1학기"
-    
-    return SemesterPickerBottomSheet(
-        isPresented: $isPresented,
-        selectedYear: $selectedYear,
-        selectedSemester: $selectedSemester
-    )
 }
