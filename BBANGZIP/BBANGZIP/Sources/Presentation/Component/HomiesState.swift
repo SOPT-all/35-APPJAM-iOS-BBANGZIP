@@ -16,18 +16,18 @@ enum HomiesState {
     var backgroundColor: Color {
         switch self {
         case .basic:
-            return Color(.backgroundNormal)
+            Color(.backgroundNormal)
         case .checked, .holding:
-            return Color(.backgroundAlternative)
+            Color(.backgroundAlternative)
         }
     }
 
     var borderColor: Color {
         switch self {
         case .checked:
-            return Color(.lineStrong)
+            Color(.lineStrong)
         default:
-            return Color.clear
+            Color.clear
         }
     }
 }
