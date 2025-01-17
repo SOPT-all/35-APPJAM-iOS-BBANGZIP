@@ -41,7 +41,10 @@ struct Balloon: View {
                     Image(leftIcon)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 16, height: 16)
+                        .frame(
+                            width: 16,
+                            height: 16
+                        )
                 }
                 
                 CustomText(
@@ -54,18 +57,28 @@ struct Balloon: View {
                     Image(rightIcon)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 16, height: 16)
+                        .frame(
+                            width: 16,
+                            height: 16
+                        )
                 }
                 
                 Spacer()
             }
-            .padding(.vertical, 8)
+            .padding(
+                .vertical,
+                8
+            )
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.staticWhite))
             )
-            .shadow(color: Color(.staticBlack).opacity(0.25), radius: 4, y: 4)
+            .shadow(
+                color: Color(.staticBlack).opacity(0.25),
+                radius: 4,
+                y: 4
+            )
             
             if balloonMode == .bottom {
                 bottomBalloonTip
@@ -78,7 +91,10 @@ struct Balloon: View {
             Image(.balloonTip)
                 .renderingMode(.template)
                 .foregroundStyle(Color(.staticWhite))
-                .padding(.leading, 24)
+                .padding(
+                    .leading,
+                    24
+                )
             
             Spacer()
         }
@@ -89,7 +105,10 @@ struct Balloon: View {
             Image(.balloonTip)
                 .renderingMode(.template)
                 .foregroundStyle(Color(.staticWhite))
-                .padding(.leading, 24)
+                .padding(
+                    .leading,
+                    24
+                )
             
             Spacer()
         }
@@ -99,6 +118,11 @@ struct Balloon: View {
 }
 
 #Preview {
-    Balloon(text: "사장님의 과제 빵점 탈출을 응원해요!", leftIcon: "bubble", rightIcon: "bubble", balloonMode: .bottom)
-        .padding(.horizontal, 20)
+    Balloon(
+        text: "사장님의 과제 빵점 탈출을 응원해요!",
+        leftIcon: "bubble",
+        rightIcon: "bubble",
+        balloonMode: .bottom
+    )
+    .padding(.horizontal, 20)
 }

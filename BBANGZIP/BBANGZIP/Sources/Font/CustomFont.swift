@@ -182,7 +182,7 @@ struct CustomText: View {
     nonisolated init(
         _ title: String,
         fontType: CustomFont,
-        color: Color? = BBANGZIPAsset.Assets.primaryHeavy.swiftUIColor
+        color: Color? = Color(.primaryHeavy)
     ) {
         self.title = title
         self.fontType = fontType
@@ -192,6 +192,6 @@ struct CustomText: View {
     var body: some View {
         Text(title)
             .applyFont(font: fontType)
-            .foregroundStyle(color ?? BBANGZIPAsset.Assets.primaryHeavy.swiftUIColor)
+            .foregroundStyle(color ?? Color(.primaryHeavy))
     }
 }
