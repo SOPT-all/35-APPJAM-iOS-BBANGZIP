@@ -32,43 +32,8 @@ struct StudyCard: View {
             modifiable ? isSelected.toggle() : isCompleted.toggle()
         } label: {
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 2) {
-                    if !isManage {
-                        CustomText(
-                            "\(studyData.subjectName) / \(studyData.examName)",
-                            fontType: .caption2Medium,
-                            color: Color(.labelAssistive)
-                        )
-                        .padding(.leading, 4)
-                    }
-                    
-                    CustomText(
-                        studyData.studyContents,
-                        fontType: .caption1Medium,
-                        color: Color(.labelAlternative)
-                    )
-                    .padding(.leading, 4)
-                    
-                    CustomText(
-                        "\(studyData.startPage)p - \(studyData.finishPage)",
-                        fontType: .label1Bold,
-                        color: Color(.labelNormal)
-                    )
-                    .padding(.top, 2)
-                    .padding(.leading, 4)
-                    
-                    HStack(spacing: 8) {
-                        Chip(remainingDays: studyData.remainingDays)
-                        
-                        CustomText(
-                            "\(studyData.deadline) 까지",
-                            fontType: .caption1Bold,
-                            color: Color(.labelAlternative)
-                        )
-                    }
-                    .padding(.top, 4)
-                }
-                .opacity(isCompleted ? 0.4 : 1)
+                StudyDataArea
+                    .opacity(isCompleted ? 0.4 : 1)
                 
                 Spacer()
                 
@@ -84,6 +49,45 @@ struct StudyCard: View {
             )
         )
         .frame(maxWidth: .infinity)
+    }
+    
+    var StudyDataArea: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            if !isManage {
+                CustomText(
+                    "\(studyData.subjectName) / \(studyData.examName)",
+                    fontType: .caption2Medium,
+                    color: Color(.labelAssistive)
+                )
+                .padding(.leading, 4)
+            }
+            
+            CustomText(
+                studyData.studyContents,
+                fontType: .caption1Medium,
+                color: Color(.labelAlternative)
+            )
+            .padding(.leading, 4)
+            
+            CustomText(
+                "\(studyData.startPage)p - \(studyData.finishPage)",
+                fontType: .label1Bold,
+                color: Color(.labelNormal)
+            )
+            .padding(.top, 2)
+            .padding(.leading, 4)
+            
+            HStack(spacing: 8) {
+                Chip(remainingDays: studyData.remainingDays)
+                
+                CustomText(
+                    "\(studyData.deadline) 까지",
+                    fontType: .caption1Bold,
+                    color: Color(.labelAlternative)
+                )
+            }
+            .padding(.top, 4)
+        }
     }
 }
 
