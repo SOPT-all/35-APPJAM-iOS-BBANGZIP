@@ -25,8 +25,14 @@ struct Chip: View {
             fontType: .caption1Medium,
             color: Color(.staticWhite)
         )
-        .padding(.vertical, 2)
-        .padding(.horizontal, 12)
+        .padding(
+            .vertical,
+            2
+        )
+        .padding(
+            .horizontal,
+            12
+        )
         .background(
             Capsule()
                 .fill(backgroundColor)
