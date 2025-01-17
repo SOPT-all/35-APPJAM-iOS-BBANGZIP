@@ -52,7 +52,10 @@ struct CustomTabView: View {
             Button {
                 selected = .subjectManage
             } label: {
-                VStack(alignment: .center, spacing: 4) {
+                VStack(
+                    alignment: .center,
+                    spacing: 4
+                ) {
                     Image(selected == .subjectManage ? .activeSubjectManage : .subjectManage)
                         .resizable()
                         .scaledToFit()
@@ -70,7 +73,10 @@ struct CustomTabView: View {
             Button {
                 selected = .todo
             } label: {
-                VStack(alignment: .center, spacing: 4) {
+                VStack(
+                    alignment: .center,
+                    spacing: 4
+                ) {
                     Image(selected == .todo ? .activeTodo : .todo)
                         .resizable()
                         .scaledToFit()
@@ -90,7 +96,10 @@ struct CustomTabView: View {
             Button {
                 selected = .networking
             } label: {
-                VStack(alignment: .center, spacing: 4) {
+                VStack(
+                    alignment: .center,
+                    spacing: 4
+                ) {
                     Image(selected == .networking ? .activeNetworking : .networking)
                         .resizable()
                         .scaledToFit()
@@ -110,7 +119,10 @@ struct CustomTabView: View {
             Button {
                 selected = .mypage
             } label: {
-                VStack(alignment: .center, spacing: 4) {
+                VStack(
+                    alignment: .center,
+                    spacing: 4
+                ) {
                     Image(selected == .mypage ? .activeMyPage : .myPage)
                         .resizable()
                         .scaledToFit()
@@ -125,7 +137,8 @@ struct CustomTabView: View {
             }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 4)
         .background(
             Color(.backgroundNormal)
                 .clipShape(
