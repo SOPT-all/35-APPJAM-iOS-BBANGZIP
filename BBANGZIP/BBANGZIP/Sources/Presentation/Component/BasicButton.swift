@@ -36,8 +36,12 @@ struct OutlinedLargeButton: ButtonStyle {
             )
             .frame(maxWidth: .infinity)
             .cornerRadius(24)
-            .overlay(RoundedRectangle(cornerRadius: 24)
-                .stroke(Color(.lineStrong), lineWidth: 1)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(
+                        Color(.lineStrong),
+                        lineWidth: 1
+                    )
             )
     }
 }
@@ -58,10 +62,10 @@ struct SolidButton: ButtonStyle {
 }
 
 struct SolidIconButton: ButtonStyle {
-    private let systemName: String
+    private let buttonImage: Image
     
-    init(systemName: String) {
-        self.systemName = systemName
+    init(buttonImage: Image) {
+        self.buttonImage = buttonImage
     }
     
     func makeBody(configuration: Configuration) -> some View {
@@ -76,7 +80,7 @@ struct SolidIconButton: ButtonStyle {
                     16
                 )
             
-            Image(systemName: systemName)
+            buttonImage
                 .foregroundStyle(Color(.staticWhite))
                 .padding(
                     .vertical,
