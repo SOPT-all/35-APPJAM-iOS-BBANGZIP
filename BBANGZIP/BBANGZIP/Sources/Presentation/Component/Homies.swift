@@ -54,17 +54,13 @@ struct Homies: View {
             CustomText(
                 name,
                 fontType: .headline1Bold,
-                color: Color(
-                    .labelNormal
-                )
+                color: Color(.labelNormal)
             )
             
             CustomText(
                 "사장님",
                 fontType: .caption2Bold,
-                color: Color(
-                    .labelAlternative
-                )
+                color: Color(.labelAlternative)
             )
         }
     }
