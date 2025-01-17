@@ -33,7 +33,7 @@ struct StudyCard: View {
         } label: {
             HStack(alignment: .top) {
                 StudyDataArea
-                    .opacity(isCompleted ? 0.4 : 1)
+                    .opacity(modifiable ? 1 : isCompleted ? 0.4 : 1)
                 
                 Spacer()
                 
@@ -49,6 +49,12 @@ struct StudyCard: View {
             )
         )
         .frame(maxWidth: .infinity)
+        .onChange(of: modifiable) { newValue in
+            if !newValue {
+                isCompleted = false
+                isSelected = false
+            }
+        }
     }
     
     var StudyDataArea: some View {

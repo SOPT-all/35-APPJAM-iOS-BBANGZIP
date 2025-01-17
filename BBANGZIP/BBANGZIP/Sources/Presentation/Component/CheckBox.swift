@@ -10,21 +10,18 @@ import SwiftUI
 
 struct CheckBox: View {
     private let isCompleted: Bool
-    private let modifiable: Bool
     
-    init(isCompleted: Bool, _ modifiable: Bool = false) {
+    init(isCompleted: Bool) {
         self.isCompleted = isCompleted
-        self.modifiable = modifiable
     }
     
     var body: some View {
         Image(.checkIcon)
             .renderingMode(.template)
-            .foregroundStyle(isCompleted ? Color(.staticWhite) : .clear)
+            .foregroundStyle(isCompleted ? BBANGZIPAsset.Assets.staticWhite.swiftUIColor : .clear)
             .padding(2)
-            .background(
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(isCompleted ? Color(.secondaryNormal) : Color(.fillStrong)))
+            .background(RoundedRectangle(cornerRadius: 12)
+                .fill(isCompleted ? BBANGZIPAsset.Assets.secondaryNormal.swiftUIColor : BBANGZIPAsset.Assets.fillStrong.swiftUIColor))
     }
 }
 
