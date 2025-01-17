@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CheckBox: View {
-    @Binding private var isCompleted: Bool
+    private let isCompleted: Bool
     
     init(isCompleted: Bool) {
         self.isCompleted = isCompleted

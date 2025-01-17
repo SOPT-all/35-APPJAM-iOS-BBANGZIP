@@ -9,8 +9,13 @@
 import SwiftUI
 
 struct StudyCardButtonStyle: ButtonStyle {
-    @Binding var isSelected: Bool
-    @Binding var modifiable: Bool
+    private let isSelected: Bool
+    private let modifiable: Bool
+    
+    init(isSelected: Bool, modifiable: Bool) {
+        self.isSelected = isSelected
+        self.modifiable = modifiable
+    }
     
     func makeBody(configuration: Configuration) -> some View {
         configuration
@@ -26,8 +31,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     private func backgroundColor(isPressed: Bool) -> Color  {
         if modifiable {
             isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundAlternative)
-        }
-        else {
+        } else {
             isPressed ? Color(.labelNormal).opacity(0.12) : Color(.backgroundNormal)
         }
     }
@@ -35,8 +39,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     private func borderColor() -> Color {
         if modifiable {
             isSelected ? Color(.lineStrong) : Color(.lineAlternative)
-        }
-        else {
+        } else {
             Color(.lineAlternative)
         }
     }
@@ -44,8 +47,7 @@ struct StudyCardButtonStyle: ButtonStyle {
     private func borderWidth() -> CGFloat {
         if modifiable {
             3
-        }
-        else {
+        } else {
             1
         }
     }

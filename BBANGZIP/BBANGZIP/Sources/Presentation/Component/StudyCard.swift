@@ -10,10 +10,22 @@ import SwiftUI
 
 struct StudyCard: View {
     private let studyData = SampleStudyData.sampleStudy
-    @State var isCompleted = false
-    @State var isSelected = false
-    @Binding var modifiable: Bool
-    @State var type: StudyCardType = .Manage
+    @State private var isCompleted: Bool
+    @State private var isSelected: Bool
+    private let modifiable: Bool
+    private let isManage: Bool
+    
+    init(
+        isCompleted: Bool = false,
+        isSelected: Bool = false,
+        modifiable: Bool,
+        isManage: Bool = true
+    ) {
+        self.isCompleted = isCompleted
+        self.isSelected = isSelected
+        self.modifiable = modifiable
+        self.isManage = isManage
+    }
     
     var body: some View {
         Button {
@@ -21,7 +33,7 @@ struct StudyCard: View {
         } label: {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    if type == .Todo {
+                    if !isManage {
                         CustomText(
                             "\(studyData.subjectName) / \(studyData.examName)",
                             fontType: .caption2Medium,
@@ -67,8 +79,8 @@ struct StudyCard: View {
         }
         .buttonStyle(
             StudyCardButtonStyle(
-                isSelected: $isSelected,
-                modifiable: $modifiable
+                isSelected: isSelected,
+                modifiable: modifiable
             )
         )
         .frame(maxWidth: .infinity)
