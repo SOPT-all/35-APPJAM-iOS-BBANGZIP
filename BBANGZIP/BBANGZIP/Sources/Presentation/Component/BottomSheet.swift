@@ -8,45 +8,10 @@
 
 import SwiftUI
 
-enum BottomSheetType: Int {
-    case revert
-    case sort
-    case withdraw
-    case detailBadge
-    case congratsBadge
-    case examDate
-    case studyFinishDate
-    case changeSemester
-    
-    func view() -> AnyView {
-        switch self {
-            // TODO: BottomSheet를 사용하는 View 구현 후 임시 뷰 제거 필요
-        case .revert:
-            AnyView(Text("미완료 상태로 되돌릴까요?"))
-        case .sort:
-            AnyView(Text("최근 등록 순"))
-        case .withdraw:
-            AnyView(Text("정말 탈퇴하시겠어요?"))
-        case .detailBadge:
-            AnyView(Text("배지 달성 조건과 리워드"))
-        case .congratsBadge:
-            AnyView(Text("배지를 획득했어요!"))
-        case .examDate:
-            AnyView(Text("시험이 언제인가요?"))
-        case .studyFinishDate:
-            AnyView(Text("언제까지 공부할까요?"))
-        case .changeSemester:
-            AnyView(Text("어떤 학기로 변경할까요?"))
-        }
-    }
-}
-
 struct BottomSheet<Content: View>: View {
     @Binding private var isShowing: Bool
     private let height: Int
     private let content: () -> Content
-    
-    @GestureState private var dragPosition = CGFloat.zero
     @State private var currentHeight: CGFloat
     
     init(
@@ -67,10 +32,12 @@ struct BottomSheet<Content: View>: View {
                     .opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        isShowing.toggle()
+                        withAnimation {
+                            isShowing.toggle()
+                        }
                     }
                 
-                VStack() {
+                VStack {
                     RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color(.interactionInactive))
                         .frame(
@@ -78,43 +45,14 @@ struct BottomSheet<Content: View>: View {
                             height: 5
                         )
                         .padding(.top, 8)
-                        .gesture(
-                            DragGesture()
-                                .updating($dragPosition) {
-                                    value,
-                                    state,
-                                    transaction in
-                                    state = value.translation.height
-                                    withAnimation(.easeOut(duration: 0.2)) {
-                                        currentHeight = max(CGFloat(height) - value.translation.height, 100)
-                                    }
-                                }
-                                .onEnded { value in
-                                    if value.translation.height > CGFloat(height) * 0.5 {
-                                        withAnimation {
-                                            isShowing = false
-                                            print("Go Down")
-                                            print(currentHeight)
-                                        }
-                                    } else {
-                                        withAnimation {
-                                            print("Stay")
-                                            print(currentHeight)
-                                            currentHeight = CGFloat(height)
-                                        }
-                                    }
-                                }
-                        )
                     
                     content()
                     
                     Spacer()
                 }
-                .frame(height: currentHeight)
+                .frame(height: CGFloat(height))
                 .frame(maxWidth: .infinity)
-                .background(
-                    Color(.backgroundNormal)
-                )
+                .background(Color(.backgroundNormal))
                 .cornerRadius(
                     48,
                     corners: [
@@ -123,15 +61,14 @@ struct BottomSheet<Content: View>: View {
                     ]
                 )
                 .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
+                    color: Color.black.opacity(
+                        0.2
+                    ),
                     radius: 4,
                     x: 0,
                     y: -4
                 )
                 .transition(.move(edge: .bottom))
-                .onAppear {
-                    currentHeight = CGFloat(height)
-                }
             }
         }
         .frame(
@@ -143,6 +80,20 @@ struct BottomSheet<Content: View>: View {
         .animation(
             .easeInOut,
             value: isShowing
+        )
+    }
+}
+
+extension View {
+    func bottomSheet<Content: View>(
+        isShowing: Binding<Bool>,
+        height: Int,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        BottomSheet(
+            isShowing: isShowing,
+            height: height,
+            content: content
         )
     }
 }
@@ -166,8 +117,8 @@ struct RoundedCorners: Shape {
     private let corners: UIRectCorner
     
     init(
-        radius: CGFloat = .infinity,
-        corners: UIRectCorner = .allCorners
+        radius: CGFloat,
+        corners: UIRectCorner
     ) {
         self.radius = radius
         self.corners = corners
@@ -182,8 +133,6 @@ struct RoundedCorners: Shape {
                 height: radius
             )
         )
-        
         return Path(path.cgPath)
     }
 }
-
