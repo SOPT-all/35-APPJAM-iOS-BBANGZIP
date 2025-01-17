@@ -19,8 +19,12 @@ struct OutlinedMediumButton: ButtonStyle {
             )
             .frame(maxWidth: .infinity)
             .cornerRadius(16)
-            .overlay(RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(.lineStrong), lineWidth: 1)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                        Color(.lineStrong),
+                        lineWidth: 1
+                    )
             )
     }
 }
