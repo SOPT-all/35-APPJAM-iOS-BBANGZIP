@@ -14,7 +14,10 @@ struct ToastModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity
+            )
             .overlay(
                 ZStack {
                     if let toast = toast {
