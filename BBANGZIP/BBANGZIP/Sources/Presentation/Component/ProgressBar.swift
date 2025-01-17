@@ -14,15 +14,24 @@ struct ProgressBar: View {
     var body: some View {
         ProgressView(value: category.percentage) {            
             HStack {
-                StepCircle(step: category, complete: true)
+                StepCircle(
+                    step: category,
+                    complete: true
+                )
                 
                 Spacer()
                 
-                StepCircle(step: category, complete: category != .First)
+                StepCircle(
+                    step: category,
+                    complete: category != .First
+                )
                 
                 Spacer()
                 
-                StepCircle(step: category, complete: category == .Third)
+                StepCircle(
+                    step: category,
+                    complete: category == .Third
+                )
             }
             .padding(.bottom, 8)
         }

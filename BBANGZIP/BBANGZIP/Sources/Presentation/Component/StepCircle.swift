@@ -27,6 +27,9 @@ struct StepCircle: View {
                 )
             }
             .foregroundStyle(complete ? Color(BBANGZIPAsset.Assets.statusPositive.color) : Color(BBANGZIPAsset.Assets.fillAlternative.color))
-            .frame(width: 20, height: 20)
+            .frame(
+                width: 20,
+                height: 20
+            )
     }
 }

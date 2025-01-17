@@ -37,7 +37,7 @@ struct StudyCard: View {
                 
                 Spacer()
                 
-                CheckBox(isCompleted: isCompleted)
+                CheckBox(isCompleted: modifiable ? false : isCompleted)
             }
             .padding(.vertical, 10)
             .padding(.horizontal, 16)

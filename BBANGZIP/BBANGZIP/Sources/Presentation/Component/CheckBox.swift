@@ -10,9 +10,11 @@ import SwiftUI
 
 struct CheckBox: View {
     private let isCompleted: Bool
+    private let modifiable: Bool
     
-    init(isCompleted: Bool) {
+    init(isCompleted: Bool, _ modifiable: Bool = false) {
         self.isCompleted = isCompleted
+        self.modifiable = modifiable
     }
     
     var body: some View {
