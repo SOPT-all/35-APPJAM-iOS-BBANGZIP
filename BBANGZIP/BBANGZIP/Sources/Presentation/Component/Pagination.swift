@@ -19,16 +19,28 @@ struct Pagination: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(1..<total+1, id: \.self) { index in
+            ForEach(
+                1..<total+1,
+                id: \.self
+            ) { index in
                 Circle()
-                    .fill(index == current ? Color(.materialDimmer) : Color(.materialDimmer).opacity(0.16))
-                    .frame(width: 6, height: 6)
-                    .padding(.trailing, index == total ? 0 : 8)
+                    .fill(Color(.materialDimmer).opacity(index == current ? 1 : 0.16))
+                    .frame(
+                        width: 6,
+                        height: 6
+                    )
+                    .padding(
+                        .trailing,
+                        index == total ? 0 : 8
+                    )
             }
         }
     }
 }
 
 #Preview {
-    Pagination(totalPage: 4, nowPage: 1)
+    Pagination(
+        totalPage: 4,
+        nowPage: 1
+    )
 }
