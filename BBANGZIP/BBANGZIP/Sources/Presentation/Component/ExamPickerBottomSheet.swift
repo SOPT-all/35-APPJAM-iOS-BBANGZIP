@@ -17,13 +17,6 @@ struct ExamPickerBottomSheet: View {
     private let years = Array(2021...2028)
     private let months = Array(1...12)
     
-    private var days: [Int] {
-        calculateDaysInMonth(
-            year: selectedYear,
-            month: selectedMonth
-        )
-    }
-    
     private let today: Date = Date()
     private let currentYear: Int
     private let currentMonth: Int
@@ -80,35 +73,42 @@ struct ExamPickerBottomSheet: View {
     }
     
     private var yearPicker: some View {
-        Picker(selection: $selectedYear, label: Text("")) {
-            ForEach(
-                years.filter {
-                    $0 >= currentYear
-                },
-                id: \.self) { year in
-                    CustomText("\(year)년",
-                               fontType: .heading2Bold,
-                               color: Color(.labelStrong)
+        Picker(
+            selection: $selectedYear,
+            label: Text("")
+        ) {
+            ForEach(years.filter {$0 >= currentYear},id: \.self) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(
+                        .labelStrong
                     )
-                    .tag(year)
-                }
+                )
+                .tag(year)
+            }
         }
         .pickerStyle(WheelPickerStyle())
         .padding(.trailing, -25)
         .clipped()
-        .onChange(
-            of: selectedYear
-        ) {
-            _ in updateSelectedDay()
+        .onChange(of: selectedYear) { _ in
+            updateSelectedDay()
         }
     }
     
     private var monthPicker: some View {
-        Picker(selection: $selectedMonth, label: Text("")) {
-            ForEach(validMonths, id: \.self) { month in
-                CustomText("\(month)월",
-                           fontType: .heading2Bold,
-                           color: Color(.labelStrong)
+        Picker(
+            selection: $selectedMonth,
+            label: Text("")
+        ) {
+            ForEach(
+                validMonths,
+                id: \.self
+            ) { month in
+                CustomText(
+                    "\(month)월",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
                 )
                 .tag(month)
             }
@@ -117,19 +117,29 @@ struct ExamPickerBottomSheet: View {
         .padding(.leading, -25)
         .padding(.trailing, -25)
         .clipped()
-        .onChange(
-            of: selectedMonth
-        ) {
-            _ in updateSelectedDay()
+        .onChange(of: selectedMonth) { _ in
+            updateSelectedDay()
         }
     }
     
     private var dayPicker: some View {
-        Picker(selection: $selectedDay, label: Text("")) {
-            ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
-                CustomText("\(day)일",
-                           fontType: .heading2Bold,
-                           color: Color(.labelStrong)
+        Picker(
+            selection: $selectedDay,
+            label: Text("")
+        ) {
+            ForEach(
+                calculateDaysInMonth(
+                    year: selectedYear,
+                    month: selectedMonth
+                ).filter {
+                    isValidDay($0)
+                },
+                id: \.self
+            ) { day in
+                CustomText(
+                    "\(day)일",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
                 )
                 .tag(day)
             }
@@ -168,6 +178,10 @@ struct ExamPickerBottomSheet: View {
     }
     
     private func updateSelectedDay() {
+        let days = calculateDaysInMonth(
+            year: selectedYear,
+            month: selectedMonth
+        )
         if !days.contains(selectedDay) {
             selectedDay = days.last ?? 1
         }

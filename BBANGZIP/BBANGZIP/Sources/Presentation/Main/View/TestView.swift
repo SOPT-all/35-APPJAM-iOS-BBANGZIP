@@ -37,7 +37,10 @@ struct TestView: View {
                 isBottomSheetPresented = true
             }
         }
-        .bottomSheet(isShowing: $isBottomSheetPresented, height: .max) {
+        .bottomSheet(
+            isShowing: $isBottomSheetPresented,
+            height: .max
+        ) {
             if let type = bottomSheetType {
                 switch type {
                 case .examDate:

@@ -16,14 +16,6 @@ struct StudyDeadlinePickerBottomSheet: View {
     
     private let years = Array(2021...2028)
     private let months = Array(1...12)
-    
-    private var days: [Int] {
-        calculateDaysInMonth(
-            year: selectedYear,
-            month: selectedMonth
-        )
-    }
-    
     private let today: Date = Date()
     private let currentYear: Int
     private let currentMonth: Int
@@ -62,9 +54,11 @@ struct StudyDeadlinePickerBottomSheet: View {
     }
     
     private var headerView: some View {
-        CustomText("언제까지 공부할까요?",
-                   fontType: .headline1Medium,
-                   color: Color(.labelNeutral))
+        CustomText(
+            "언제까지 공부할까요?",
+            fontType: .headline1Medium,
+            color: Color(.labelNeutral)
+        )
     }
     
     private var pickersView: some View {
@@ -82,15 +76,16 @@ struct StudyDeadlinePickerBottomSheet: View {
             label: Text("")
         ) {
             ForEach(
-                years.filter {
-                    $0 >= currentYear
-                },
-                id: \.self) { year in
-                    CustomText("\(year)년",
-                               fontType: .heading2Bold,
-                               color: Color(.labelStrong))
-                    .tag(year)
-                }
+                years.filter { $0 >= currentYear },
+                id: \.self
+            ) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(year)
+            }
         }
         .pickerStyle(WheelPickerStyle())
         .padding(.trailing, -25)
@@ -111,9 +106,11 @@ struct StudyDeadlinePickerBottomSheet: View {
                 validMonths,
                 id: \.self
             ) { month in
-                CustomText("\(month)월",
-                           fontType: .heading2Bold,
-                           color: Color(.labelStrong))
+                CustomText(
+                    "\(month)월",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
                 .tag(month)
             }
         }
@@ -133,10 +130,20 @@ struct StudyDeadlinePickerBottomSheet: View {
             selection: $selectedDay,
             label: Text("")
         ) {
-            ForEach(days.filter { isValidDay($0) }, id: \.self) { day in
-                CustomText("\(day)일",
-                           fontType: .heading2Bold,
-                           color: Color(.labelStrong))
+            ForEach(
+                calculateDaysInMonth(
+                    year: selectedYear,
+                    month: selectedMonth
+                ).filter {
+                    isValidDay($0)
+                },
+                id: \.self
+            ) { day in
+                CustomText(
+                    "\(day)일",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
                 .tag(day)
             }
         }
@@ -172,6 +179,10 @@ struct StudyDeadlinePickerBottomSheet: View {
     }
     
     private func updateSelectedDay() {
+        let days = calculateDaysInMonth(
+            year: selectedYear,
+            month: selectedMonth
+        )
         if !days.contains(selectedDay) {
             selectedDay = days.last ?? 1
         }
