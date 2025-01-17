@@ -13,11 +13,7 @@ struct SemesterPickerBottomSheet: View {
     @Binding var selectedYear: Int
     @Binding var selectedSemester: String
     
-    private let years = [
-        2025,
-        2026,
-        2027
-    ]
+    private let years = Array(2025...2027)
     private let semesters = [
         "1학기",
         "2학기",
@@ -27,50 +23,85 @@ struct SemesterPickerBottomSheet: View {
     
     var body: some View {
         VStack(spacing: 16) {
-            CustomText("어떤 학기로 변경할까요?",
-                       fontType: .headline1Medium,
-                       color: (BBANGZIPAsset.Assets.labelNeutral.swiftUIColor)
-            )
-            GeometryReader { geometry in
-                HStack(spacing: 0) {
-                    Picker(selection: $selectedYear, label: Text("")) {
-                        ForEach(years, id: \.self) { year in
-                            CustomText("\(year)년",
-                                       fontType: .heading2Bold,
-                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                            .tag(year)
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .padding(.trailing, -15)
-                    .clipped()
-                    Picker(selection: $selectedSemester, label: Text("")) {
-                        ForEach(semesters, id: \.self) { semester in
-                            CustomText(semester,
-                                       fontType: .heading2Bold,
-                                       color: (BBANGZIPAsset.Assets.labelStrong.swiftUIColor))
-                            .tag(semester)
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .padding(.leading, -15)
-                    .clipped()
-                }
-            }
-            .frame(height: 212)
-            .padding(20)
-            
-            Button(action: {
-                withAnimation {
-                    isPresented = false
-                }
-            }) {
-                Text("학기 변경하기")
-            }
-            .buttonStyle(SolidButton())
-            .padding(.horizontal)
+            headerView
+            pickersView
+            actionButton
         }
         .padding()
+    }
+    
+    private var headerView: some View {
+        CustomText("어떤 학기로 변경할까요?",
+                   fontType: .headline1Medium,
+                   color: Color(.labelNeutral)
+        )
+    }
+    
+    private var pickersView: some View {
+        GeometryReader { geometry in
+            HStack(spacing: 0) {
+                yearPicker
+                semesterPicker
+            }
+        }
+        .frame(height: 212)
+        .padding(20)
+    }
+    
+    private var yearPicker: some View {
+        Picker(
+            selection: $selectedYear,
+            label: Text("")
+        ) {
+            ForEach(
+                years,
+                id: \.self
+            ) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(year)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(.trailing, -15)
+        .clipped()
+    }
+    
+    private var semesterPicker: some View {
+        Picker(
+            selection: $selectedSemester,
+            label: Text("")
+        ) {
+            ForEach(
+                semesters,
+                id: \.self
+            ) { semester in
+                CustomText(
+                    semester,
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(semester)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(.leading, -15)
+        .clipped()
+    }
+    
+    private var actionButton: some View {
+        Button(action: {
+            withAnimation {
+                isPresented = false
+            }
+        }) {
+            Text("학기 변경하기")
+        }
+        .buttonStyle(SolidButton())
+        .padding(.horizontal)
     }
 }
 
