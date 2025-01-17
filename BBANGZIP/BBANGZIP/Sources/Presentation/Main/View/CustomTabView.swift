@@ -125,7 +125,7 @@ struct CustomTabView: View {
             }
         }
         .padding(.horizontal, 12)
-        .padding(.top, 12)
+        .padding(.vertical, 12)
         .background(
             Color(.backgroundNormal)
                 .clipShape(
@@ -143,6 +143,7 @@ struct CustomTabView: View {
                     radius: 4,
                     y: -4
                 )
+                .edgesIgnoringSafeArea(.bottom)
         )
     }
 }
