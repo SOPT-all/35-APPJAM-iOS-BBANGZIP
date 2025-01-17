@@ -53,24 +53,36 @@ struct Homies: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
-                        .stroke(state.borderColor, lineWidth: 3)
+                        .stroke(
+                            state.borderColor,
+                            lineWidth: 3
+                        )
                 )
         }
     
     var body: some View {
         HStack(spacing: 0) {
             profile
-                .padding(.trailing, 16)
+                .padding(
+                    .trailing,
+                    16
+                )
             
             friendName
             
             Spacer()
             
             Image(.dotsVertical)
-                .padding(.horizontal, 10)
+                .padding(
+                    .horizontal,
+                    10
+                )
         }
         .frame(maxWidth: .infinity)
-        .padding(.all, 16)
+        .padding(
+            .all,
+            16
+        )
         .background(backgroundView)
     }
 }
@@ -85,7 +97,10 @@ struct Homies: View {
             ),
             name: "강라리"
         )
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
         
         Homies(
             state: .checked,
@@ -95,7 +110,10 @@ struct Homies: View {
             ),
             name: "강라리"
         )
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
         
         Homies(
             state: .holding,
@@ -105,6 +123,9 @@ struct Homies: View {
             ),
             name: "강라리"
         )
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
     }
 }
