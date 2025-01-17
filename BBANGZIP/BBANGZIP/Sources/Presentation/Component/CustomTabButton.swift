@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomTabButton: View {
-    let tab: Tab
+    private(set) var tab: Tab
     @Binding var selected: Tab
     
     var body: some View {

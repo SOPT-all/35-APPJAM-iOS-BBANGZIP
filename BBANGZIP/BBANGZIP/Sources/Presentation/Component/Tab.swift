@@ -45,9 +45,9 @@ enum Tab {
         case .subjectManage:
             "과목 관리"
         case .todo:
-            "할 일"
-        case .networking: 
-            "네트워킹"
+            "오늘 할 일"
+        case .networking:
+            "이웃 목록"
         case .mypage: 
             "마이페이지"
         }
