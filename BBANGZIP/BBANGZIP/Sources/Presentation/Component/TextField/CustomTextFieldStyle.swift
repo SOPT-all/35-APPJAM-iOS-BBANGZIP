@@ -26,18 +26,6 @@ struct CustomTextFieldStyle: TextFieldStyle {
         self.alertCase = alertText
     }
     
-    private var backgroundView: some View {
-        RoundedRectangle(cornerRadius: 20)
-            .fill(state.backgroundColor)
-            .overlay(
-                RoundedRectangle(cornerRadius: 20)
-                    .stroke(
-                        state.strokeColor,
-                        lineWidth: 1
-                    )
-            )
-    }
-    
     func _body(configuration: TextField<Self._Label>) -> some View {
         VStack(
             alignment: .leading,
@@ -51,34 +39,21 @@ struct CustomTextFieldStyle: TextFieldStyle {
                         icon
                             .renderingMode(.template)
                             .foregroundStyle(state.iconColor)
-                            .padding(.leading, 16)
+                            .padding(
+                                .leading,
+                                16
+                            )
                     }
                     
                     configuration
                         .applyFont(font: .label1Medium)
                         .foregroundStyle(state.textColor)
-                        .padding(.leading, 6)
+                        .padding(
+                            .leading,
+                            6
+                        )
                     
-                    HStack(spacing: 8) {
-                        if let maxLength = style.maxLength {
-                            CustomText(
-                                "\(text.count)/\(maxLength)",
-                                fontType: .caption1Medium,
-                                color: state.textColor
-                            )
-                        }
-                        
-                        if style.clearable, state.showCancelButton {
-                            Image(.X)
-                                .renderingMode(.template)
-                                .frame(width: 24, height: 24)
-                                .foregroundStyle(state.textColor)
-                                .onTapGesture {
-                                    text = ""
-                                }
-                        }
-                    }
-                    .padding(.trailing, 12)
+                    rightAccessoryView
                 }
             }
             .frame(height: 56)
@@ -88,8 +63,52 @@ struct CustomTextFieldStyle: TextFieldStyle {
                     fontType: .caption2Medium,
                     color: state.announceColor
                 )
-                .padding(.leading, 8)
+                .padding(
+                    .leading,
+                    8
+                )
             }
         }
+    }
+    
+    private var backgroundView: some View {
+        RoundedRectangle(cornerRadius: 20)
+            .fill(state.backgroundColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(
+                        state.strokeColor,
+                        lineWidth: 1
+                    )
+            )
+    }
+    
+    private var rightAccessoryView: some View {
+        HStack(spacing: 8) {
+            if let maxLength = style.maxLength {
+                CustomText(
+                    "\(text.count)/\(maxLength)",
+                    fontType: .caption1Medium,
+                    color: state.textColor
+                )
+            }
+            
+            if style.clearable, state.showCancelButton {
+                Image(.X)
+                    .renderingMode(.template)
+                    .frame(
+                        width: 24,
+                        height: 24
+                    )
+                    .foregroundStyle(state.textColor)
+                    .onTapGesture {
+                        text = ""
+                    }
+            }
+        }
+        .padding(
+            .trailing,
+            12
+        )
     }
 }
