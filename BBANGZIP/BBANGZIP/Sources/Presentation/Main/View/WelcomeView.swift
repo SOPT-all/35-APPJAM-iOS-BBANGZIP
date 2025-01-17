@@ -28,9 +28,9 @@ struct WelcomeView: View {
             Spacer()
             
             Button("빵집 오픈하러 가기") {
-                
+                // TODO: 버튼 터치 시 화면 전환 로직 추가 필요
             }
-            .buttonStyle(SolidIconButton(systemName: "chevron.right"))
+            .buttonStyle(SolidIconButton(imageName: "chevronRightThickSmall"))
         }
         .padding(.horizontal, 20)
         
