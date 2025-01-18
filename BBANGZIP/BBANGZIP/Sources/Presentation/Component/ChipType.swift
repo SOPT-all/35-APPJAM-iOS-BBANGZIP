@@ -19,7 +19,7 @@ enum ChipType {
     var text: String {
         switch self {
         case .daysLeftWithText(let days):
-            "시험까지  D\(days)"
+            "시험까지 D\(days)"
         case .daysLeftGray(let days):
             "D\(days)"
         case .daysLeftBlack(let days):
@@ -29,7 +29,7 @@ enum ChipType {
         case .points(let points):
             "\(points)P"
         case .level(let level):
-            "Lv.\(level)"
+            "Lv\(level)"
         }
     }
     
