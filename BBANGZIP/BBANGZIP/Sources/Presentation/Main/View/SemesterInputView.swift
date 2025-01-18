@@ -74,9 +74,8 @@ struct SemesterInputView: View {
             )
         }
         .navigationBarBackButtonHidden(true)
-        // .navigationBarItems(leading: backButton)
         .toolbar {
-            ToolbarItem(placement: .navigation) {
+            ToolbarItemGroup(placement: .topBarLeading) {
                 backButton
             }
         }
