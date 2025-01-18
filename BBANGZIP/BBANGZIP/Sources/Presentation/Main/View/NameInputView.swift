@@ -9,8 +9,12 @@
 import SwiftUI
 
 struct NameInputView: View {
-    @StateObject private var viewModel = NameInputViewModel()
+    @StateObject private var viewModel: NameInputViewModel
     @SwiftUI.Environment(\.dismiss) private var dismiss
+    
+    init(viewModel: NameInputViewModel = NameInputViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack(spacing: 0) {

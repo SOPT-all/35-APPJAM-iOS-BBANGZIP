@@ -9,10 +9,22 @@
 import SwiftUI
 
 class NameInputViewModel: ObservableObject {
-    @Published var currentStep: Step = .First
-    @Published var nickname: String = ""
-    @Published var announceState: NicknameTextFieldAlertCase? = nil
-    @Published var state: TextFieldState = .defaultState
+    @Published var currentStep: Step
+    @Published var nickname: String
+    @Published var announceState: NicknameTextFieldAlertCase?
+    @Published var state: TextFieldState
+    
+    init(
+        currentStep: Step = .First,
+        nickname: String = "",
+        announceState: NicknameTextFieldAlertCase? = nil,
+        state: TextFieldState = .defaultState
+    ) {
+        self.currentStep = currentStep
+        self.nickname = nickname
+        self.announceState = announceState
+        self.state = state
+    }
     
     private func validateNickname(
         oldText: String,
