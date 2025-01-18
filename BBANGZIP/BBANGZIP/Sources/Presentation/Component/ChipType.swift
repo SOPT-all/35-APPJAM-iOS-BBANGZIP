@@ -35,18 +35,14 @@ enum ChipType {
     
     var color: Color {
         switch self {
-        case .daysLeftWithText:
+        case .daysLeftWithText, .daysLeftBlack, .level:
             Color(.statusPositive)
         case .daysLeftGray:
             Color(.labelAlternative)
-        case .daysLeftBlack:
-            Color(.statusPositive)
         case .delayedDate:
             Color(.statusDestructive)
         case .points:
             Color(.statusCautionary)
-        case .level:
-            Color(.statusPositive)
         }
     }
 }
