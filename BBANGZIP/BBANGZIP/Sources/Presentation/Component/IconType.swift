@@ -16,11 +16,11 @@ enum IconType {
     var color: Color {
         switch self {
         case .black:
-            return Color(.statusPositive)
+            Color(.statusPositive)
         case .yellow:
-            return Color(.statusCautionary)
+            Color(.statusCautionary)
         case .orange:
-            return Color(.statusDestructive)
+            Color(.statusDestructive)
         }
     }
 }
