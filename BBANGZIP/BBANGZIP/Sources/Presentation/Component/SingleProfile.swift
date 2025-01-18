@@ -41,9 +41,21 @@ struct SingleProfile: View {
 
 #Preview {
     HStack {
-        SingleProfile(size: .large, outlined: true)
-        SingleProfile(size: .large, outlined: false)
-        SingleProfile(size: .medium, outlined: true)
-        SingleProfile(size: .medium, outlined: false)
+        SingleProfile(
+            size: .large,
+            outlined: true
+        )
+        SingleProfile(
+            size: .large,
+            outlined: false
+        )
+        SingleProfile(
+            size: .medium,
+            outlined: true
+        )
+        SingleProfile(
+            size: .medium,
+            outlined: false
+        )
     }
 }

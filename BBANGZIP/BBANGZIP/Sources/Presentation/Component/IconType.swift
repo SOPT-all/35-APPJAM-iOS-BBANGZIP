@@ -16,11 +16,11 @@ enum IconType {
     var color: Color {
         switch self {
         case .black:
-            return BBANGZIPAsset.Assets.statusPositive.swiftUIColor
+            Color(.statusPositive)
         case .yellow:
-            return BBANGZIPAsset.Assets.statusCautionary.swiftUIColor
+            Color(.statusCautionary)
         case .orange:
-            return BBANGZIPAsset.Assets.statusDestructive.swiftUIColor
+            Color(.statusDestructive)
         }
     }
 }

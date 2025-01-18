@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct MainView: View {
     var body: some View {
         NavigationView {
@@ -18,8 +16,18 @@ struct MainView: View {
                     .fontWeight(.bold)
                     .padding()
                 
+                NavigationLink(destination: TestView()) {
+                    Text("Go to TestView")
+                        .font(.headline)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.black)
+                        .cornerRadius(8)
+                }
+                
                 Spacer()
             }
+            .navigationTitle("Main View")
         }
     }
 }

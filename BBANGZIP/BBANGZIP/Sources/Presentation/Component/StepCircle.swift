@@ -23,10 +23,13 @@ struct StepCircle: View {
                 CustomText(
                     "\(step.rawValue)",
                     fontType: .caption2Bold,
-                    color: complete ? Color(BBANGZIPAsset.Assets.staticWhite.color) : Color(BBANGZIPAsset.Assets.labelDisable.color)
+                    color: complete ? Color(.staticWhite) : Color(.labelDisable)
                 )
             }
-            .foregroundStyle(complete ? Color(BBANGZIPAsset.Assets.statusPositive.color) : Color(BBANGZIPAsset.Assets.fillAlternative.color))
-            .frame(width: 20, height: 20)
+            .foregroundStyle(complete ? Color(.statusPositive) : Color(.fillAlternative))
+            .frame(
+                width: 20,
+                height: 20
+            )
     }
 }
