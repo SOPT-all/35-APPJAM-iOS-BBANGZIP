@@ -9,12 +9,26 @@
 import SwiftUI
 
 struct SemesterInputView: View {
-    @State private var currentStep: Step = .Second
-    @State private var nickname: String = "유나 사장님"
-    @State private var selectedYear: Int = 2025
-    @State private var selectedSemester: String = "1학기"
-    @State private var isPickerPresented: Bool = false
+    @State private var currentStep: Step
+    @State private var nickname: String
+    @State private var selectedYear: Int
+    @State private var selectedSemester: String
+    @State private var isPickerPresented: Bool
     @SwiftUI.Environment(\.dismiss) private var dismiss
+    
+    init(
+        currentStep: Step = .Second,
+        nickname: String = "유나 사장님",
+        selectedYear: Int = 2025,
+        selectedSemester: String = "1학기",
+        isPickerPresented: Bool = false
+    ) {
+        self.currentStep = currentStep
+        self.nickname = nickname
+        self.selectedYear = selectedYear
+        self.selectedSemester = selectedSemester
+        self.isPickerPresented = isPickerPresented
+    }
     
     private let years = Array(2025...2028)
     private let semesters = [
