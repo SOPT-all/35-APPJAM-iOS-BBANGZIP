@@ -75,19 +75,32 @@ struct SubjectInputView: View {
     }
     
     private var mainDescription: some View {
-        HStack(spacing: 0) {
-            CustomText(
-                "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
-                fontType: .title2Bold,
-                color: Color(.labelNormal)
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                CustomText(
+                    "수강하는 과목 중",
+                    fontType: .title2Bold,
+                    color: Color(.labelNormal)
+                )
+                Spacer()
+            }
+            .padding(
+                .bottom,
+                5
             )
             
-            Spacer()
+            HStack(spacing: 0) {
+                CustomText(
+                    "한 가지만 먼저 입력해 볼까요?",
+                    fontType: .title2Bold,
+                    color: Color(.labelNormal)
+                )
+            }
+            .padding(
+                .bottom,
+                33
+            )
         }
-        .padding(
-            .bottom,
-            33
-        )
     }
     
     private var subjectTextField: some View {
