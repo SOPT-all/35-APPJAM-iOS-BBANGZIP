@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomTabBar: View {
-    @Binding var selected: Tab
+    @Binding private var selected: Tab
     
     init(selected: Binding<Tab>) {
         self._selected = selected
