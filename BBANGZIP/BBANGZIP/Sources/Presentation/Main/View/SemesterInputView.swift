@@ -15,7 +15,7 @@ struct SemesterInputView: View {
     @State private var selectedSemester: String = "1학기"
     @State private var isPickerPresented: Bool = false
     
-    private let years = Array(2025...2027)
+    private let years = Array(2025...2028)
     private let semesters = [
         "1학기",
         "2학기",
