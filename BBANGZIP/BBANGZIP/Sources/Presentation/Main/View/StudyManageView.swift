@@ -9,36 +9,25 @@
 import SwiftUI
 
 struct StudyManageView: View {
-    @State var isShowingBottomSheet = false
-    @State private var selectedBottomSheetType: BottomSheetType? = .changeSemester
+    @State private var isShowingBottomSheet: Bool
+    private let selectedBottomSheetType: BottomSheetType?
+    
+    init(
+        isShowingBottomSheet: Bool,
+        selectedBottomSheetType: BottomSheetType? = .changeSemester
+    ) {
+        self.isShowingBottomSheet = isShowingBottomSheet
+        self.selectedBottomSheetType = selectedBottomSheetType
+    }
     
     var body: some View {
         VStack {
             HStack {
-                Button {
-                    isShowingBottomSheet = true
-                } label: {
-                    HStack(spacing: 4) {
-                        CustomText(
-                            "2025년 1학기",
-                            fontType: .body1Bold,
-                            color: Color(.labelNormal)
-                        )
-                        
-                        Image(.chevronDown)
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(
-                                width: 20,
-                                height: 20
-                            )
-                            .foregroundStyle(Color(.labelNormal))
-                    }
-                }
-                .padding(
-                    .leading,
-                    24
-                )
+                ChangeSemesterButton(isShowingBottomSheet: $isShowingBottomSheet)
+                    .padding(
+                        .leading,
+                        24
+                    )
                 
                 Spacer()
             }
@@ -50,9 +39,10 @@ struct StudyManageView: View {
                 .bottom,
                 169
             )
-            .background(RoundedRectangle(cornerRadius: 32)
-                .fill(Color(.backgroundAccent))
-                .edgesIgnoringSafeArea(.top)
+            .background(
+                RoundedRectangle(cornerRadius: 32)
+                    .fill(Color(.backgroundAccent))
+                    .edgesIgnoringSafeArea(.top)
             )
             
             VStack {
@@ -128,13 +118,14 @@ struct StudyManageView: View {
                         )
                     }
                     .padding(.vertical, 59)
-                    .background(RoundedRectangle(cornerRadius: 24)
-                        .foregroundStyle(Color(.staticWhite))
-                        .shadow(
-                            color: Color(.staticBlack).opacity(0.25),
-                            radius: 4,
-                            y: 4
-                        ))
+                    .background(
+                        RoundedRectangle(cornerRadius: 24)
+                            .foregroundStyle(Color(.staticWhite))
+                            .shadow(
+                                color: Color(.staticBlack).opacity(0.25),
+                                radius: 4,
+                                y: 4
+                            ))
                     
                 }
                 .padding(.top, 32)
@@ -157,19 +148,19 @@ struct StudyManageView: View {
             
         }
         .overlay(
-                bottomSheet(
-                    isShowing: $isShowingBottomSheet,
-                    height: 453
-                ) {
-                    if let type = selectedBottomSheetType {
-                        type.contentView(isPresented: $isShowingBottomSheet)
-                    }
+            bottomSheet(
+                isShowing: $isShowingBottomSheet,
+                height: 453
+            ) {
+                if let type = selectedBottomSheetType {
+                    type.contentView(isPresented: $isShowingBottomSheet)
                 }
+            }
             
         )
     }
 }
 
 #Preview {
-    StudyManageView()
+    StudyManageView(isShowingBottomSheet: false)
 }
