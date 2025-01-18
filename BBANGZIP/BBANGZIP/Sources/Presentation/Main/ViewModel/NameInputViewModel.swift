@@ -18,7 +18,10 @@ class NameInputViewModel: ObservableObject {
         // TODO: 다음 버튼 눌렀을 때 화면 전환 로직 구현
     }
     
-    private func validateNickname(oldText: String, newText: String) {
+    private func validateNickname(
+        oldText: String,
+        newText: String
+    ) {
         if let maxLength = TextFieldStyleCase.nickname.maxLength {
             if newText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 // 공백으로만 이루어짐
