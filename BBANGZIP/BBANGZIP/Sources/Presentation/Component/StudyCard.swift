@@ -106,11 +106,7 @@ struct StudyCard: View {
             
             HStack(spacing: 8) {
                 Chip(
-                    type: .daysLeft(
-                        studyData.remainingDays,
-                        withExamLabel: false
-                    ),
-                    backgroundColor: studyData.remainingDays >= 0 ? Color(.statusDestructive) : Color(.statusPositive)
+                    type: studyData.remainingDays >= 0 ? .delayedDate(studyData.remainingDays) : .daysLeftWithText(studyData.remainingDays)
                 )
                 CustomText(
                     "\(studyData.deadline) 까지",

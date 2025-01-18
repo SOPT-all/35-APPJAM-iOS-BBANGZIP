@@ -9,30 +9,44 @@
 import SwiftUI
 
 enum ChipType {
-    case daysLeft(
-        Int,
-        withExamLabel: Bool
-    )
+    case daysLeftWithText(Int)
+    case daysLeftGray(Int)
+    case daysLeftBlack(Int)
+    case delayedDate(Int)
     case points(Int)
     case level(Int)
     
     var text: String {
         switch self {
-        case .daysLeft(
-            let days,
-            let withExamLabel
-        ):
-            if withExamLabel {
-                "시험까지 D - \(days)"
-            } else if days >= 0 {
-                "D + \(days)"
-            } else {
-                "D - \(-days)"
-            }
+        case .daysLeftWithText(let days):
+            "시험까지  D\(days)"
+        case .daysLeftGray(let days):
+            "D\(days)"
+        case .daysLeftBlack(let days):
+            "D\(days)"
+        case .delayedDate(let days):
+            "D+\(days)"
         case .points(let points):
             "\(points)P"
         case .level(let level):
-            "Lv \(level)"
+            "Lv.\(level)"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .daysLeftWithText(_):
+            Color(.statusPositive)
+        case .daysLeftGray(_):
+            Color(.labelAlternative)
+        case .daysLeftBlack(_):
+            Color(.statusPositive)
+        case .delayedDate(_):
+            Color(.statusDestructive)
+        case .points(_):
+            Color(.statusCautionary)
+        case .level(_):
+            Color(.statusPositive)
         }
     }
 }

@@ -9,16 +9,11 @@ import SwiftUI
 
 struct Chip: View {
     private let type: ChipType
-    private let backgroundColor: Color
-    
-    init(
-        type: ChipType,
-        backgroundColor: Color
-    ) {
+
+    init(type: ChipType) {
         self.type = type
-        self.backgroundColor = backgroundColor
     }
-    
+
     var body: some View {
         CustomText(
             type.text,
@@ -35,48 +30,18 @@ struct Chip: View {
         )
         .background(
             Capsule()
-                .fill(backgroundColor)
+                .fill(type.color)
         )
     }
 }
 
 #Preview {
     VStack(spacing: 10) {
-        Chip(
-            type: .daysLeft(
-                24,
-                withExamLabel: true
-            ),
-            backgroundColor: Color(
-                .statusPositive
-            )
-        )
-        Chip(
-            type: .daysLeft(
-                -18,
-                 withExamLabel: false
-            ),
-            backgroundColor: Color(.labelAlternative)
-        )
-        Chip(
-            type: .daysLeft(
-                6,
-                withExamLabel: false
-            ),
-            backgroundColor: Color(.statusDestructive)
-        )
-        Chip(
-            type: .points(
-                50
-            ),
-            backgroundColor: Color(
-                .statusCautionary
-            )
-        )
-        Chip(
-            type: .level(1),
-            backgroundColor: Color(.statusPositive)
-        )
+        Chip(type: .daysLeftWithText(-24))
+        Chip(type: .daysLeftGray(-18))
+        Chip(type: .delayedDate(6))
+        Chip(type: .points(50))
+        Chip(type: .level(1))
     }
     .padding()
 }
