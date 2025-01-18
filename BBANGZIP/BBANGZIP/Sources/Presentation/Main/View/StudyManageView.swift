@@ -46,87 +46,12 @@ struct StudyManageView: View {
             )
             
             VStack {
-                HStack {
-                    CustomText(
-                        "어떤 과목을 공부해 볼까요?",
-                        fontType: .headline2Bold,
-                        color: Color(.labelAlternative)
-                    )
-                    
-                    Spacer()
-                    
-                    Button {
-                         
-                    } label: {
-                        Image(.trash)
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(
-                                width: 24,
-                                height: 24
-                            )
-                            .foregroundStyle(Color(.labelAssistive))
-                    }
-                }
+                subjectSection
                 
                 HStack(spacing: 20) {
-                    VStack(spacing: 8) {
-                        CircleIcon(name: "Plus")
-                            .padding(
-                                .horizontal,
-                                59
-                            )
-                        
-                        CustomText(
-                            "과목추가",
-                            fontType: .body1Bold,
-                            color: Color(.labelDisable)
-                        )
-                    }
-                    .padding(
-                        .vertical,
-                        59
-                    )
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .foregroundStyle(Color(.staticWhite))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .stroke(
-                                        Color(
-                                            .lineAlternative
-                                        ),
-                                        lineWidth: 2
-                                    )
-                            )
-                            .shadow(
-                                color: Color(.staticBlack).opacity(0.25),
-                                radius: 4,
-                                y: 4
-                            )
-                    )
+                    exView
                     
-                    VStack(spacing: 8) {
-                        CircleIcon(name: "Plus")
-                            .padding(.horizontal, 59)
-                        
-                        CustomText(
-                            "과목추가",
-                            fontType: .body1Bold,
-                            color: Color(.labelDisable)
-                        )
-                    }
-                    .padding(.vertical, 59)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .foregroundStyle(Color(.staticWhite))
-                            .shadow(
-                                color: Color(.staticBlack).opacity(0.25),
-                                radius: 4,
-                                y: 4
-                            ))
-                    
+                    exView
                 }
                 .padding(.top, 32)
                     
@@ -157,6 +82,70 @@ struct StudyManageView: View {
                 }
             }
             
+        )
+    }
+    
+    var subjectSection: some View {
+        HStack {
+            CustomText(
+                "어떤 과목을 공부해 볼까요?",
+                fontType: .headline2Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            Spacer()
+            
+            Button {
+                 
+            } label: {
+                Image(.trash)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(
+                        width: 24,
+                        height: 24
+                    )
+                    .foregroundStyle(Color(.labelAssistive))
+            }
+        }
+    }
+    
+    var exView: some View {
+        VStack(spacing: 8) {
+            CircleIcon(name: "Plus")
+                .padding(
+                    .horizontal,
+                    59
+                )
+            
+            CustomText(
+                "과목추가",
+                fontType: .body1Bold,
+                color: Color(.labelDisable)
+            )
+        }
+        .padding(
+            .vertical,
+            59
+        )
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .foregroundStyle(Color(.staticWhite))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(
+                            Color(
+                                .lineAlternative
+                            ),
+                            lineWidth: 2
+                        )
+                )
+                .shadow(
+                    color: Color(.staticBlack).opacity(0.25),
+                    radius: 4,
+                    y: 4
+                )
         )
     }
 }
