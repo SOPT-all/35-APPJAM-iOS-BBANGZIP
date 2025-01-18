@@ -36,7 +36,7 @@ struct OnboardingStartView: View {
             }
             .buttonStyle(
                 SolidIconButton(
-                    Image(.chevronRightThickSmall)
+                    buttonImage: Image(.chevronRightThickSmall)
                 )
             )
         }
