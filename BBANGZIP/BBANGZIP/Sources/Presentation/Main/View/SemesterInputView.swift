@@ -25,79 +25,153 @@ struct SemesterInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Image(.chevronLeftThickSmall)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.labelAlternative))
-                Spacer()
-            }
-            .padding(16)
+            backButton
             
             ProgressBar(category: $currentStep)
-                .padding(.horizontal, 44)
-                .padding(.bottom, 78)
+                .padding(
+                    .horizontal,
+                    44
+                )
+                .padding(
+                    .bottom,
+                    48
+                )
             
             VStack(spacing: 0) {
-                HStack {
-                    CustomText(
-                        "\(nickname), 안녕하세요!",
-                        fontType: .body2Bold,
-                        color: Color(.labelAlternative)
-                    )
-                    
-                    Spacer()
-                }
-                .padding(.bottom, 8)
+                headerDescription
                 
-                HStack {
-                    CustomText(
-                        "현재 재학 중인 학기를\n알려주세요",
-                        fontType: .title2Bold,
-                        color: Color(.labelNormal)
-                    )
-                    
-                    Spacer()
-                }
-                .padding(.bottom, 32)
+                mainDescription
                 
-                HStack {
-                    Picker("Year", selection: $selectedYear) {
-                        ForEach(years, id: \.self) { year in
-                            CustomText(
-                                "\(year)년",
-                                fontType: .heading2Bold,
-                                color: Color(.labelStrong)
-                            )                                .tag(year)
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 120, height: 180)
-                    .clipped()
-                    
-                    Picker("Semester", selection: $selectedSemester) {
-                        ForEach(semesters, id: \.self) { semester in
-                            Text(semester)
-                                .font(.system(size: 18, weight: .bold))
-                                .tag(semester)
-                        }
-                    }
-                    .pickerStyle(WheelPickerStyle())
-                    .frame(width: 120, height: 180)
-                    .clipped()
+                HStack(spacing: 0) {
+                    yearPicker
+                    semesterPicker
                 }
-                .padding(.bottom, 32)
+                .padding(
+                    .bottom,
+                    32
+                )
                 
                 Spacer()
                 
-                Button("다음으로") {
-                    
-                }
-                .buttonStyle(SolidIconButton(buttonImage: Image(.chevronLeftThickSmall)))
+                nextButton
             }
-            .padding(.horizontal, 20)
+            .padding(
+                .horizontal,
+                20
+            )
         }
     }
     
+    private var headerDescription: some View {
+        HStack {
+            CustomText(
+                "\(nickname), 안녕하세요!",
+                fontType: .body2Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            Spacer()
+        }
+        .padding(
+            .bottom,
+            8
+        )
+    }
+    
+    private var mainDescription: some View {
+        HStack {
+            CustomText(
+                "현재 재학 중인\n학기를 알려주세요",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            
+            Spacer()
+        }
+        .padding(
+            .bottom,
+            32
+        )
+    }
+    
+    private var backButton: some View {
+        HStack {
+            Image(.chevronLeftThickSmall)
+                .renderingMode(.template)
+                .foregroundStyle(Color(.labelAlternative))
+            Spacer()
+        }
+        .padding(16)
+    }
+    
+    private var yearPicker: some View {
+        Picker(
+            "Year",
+            selection: $selectedYear
+        ) {
+            ForEach(
+                years,
+                id: \.self
+            ) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(year)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(
+            .leading,
+            -5
+        )
+        .padding(
+            .trailing,
+            -15
+        )
+        .clipped()
+    }
+    
+    private var semesterPicker: some View {
+        Picker(
+            "Semester",
+            selection: $selectedSemester
+        ) {
+            ForEach(
+                semesters,
+                id: \.self
+            ) { semester in
+                CustomText(
+                    semester,
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(semester)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(
+            .leading,
+            -15
+        )
+        .padding(
+            .trailing,
+            -5
+        )
+        .clipped()
+    }
+    
+    private var nextButton: some View {
+        NavigationLink("다음으로") {
+            // TODO: 버튼 눌렀을 때 화면 전환 필요
+        }
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronLeftThickSmall)
+            )
+        )
+    }
 }
 
 #Preview {
