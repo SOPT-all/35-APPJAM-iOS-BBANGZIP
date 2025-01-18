@@ -10,7 +10,6 @@ import SwiftUI
 
 struct NameInputView: View {
     @StateObject private var viewModel: NameInputViewModel
-    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(viewModel: NameInputViewModel = NameInputViewModel()) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -51,7 +50,7 @@ struct NameInputView: View {
     
     private var backButton: some View {
         Button(action: {
-            dismiss()
+            // TODO: 뒤로가기 버튼 누르면 상태 변경하도록
         }) {
             HStack {
                 Image(.chevronLeftThickSmall)
