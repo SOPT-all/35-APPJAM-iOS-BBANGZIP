@@ -97,11 +97,11 @@ struct NameInputView: View {
 }
 
 struct TestNextView: View {
-    @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     private var backButton: some View {
         Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
+            dismiss()
         }) {
             HStack {
                 Image(.chevronLeftThickSmall)
