@@ -95,6 +95,7 @@ struct SubjectInputView: View {
                     fontType: .title2Bold,
                     color: Color(.labelNormal)
                 )
+                Spacer()
             }
             .padding(
                 .bottom,
