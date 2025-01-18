@@ -72,17 +72,14 @@ struct StudyManageView: View {
             Spacer()
             
         }
-        .overlay(
-            bottomSheet(
-                isShowing: $isShowingBottomSheet,
-                height: 453
-            ) {
-                if let type = selectedBottomSheetType {
-                    type.contentView(isPresented: $isShowingBottomSheet)
-                }
+        .bottomSheet(
+            isShowing: $isShowingBottomSheet,
+            height: 453
+        ) {
+            if let type = selectedBottomSheetType {
+                type.contentView(isPresented: $isShowingBottomSheet)
             }
-            
-        )
+        }
     }
     
     var subjectSection: some View {
