@@ -8,11 +8,6 @@
 
 import SwiftUI
 
-protocol CardState {
-    var backgroundColor: Color { get }
-    var borderColor: Color { get }
-}
-
 enum HomiesCardState: CardState {
     case cardDefault
     case selected

@@ -9,12 +9,12 @@
 import SwiftUI
 
 struct HomiesCard: View {
-    private let state: HomiesCardState
+    private let state: CardState
     private let profile: SingleProfile
     private let name: String
     
     init(
-        state: HomiesCardState,
+        state: CardState,
         profile: SingleProfile,
         name: String
     ) {
@@ -86,7 +86,7 @@ struct HomiesCard: View {
 #Preview {
     VStack(spacing: 50) {
         HomiesCard(
-            state: .cardDefault,
+            state: HomiesCardState.cardDefault,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
@@ -99,7 +99,7 @@ struct HomiesCard: View {
         )
         
         HomiesCard(
-            state: .selected,
+            state: HomiesCardState.selected,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
@@ -112,7 +112,7 @@ struct HomiesCard: View {
         )
         
         HomiesCard(
-            state: .selectable,
+            state: HomiesCardState.selectable,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
