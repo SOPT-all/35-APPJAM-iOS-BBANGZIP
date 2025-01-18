@@ -12,43 +12,49 @@ struct NameInputView: View {
     @StateObject private var viewModel = NameInputViewModel()
     
     var body: some View {
-        VStack(spacing: 0) {
-            backButton
-            
-            ProgressBar(category: $viewModel.currentStep)
+        NavigationView {
+            VStack(spacing: 0) {
+                backButton
+                
+                ProgressBar(category: $viewModel.currentStep)
+                    .padding(
+                        .horizontal,
+                        44
+                    )
+                    .padding(
+                        .bottom,
+                        78
+                    )
+                
+                VStack(spacing: 32) {
+                    mainDescription
+                    
+                    nicknameTextField
+                    
+                    Spacer()
+                    
+                    nextButton
+                }
                 .padding(
                     .horizontal,
-                    44
+                    20
                 )
-                .padding(
-                    .bottom,
-                    78
-                )
-            
-            VStack(spacing: 32) {
-                mainDescription
-                
-                nicknameTextField
-                
-                Spacer()
-                
-                nextButton
             }
-            .padding(
-                .horizontal,
-                20
-            )
         }
     }
     
     private var backButton: some View {
-        HStack {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
-            Spacer()
+        Button(action: {
+            
+        }) {
+            HStack {
+                Image(.chevronLeftThickSmall)
+                    .renderingMode(.template)
+                    .foregroundStyle(Color(.labelAlternative))
+                Spacer()
+            }
+            .padding(16)
         }
-        .padding(16)
     }
     
     private var mainDescription: some View {
@@ -68,26 +74,49 @@ struct NameInputView: View {
             "예) 유나대장",
             text: $viewModel.nickname
         )
-            .textFieldStyle(
-                CustomTextFieldStyle(
-                    text: $viewModel.nickname,
-                    style: .nickname,
-                    state: viewModel.state,
-                    alertText: viewModel.announceState
-                )
+        .textFieldStyle(
+            CustomTextFieldStyle(
+                text: $viewModel.nickname,
+                style: .nickname,
+                state: viewModel.state,
+                alertText: viewModel.announceState
             )
+        )
     }
     
     private var nextButton: some View {
         NavigationLink("다음으로") {
-            // TODO: 화면 연결 로직
+            TestNextView()
         }
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.chevronLeftThickSmall)
             )
         )
+    }
+}
 
+struct TestNextView: View {
+    @SwiftUI.Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    private var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            HStack {
+                Image(.chevronLeftThickSmall)
+                    .renderingMode(.template)
+                    .foregroundStyle(Color(.labelAlternative))
+                Spacer()
+            }
+            .padding(16)
+        }
+    }
+    
+    var body: some View {
+        Text("Test View")
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: backButton)  // <-- 👀 버튼을 등록한다.
     }
 }
 
