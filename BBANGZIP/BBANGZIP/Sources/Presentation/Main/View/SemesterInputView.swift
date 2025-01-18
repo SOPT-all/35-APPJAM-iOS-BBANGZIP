@@ -14,7 +14,6 @@ struct SemesterInputView: View {
     @State private var selectedYear: Int
     @State private var selectedSemester: String
     @State private var isPickerPresented: Bool
-    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(
         currentStep: Step = .Second,
@@ -115,7 +114,7 @@ struct SemesterInputView: View {
     
     private var backButton: some View {
         Button(action: {
-            dismiss()
+            // TODO: 뒤로가기 버튼 누르면 상태 변경
         }) {
             HStack {
                 Image(.chevronLeftThickSmall)
