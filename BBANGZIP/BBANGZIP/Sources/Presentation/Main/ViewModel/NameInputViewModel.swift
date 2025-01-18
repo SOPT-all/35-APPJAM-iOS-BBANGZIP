@@ -8,11 +8,13 @@
 
 import SwiftUI
 
-class NameInputViewModel: ObservableObject {
+final class NameInputViewModel: ObservableObject {
     @Published var currentStep: Step
     @Published var nickname: String
     @Published var announceState: NicknameTextFieldAlertCase?
     @Published var state: TextFieldState
+    
+    // TODO: TextField 로직 변경 후 수정 필요
     
     init(
         currentStep: Step = .First,
@@ -32,7 +34,7 @@ class NameInputViewModel: ObservableObject {
     ) {
         if let maxLength = TextFieldStyleCase.nickname.maxLength {
             if newText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                // 공백으로만 이루어짐
+                // TODO: 공백으로만 이루어진 경우 로직 추가 필요
             }
             if newText.count > maxLength {
                 nickname = String(newText.prefix(maxLength))
@@ -46,10 +48,10 @@ class NameInputViewModel: ObservableObject {
                     }
                 }
                 
-                if result.isEmpty { // 글자 삭제한 경우
-                    
-                } else { // 입력한 글자 검사
-                    if result.containsEmoji { // 특수문자(이모지)
+                if result.isEmpty {
+                    // TODO: 공백인 경우 로직 추가 필요
+                } else {
+                    if result.containsEmoji {
                         state = .alert
                         announceState = .emojiWrong
                     } else if result.containsSymbol {
