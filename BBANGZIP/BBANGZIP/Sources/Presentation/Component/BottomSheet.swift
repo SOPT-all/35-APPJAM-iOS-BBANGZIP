@@ -89,10 +89,12 @@ extension View {
         height: Int,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
-        BottomSheet(
-            isShowing: isShowing,
-            height: height,
-            content: content
+        overlay(
+            BottomSheet(
+                isShowing: isShowing,
+                height: height,
+                content: content
+            )
         )
     }
 }
