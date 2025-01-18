@@ -10,42 +10,44 @@ import SwiftUI
 
 struct NameInputView: View {
     @StateObject private var viewModel = NameInputViewModel()
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                backButton
-                
-                ProgressBar(category: $viewModel.currentStep)
-                    .padding(
-                        .horizontal,
-                        44
-                    )
-                    .padding(
-                        .bottom,
-                        78
-                    )
-                
-                VStack(spacing: 32) {
-                    mainDescription
-                    
-                    nicknameTextField
-                    
-                    Spacer()
-                    
-                    nextButton
-                }
+        VStack(spacing: 0) {
+            ProgressBar(category: $viewModel.currentStep)
                 .padding(
                     .horizontal,
-                    20
+                    44
                 )
+                .padding(
+                    .bottom,
+                    78
+                )
+            
+            VStack(spacing: 32) {
+                mainDescription
+                
+                nicknameTextField
+                
+                Spacer()
+                
+                nextButton
             }
+            .padding(
+                .horizontal,
+                20
+            )
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading: backButton
+        )
+        
     }
     
     private var backButton: some View {
         Button(action: {
-            
+            dismiss()
         }) {
             HStack {
                 Image(.chevronLeftThickSmall)
@@ -53,7 +55,6 @@ struct NameInputView: View {
                     .foregroundStyle(Color(.labelAlternative))
                 Spacer()
             }
-            .padding(16)
         }
     }
     
@@ -86,37 +87,13 @@ struct NameInputView: View {
     
     private var nextButton: some View {
         NavigationLink("다음으로") {
-            TestNextView()
+            // TODO: 화면 전환해야 할 다음 뷰
         }
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.chevronLeftThickSmall)
             )
         )
-    }
-}
-
-struct TestNextView: View {
-    @SwiftUI.Environment(\.dismiss) private var dismiss
-    
-    private var backButton: some View {
-        Button(action: {
-            dismiss()
-        }) {
-            HStack {
-                Image(.chevronLeftThickSmall)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.labelAlternative))
-                Spacer()
-            }
-            .padding(16)
-        }
-    }
-    
-    var body: some View {
-        Text("Test View")
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: backButton)  // <-- 👀 버튼을 등록한다.
     }
 }
 
