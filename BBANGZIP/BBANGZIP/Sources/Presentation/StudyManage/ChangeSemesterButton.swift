@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct ChangeSemesterButton: View {
-    @Binding private var isShowingBottomSheet: Bool
+    @ObservedObject var viewModel: SubjectManageViewModel
     
-    init(isShowingBottomSheet: Binding<Bool>) {
-        self._isShowingBottomSheet = isShowingBottomSheet
+    init(viewModel: SubjectManageViewModel = SubjectManageViewModel()) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
         Button {
-            isShowingBottomSheet = true
+            viewModel.showChangeSemesterSheet()
         } label: {
             HStack(spacing: 4) {
                 CustomText(

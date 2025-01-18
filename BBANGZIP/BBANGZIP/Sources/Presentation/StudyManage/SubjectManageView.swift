@@ -8,22 +8,22 @@
 
 import SwiftUI
 
-struct StudyManageView: View {
-    @State private var isShowingBottomSheet: Bool
+struct SubjectManageView: View {
+    @StateObject private var viewModel: SubjectManageViewModel
     private let selectedBottomSheetType: BottomSheetType?
     
     init(
-        isShowingBottomSheet: Bool,
+        viewModel: SubjectManageViewModel = SubjectManageViewModel(),
         selectedBottomSheetType: BottomSheetType? = .changeSemester
     ) {
-        self.isShowingBottomSheet = isShowingBottomSheet
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.selectedBottomSheetType = selectedBottomSheetType
     }
     
     var body: some View {
         VStack {
             HStack {
-                ChangeSemesterButton(isShowingBottomSheet: $isShowingBottomSheet)
+                ChangeSemesterButton(viewModel: viewModel)
                     .padding(
                         .leading,
                         24
@@ -45,7 +45,7 @@ struct StudyManageView: View {
                     .edgesIgnoringSafeArea(.top)
             )
             
-            VStack {
+            VStack(spacing: 32) {
                 subjectSection
                 
                 HStack(spacing: 20) {
@@ -53,19 +53,13 @@ struct StudyManageView: View {
                     
                     exView
                 }
-                .padding(.top, 32)
-                    
             }
             .padding(
                 .top,
                 48
             )
             .padding(
-                .leading,
-                20
-            )
-            .padding(
-                .trailing,
+                .horizontal,
                 20
             )
             
@@ -73,11 +67,11 @@ struct StudyManageView: View {
             
         }
         .bottomSheet(
-            isShowing: $isShowingBottomSheet,
+            isShowing: $viewModel.isShowingBottomSheet,
             height: 453
         ) {
             if let type = selectedBottomSheetType {
-                type.contentView(isPresented: $isShowingBottomSheet)
+                type.contentView(isPresented: $viewModel.isShowingBottomSheet)
             }
         }
     }
@@ -148,5 +142,5 @@ struct StudyManageView: View {
 }
 
 #Preview {
-    StudyManageView(isShowingBottomSheet: false)
+    SubjectManageView()
 }
