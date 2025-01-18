@@ -40,7 +40,6 @@ struct OnboardingStartView: View {
             .horizontal,
             20
         )
-        
     }
 }
 
