@@ -29,7 +29,7 @@ enum ChipType {
         case .points(let points):
             "\(points)P"
         case .level(let level):
-            "Lv\(level)"
+            "Lv \(level)"
         }
     }
     
