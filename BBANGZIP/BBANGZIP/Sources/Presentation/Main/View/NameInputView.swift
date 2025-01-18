@@ -79,8 +79,8 @@ struct NameInputView: View {
     }
     
     private var nextButton: some View {
-        Button("다음으로") {
-            viewModel.handleNextButtonTapped()
+        NavigationLink("다음으로") {
+            // TODO: 화면 연결 로직
         }
         .buttonStyle(
             SolidIconButton(

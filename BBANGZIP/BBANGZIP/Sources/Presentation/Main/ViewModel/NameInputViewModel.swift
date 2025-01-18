@@ -14,10 +14,6 @@ class NameInputViewModel: ObservableObject {
     @Published var announceState: NicknameTextFieldAlertCase? = nil
     @Published var state: TextFieldState = .defaultState
     
-    func handleNextButtonTapped() {
-        // TODO: 다음 버튼 눌렀을 때 화면 전환 로직 구현
-    }
-    
     private func validateNickname(
         oldText: String,
         newText: String
