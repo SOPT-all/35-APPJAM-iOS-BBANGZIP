@@ -9,7 +9,7 @@
 import SwiftUI
 
 enum ChipType {
-    case daysRemaining(
+    case daysLeft(
         Int,
         withExamLabel: Bool
     )
@@ -18,7 +18,7 @@ enum ChipType {
     
     var text: String {
         switch self {
-        case .daysRemaining(
+        case .daysLeft(
             let days,
             let withExamLabel
         ):

@@ -106,7 +106,7 @@ struct StudyCard: View {
             
             HStack(spacing: 8) {
                 Chip(
-                    type: .daysRemaining(
+                    type: .daysLeft(
                         studyData.remainingDays,
                         withExamLabel: false
                     ),

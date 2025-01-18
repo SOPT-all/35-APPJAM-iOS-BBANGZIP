@@ -43,7 +43,7 @@ struct Chip: View {
 #Preview {
     VStack(spacing: 10) {
         Chip(
-            type: .daysRemaining(
+            type: .daysLeft(
                 24,
                 withExamLabel: true
             ),
@@ -52,14 +52,14 @@ struct Chip: View {
             )
         )
         Chip(
-            type: .daysRemaining(
+            type: .daysLeft(
                 -18,
                  withExamLabel: false
             ),
             backgroundColor: Color(.labelAlternative)
         )
         Chip(
-            type: .daysRemaining(
+            type: .daysLeft(
                 6,
                 withExamLabel: false
             ),
