@@ -84,7 +84,7 @@ struct SubjectCard: View {
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(
                         state.borderColor,
-                        lineWidth: 3
+                        lineWidth: state.borderWidth
                     )
             )
     }

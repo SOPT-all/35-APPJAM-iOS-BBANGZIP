@@ -11,4 +11,5 @@ import SwiftUI
 protocol CardState {
     var backgroundColor: Color { get }
     var borderColor: Color { get }
+    var borderWidth: CGFloat { get }
 }

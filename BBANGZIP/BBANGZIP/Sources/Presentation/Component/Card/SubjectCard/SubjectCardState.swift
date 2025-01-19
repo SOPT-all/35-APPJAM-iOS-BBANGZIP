@@ -25,9 +25,18 @@ enum SubjectCardState: CardState {
     var borderColor: Color {
         switch self {
         case .cardDefault, .selectable:
-            Color.clear
+            Color(.lineAlternative)
         case .selected:
             Color(.lineStrong)
+        }
+    }
+    
+    var borderWidth: CGFloat {
+        switch self {
+        case .cardDefault, .selectable:
+            1
+        case .selected:
+            3
         }
     }
 }

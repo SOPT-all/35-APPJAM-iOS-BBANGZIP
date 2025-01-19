@@ -24,10 +24,19 @@ enum HomiesCardState: CardState {
 
     var borderColor: Color {
         switch self {
+        case .cardDefault, .selectable:
+            Color(.lineAlternative)
         case .selected:
             Color(.lineStrong)
-        default:
-            Color.clear
+        }
+    }
+    
+    var borderWidth: CGFloat {
+        switch self {
+        case .cardDefault, .selectable:
+            1
+        case .selected:
+            3
         }
     }
 }
