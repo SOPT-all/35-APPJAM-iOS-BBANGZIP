@@ -33,12 +33,13 @@ struct SubjectAddView: View {
             
             Spacer()
             
-            Button("과목 추가하기") {
+            Button("추가하기") {
                 viewModel.addSubject()
             }
             .buttonStyle(
                 SolidIconButton(
-                    buttonImage: Image(.plus)
+                    buttonImage: Image(.plus),
+                    viewModel.isEnabled
                 )
             )
         }

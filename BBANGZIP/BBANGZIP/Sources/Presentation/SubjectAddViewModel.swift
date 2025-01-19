@@ -12,17 +12,21 @@ class SubjectAddViewModel: ObservableObject {
     @Published var subject: String
     @Published var state: TextFieldState
     @Published var alertCase: SubjectTextFieldAlterCase?
+    @Published var isEnabled: Bool
     
     init(
         subject: String = "",
         state: TextFieldState = .defaultState,
-        alertCase: SubjectTextFieldAlterCase? = .defaultCorrect
+        alertCase: SubjectTextFieldAlterCase? = .defaultCorrect,
+        isEnabled: Bool = false
     ) {
         self.subject = subject
         self.state = state
         self.alertCase = alertCase
+        self.isEnabled = isEnabled
     }
     
+    // TODO: 텍스트필드 조건 만족시 isEnabled = true로 변경하는 로직 필요
     private func validateSubject(
         oldText: String,
         newText: String
