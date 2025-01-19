@@ -10,11 +10,14 @@ import SwiftUI
 
 enum TextFieldStyleCase {
     case nickname
+    case subject
     
     var icon: Image? {
         switch self {
         case .nickname:
             Image(.user)
+        case .subject:
+            Image(.book)
         }
     }
     
@@ -22,12 +25,14 @@ enum TextFieldStyleCase {
         switch self {
         case .nickname:
             8
+        case .subject:
+            10
         }
     }
     
     var clearable: Bool {
         switch self {
-        case .nickname:
+        case .nickname, .subject:
             true
         }
     }
