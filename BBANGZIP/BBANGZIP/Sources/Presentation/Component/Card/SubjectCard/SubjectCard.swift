@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SubjectCard: View {
-    @State private var state: CardState
+    private var state: CardState
     // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
     private let subjectCardData: SubjectCardData
     
@@ -69,10 +69,8 @@ struct SubjectCard: View {
                         6
                     )
             }
-            
         }
         .frame(
-            width: 158,
             height: 190
         )
     }
@@ -115,26 +113,6 @@ struct SubjectCard: View {
                 "진행 중인 공부",
                 fontType: .caption1Bold,
                 color: Color(.labelAssistive)
-            )
-        }
-    }
-}
-
-#Preview {
-    ZStack {
-        Color(.systemPink)
-        VStack(spacing: 10) {
-            SubjectCard(
-                state: SubjectCardState.cardDefault,
-                subjectCardData: .mockData
-            )
-            SubjectCard(
-                state: SubjectCardState.selected,
-                subjectCardData: .mockData
-            )
-            SubjectCard(
-                state: SubjectCardState.selectable,
-                subjectCardData: .mockData
             )
         }
     }

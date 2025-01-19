@@ -10,16 +10,28 @@ import SwiftUI
 
 final class SubjectManageViewModel: ObservableObject {
     @Published var isShowingBottomSheet: Bool
+    @Published var state: CardState
     
-    init(isShowingBottomSheet: Bool = false) {
+    init(
+        isShowingBottomSheet: Bool = false,
+        state: CardState = SubjectCardState.cardDefault
+    ) {
         self.isShowingBottomSheet = isShowingBottomSheet
+        self.state = state
     }
     
     func showChangeSemesterSheet() {
         isShowingBottomSheet = true
     }
     
-    private func deleteSubject() {
-        // TODO: 과목 삭제 로직 구현
+    func deleteSubject() {
+        switch state {
+        case SubjectCardState.cardDefault:
+            state = SubjectCardState.selectable
+        case SubjectCardState.selectable:
+            state = SubjectCardState.cardDefault
+        default:
+            break
+        }
     }
 }

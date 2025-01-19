@@ -20,6 +20,17 @@ struct SubjectManageView: View {
         self.selectedBottomSheetType = selectedBottomSheetType
     }
     
+    // TODO: API 연동 후 수정 필요
+    private let data = Array(1...8)
+    
+    private let columns = [
+        GridItem(
+            .flexible(),
+            spacing: 20
+        ),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         VStack {
             HStack {
@@ -48,10 +59,25 @@ struct SubjectManageView: View {
             VStack(spacing: 32) {
                 subjectSection
                 
-                HStack(spacing: 20) {
-                    exView
-                    
-                    exView
+                ScrollView {
+                    LazyVGrid(
+                        columns: columns,
+                        spacing: 20
+                    ) {
+                        ForEach(
+                            data,
+                            id: \.self
+                        ) { i in
+                            Button {
+                                
+                            } label: {
+                                SubjectCard(
+                                    state: viewModel.state,
+                                    subjectCardData: SubjectCardData.mockData
+                                )
+                            }
+                        }
+                    }
                 }
             }
             .padding(
@@ -74,6 +100,7 @@ struct SubjectManageView: View {
                 type.contentView(isPresented: $viewModel.isShowingBottomSheet)
             }
         }
+        
     }
     
     var subjectSection: some View {
@@ -87,7 +114,7 @@ struct SubjectManageView: View {
             Spacer()
             
             Button {
-                // TODO: viewModel내에서 취소 로직 구현 후 반영 필요
+                viewModel.deleteSubject()
             } label: {
                 Image(.trash)
                     .renderingMode(.template)
@@ -100,42 +127,6 @@ struct SubjectManageView: View {
                     .foregroundStyle(Color(.labelAssistive))
             }
         }
-    }
-    
-    var exView: some View {
-        VStack(spacing: 8) {
-            CircleIcon(name: "Plus")
-                .padding(
-                    .horizontal,
-                    59
-                )
-            
-            CustomText(
-                "과목추가",
-                fontType: .body1Bold,
-                color: Color(.labelDisable)
-            )
-        }
-        .padding(
-            .vertical,
-            59
-        )
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .foregroundStyle(Color(.staticWhite))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(
-                            Color(.lineAlternative),
-                            lineWidth: 2
-                        )
-                )
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    y: 4
-                )
-        )
     }
 }
 
