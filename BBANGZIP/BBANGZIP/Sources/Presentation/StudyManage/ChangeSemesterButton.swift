@@ -21,6 +21,7 @@ struct ChangeSemesterButton: View {
         } label: {
             HStack(spacing: 4) {
                 CustomText(
+                    // TODO: API 연동 후 변경 필요
                     "2025년 1학기",
                     fontType: .body1Bold,
                     color: Color(.labelNormal)

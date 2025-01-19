@@ -87,7 +87,7 @@ struct SubjectManageView: View {
             Spacer()
             
             Button {
-                 
+                // TODO: viewModel내에서 취소 로직 구현 후 반영 필요
             } label: {
                 Image(.trash)
                     .renderingMode(.template)
@@ -126,9 +126,7 @@ struct SubjectManageView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
                         .stroke(
-                            Color(
-                                .lineAlternative
-                            ),
+                            Color(.lineAlternative),
                             lineWidth: 2
                         )
                 )
