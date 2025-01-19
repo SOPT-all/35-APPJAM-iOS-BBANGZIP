@@ -10,8 +10,7 @@ let infoPlist: [String: Plist.Value] = [
         "UISceneConfigurations": [
             "UIWindowSceneSessionRoleApplication": [
                 [
-                    "UISceneConfigurationName": "Default Configuration",
-                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
+                    "UISceneConfigurationName": "Default Configuration"
                 ],
             ]
         ]

@@ -40,6 +40,22 @@ final class KeyChainManager: Sendable {
         ] as CFDictionary
         let status = SecItemAdd(saveData, nil)
         handleStatus(status: status)
+        if status == errSecDuplicateItem {
+            // 이미 존재하는 경우 업데이트 수행
+            let updateQuery: CFDictionary = [
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrService: serviceName,
+                kSecAttrAccount: type.account
+            ] as CFDictionary
+            
+            let attributesToUpdate: CFDictionary = [
+                kSecValueData: token.data(using: .utf8)!
+            ] as CFDictionary
+            
+            return SecItemUpdate(updateQuery, attributesToUpdate)
+        }
+        
+        handleStatus(status: status)
         return status
     }
     

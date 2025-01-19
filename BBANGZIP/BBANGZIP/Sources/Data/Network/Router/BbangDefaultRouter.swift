@@ -134,7 +134,7 @@ extension BbangDefaultRouter: Router {
         switch self {
         default:
             return [
-                "Conttent-Type": "application/json"
+                "Content-Type": "application/json"
             ]
         }
     }

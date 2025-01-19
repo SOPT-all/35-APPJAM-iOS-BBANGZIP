@@ -6,9 +6,12 @@
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
+import Alamofire
+import Security
+
 import KakaoSDKUser
 import KakaoSDKCommon
-import Alamofire
+
 
 final class DefaultUserRepository: UserRepository {
     private let session: Session
@@ -20,19 +23,19 @@ final class DefaultUserRepository: UserRepository {
     
     func kakaoLogin(completion: @escaping (Bool) -> Void) {
         if (UserApi.isKakaoTalkLoginAvailable()) {
-            UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
+            UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
                 if let error = error {
                     print(error)
-                }
-                else {
-                    print("loginWithKakaoTalk() success.")
+                    completion(false)
+                } else {
+                    print("loginWithKakaoTalk() 성공")
                     
-                    _ = oauthToken
                     guard let accessToken = oauthToken?.accessToken else {
                         completion(false)
                         return
                     }
-                    KeyChainManager.shared.saveValue(
+                    
+                    let status = KeyChainManager.shared.saveValue(
                         token: accessToken,
                         type: .AccessToken
                     )
@@ -46,22 +49,27 @@ final class DefaultUserRepository: UserRepository {
     
     func registerKakaoToken() async {
         guard let code = KeyChainManager.shared.searchValue() else {
+            print("Keychain에서 코드를 찾을 수 없습니다.")
             return
         }
-        let result = await session.request(
-            BbangDefaultRouter.signup(
-                dto: SignInRequestDTO(
-                    code: code
+        
+        do {
+            let result = try await session.request(
+                BbangDefaultRouter.signup(
+                    dto: SignInRequestDTO(code: code)
                 )
             )
-        )
-            .serializingDecodable(SignInResponseDTO.self).result
-        
-        switch result {
-        case .success(let dto):
-            dump(dto)
-        case .failure(let error):
-            dump(error)
+                .serializingDecodable(SignInResponseDTO.self).value
+            
+            print("회원가입 성공: \(result)")
+        } catch {
+            if let afError = error.asAFError {
+                print("Alamofire 에러: \(afError)")
+            } else if let decodingError = error as? DecodingError {
+                print("디코딩 에러: \(decodingError)")
+            } else {
+                print("알 수 없는 에러: \(error)")
+            }
         }
     }
 }
