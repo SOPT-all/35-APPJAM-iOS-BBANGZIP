@@ -1,33 +1,33 @@
 //
-//  HomiesState.swift
+//  SubjectCardState.swift
 //  BBANGZIP
 //
-//  Created by 김송희 on 1/16/25.
+//  Created by 조성민 on 1/17/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
 import SwiftUI
 
-enum HomiesState {
-    case basic
-    case checked
-    case holding
+enum SubjectCardState: CardState {
+    case cardDefault
+    case selected
+    case selectable
     
     var backgroundColor: Color {
         switch self {
-        case .basic:
+        case .cardDefault:
             Color(.backgroundNormal)
-        case .checked, .holding:
+        case .selected, .selectable:
             Color(.backgroundAlternative)
         }
     }
-
+    
     var borderColor: Color {
         switch self {
-        case .checked:
-            Color(.lineStrong)
-        default:
+        case .cardDefault, .selectable:
             Color.clear
+        case .selected:
+            Color(.lineStrong)
         }
     }
 }

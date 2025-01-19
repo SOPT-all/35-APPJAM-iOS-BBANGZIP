@@ -1,5 +1,5 @@
 //
-//  Homies.swift
+//  HomiesCard.swift
 //  BBANGZIP
 //
 //  Created by 김송희 on 1/16/25.
@@ -8,13 +8,13 @@
 
 import SwiftUI
 
-struct Homies: View {
-    private let state: HomiesState
+struct HomiesCard: View {
+    private let state: CardState
     private let profile: SingleProfile
     private let name: String
     
     init(
-        state: HomiesState,
+        state: CardState,
         profile: SingleProfile,
         name: String
     ) {
@@ -85,8 +85,8 @@ struct Homies: View {
 
 #Preview {
     VStack(spacing: 50) {
-        Homies(
-            state: .basic,
+        HomiesCard(
+            state: HomiesCardState.cardDefault,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
@@ -98,8 +98,8 @@ struct Homies: View {
             20
         )
         
-        Homies(
-            state: .checked,
+        HomiesCard(
+            state: HomiesCardState.selected,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
@@ -111,8 +111,8 @@ struct Homies: View {
             20
         )
         
-        Homies(
-            state: .holding,
+        HomiesCard(
+            state: HomiesCardState.selectable,
             profile: SingleProfile(
                 size: .medium,
                 outlined: true
