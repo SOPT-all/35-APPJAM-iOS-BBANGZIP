@@ -10,17 +10,17 @@ import SwiftUI
 
 class SubjectAddViewModel: ObservableObject {
     @Published var subject: String
-    @Published var announceState: SubjectTextFieldAlterCase?
     @Published var state: TextFieldState
+    @Published var alertCase: SubjectTextFieldAlterCase?
     
     init(
         subject: String = "",
-        announceState: SubjectTextFieldAlterCase? = nil,
-        state: TextFieldState = .defaultState
+        state: TextFieldState = .defaultState,
+        alertCase: SubjectTextFieldAlterCase? = nil
     ) {
         self.subject = subject
-        self.announceState = announceState
         self.state = state
+        self.alertCase = alertCase
     }
     
     private func validateSubject(
@@ -34,7 +34,7 @@ class SubjectAddViewModel: ObservableObject {
             if newText.count > maxLength {
                 subject = String(newText.prefix(maxLength))
                 state = .alert
-                announceState = .maxLengthWrong
+                alertCase = .maxLengthWrong
             } else {
                 var result = newText
                 for char in oldText {
@@ -48,17 +48,17 @@ class SubjectAddViewModel: ObservableObject {
                 } else {
                     if result.containsEmoji {
                         state = .alert
-                        announceState = .emojiWrong
+                        alertCase = .emojiWrong
                     } else if result.containsSymbol {
                         state = .alert
-                        announceState = .symbolWrong
+                        alertCase = .symbolWrong
                     } else {
                         if newText.isEmpty {
                             state = .placeholder
-                            announceState = .defaultCorrect
+                            alertCase = .defaultCorrect
                         } else {
                             state = .complete
-                            announceState = .completeCorrect
+                            alertCase = .completeCorrect
                         }
                     }
                 }
