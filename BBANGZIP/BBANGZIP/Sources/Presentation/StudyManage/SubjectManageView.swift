@@ -59,26 +59,9 @@ struct SubjectManageView: View {
             VStack(spacing: 32) {
                 subjectSection
                 
-                ScrollView {
-                    LazyVGrid(
-                        columns: columns,
-                        spacing: 20
-                    ) {
-                        ForEach(
-                            data,
-                            id: \.self
-                        ) { i in
-                            Button {
-                                
-                            } label: {
-                                SubjectCard(
-                                    state: viewModel.state,
-                                    subjectCardData: SubjectCardData.mockData
-                                )
-                            }
-                        }
-                    }
-                }
+                // TODO: padding bottom 마지막 카드 기준 정렬 필요
+                subjectCardScrollSection
+                    .padding(.bottom, 80)
             }
             .padding(
                 .top,
@@ -127,6 +110,30 @@ struct SubjectManageView: View {
                     .foregroundStyle(Color(.labelAssistive))
             }
         }
+    }
+    
+    var subjectCardScrollSection: some View {
+        ScrollView {
+            LazyVGrid(
+                columns: columns,
+                spacing: 20
+            ) {
+                ForEach(
+                    data,
+                    id: \.self
+                ) { i in
+                    Button {
+                        // TODO: 과목 별 선택 로직 추가 필요
+                    } label: {
+                        SubjectCard(
+                            state: viewModel.state,
+                            subjectCardData: SubjectCardData.mockData
+                        )
+                    }
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
     }
 }
 
