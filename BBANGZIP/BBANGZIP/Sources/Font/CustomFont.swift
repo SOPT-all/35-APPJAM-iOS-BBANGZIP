@@ -163,7 +163,7 @@ struct FontModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(font.swiftUIFont)
-            .lineSpacing(font.lineHeight - font.size)
+            .lineSpacing((font.lineHeight - font.size) / 4)
             .kerning(font.letterSpacing)
     }
 }
