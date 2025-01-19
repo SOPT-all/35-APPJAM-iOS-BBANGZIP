@@ -12,7 +12,7 @@ struct SemesterInputView: View {
     @State private var currentStep: Step
     @State private var nickname: String
     @State private var selectedYear: Int
-    @State private var selectedSemester: String
+    @State private var selectedSemester: Semester
     @State private var isPickerPresented: Bool
     
     init(
@@ -20,7 +20,7 @@ struct SemesterInputView: View {
         currentStep: Step = .Second,
         nickname: String,
         selectedYear: Int,
-        selectedSemester: String,
+        selectedSemester: Semester,
         isPickerPresented: Bool = false
     ) {
         self.currentStep = currentStep
@@ -31,12 +31,6 @@ struct SemesterInputView: View {
     }
     
     private let years = Array(2025...2028)
-    private let semesters = [
-        "1학기",
-        "2학기",
-        "여름학기",
-        "겨울학기"
-    ]
     
     var body: some View {
         VStack(spacing: 0) {            
@@ -85,7 +79,7 @@ struct SemesterInputView: View {
     private var headerDescription: some View {
         HStack {
             CustomText(
-                "\(nickname), 안녕하세요!",
+                "\(nickname) 사장님, 안녕하세요!",
                 fontType: .body2Bold,
                 color: Color(.labelAlternative)
             )
@@ -162,11 +156,11 @@ struct SemesterInputView: View {
             selection: $selectedSemester
         ) {
             ForEach(
-                semesters,
+                Semester.allCases,
                 id: \.self
             ) { semester in
                 CustomText(
-                    semester,
+                    semester.rawValue,
                     fontType: .heading2Bold,
                     color: Color(.labelStrong)
                 )
@@ -198,7 +192,11 @@ struct SemesterInputView: View {
 }
 
 #Preview {
-    SemesterInputView()
+    SemesterInputView(
+        nickname: "홍시",
+        selectedYear: 2025,
+        selectedSemester: Semester.summer
+    )
 }
 
 
