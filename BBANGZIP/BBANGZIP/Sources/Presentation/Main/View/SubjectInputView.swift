@@ -112,7 +112,7 @@ struct SubjectInputView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.chevronLeftThickSmall)
+                buttonImage: Image(.chevronRight)
             )
         )
         
