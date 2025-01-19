@@ -112,31 +112,31 @@ enum CustomFont: Sendable {
     var letterSpacing: CGFloat {
         switch self {
         case .title1Small, .title1Medium, .title1Bold:
-            return -0.027
+            return -0.972
         case .title2Small, .title2Medium, .title2Bold:
-            return -0.0236
+            return -0.6608
         case .title3Small, .title3Medium, .title3Bold:
-            return -0.023
+            return -0.552
         case .heading1Small, .heading1Medium, .heading1Bold:
-            return -0.0194
+            return -0.4268
         case .heading2Small, .heading2Medium, .heading2Bold:
-            return -0.012
+            return -0.24
         case .headline1Small, .headline1Medium, .headline1Bold:
-            return -0.002
+            return -0.0036
         case .headline2Small, .headline2Medium, .headline2Bold:
             return 0
         case .body1Small, .body1Medium, .body1Bold:
-            return 0.0057
+            return 0.0912
         case .body2Small, .body2Medium, .body2Bold:
-            return 0.0096
+            return 0.144
         case .label1Small, .label1Medium, .label1Bold:
-            return 0.0145
+            return 0.203
         case .label2Small, .label2Medium, .label2Bold:
-            return 0.0194
+            return 0.2522
         case .caption1Small, .caption1Medium, .caption1Bold:
-            return 0.0252
+            return 0.3024
         case .caption2Small, .caption2Medium, .caption2Bold:
-            return 0.0311
+            return 0.3421
         }
     }
 
