@@ -17,6 +17,7 @@ enum BottomSheetType: Int {
     case examDate
     case studyFinishDate
     case changeSemester
+    case divideStudy
     
     @MainActor @ViewBuilder
     func contentView(isPresented: Binding<Bool>) -> some View {
@@ -54,6 +55,10 @@ enum BottomSheetType: Int {
                 isPresented: isPresented,
                 selectedYear: .constant(2025),
                 selectedSemester: .constant("1학기")
+            )
+        case .divideStudy:
+            DivideStudyBottomSheet(
+                isPresented: isPresented
             )
         default:
             Text("아직 구현되지 않은 뷰입니다.")
