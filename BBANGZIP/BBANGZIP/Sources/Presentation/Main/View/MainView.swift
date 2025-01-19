@@ -11,6 +11,10 @@ struct MainView: View {
     var body: some View {
         NavigationView {
             VStack {
+                MenuTab(
+                    tabNames: ["중간고사", "기말고사", "멍멍멍"]
+                )
+
                 Text("Welcome")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -35,5 +39,6 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+        
     }
 }
