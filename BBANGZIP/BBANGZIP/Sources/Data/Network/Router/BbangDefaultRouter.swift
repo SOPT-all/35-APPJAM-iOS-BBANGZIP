@@ -11,7 +11,7 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case signup(dto: signInRequestDTO)
+    case signup(dto: SignInRequestDTO)
     case getRefreshToken
     case logout
     case withDraw
@@ -43,7 +43,7 @@ extension BbangDefaultRouter: Router {
     
     var path: String {
         switch self {
-        case .signup(let signInRequest):
+        case .signup:
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -132,11 +132,6 @@ extension BbangDefaultRouter: Router {
     
     var headers: [String : String]? {
         switch self {
-        case .signup(let signInRequest):
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(signInRequest.authorization)"
-            ]
         default:
             return [
                 "Conttent-Type": "application/json"

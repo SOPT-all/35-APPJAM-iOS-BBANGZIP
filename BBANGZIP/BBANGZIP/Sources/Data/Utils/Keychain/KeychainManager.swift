@@ -9,19 +9,24 @@
 import Foundation
 import Security
 
-protocol KeyChainManager: Sendable {
-    func saveValue(
-        token: String,
-        type: TokenType
-    ) -> OSStatus
-    func changeValue(token: String) -> OSStatus
-    func searchValue() -> String?
-    @discardableResult
-    func removeValue() -> OSStatus
-}
+//protocol KeyChainManager: Sendable {
+//    func saveValue(
+//        token: String,
+//        type: TokenType
+//    ) -> OSStatus
+//    func changeValue(token: String) -> OSStatus
+//    func searchValue() -> String?
+//    @discardableResult
+//    func removeValue() -> OSStatus
+//}
 
-final class DefaultKeyChainManager: KeyChainManager {
+//final class DefaultKeyChainManager: KeyChainManager {
+final class KeyChainManager: Sendable {
     private let serviceName: String = "com.bbangzip.io.tuist.BBANGZIP"
+    
+    static let shared = KeyChainManager()
+    
+    private init() { }
     
     func saveValue(
         token: String,
