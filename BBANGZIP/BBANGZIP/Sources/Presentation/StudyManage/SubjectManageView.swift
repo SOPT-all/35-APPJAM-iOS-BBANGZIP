@@ -59,9 +59,7 @@ struct SubjectManageView: View {
             VStack(spacing: 32) {
                 subjectSection
                 
-                // TODO: padding bottom 마지막 카드 기준 정렬 필요
                 subjectCardScrollSection
-                    .padding(.bottom, 80)
             }
             .padding(
                 .top,
@@ -119,15 +117,24 @@ struct SubjectManageView: View {
                 spacing: 20
             ) {
                 ForEach(
-                    data,
-                    id: \.self
-                ) { i in
+                    Array(data.enumerated()),
+                    id: \.element
+                ) {
+                    index,
+                    item in
                     Button {
                         // TODO: 과목 별 선택 로직 추가 필요
                     } label: {
                         SubjectCard(
                             state: viewModel.state,
                             subjectCardData: SubjectCardData.mockData
+                        )
+                        .modifier(
+                            LastRowPadding(
+                                index: index,
+                                totalCount: data.count,
+                                columns: columns.count
+                            )
                         )
                     }
                 }
