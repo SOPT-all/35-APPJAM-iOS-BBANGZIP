@@ -16,7 +16,7 @@ class SubjectAddViewModel: ObservableObject {
     init(
         subject: String = "",
         state: TextFieldState = .defaultState,
-        alertCase: SubjectTextFieldAlterCase? = nil
+        alertCase: SubjectTextFieldAlterCase? = .defaultCorrect
     ) {
         self.subject = subject
         self.state = state
@@ -37,6 +37,7 @@ class SubjectAddViewModel: ObservableObject {
                 alertCase = .maxLengthWrong
             } else {
                 var result = newText
+                
                 for char in oldText {
                     if let index = result.firstIndex(of: char) {
                         result.remove(at: index)
@@ -68,6 +69,5 @@ class SubjectAddViewModel: ObservableObject {
     
     func addSubject() {
         // TODO: 과목 추가, 과목 중복 비교 로직 구현
-        
     }
 }
