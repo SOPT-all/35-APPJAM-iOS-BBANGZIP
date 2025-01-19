@@ -16,10 +16,11 @@ struct SemesterInputView: View {
     @State private var isPickerPresented: Bool
     
     init(
+        // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
         currentStep: Step = .Second,
-        nickname: String = "유나 사장님",
-        selectedYear: Int = 2025,
-        selectedSemester: String = "1학기",
+        nickname: String,
+        selectedYear: Int,
+        selectedSemester: String,
         isPickerPresented: Bool = false
     ) {
         self.currentStep = currentStep
