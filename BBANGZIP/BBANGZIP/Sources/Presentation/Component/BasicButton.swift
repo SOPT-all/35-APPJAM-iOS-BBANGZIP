@@ -83,8 +83,9 @@ struct SolidIconButton: ButtonStyle {
                     .vertical,
                     16
                 )
-            
+           
             buttonImage
+                .renderingMode(.template)
                 .foregroundStyle(Color(.staticWhite))
                 .padding(
                     .vertical,

@@ -2,22 +2,21 @@
 //  Chip.swift
 //  BBANGZIP
 //
-//  Created by 최유빈 on 1/16/25.
+//  Created by 송여경 on 1/17/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
-
 import SwiftUI
 
 struct Chip: View {
-    private let remainingDays: Int
-    
-    init(remainingDays: Int) {
-        self.remainingDays = remainingDays
+    private let type: ChipType
+
+    init(type: ChipType) {
+        self.type = type
     }
-    
+
     var body: some View {
-        CustomText (
-            "D\(remainingDays)",
+        CustomText(
+            type.text,
             fontType: .caption1Medium,
             color: Color(.staticWhite)
         )
@@ -31,6 +30,18 @@ struct Chip: View {
         )
         .background(
             Capsule()
-                .fill(Color(.labelAlternative)))
+                .fill(type.color)
+        )
     }
+}
+
+#Preview {
+    VStack(spacing: 10) {
+        Chip(type: .daysLeftWithText(-24))
+        Chip(type: .daysLeftGray(-18))
+        Chip(type: .delayedDate(6))
+        Chip(type: .points(50))
+        Chip(type: .level(1))
+    }
+    .padding()
 }
