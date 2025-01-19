@@ -68,6 +68,6 @@ class SubjectAddViewModel: ObservableObject {
     }
     
     func addSubject() {
-        // TODO: 과목 추가, 과목 중복 비교 로직 구현
+        // TODO: 과목 추가, 과목 중복 비교 로직 / 토스트 메시지 노출 로직 구현 필요
     }
 }
