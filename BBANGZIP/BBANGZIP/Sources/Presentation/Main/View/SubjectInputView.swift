@@ -9,17 +9,32 @@
 import SwiftUI
 
 struct SubjectInputView: View {
-    @State private var currentStep: Step = .third
-    @State private var subject: String = ""
-    @State private var selectedYear: Int = 2025
-    @State private var selectedSemester: String = "1학기"
-    @State private var announceState: NicknameTextFieldAlertCase? = nil
-    @State private var state: TextFieldState = .defaultState
+    @State private var currentStep: Step
+    @State private var subject: String
+    @State private var selectedYear: Int
+    @State private var selectedSemester: Semester
+    @State private var announceState: NicknameTextFieldAlertCase?
+    @State private var state: TextFieldState
+    
+    init(
+        // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
+        currentStep: Step = .third,
+        subject: String,
+        selectedYear: Int,
+        selectedSemester: Semester,
+        announceState: NicknameTextFieldAlertCase? = nil,
+        state: TextFieldState = .defaultState
+    ) {
+        self.currentStep = currentStep
+        self.subject = subject
+        self.selectedYear = selectedYear
+        self.selectedSemester = selectedSemester
+        self.announceState = announceState
+        self.state = state
+    }
     
     var body: some View {
         VStack(spacing: 0) {
-            backButton
-            
             ProgressBar(category: $currentStep)
                 .padding(
                     .horizontal,
@@ -46,10 +61,18 @@ struct SubjectInputView: View {
                 20
             )
         }
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                backButton
+            }
+        }
     }
     
     private var backButton: some View {
-        HStack(spacing: 0) {
+        Button(action: {
+            // TODO: 뒤로가기 버튼 누르면 상태 변경하도록
+        }) {
             Image(.chevronLeftThickSmall)
                 .renderingMode(.template)
                 .foregroundStyle(Color(.labelAlternative))
@@ -120,5 +143,9 @@ struct SubjectInputView: View {
 }
 
 #Preview {
-    SubjectInputView()
+    SubjectInputView(
+        subject: "경제학원론",
+        selectedYear: 2025,
+        selectedSemester: Semester.summer
+    )
 }
