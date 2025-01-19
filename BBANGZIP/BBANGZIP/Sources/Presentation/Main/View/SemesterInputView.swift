@@ -56,6 +56,7 @@ struct SemesterInputView: View {
                 
                 HStack(spacing: 0) {
                     yearPicker
+                    
                     semesterPicker
                 }
                 .padding(
