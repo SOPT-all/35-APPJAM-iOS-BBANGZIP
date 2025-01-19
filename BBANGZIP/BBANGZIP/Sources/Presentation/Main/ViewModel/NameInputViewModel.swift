@@ -17,7 +17,7 @@ final class NameInputViewModel: ObservableObject {
     // TODO: TextField 로직 변경 후 수정 필요
     
     init(
-        currentStep: Step = .First,
+        currentStep: Step = .first,
         nickname: String = "",
         announceState: NicknameTextFieldAlertCase? = nil,
         state: TextFieldState = .defaultState

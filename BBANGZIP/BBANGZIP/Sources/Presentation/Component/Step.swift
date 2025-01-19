@@ -9,17 +9,17 @@
 import SwiftUI
 
 enum Step: Int {
-    case First = 1
-    case Second = 2
-    case Third = 3
+    case first = 1
+    case second = 2
+    case third = 3
     
     var percentage: CGFloat {
         switch self {
-        case .First:
+        case .first:
             0.04
-        case .Second:
+        case .second:
             0.5
-        case .Third:
+        case .third:
             1
         }
     }
