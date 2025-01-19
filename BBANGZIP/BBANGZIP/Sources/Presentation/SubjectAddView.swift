@@ -11,7 +11,9 @@ import SwiftUI
 struct SubjectAddView: View {
     @StateObject private var viewModel: SubjectAddViewModel
     
-    init(viewModel: SubjectAddViewModel = SubjectAddViewModel()) {
+    init(
+        viewModel: SubjectAddViewModel = SubjectAddViewModel()
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -28,8 +30,30 @@ struct SubjectAddView: View {
             }
             
             subjectTextField
+            
+            Spacer()
+            
+            Button("과목 추가하기") {
+                viewModel.addSubject()
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.plus)
+                )
+            )
         }
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
+        .padding(
+            .top,
+            16
+        )
+        .padding(
+            .bottom,
+            8
+        )
     }
     
     var subjectTextField: some View {

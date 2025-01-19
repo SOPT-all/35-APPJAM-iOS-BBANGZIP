@@ -65,4 +65,9 @@ class SubjectAddViewModel: ObservableObject {
             }
         }
     }
+    
+    func addSubject() {
+        // TODO: 과목 추가, 과목 중복 비교 로직 구현
+        
+    }
 }
