@@ -78,6 +78,6 @@ struct MenuTab: View {
 
 #Preview {
     MenuTab(
-        tabNames: ["중간고사", "기말고사", "멍멍멍"]
+        tabNames: ["중간고사", "기말고사"]
     )
 }
