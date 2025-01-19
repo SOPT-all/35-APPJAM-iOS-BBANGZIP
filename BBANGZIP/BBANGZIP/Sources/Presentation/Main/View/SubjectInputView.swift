@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SubjectInputView: View {
-    @State private var currentStep: Step = .Third
+    @State private var currentStep: Step = .third
     @State private var subject: String = ""
     @State private var selectedYear: Int = 2025
     @State private var selectedSemester: String = "1학기"
@@ -78,20 +78,7 @@ struct SubjectInputView: View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 CustomText(
-                    "수강하는 과목 중",
-                    fontType: .title2Bold,
-                    color: Color(.labelNormal)
-                )
-                Spacer()
-            }
-            .padding(
-                .bottom,
-                5
-            )
-            
-            HStack(spacing: 0) {
-                CustomText(
-                    "한 가지만 먼저 입력해 볼까요?",
+                    "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
                     fontType: .title2Bold,
                     color: Color(.labelNormal)
                 )
