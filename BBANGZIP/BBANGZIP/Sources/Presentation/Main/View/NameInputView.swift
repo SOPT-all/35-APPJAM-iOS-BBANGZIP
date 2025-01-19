@@ -42,9 +42,11 @@ struct NameInputView: View {
             )
         }
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(
-            leading: backButton
-        )
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                backButton
+            }
+        }
         
     }
     
@@ -52,12 +54,10 @@ struct NameInputView: View {
         Button(action: {
             // TODO: 뒤로가기 버튼 누르면 상태 변경하도록
         }) {
-            HStack {
-                Image(.chevronLeftThickSmall)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.labelAlternative))
-                Spacer()
-            }
+            Image(.chevronLeftThickSmall)
+                .renderingMode(.template)
+                .foregroundStyle(Color(.labelAlternative))
+            Spacer()
         }
     }
     
@@ -94,7 +94,7 @@ struct NameInputView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.chevronLeftThickSmall)
+                buttonImage: Image(.chevronRight)
             )
         )
     }
