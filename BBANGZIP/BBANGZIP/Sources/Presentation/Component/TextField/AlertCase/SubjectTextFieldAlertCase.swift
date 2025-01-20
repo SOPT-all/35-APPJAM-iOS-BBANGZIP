@@ -1,12 +1,14 @@
 //
-//  NicknameTextFieldAlertCase.swift
+//  SubjectTextFieldAlertCase.swift
 //  BBANGZIP
 //
-//  Created by 조성민 on 1/17/25.
+//  Created by 김송희 on 1/20/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
-enum NicknameTextFieldAlertCase: TextFieldAlertable {
+import SwiftUI
+
+enum SubjectTextFieldAlertCase: TextFieldAlertable {
     case alert
     case enable
     

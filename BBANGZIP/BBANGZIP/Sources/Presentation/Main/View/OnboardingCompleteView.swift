@@ -11,17 +11,6 @@ import SwiftUI
 struct OnboardingCompleteView: View {
     var body: some View {
         VStack {
-//            HStack {
-//                Image(.chevronLeftThickSmall)
-//                    .renderingMode(.template)
-//                    .foregroundStyle(Color(.labelAlternative))
-//                Spacer()
-//            }
-//            .padding(
-//                .top,
-//                16
-//            )
-            
             HStack {
                 CustomText(
                     "제 과제 빵점 오픈을\n축하합니다!",
@@ -45,15 +34,6 @@ struct OnboardingCompleteView: View {
             )
             
             Spacer()
-            
-//            Button("빵점 탈출하러 가기") {
-//                // TODO: 버튼 터치 시 화면 전환 로직 추가 필요
-//            }
-//            .buttonStyle(SolidIconButton(buttonImage: Image(.chevronRightThickSmall)))
-//            .padding(
-//                .horizontal,
-//                4
-//            )
         }
         .padding(
             .horizontal,

@@ -17,54 +17,11 @@ final class NameInputViewModel: ObservableObject {
     
     init(
         nickname: String = "",
-        announceState: NicknameTextFieldAlertCase? = nil,
+        announceState: NicknameTextFieldAlertCase? = .alert,
         state: TextFieldState = .defaultState
     ) {
         self.nickname = nickname
         self.announceState = announceState
         self.state = state
-    }
-    
-    private func validateNickname(
-        oldText: String,
-        newText: String
-    ) {
-        if let maxLength = TextFieldStyleCase.nickname.maxLength {
-            if newText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                // TODO: 공백으로만 이루어진 경우 로직 추가 필요
-            }
-            if newText.count > maxLength {
-                nickname = String(newText.prefix(maxLength))
-                state = .alert
-                announceState = .maxLengthWrong
-            } else {
-                var result = newText
-                for char in oldText {
-                    if let index = result.firstIndex(of: char) {
-                        result.remove(at: index)
-                    }
-                }
-                
-                if result.isEmpty {
-                    // TODO: 공백인 경우 로직 추가 필요
-                } else {
-                    if result.containsEmoji {
-                        state = .alert
-                        announceState = .emojiWrong
-                    } else if result.containsSymbol {
-                        state = .alert
-                        announceState = .symbolWrong
-                    } else {
-                        if newText.isEmpty {
-                            state = .placeholder
-                            announceState = .defaultCorrect
-                        } else {
-                            state = .complete
-                            announceState = .completeCorrect
-                        }
-                    }
-                }
-            }
-        }
     }
 }

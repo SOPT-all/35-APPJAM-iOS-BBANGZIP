@@ -9,25 +9,11 @@
 import SwiftUI
 
 struct SubjectInputView: View {
-    @State private var subject: String
-    @State private var selectedYear: Int
-    @State private var selectedSemester: Semester
-    @State private var announceState: NicknameTextFieldAlertCase?
-    @State private var state: TextFieldState
-    
-    init(
-        subject: String = "",
-        selectedYear: Int = 2025,
-        selectedSemester: Semester = Semester.first,
-        announceState: NicknameTextFieldAlertCase? = nil,
-        state: TextFieldState = .defaultState
-    ) {
-        self.subject = subject
-        self.selectedYear = selectedYear
-        self.selectedSemester = selectedSemester
-        self.announceState = announceState
-        self.state = state
-    }
+    @Binding var subject: String
+    @Binding var selectedYear: Int
+    @Binding var selectedSemester: Semester
+    @State var announceState: SubjectTextFieldAlertCase? = .alert
+    @State var state: TextFieldState = .defaultState
     
     var body: some View {
         VStack(spacing: 0) {
@@ -50,7 +36,7 @@ struct SubjectInputView: View {
     private var headerDescription: some View {
         HStack(spacing: 0) {
             CustomText(
-                "\(selectedYear)년 \(selectedSemester)에 재학 중이시네요!",
+                "\(selectedYear)년 \(selectedSemester.text)에 재학 중이시네요!",
                 fontType: .body2Bold,
                 color: Color(.labelAlternative)
             )
@@ -82,13 +68,13 @@ struct SubjectInputView: View {
     
     private var subjectTextField: some View {
         TextField(
-            "예) 유나대장",
+            "예) 거시경제학",
             text: $subject
         )
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $subject,
-                style: .nickname,
+                style: .subject,
                 state: state,
                 alertText: announceState
             )
@@ -98,8 +84,8 @@ struct SubjectInputView: View {
 
 #Preview {
     SubjectInputView(
-        subject: "경제학원론",
-        selectedYear: 2025,
-        selectedSemester: Semester.summer
+        subject: .constant("경제학원론"),
+        selectedYear: .constant(2025),
+        selectedSemester: .constant(Semester.summer)
     )
 }

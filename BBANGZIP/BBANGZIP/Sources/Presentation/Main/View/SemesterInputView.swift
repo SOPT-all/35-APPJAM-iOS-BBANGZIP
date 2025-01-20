@@ -9,22 +9,10 @@
 import SwiftUI
 
 struct SemesterInputView: View {
-    @State private var nickname: String
-    @State private var selectedYear: Int
-    @State private var selectedSemester: Semester
-    @State private var isPickerPresented: Bool
-    
-    init(
-        nickname: String = "",
-        selectedYear: Int = 2025,
-        selectedSemester: Semester = Semester.first,
-        isPickerPresented: Bool = false
-    ) {
-        self.nickname = nickname
-        self.selectedYear = selectedYear
-        self.selectedSemester = selectedSemester
-        self.isPickerPresented = isPickerPresented
-    }
+    @Binding var nickname: String
+    @Binding var selectedYear: Int
+    @Binding var selectedSemester: Semester
+    @State private var isPickerPresented: Bool = false
     
     private let years = Array(2025...2028)
     
@@ -40,10 +28,6 @@ struct SemesterInputView: View {
                     
                     semesterPicker
                 }
-                .padding(
-                    .bottom,
-                    32
-                )
                 
                 Spacer()
             }
@@ -147,9 +131,9 @@ struct SemesterInputView: View {
 
 #Preview {
     SemesterInputView(
-        nickname: "홍시",
-        selectedYear: 2025,
-        selectedSemester: Semester.summer
+        nickname: .constant("홍시"),
+        selectedYear: .constant(2025),
+        selectedSemester: .constant(Semester.summer)
     )
 }
 

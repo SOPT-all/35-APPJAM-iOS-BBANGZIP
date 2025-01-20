@@ -13,4 +13,17 @@ enum Semester: String, CaseIterable {
     case second = "2학기"
     case summer = "여름학기"
     case winter = "겨울학기"
+    
+    var text: String {
+        switch self {
+        case .first:
+            "1학기"
+        case .second:
+            "2학기"
+        case .summer:
+            "여름학기"
+        case .winter:
+            "겨울학기"
+        }
+    }
 }

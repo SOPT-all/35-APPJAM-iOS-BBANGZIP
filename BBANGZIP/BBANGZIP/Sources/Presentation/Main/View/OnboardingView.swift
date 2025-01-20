@@ -27,18 +27,22 @@ struct OnboardingView: View {
     @State private var currentStep: Step = .first
     @State private var isForward: Bool = true
     @State private var buttonText: OnboardingButtonText = .start
+    @State private var nickname: String = ""
+    @State private var year: Int = 2025
+    @State private var semester: Semester = .first
+    @State private var subject: String = ""
     
     var body: some View {
         NavigationStack {
             switch currentState {
             case .start:
-                VStack {
+                VStack(spacing: 0) {
                     OnboardingStartView()
                     
                     nextButton
                 }
             case .complete:
-                VStack {
+                VStack(spacing: 0) {
                     backButton
                     
                     OnboardingCompleteView()
@@ -46,7 +50,7 @@ struct OnboardingView: View {
                     nextButton
                 }
             default:
-                VStack {
+                VStack(spacing: 0) {
                     backButton
                     
                     progressBar
@@ -77,7 +81,7 @@ struct OnboardingView: View {
             )
             .padding(
                 .bottom,
-                78
+                48
             )
     }
     
@@ -95,10 +99,14 @@ struct OnboardingView: View {
     private var inputView: some View {
             ZStack {
                 if currentState == .nameInput {
-                    NameInputView()
+                    NameInputView(nickname: $nickname)
                         .transition(.move(edge: .leading))
                 } else if currentState == .semesterInput {
-                    SemesterInputView()
+                    SemesterInputView(
+                        nickname: $nickname,
+                        selectedYear: $year,
+                        selectedSemester: $semester
+                    )
                         .transition(
                             .asymmetric(
                                 insertion: .move(edge: isForward ? .trailing : .leading),
@@ -106,7 +114,11 @@ struct OnboardingView: View {
                             )
                         )
                 } else if currentState == .subjectInput {
-                    SubjectInputView()
+                    SubjectInputView(
+                        subject: $subject,
+                        selectedYear: $year,
+                        selectedSemester: $semester
+                    )
                         .transition(.move(edge: .trailing))
                 }
             }
@@ -185,6 +197,10 @@ struct OnboardingView: View {
                 buttonText = OnboardingButtonText.inProgress
             case .complete:
                 buttonText = OnboardingButtonText.complete
+            }
+            
+            if(currentState == .start) {
+                // TODO: nickname, year, semester, subjectName 서버 전달
             }
         }
     }

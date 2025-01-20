@@ -9,11 +9,9 @@
 import SwiftUI
 
 struct NameInputView: View {
-    @StateObject private var viewModel: NameInputViewModel
-    
-    init(viewModel: NameInputViewModel = NameInputViewModel()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
+    @Binding var nickname: String
+    @State var announceState: NicknameTextFieldAlertCase? = .alert
+    @State var state: TextFieldState = .defaultState
     
     var body: some View {
         VStack(spacing: 0) {
@@ -31,23 +29,16 @@ struct NameInputView: View {
         }
     }
     
-    private var backButton: some View {
-        Button(action: {
-            // TODO: 뒤로가기 버튼 누르면 상태 변경하도록
-        }) {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
-            Spacer()
-        }
-    }
-    
     private var mainDescription: some View {
         HStack {
             CustomText(
                 "사장님의 이름을\n알려주세요",
                 fontType: .title2Bold,
                 color: Color(.labelNormal)
+            )
+            .padding(
+                .top,
+                30
             )
             
             Spacer()
@@ -56,31 +47,20 @@ struct NameInputView: View {
     
     private var nicknameTextField: some View {
         TextField(
-            "예) 유나대장",
-            text: $viewModel.nickname
+            "예) 탁구왕김제빵",
+            text: $nickname
         )
         .textFieldStyle(
             CustomTextFieldStyle(
-                text: $viewModel.nickname,
+                text: $nickname,
                 style: .nickname,
-                state: viewModel.state,
-                alertText: viewModel.announceState
-            )
-        )
-    }
-    
-    private var nextButton: some View {
-        NavigationLink("다음으로") {
-            // TODO: 화면 전환해야 할 다음 뷰
-        }
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRight)
+                state: state,
+                alertText: announceState
             )
         )
     }
 }
 
 #Preview {
-    NameInputView()
+    NameInputView(nickname: .constant("서유나"))
 }
