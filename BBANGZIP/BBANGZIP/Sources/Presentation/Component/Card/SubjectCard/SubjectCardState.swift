@@ -36,7 +36,7 @@ enum SubjectCardState: CardState {
         case .cardDefault, .selectable:
             1
         case .selected:
-            3
+            2
         }
     }
 }

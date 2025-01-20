@@ -138,16 +138,32 @@ struct SubjectManageView: View {
                             )
                         )
                     }
+                    .buttonStyle(PressedButtonStyle())
                 }
                 
-                SubjectAddCard()
-                    .padding( 
-                        .bottom,
-                        80
-                    )
+                Button {
+                    // TODO: 추가 페이지 이동
+                } label: {
+                    SubjectAddCard()
+                }
+                .padding(
+                    .bottom,
+                    80
+                )
+                .buttonStyle(PressedButtonStyle())
             }
         }
         .scrollIndicators(.hidden)
+    }
+}
+
+struct PressedButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
+            )
     }
 }
 
