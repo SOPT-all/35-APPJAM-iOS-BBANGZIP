@@ -4,7 +4,7 @@ import SwiftUI
 struct BBANGZIPApp: App {
     var body: some Scene {
         WindowGroup {
-            MainView()
+            CustomTabView()
         }
     }
 }
