@@ -19,9 +19,9 @@ struct SubjectInputView: View {
     init(
         // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
         currentStep: Step = .third,
-        subject: String,
-        selectedYear: Int,
-        selectedSemester: Semester,
+        subject: String = "",
+        selectedYear: Int = 2025,
+        selectedSemester: Semester = Semester.first,
         announceState: NicknameTextFieldAlertCase? = nil,
         state: TextFieldState = .defaultState
     ) {
@@ -35,15 +35,15 @@ struct SubjectInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProgressBar(category: $currentStep)
-                .padding(
-                    .horizontal,
-                    44
-                )
-                .padding(
-                    .bottom,
-                    48
-                )
+//            ProgressBar(category: $currentStep)
+//                .padding(
+//                    .horizontal,
+//                    44
+//                )
+//                .padding(
+//                    .bottom,
+//                    48
+//                )
             
             VStack(spacing: 0) {
                 headerDescription
@@ -54,19 +54,19 @@ struct SubjectInputView: View {
                 
                 Spacer()
                 
-                nextButton
+//                nextButton
             }
             .padding(
                 .horizontal,
                 20
             )
         }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                backButton
-            }
-        }
+//        .navigationBarBackButtonHidden()
+//        .toolbar {
+//            ToolbarItemGroup(placement: .topBarLeading) {
+//                backButton
+//            }
+//        }
     }
     
     private var backButton: some View {

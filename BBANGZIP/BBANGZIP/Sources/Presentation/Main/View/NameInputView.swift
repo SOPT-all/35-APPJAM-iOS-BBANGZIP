@@ -17,15 +17,15 @@ struct NameInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProgressBar(category: $viewModel.currentStep)
-                .padding(
-                    .horizontal,
-                    44
-                )
-                .padding(
-                    .bottom,
-                    78
-                )
+//            ProgressBar(category: $viewModel.currentStep)
+//                .padding(
+//                    .horizontal,
+//                    44
+//                )
+//                .padding(
+//                    .bottom,
+//                    78
+//                )
             
             VStack(spacing: 32) {
                 mainDescription
@@ -34,19 +34,19 @@ struct NameInputView: View {
                 
                 Spacer()
                 
-                nextButton
+//                nextButton
             }
             .padding(
                 .horizontal,
                 20
             )
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                backButton
-            }
-        }
+//        .navigationBarBackButtonHidden(true)
+//        .toolbar {
+//            ToolbarItemGroup(placement: .topBarLeading) {
+//                backButton
+//            }
+//        }
         
     }
     
