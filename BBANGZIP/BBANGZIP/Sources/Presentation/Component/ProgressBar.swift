@@ -42,20 +42,15 @@ struct ProgressBar: View {
                     }
                     .padding(.bottom, 8)
                 }
-                .progressViewStyle(LinearProgressViewStyle(tint: Color(.labelNormal)))
-                .background(
-                    Capsule()
-                        .fill(Color(.fillStrong))
-                )
+                .progressViewStyle(LinearProgressViewStyle())
+                .tint(Color(.labelNormal))
                 
             case .basic(let progress):
                 ProgressView(value: progress)
-                    .progressViewStyle(LinearProgressViewStyle(tint: Color(.labelNormal)))
-                    .frame(height: 8)
-                    .background(
-                        Capsule()
-                            .fill(Color(.staticWhite))
-                    )
+                    .progressViewStyle(LinearProgressViewStyle())
+                //TODO: ProgressBarStyle Custom 필요
+                    .tint(Color(.labelNormal))
+                    .background(Color(.staticWhite))
             }
         }
     }

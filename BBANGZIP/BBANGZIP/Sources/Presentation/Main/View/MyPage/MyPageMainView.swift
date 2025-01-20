@@ -110,7 +110,9 @@ struct HeaderView: View {
     }
     
     var experienceView: some View {
-        VStack(
+        let progress = Double(currentScore) / Double(maxScore)
+        
+        return VStack(
             alignment: .leading,
             spacing: 8
         ) {
@@ -138,21 +140,11 @@ struct HeaderView: View {
                     )
                 }
             }
-            
-            ProgressView(
-                value: Double(currentScore),
-                total: Double(maxScore)
-            )
-            .progressViewStyle(LinearProgressViewStyle(tint: .black))
-            .frame(height: 8)
-            .background(
-                Capsule()
-                    .fill(Color.gray.opacity(0.3))
-            )
+            ProgressBar(type: .basic(progress: progress))
         }
         .padding(
             .horizontal,
-            67.5
+            40
         )
     }
     
@@ -240,7 +232,11 @@ struct BadgeSection: View {
     }
 }
 
-
 #Preview {
-    MyPageMainView(level: 1, currentScore: 50, badgeCount: 4)
+    MyPageMainView(
+        level: 1,
+        currentScore: 100,
+        badgeCount: 4 ,
+        maxScore: 200
+    )
 }
