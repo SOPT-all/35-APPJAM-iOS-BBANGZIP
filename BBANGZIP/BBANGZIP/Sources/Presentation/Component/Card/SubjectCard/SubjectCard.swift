@@ -11,12 +11,12 @@ import SwiftUI
 struct SubjectCard: View {
     private var state: CardState
     // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
-    private let subjectCardData: SubjectCardData
+    private let subjectCardData: SubjectCardModel
     private let borderPadding: CGFloat = 2
     
     init(
         state: CardState,
-        subjectCardData: SubjectCardData
+        subjectCardData: SubjectCardModel
     ) {
         self.state = state
         self.subjectCardData = subjectCardData
@@ -32,18 +32,19 @@ struct SubjectCard: View {
                     spacing: 4
                 ) {
                     CustomText(
-                        subjectCardData.title,
+                        subjectCardData.subjectName,
                         fontType: .body1Bold,
                         color: Color(.labelNormal)
                     )
+                    .lineLimit(1)
                     
                     CustomText(
-                        subjectCardData.test,
+                        subjectCardData.studyList.examName,
                         fontType: .label2Bold,
                         color: Color(.labelNeutral)
                     )
                     
-                    Chip(type: subjectCardData.chipType)
+                    Chip(type: .daysLeftBlack(-subjectCardData.studyList.examDday))
                     
                     Spacer()
                     
@@ -90,7 +91,7 @@ struct SubjectCard: View {
     private var delayedStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.delayedStudyCount,
+                number: subjectCardData.studyList.pendingCount,
                 type: .orange
             )
             
@@ -105,7 +106,7 @@ struct SubjectCard: View {
     private var inProgressStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.inProgressStudyCount,
+                number: subjectCardData.studyList.inProgressCount,
                 type: .black
             )
             

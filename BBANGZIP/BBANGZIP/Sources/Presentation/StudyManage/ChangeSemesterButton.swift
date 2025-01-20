@@ -12,7 +12,7 @@ struct ChangeSemesterButton: View {
     @ObservedObject var viewModel: SubjectManageViewModel
     
     // TODO: API 연동 후 dataCount 변경 필요
-    init(viewModel: SubjectManageViewModel = SubjectManageViewModel(dataCount: 8)) {
+    init(viewModel: SubjectManageViewModel = SubjectManageViewModel(modelList: [])) {
         self.viewModel = viewModel
     }
     

@@ -10,20 +10,14 @@ import SwiftUI
 
 final class SubjectManageViewModel: ObservableObject {
     @Published var isShowingBottomSheet: Bool
-    @Published private(set) var state: [Int: CardState]
+    @Published var modelList: [SubjectCardModel]
     
     init(
         isShowingBottomSheet: Bool = false,
-        initialState: CardState = SubjectCardState.cardDefault,
-        // TODO: dataCount 추후 API 연동 후 수정 필요
-        dataCount: Int
+        modelList: [SubjectCardModel]
     ) {
         self.isShowingBottomSheet = isShowingBottomSheet
-        var initialStates: [Int: CardState] = [:]
-        for id in 1...dataCount {
-            initialStates[id] = SubjectCardState.cardDefault
-        }
-        self.state = initialStates
+        self.modelList = modelList
     }
     
     func showChangeSemesterSheet() {
@@ -31,7 +25,7 @@ final class SubjectManageViewModel: ObservableObject {
     }
     
     func deleteSubject() {
-        let currentState = state.values.first ?? SubjectCardState.cardDefault
+        let currentState: CardState = modelList.first?.state ?? SubjectCardState.cardDefault
         
         let newState: CardState = switch currentState {
         case SubjectCardState.cardDefault:
@@ -42,14 +36,14 @@ final class SubjectManageViewModel: ObservableObject {
             currentState
         }
         
-        for key in state.keys {
-            state[key] = newState
+        for i in modelList.indices {
+            modelList[i].state = newState
         }
     }
     
     func getState(for id: Int) -> CardState {
         
-        return state[id] ?? SubjectCardState.cardDefault
+        return modelList[id].state
     }
     
     func selectSubject(id: Int) {
@@ -57,11 +51,15 @@ final class SubjectManageViewModel: ObservableObject {
         
         switch currentState {
         case SubjectCardState.selectable:
-            state[id] = SubjectCardState.selected
+            modelList[id].state = SubjectCardState.selected
         case SubjectCardState.selected:
-            state[id] = SubjectCardState.selectable
+            modelList[id].state = SubjectCardState.selectable
         default:
             break
         }
+    }
+    
+    func fetchSubjectData() {
+        modelList = SubjectCardModel.mockList
     }
 }

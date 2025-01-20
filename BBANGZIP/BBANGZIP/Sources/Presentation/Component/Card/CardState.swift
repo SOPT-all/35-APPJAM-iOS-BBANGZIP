@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-protocol CardState {
+protocol CardState: Sendable {
     var backgroundColor: Color { get }
     var borderColor: Color { get }
     var borderWidth: CGFloat { get }

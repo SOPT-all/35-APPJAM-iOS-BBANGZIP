@@ -15,7 +15,7 @@ struct SubjectManageView: View {
     
     init(
         // TODO: dataCount API 연동 후 수정 필요
-        viewModel: SubjectManageViewModel = SubjectManageViewModel(dataCount: 8),
+        viewModel: SubjectManageViewModel = SubjectManageViewModel(modelList: []),
         selectedBottomSheetType: BottomSheetType? = .changeSemester,
         isBottomSheetShowing: Binding<Bool>
     ) {
@@ -23,9 +23,6 @@ struct SubjectManageView: View {
         self.selectedBottomSheetType = selectedBottomSheetType
         _isBottomSheetShowing = isBottomSheetShowing
     }
-    
-    // TODO: API 연동 후 수정 필요
-    private let data = Array(1...8)
     
     private let columns = [
         GridItem(
@@ -88,6 +85,9 @@ struct SubjectManageView: View {
         .onChange(of: viewModel.isShowingBottomSheet) { newValue in
             isBottomSheetShowing = newValue
         }
+        .onAppear {
+            viewModel.fetchSubjectData()
+        }
     }
     
     var subjectSection: some View {
@@ -123,22 +123,21 @@ struct SubjectManageView: View {
                 spacing: 20
             ) {
                 ForEach(
-                    Array(data.enumerated()),
-                    id: \.element
+                    Array(viewModel.modelList.indices),
+                    id: \.self
                 ) {
-                    index,
-                    item in
+                    index in
                     Button {
-                        viewModel.selectSubject(id: item)
+                        viewModel.selectSubject(id: index)
                     } label: {
                         SubjectCard(
-                            state: viewModel.getState(for: item),
-                            subjectCardData: SubjectCardData.mockData
+                            state: viewModel.getState(for: index),
+                            subjectCardData: viewModel.modelList[index]
                         )
                         .modifier(
                             LastRowPadding(
                                 index: index,
-                                totalCount: data.count,
+                                totalCount: viewModel.modelList.count,
                                 columns: columns.count
                             )
                         )
@@ -159,15 +158,5 @@ struct SubjectManageView: View {
             }
         }
         .scrollIndicators(.hidden)
-    }
-}
-
-struct PressedButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .overlay(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
-            )
     }
 }
