@@ -12,8 +12,8 @@ final class MyPageMainViewModel: ObservableObject {
     @Published var level: Int
     @Published var currentScore: Int
     @Published var badgeCount: Int
-    let maxScore: Int
-    let title: String
+    @Published var maxScore: Int
+    @Published var title: String
     
     init(
         level: Int,

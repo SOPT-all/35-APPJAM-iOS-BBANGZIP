@@ -30,18 +30,22 @@ struct HeaderView: View {
         ZStack {
             VStack {
                 backgroundView
+                
                 Spacer()
             }
             VStack {
                 VStack(spacing: 22) {
                     experienceView
+                    
                     BadgeSection(
                         badgeCount: viewModel.badgeCount,
                         onBadgeSettingTap: {
                             print("뱃지 설정하기 클릭")
+                            //TODO: 화면 전환 필요
                         },
                         onBadgeCollectionTap: {
                             print("뱃지 도감 클릭")
+                            //TODO: 화면 전환 필요
                         }
                     )
                 }
@@ -49,6 +53,7 @@ struct HeaderView: View {
                     .top,
                     330
                 )
+                
                 Spacer()
             }
         }
@@ -77,6 +82,7 @@ struct HeaderView: View {
         ) {
             HStack {
                 Chip(type: .level(viewModel.level))
+                
                 CustomText(
                     viewModel.title,
                     fontType: .body1Bold,
@@ -89,6 +95,7 @@ struct HeaderView: View {
                     Image(.trophyGray)
                         .scaledToFit()
                         .frame(width: 24, height: 24)
+                    
                     CustomText(
                         "\(viewModel.currentScore)/\(viewModel.maxScore)",
                         fontType: .label2Medium,
@@ -96,16 +103,30 @@ struct HeaderView: View {
                     )
                 }
             }
+            
             ProgressBar(type: .basic(progress: viewModel.progress))
         }
-        .padding(.horizontal, 40)
+        .padding(
+            .horizontal,
+            40
+        )
     }
 }
 
 struct BadgeSection: View {
-    let badgeCount: Int
-    let onBadgeSettingTap: () -> Void
-    let onBadgeCollectionTap: () -> Void
+    private let badgeCount: Int
+    private let onBadgeSettingTap: () -> Void
+    private let onBadgeCollectionTap: () -> Void
+    
+    init(
+        badgeCount: Int,
+        onBadgeSettingTap: @escaping () -> Void,
+        onBadgeCollectionTap: @escaping () -> Void
+    ) {
+        self.badgeCount = badgeCount
+        self.onBadgeSettingTap = onBadgeSettingTap
+        self.onBadgeCollectionTap = onBadgeCollectionTap
+    }
     
     var body: some View {
         HStack(
@@ -170,7 +191,10 @@ struct BadgeSection: View {
                     y: 2
                 )
         )
-        .padding(.horizontal, 20)
+        .padding(
+            .horizontal,
+            20
+        )
     }
 }
 
