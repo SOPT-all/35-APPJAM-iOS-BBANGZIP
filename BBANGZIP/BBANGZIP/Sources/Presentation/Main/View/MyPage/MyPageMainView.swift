@@ -16,7 +16,13 @@ struct MyPageMainView: View {
     private let maxScore: Int
     private let title: String
     
-    init(level: Int, currentScore: Int, badgeCount: Int, maxScore: Int = 200, title: String = "가판대") {
+    init(
+        level: Int,
+        currentScore: Int,
+        badgeCount: Int,
+        maxScore: Int = 200,
+        title: String = "가판대"
+    ) {
         self._level = State(initialValue: level)
         self._currentScore = State(initialValue: currentScore)
         self._badgeCount = State(initialValue: badgeCount)
@@ -25,24 +31,14 @@ struct MyPageMainView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack (spacing: 0) {
             HeaderView(
                 level: level,
                 title: title,
                 currentScore: currentScore,
-                maxScore: maxScore
+                maxScore: maxScore,
+                badgeCount: badgeCount
             )
-            
-            BadgeSection(
-                badgeCount: badgeCount,
-                onBadgeSettingTap: {
-                    print("뱃지 설정하기 클릭")
-                },
-                onBadgeCollectionTap: {
-                    print("배지 도감 클릭")
-                }
-            )
-            
             Spacer()
         }
     }
@@ -53,124 +49,198 @@ struct HeaderView: View {
     private let title: String
     private let currentScore: Int
     private let maxScore: Int
+    private let badgeCount: Int
     
-    init(level: Int, title: String, currentScore: Int, maxScore: Int) {
+    init(
+        level: Int,
+        title: String,
+        currentScore: Int,
+        maxScore: Int,
+        badgeCount: Int
+    ) {
         self.level = level
         self.title = title
         self.currentScore = currentScore
         self.maxScore = maxScore
+        self.badgeCount = badgeCount
     }
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Color(.backgroundAccent)
-                .cornerRadius(
-                    32,
-                    corners: [
-                        .bottomLeft,
-                        .bottomRight
-                    ]
-                )
-                .frame(height: 416)
-                .onTapGesture {
-                    print("레벨업 상태 화면으로 change 예정")
-                }
-            
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Chip(type: .level(level))
-                    CustomText(
-                        title,
-                        fontType: .body1Bold,
-                        color: Color(.labelNormal)
-                    )
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 0) {
-                        Image(.trophyGray)
-                            .scaledToFit()
-                            .frame(
-                                width: 24,
-                                height: 24
-                            )
-                        CustomText(
-                            "\(Int(currentScore))/\(Int(maxScore))",
-                            fontType: .label2Medium,
-                            color: Color(.labelAlternative)
-                        )
-                    }
-                }
+        ZStack() {
+            VStack {
+                backgroundView
                 
-                ProgressView(value: Double(currentScore), total: Double(maxScore))
-                    .progressViewStyle(LinearProgressViewStyle(tint: .black))
-                    .frame(height: 8)
-                    .background(
-                        Capsule()
-                            .fill(Color.gray.opacity(0.3))
-                    )
+                Spacer()
             }
-            .padding()
-            .padding([.leading, .trailing], 67.5)
-            .padding(.bottom, 22)
+            VStack {
+                VStack(spacing: 22) {
+                    experienceView
+                    
+                    BadgeSection(
+                        badgeCount: badgeCount,
+                        onBadgeSettingTap: {
+                            print("뱃지 설정하기 클릭")
+                        },
+                        onBadgeCollectionTap: {
+                            print("뱃지 도감 클릭")
+                        }
+                    )
+                }
+                .padding(.top, 330)
+                
+                Spacer()
+            }
         }
-        .edgesIgnoringSafeArea(.all)
+        .edgesIgnoringSafeArea(.top)
     }
+    
+    var backgroundView: some View {
+        Color(.backgroundAccent)
+            .cornerRadius(
+                32,
+                corners: [
+                    .bottomLeft,
+                    .bottomRight
+                ]
+            )
+            .frame(height: 416)
+            .onTapGesture {
+                print("레벨업 상태 화면으로 change 예정")
+            }
+    }
+    
+    var experienceView: some View {
+        VStack(
+            alignment: .leading,
+            spacing: 8
+        ) {
+            HStack {
+                Chip(type: .level(level))
+                CustomText(
+                    title,
+                    fontType: .body1Bold,
+                    color: Color(.labelNormal)
+                )
+                
+                Spacer()
+                
+                HStack(spacing: 0) {
+                    Image(.trophyGray)
+                        .scaledToFit()
+                        .frame(
+                            width: 24,
+                            height: 24
+                        )
+                    CustomText(
+                        "\(Int(currentScore))/\(Int(maxScore))",
+                        fontType: .label2Medium,
+                        color: Color(.labelAlternative)
+                    )
+                }
+            }
+            
+            ProgressView(
+                value: Double(currentScore),
+                total: Double(maxScore)
+            )
+            .progressViewStyle(LinearProgressViewStyle(tint: .black))
+            .frame(height: 8)
+            .background(
+                Capsule()
+                    .fill(Color.gray.opacity(0.3))
+            )
+        }
+        .padding(
+            .horizontal,
+            67.5
+        )
+    }
+    
 }
 
 struct BadgeSection: View {
-    let badgeCount: Int
-    let onBadgeSettingTap: () -> Void
-    let onBadgeCollectionTap: () -> Void
+    private let badgeCount: Int
+    private let onBadgeSettingTap: () -> Void
+    private let onBadgeCollectionTap: () -> Void
     
-    init(badgeCount: Int, onBadgeSettingTap: @escaping () -> Void, onBadgeCollectionTap: @escaping () -> Void) {
+    init(
+        badgeCount: Int,
+        onBadgeSettingTap: @escaping () -> Void,
+        onBadgeCollectionTap: @escaping () -> Void
+    ) {
         self.badgeCount = badgeCount
         self.onBadgeSettingTap = onBadgeSettingTap
         self.onBadgeCollectionTap = onBadgeCollectionTap
     }
     
     var body: some View {
-        HStack(spacing: 74.25) {
-            VStack {
+        HStack(alignment: .bottom, spacing: 73.5) {
+            VStack(spacing: 6) {
                 Button(action: onBadgeSettingTap) {
                     Image(.badge)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 80, height: 80)
+                        .frame(
+                            width: 80,
+                            height: 80
+                        )
                 }
-                CustomText("뱃지 설정하기", fontType: .caption1Medium, color: Color(.labelAssistive))
+                CustomText(
+                    "뱃지 설정하기",
+                    fontType: .caption1Medium,
+                    color: Color(.labelAssistive)
+                )
             }
             
-            VStack(spacing: 4) {
-                HStack(spacing: 2) {
-                    CustomText(
-                        "\(badgeCount)",
-                        fontType: .title2Bold,
-                        color: Color(.labelNormal)
-                    )
-                    CustomText("개", fontType: .body1Medium, color: Color(.labelNormal))
-                    Image(.chevronRight)
+            VStack(spacing: 6) {
+                VStack {
+                    Spacer()
+                    
+                    HStack(spacing: 2) {
+                        CustomText(
+                            "\(badgeCount)",
+                            fontType: .title2Bold,
+                            color: Color(.labelNormal)
+                        )
+                        CustomText(
+                            "개",
+                            fontType: .body1Medium,
+                            color: Color(.labelNormal)
+                        )
+                        Image(.chevronRight)
+                    }
+                    
+                    Spacer()
                 }
-                .padding(.bottom)
+                .frame(height: 80)
                 
-                CustomText("배지 도감", fontType: .caption1Medium, color: Color(.labelAssistive))
+                CustomText(
+                    "배지 도감",
+                    fontType: .caption1Medium,
+                    color: Color(.labelAssistive)
+                )
             }
-            .padding(.bottom, -24)
             .onTapGesture {
                 onBadgeCollectionTap()
             }
         }
-        .padding()
+        .padding(.vertical, 24)
+        .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color.white)
-                .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
+            RoundedRectangle(cornerRadius: 40)
+                .fill(Color(.backgroundNormal))
+                .shadow(
+                    color: .gray.opacity(0.3),
+                    radius: 4,
+                    x: 0,
+                    y: 2
+                )
         )
-        .padding([.leading, .trailing], 24)
-        .padding(.top, -16)
+        .padding(.horizontal, 20)
     }
 }
 
+
 #Preview {
-    MyPageMainView(level: 1, currentScore: 50, badgeCount: 8)
+    MyPageMainView(level: 1, currentScore: 50, badgeCount: 4)
 }
