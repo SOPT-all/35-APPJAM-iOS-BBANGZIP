@@ -47,10 +47,26 @@ struct ProgressBar: View {
                 
             case .basic(let progress):
                 ProgressView(value: progress)
-                    .progressViewStyle(LinearProgressViewStyle())
-                //TODO: ProgressBarStyle Custom 필요
-                    .tint(Color(.labelNormal))
-                    .background(Color(.staticWhite))
+                    .progressViewStyle(CustomProgressBar())
+            }
+        }
+    }
+}
+
+struct CustomProgressBar: ProgressViewStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        ZStack(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.staticWhite))
+                .frame(height: 8)
+            
+            if let fractionCompleted = configuration.fractionCompleted {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.primaryLight))
+                    .frame(
+                        width: UIScreen.main.bounds.width * CGFloat(fractionCompleted),
+                        height: 8
+                    )
             }
         }
     }
