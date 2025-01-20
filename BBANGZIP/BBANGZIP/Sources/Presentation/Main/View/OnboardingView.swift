@@ -24,9 +24,15 @@ enum OnboardingButtonText {
 
 struct OnboardingView: View {
     @StateObject private var viewModel: OnboardingViewModel
+    @StateObject private var nicknameViewModel:
+    NicknameViewModel
     
-    init(viewModel: OnboardingViewModel = OnboardingViewModel()) {
+    init(
+        viewModel: OnboardingViewModel = OnboardingViewModel(),
+        nicknameViewModel: NicknameViewModel = NicknameViewModel()
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _nicknameViewModel = StateObject(wrappedValue: nicknameViewModel)
     }
     
     var body: some View {
@@ -103,11 +109,11 @@ struct OnboardingView: View {
     private var inputView: some View {
         ZStack {
             if viewModel.currentState == .nameInput {
-                NameInputView(nickname: $viewModel.nickname)
+                NameInputView(nickname: $nicknameViewModel.nickname)
                     .transition(.move(edge: .leading))
             } else if viewModel.currentState == .semesterInput {
                 SemesterInputView(
-                    nickname: $viewModel.nickname,
+                    nickname: $nicknameViewModel.nickname,
                     selectedYear: $viewModel.year,
                     selectedSemester: $viewModel.semester
                 )

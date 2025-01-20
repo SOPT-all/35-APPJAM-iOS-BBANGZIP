@@ -13,29 +13,32 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentStep: Step
     @Published var isForward: Bool
     @Published var buttonText: OnboardingButtonText
-    @Published var nickname: String
     @Published var year: Int
     @Published var semester: Semester
     @Published var subject: String
+    @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
+    @Published var subjectState: TextFieldState
     
     init(
         currentState: OnboardingState = .start,
         currentStep: Step = .first,
         isForward: Bool = true,
         buttonText: OnboardingButtonText = .start,
-        nickname: String = "",
         year: Int = 2025,
         semester: Semester = .first,
-        subject: String = ""
+        subject: String = "",
+        subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
+        subjectState: TextFieldState = .defaultState
     ) {
         self.currentState = currentState
         self.currentStep = currentStep
         self.isForward = isForward
         self.buttonText = buttonText
-        self.nickname = nickname
         self.year = year
         self.semester = semester
         self.subject = subject
+        self.subjectAnnounceState = subjectAnnounceState
+        self.subjectState = subjectState
     }
     
     func goBack() {
@@ -117,5 +120,4 @@ class OnboardingViewModel: ObservableObject {
             }
         }
     }
-    
 }

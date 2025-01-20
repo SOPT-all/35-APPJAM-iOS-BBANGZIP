@@ -10,8 +10,18 @@ import SwiftUI
 
 struct NameInputView: View {
     @Binding var nickname: String
-    @State var announceState: NicknameTextFieldAlertCase? = .alert
-    @State var state: TextFieldState = .defaultState
+    @State var oldNickname: String = ""
+    
+    @FocusState private var isNicknameFocused: Bool
+    @StateObject private var viewModel: NicknameViewModel
+    
+    init(
+        viewModel: NicknameViewModel = NicknameViewModel(),
+        nickname: Binding<String>
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self._nickname = nickname
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -50,17 +60,33 @@ struct NameInputView: View {
             "예) 탁구왕김제빵",
             text: $nickname
         )
+        .focused($isNicknameFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $nickname,
                 style: .nickname,
-                state: state,
-                alertText: announceState
+                state: viewModel.nicknameState,
+                alertText: viewModel.nicknameAnnounceState
             )
         )
+        .onChange(of: nickname) { newNickname in
+            if newNickname.count > 10 {
+                nickname = String(newNickname.prefix(10))
+            }
+            
+            viewModel.verifyNickname(
+                oldText: oldNickname,
+                newText: newNickname,
+                isFocused: isNicknameFocused
+            )
+            
+            oldNickname = viewModel.nickname
+        }
+        .onChange(of: isNicknameFocused) { isFocused in
+            viewModel.handleFocusChange(
+                isFocused: isFocused,
+                text: nickname
+            )
+        }
     }
-}
-
-#Preview {
-    NameInputView(nickname: .constant("서유나"))
 }

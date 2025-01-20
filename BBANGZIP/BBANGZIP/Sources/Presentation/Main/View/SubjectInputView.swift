@@ -36,7 +36,7 @@ struct SubjectInputView: View {
     private var headerDescription: some View {
         HStack(spacing: 0) {
             CustomText(
-                "\(selectedYear)년 \(selectedSemester.text)에 재학 중이시네요!",
+                "\(selectedYear)년 \(selectedSemester.rawValue)에 재학 중이시네요!",
                 fontType: .body2Bold,
                 color: Color(.labelAlternative)
             )
