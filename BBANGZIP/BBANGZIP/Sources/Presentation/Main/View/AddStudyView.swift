@@ -60,6 +60,7 @@ struct AddStudyView: View {
         }
     }
     
+    // TODO: 뒤로가기 버튼 ToolBar로 리팩토링 필요
     private var backButton: some View {
         HStack {
             Image(.chevronLeftThickSmall)
@@ -106,6 +107,7 @@ struct AddStudyView: View {
         )
         .disabled(true)
         .onTapGesture {
+            // TODO: 바텀시트 연결
             isDatePickerPresented = true
         }
         .padding(
