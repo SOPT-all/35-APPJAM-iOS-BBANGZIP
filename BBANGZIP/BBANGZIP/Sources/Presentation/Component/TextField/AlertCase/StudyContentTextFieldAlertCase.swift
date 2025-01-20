@@ -16,9 +16,9 @@ enum StudyContentTextFieldAlertCase: TextFieldAlertable {
     var alertText: String {
         switch self {
         case .defaultCorrect:
-            "교재 이름은 20글자 이내로 입력해 주세요"
+            "한글/영문/숫자/특수문자 조합으로 최대 20자까지 입력 가능해요"
         case .completeCorrect:
-            "사용 가능한 이름이에요"
+            "사용 가능한 교재/PPT 이름이에요"
         case .maxLengthWrong:
             "교재 이름은 20글자 이내로 입력해 주세요"
         }

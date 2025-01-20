@@ -64,4 +64,5 @@ final class AddStudyViewModel: ObservableObject {
     // TODO: 텍스트필드 입력 시 상태 변화하는 로직 추가 필요
     // TODO: 텍스트필드 입력값에 따라 버튼 활성화하는 로직 추가 필요
     // TODO: 학습 범위에는 정수만 입력하도록 제한하는 로직 추가 필요
+    // TODO: 학습 범위 숫자로 입력시 p 자동으로 붙는 로직 추가 필요
 }
