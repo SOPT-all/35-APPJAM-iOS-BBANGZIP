@@ -11,7 +11,7 @@ import SwiftUI
 struct ChangeSemesterButton: View {
     @ObservedObject var viewModel: SubjectManageViewModel
     
-    init(viewModel: SubjectManageViewModel = SubjectManageViewModel()) {
+    init(viewModel: SubjectManageViewModel = SubjectManageViewModel(dataCount: 8)) {
         self.viewModel = viewModel
     }
     

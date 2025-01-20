@@ -13,7 +13,8 @@ struct SubjectManageView: View {
     private let selectedBottomSheetType: BottomSheetType?
     
     init(
-        viewModel: SubjectManageViewModel = SubjectManageViewModel(),
+        // TODO: dataCount API 연동 후 수정 필요
+        viewModel: SubjectManageViewModel = SubjectManageViewModel(dataCount: 8),
         selectedBottomSheetType: BottomSheetType? = .changeSemester
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -123,10 +124,10 @@ struct SubjectManageView: View {
                     index,
                     item in
                     Button {
-                        // TODO: 과목 별 선택 로직 추가 필요
+                        viewModel.selectSubject(id: item)
                     } label: {
                         SubjectCard(
-                            state: viewModel.state,
+                            state: viewModel.getState(for: item),
                             subjectCardData: SubjectCardData.mockData
                         )
                         .modifier(
