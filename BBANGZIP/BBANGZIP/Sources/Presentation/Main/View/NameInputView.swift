@@ -17,7 +17,7 @@ struct NameInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProgressBar(category: $viewModel.currentStep)
+            ProgressBar(type: .withCircle(category: viewModel.currentStep))
                 .padding(
                     .horizontal,
                     44

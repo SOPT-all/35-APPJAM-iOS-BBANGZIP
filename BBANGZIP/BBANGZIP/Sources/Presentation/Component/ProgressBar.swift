@@ -9,37 +9,67 @@
 import SwiftUI
 
 struct ProgressBar: View {
-    @Binding var category: Step
+    private let type: ProgressBarType
+    
+    init(type: ProgressBarType) {
+        self.type = type
+    }
     
     var body: some View {
-        ProgressView(value: category.percentage) {            
-            HStack {
-                StepCircle(
-                    step: Step.first,
-                    complete: true
-                )
+        VStack {
+            switch type {
+            case .withCircle(let category):
+                ProgressView(value: category.percentage) {
+                    HStack {
+                        StepCircle(
+                            step: Step.first,
+                            complete: category.rawValue >= Step.first.rawValue
+                        )
+                        
+                        Spacer()
+                        
+                        StepCircle(
+                            step: Step.second,
+                            complete: category.rawValue >= Step.second.rawValue
+                        )
+                        
+                        Spacer()
+                        
+                        StepCircle(
+                            step: Step.third,
+                            complete: category.rawValue >= Step.third.rawValue
+                        )
+                    }
+                    .padding(.bottom, 8)
+                }
+                .progressViewStyle(LinearProgressViewStyle())
+                .tint(Color(.labelNormal))
                 
-                Spacer()
-                
-                StepCircle(
-                    step: Step.second,
-                    complete: category != .first
-                )
-                
-                Spacer()
-                
-                StepCircle(
-                    step: Step.third,
-                    complete: category == .third
-                )
+            case .basic(let progress):
+                ProgressView(value: progress)
+                    .progressViewStyle(CustomProgressBar())
             }
-            .padding(
-                .bottom,
-                8
-            )
         }
-        .progressViewStyle(
-            LinearProgressViewStyle(tint: Color(.statusPositive))
-        )
+    }
+}
+struct CustomProgressBar: ProgressViewStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.staticWhite))
+                    .frame(height: 8)
+                
+                if let fractionCompleted = configuration.fractionCompleted {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(.primaryLight))
+                        .frame(
+                            width: geometry.size.width * CGFloat(fractionCompleted),
+                            height: 8
+                        )
+                }
+            }
+        }
+        .frame(height: 8)
     }
 }

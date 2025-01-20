@@ -16,6 +16,10 @@ final class NameInputViewModel: ObservableObject {
     
     // TODO: TextField 로직 변경 후 수정 필요
     
+    var progressBarType: ProgressBarType {
+        .withCircle(category: currentStep)
+    }
+    
     init(
         currentStep: Step = .first,
         nickname: String = "",
