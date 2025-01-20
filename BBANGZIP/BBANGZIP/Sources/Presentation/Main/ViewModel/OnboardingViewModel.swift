@@ -18,6 +18,10 @@ class OnboardingViewModel: ObservableObject {
     @Published var subject: String
     @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
     @Published var subjectState: TextFieldState
+    @Published var nickname: String
+    @Published var nicknameAnnounceState: NicknameTextFieldAlertCase?
+    @Published var nicknameState: TextFieldState
+    @Published var isFocused: Bool = false
     
     init(
         currentState: OnboardingState = .start,
@@ -26,6 +30,9 @@ class OnboardingViewModel: ObservableObject {
         buttonText: OnboardingButtonText = .start,
         year: Int = 2025,
         semester: Semester = .first,
+        nickname: String = "",
+        nicknameAnnounceState: NicknameTextFieldAlertCase? = .alert,
+        nicknameState: TextFieldState = .defaultState,
         subject: String = "",
         subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
         subjectState: TextFieldState = .defaultState
@@ -36,6 +43,9 @@ class OnboardingViewModel: ObservableObject {
         self.buttonText = buttonText
         self.year = year
         self.semester = semester
+        self.nickname = nickname
+        self.nicknameAnnounceState = nicknameAnnounceState
+        self.nicknameState = nicknameState
         self.subject = subject
         self.subjectAnnounceState = subjectAnnounceState
         self.subjectState = subjectState
@@ -118,6 +128,37 @@ class OnboardingViewModel: ObservableObject {
             if(currentState == .start) {
                 // TODO: nickname, year, semester, subjectName 서버 전달
             }
+        }
+    }
+    
+    func verifyNickname(
+        oldText: String,
+        newText: String,
+        isFocused: Bool
+    ) {
+        if !isFocused {
+            nicknameState = newText.isEmpty ? .defaultState : .field
+            return
+        }
+        
+        if newText.isEmpty {
+            nicknameState = .placeholder
+        } else if newText.containsEmoji || newText.containsSymbol {
+            nicknameState = .alert
+        } else {
+            nicknameState = .typing
+        }
+        
+        if let maxLength = TextFieldStyleCase.nickname.maxLength {
+            nickname = String(newText.prefix(maxLength))
+        } else {
+            nickname = newText
+        }
+    }
+    
+    func handleFocusChange(isFocused: Bool, text: String) {
+        if !isFocused {
+            nicknameState = text.isEmpty ? .defaultState : .field
         }
     }
 }

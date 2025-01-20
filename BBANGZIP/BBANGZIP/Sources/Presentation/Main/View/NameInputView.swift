@@ -13,10 +13,10 @@ struct NameInputView: View {
     @State var oldNickname: String = ""
     
     @FocusState private var isNicknameFocused: Bool
-    @StateObject private var viewModel: NicknameViewModel
+    @StateObject private var viewModel: OnboardingViewModel
     
     init(
-        viewModel: NicknameViewModel = NicknameViewModel(),
+        viewModel: OnboardingViewModel = OnboardingViewModel(),
         nickname: Binding<String>
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
