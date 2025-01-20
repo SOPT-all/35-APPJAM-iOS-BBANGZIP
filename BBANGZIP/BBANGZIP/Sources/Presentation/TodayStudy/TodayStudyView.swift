@@ -9,16 +9,54 @@
 import SwiftUI
 
 struct TodayStudyView: View {
+    @StateObject private var viewModel: TodayStudyViewModel
     
-//    @StateObject private var viewModel: TodayStudyViewModel =
+    init(viewModel: TodayStudyViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
-        ZStack {
-            backgroundView
-            
-            headerView
+        ScrollView {
+            ZStack {
+                backgroundView
+                
+                headerView
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        CustomText(
+                            viewModel.completeAnnounceText,
+                            fontType: .label1Bold,
+                            color: Color(.labelAlternative)
+                        )
+                        
+                        CustomText(
+                            viewModel.pendingAnnounceText,
+                            fontType: .title3Bold,
+                            color: Color(.labelNormal)
+                        )
+                        
+                        Spacer()
+                    }
+                    
+                    Spacer()
+                }
+                .padding(
+                    .leading,
+                    28
+                )
+                .padding(
+                    .top,
+                    280
+                )
+            }
         }
         .ignoresSafeArea()
+        .onAppear {
+            Task { @MainActor in
+                await viewModel.fetchData()
+            }
+        }
     }
     
     var backgroundView: some View {
@@ -178,5 +216,11 @@ struct DelayedStudyButton: View {
 }
 
 #Preview {
-    TodayStudyView()
+    TodayStudyView(
+        viewModel: TodayStudyViewModel(
+            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                studyRepository: DefaultStudyRepository()
+            )
+        )
+    )
 }
