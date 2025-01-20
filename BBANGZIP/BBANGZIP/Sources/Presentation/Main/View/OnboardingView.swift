@@ -23,18 +23,15 @@ enum OnboardingButtonText {
 }
 
 struct OnboardingView: View {
-    @State private var currentState: OnboardingState = .start
-    @State private var currentStep: Step = .first
-    @State private var isForward: Bool = true
-    @State private var buttonText: OnboardingButtonText = .start
-    @State private var nickname: String = ""
-    @State private var year: Int = 2025
-    @State private var semester: Semester = .first
-    @State private var subject: String = ""
+    @StateObject private var viewModel: OnboardingViewModel
+    
+    init(viewModel: OnboardingViewModel = OnboardingViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         NavigationStack {
-            switch currentState {
+            switch viewModel.currentState {
             case .start:
                 VStack(spacing: 0) {
                     OnboardingStartView()
@@ -68,7 +65,7 @@ struct OnboardingView: View {
     }
     
     private var backButton: some View {
-        Button(action: goBack) {
+        Button(action: viewModel.goBack) {
             Image(.chevronLeftThickSmall)
                 .renderingMode(.template)
                 .foregroundStyle(Color(.labelAlternative))
@@ -78,7 +75,7 @@ struct OnboardingView: View {
     }
     
     private var progressBar: some View {
-        ProgressBar(category: $currentStep)
+        ProgressBar(category: $viewModel.currentStep)
             .padding(
                 .horizontal,
                 44
@@ -90,7 +87,10 @@ struct OnboardingView: View {
     }
     
     private var nextButton: some View {
-        Button(buttonText.text, action: goNext)
+        Button(
+            viewModel.buttonText.text,
+            action: viewModel.goNext
+        )
             .buttonStyle(
                 SolidIconButton(
                     buttonImage: Image(.chevronRight)
@@ -102,111 +102,34 @@ struct OnboardingView: View {
     @ViewBuilder
     private var inputView: some View {
         ZStack {
-            if currentState == .nameInput {
-                NameInputView(nickname: $nickname)
+            if viewModel.currentState == .nameInput {
+                NameInputView(nickname: $viewModel.nickname)
                     .transition(.move(edge: .leading))
-            } else if currentState == .semesterInput {
+            } else if viewModel.currentState == .semesterInput {
                 SemesterInputView(
-                    nickname: $nickname,
-                    selectedYear: $year,
-                    selectedSemester: $semester
+                    nickname: $viewModel.nickname,
+                    selectedYear: $viewModel.year,
+                    selectedSemester: $viewModel.semester
                 )
                 .transition(
                     .asymmetric(
-                        insertion: .move(edge: isForward ? .trailing : .leading),
-                        removal: .move(edge: isForward ? .leading : .trailing)
+                        insertion: .move(edge: viewModel.isForward ? .trailing : .leading),
+                        removal: .move(edge: viewModel.isForward ? .leading : .trailing)
                     )
                 )
-            } else if currentState == .subjectInput {
+            } else if viewModel.currentState == .subjectInput {
                 SubjectInputView(
-                    subject: $subject,
-                    selectedYear: $year,
-                    selectedSemester: $semester
+                    subject: $viewModel.subject,
+                    selectedYear: $viewModel.year,
+                    selectedSemester: $viewModel.semester
                 )
                 .transition(.move(edge: .trailing))
             }
         }
-        .animation(.easeInOut, value: currentState)
-    }
-    
-    private func goBack() {
-        withAnimation {
-            isForward = false
-            
-            switch currentState {
-            case .nameInput:
-                currentState = .start
-            case .semesterInput:
-                currentState = .nameInput
-            case .subjectInput:
-                currentState = .semesterInput
-            case .complete:
-                currentState = .subjectInput
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .nameInput:
-                currentStep = .first
-            case .semesterInput:
-                currentStep = .second
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .start:
-                buttonText = OnboardingButtonText.start
-            case .nameInput, .semesterInput, .subjectInput:
-                buttonText = OnboardingButtonText.inProgress
-            case .complete:
-                buttonText = OnboardingButtonText.complete
-            }
-        }
-    }
-    
-    private func goNext() {
-        withAnimation {
-            isForward = true
-            
-            switch currentState {
-            case .start:
-                currentState = .nameInput
-            case .nameInput:
-                currentState = .semesterInput
-            case .semesterInput:
-                currentState = .subjectInput
-            case .subjectInput:
-                currentState = .complete
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .nameInput:
-                currentStep = .first
-            case .semesterInput:
-                currentStep = .second
-            case .subjectInput:
-                currentStep = .third
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .start:
-                buttonText = OnboardingButtonText.start
-            case .nameInput, .semesterInput, .subjectInput:
-                buttonText = OnboardingButtonText.inProgress
-            case .complete:
-                buttonText = OnboardingButtonText.complete
-            }
-            
-            if(currentState == .start) {
-                // TODO: nickname, year, semester, subjectName 서버 전달
-            }
-        }
+        .animation(
+            .easeInOut,
+            value: viewModel.currentState
+        )
     }
 }
 
