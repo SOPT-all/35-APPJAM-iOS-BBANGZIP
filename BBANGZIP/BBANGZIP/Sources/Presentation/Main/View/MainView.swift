@@ -9,21 +9,37 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-        MyPageMainView(
-            viewModel: MyPageMainViewModel(
-                level: 1,
-                currentScore: 100,
-                badgeCount: 4,
-                maxScore: 200
-            )
-        )
-        
+        NavigationView {
+            VStack {
+                MenuTab(
+                    tabNames: ["중간고사", "기말고사"]
+                )
+
+                Text("Welcome")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                
+                NavigationLink(destination: TestView()) {
+                    Text("Go to TestView")
+                        .font(.headline)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.black)
+                        .cornerRadius(8)
+                }
+                
+                Spacer()
+            }
+            .navigationTitle("Main View")
+        }
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView()
+        
     }
 }
 

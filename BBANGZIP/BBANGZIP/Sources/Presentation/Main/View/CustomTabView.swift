@@ -10,12 +10,17 @@ import SwiftUI
 
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
+    @State private var isBottomSheetShowing: Bool
+    
+    init(isBottomSheetShowing: Bool = false) {
+        self.isBottomSheetShowing = isBottomSheetShowing
+    }
     
     var body: some View {
         ZStack {
             TabView(selection: $selected) {
                 Group {
-                    Text("과목 관리")
+                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
                         .tag(Tab.subjectManage)
                     
                     Text("오늘 할 일")
@@ -36,7 +41,9 @@ struct CustomTabView: View {
             VStack {
                 Spacer()
                 
-                CustomTabBar(selected: $selected)
+                if !isBottomSheetShowing {
+                    CustomTabBar(selected: $selected)
+                }
             }
         }
     }
