@@ -72,6 +72,7 @@ struct HeaderView: View {
             .frame(height: 416)
             .onTapGesture {
                 print("레벨업 상태 화면으로 change 예정")
+                //TODO: 추후 화면 전환 예정
             }
     }
     
@@ -94,7 +95,10 @@ struct HeaderView: View {
                 HStack(spacing: 0) {
                     Image(.trophyGray)
                         .scaledToFit()
-                        .frame(width: 24, height: 24)
+                        .frame(
+                            width: 24,
+                            height: 24
+                        )
                     
                     CustomText(
                         "\(viewModel.currentScore)/\(viewModel.maxScore)",
@@ -143,6 +147,7 @@ struct BadgeSection: View {
                             height: 80
                         )
                 }
+                
                 CustomText(
                     "뱃지 설정하기",
                     fontType: .caption1Medium,
@@ -154,19 +159,23 @@ struct BadgeSection: View {
                 Button(action: onBadgeCollectionTap) {
                     VStack {
                         Spacer()
+                        
                         HStack(spacing: 2) {
                             CustomText(
                                 "\(badgeCount)",
                                 fontType: .title2Bold,
                                 color: Color(.labelNormal)
                             )
+                            
                             CustomText(
                                 "개",
                                 fontType: .body1Medium,
                                 color: Color(.labelNormal)
                             )
+                            
                             Image(.chevronRight)
                         }
+                        
                         Spacer()
                     }
                     .frame(height: 80)

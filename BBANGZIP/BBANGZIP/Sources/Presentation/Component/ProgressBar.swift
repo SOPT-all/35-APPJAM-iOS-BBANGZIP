@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProgressBar: View {
-    private var type: ProgressBarType
+    private let type: ProgressBarType
     
     init(type: ProgressBarType) {
         self.type = type
