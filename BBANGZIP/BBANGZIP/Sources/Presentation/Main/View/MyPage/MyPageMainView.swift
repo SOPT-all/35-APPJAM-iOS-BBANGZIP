@@ -9,75 +9,34 @@
 import SwiftUI
 
 struct MyPageMainView: View {
-    @State private var level: Int
-    @State private var currentScore: Int
-    @State private var badgeCount: Int
+    @StateObject private var viewModel: MyPageMainViewModel
     
-    private let maxScore: Int
-    private let title: String
-    
-    init(
-        level: Int,
-        currentScore: Int,
-        badgeCount: Int,
-        maxScore: Int = 200,
-        title: String = "가판대"
-    ) {
-        self._level = State(initialValue: level)
-        self._currentScore = State(initialValue: currentScore)
-        self._badgeCount = State(initialValue: badgeCount)
-        self.maxScore = maxScore
-        self.title = title
+    init(viewModel: MyPageMainViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
-        VStack (spacing: 0) {
-            HeaderView(
-                level: level,
-                title: title,
-                currentScore: currentScore,
-                maxScore: maxScore,
-                badgeCount: badgeCount
-            )
+        VStack(spacing: 0) {
+            HeaderView(viewModel: viewModel)
             Spacer()
         }
     }
 }
 
 struct HeaderView: View {
-    private let level: Int
-    private let title: String
-    private let currentScore: Int
-    private let maxScore: Int
-    private let badgeCount: Int
-    
-    init(
-        level: Int,
-        title: String,
-        currentScore: Int,
-        maxScore: Int,
-        badgeCount: Int
-    ) {
-        self.level = level
-        self.title = title
-        self.currentScore = currentScore
-        self.maxScore = maxScore
-        self.badgeCount = badgeCount
-    }
+    @ObservedObject var viewModel: MyPageMainViewModel
     
     var body: some View {
-        ZStack() {
+        ZStack {
             VStack {
                 backgroundView
-                
                 Spacer()
             }
             VStack {
                 VStack(spacing: 22) {
                     experienceView
-                    
                     BadgeSection(
-                        badgeCount: badgeCount,
+                        badgeCount: viewModel.badgeCount,
                         onBadgeSettingTap: {
                             print("뱃지 설정하기 클릭")
                         },
@@ -87,7 +46,6 @@ struct HeaderView: View {
                     )
                 }
                 .padding(.top, 330)
-                
                 Spacer()
             }
         }
@@ -96,13 +54,7 @@ struct HeaderView: View {
     
     var backgroundView: some View {
         Color(.backgroundAccent)
-            .cornerRadius(
-                32,
-                corners: [
-                    .bottomLeft,
-                    .bottomRight
-                ]
-            )
+            .cornerRadius(32, corners: [.bottomLeft, .bottomRight])
             .frame(height: 416)
             .onTapGesture {
                 print("레벨업 상태 화면으로 change 예정")
@@ -110,16 +62,11 @@ struct HeaderView: View {
     }
     
     var experienceView: some View {
-        let progress = Double(currentScore) / Double(maxScore)
-        
-        return VStack(
-            alignment: .leading,
-            spacing: 8
-        ) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Chip(type: .level(level))
+                Chip(type: .level(viewModel.level))
                 CustomText(
-                    title,
+                    viewModel.title,
                     fontType: .body1Bold,
                     color: Color(.labelNormal)
                 )
@@ -129,41 +76,24 @@ struct HeaderView: View {
                 HStack(spacing: 0) {
                     Image(.trophyGray)
                         .scaledToFit()
-                        .frame(
-                            width: 24,
-                            height: 24
-                        )
+                        .frame(width: 24, height: 24)
                     CustomText(
-                        "\(Int(currentScore))/\(Int(maxScore))",
+                        "\(viewModel.currentScore)/\(viewModel.maxScore)",
                         fontType: .label2Medium,
                         color: Color(.labelAlternative)
                     )
                 }
             }
-            ProgressBar(type: .basic(progress: progress))
+            ProgressBar(type: .basic(progress: viewModel.progress))
         }
-        .padding(
-            .horizontal,
-            40
-        )
+        .padding(.horizontal, 40)
     }
-    
 }
 
 struct BadgeSection: View {
-    private let badgeCount: Int
-    private let onBadgeSettingTap: () -> Void
-    private let onBadgeCollectionTap: () -> Void
-    
-    init(
-        badgeCount: Int,
-        onBadgeSettingTap: @escaping () -> Void,
-        onBadgeCollectionTap: @escaping () -> Void
-    ) {
-        self.badgeCount = badgeCount
-        self.onBadgeSettingTap = onBadgeSettingTap
-        self.onBadgeCollectionTap = onBadgeCollectionTap
-    }
+    let badgeCount: Int
+    let onBadgeSettingTap: () -> Void
+    let onBadgeCollectionTap: () -> Void
     
     var body: some View {
         HStack(alignment: .bottom, spacing: 73.5) {
@@ -172,10 +102,7 @@ struct BadgeSection: View {
                     Image(.badge)
                         .resizable()
                         .scaledToFit()
-                        .frame(
-                            width: 80,
-                            height: 80
-                        )
+                        .frame(width: 80, height: 80)
                 }
                 CustomText(
                     "뱃지 설정하기",
@@ -187,7 +114,6 @@ struct BadgeSection: View {
             VStack(spacing: 6) {
                 VStack {
                     Spacer()
-                    
                     HStack(spacing: 2) {
                         CustomText(
                             "\(badgeCount)",
@@ -201,11 +127,9 @@ struct BadgeSection: View {
                         )
                         Image(.chevronRight)
                     }
-                    
                     Spacer()
                 }
                 .frame(height: 80)
-                
                 CustomText(
                     "배지 도감",
                     fontType: .caption1Medium,
@@ -234,9 +158,11 @@ struct BadgeSection: View {
 
 #Preview {
     MyPageMainView(
-        level: 1,
-        currentScore: 100,
-        badgeCount: 4 ,
-        maxScore: 200
+        viewModel: MyPageMainViewModel(
+            level: 1,
+            currentScore: 100,
+            badgeCount: 4,
+            maxScore: 200
+        )
     )
 }

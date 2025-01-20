@@ -52,22 +52,24 @@ struct ProgressBar: View {
         }
     }
 }
-
 struct CustomProgressBar: ProgressViewStyle {
     func makeBody(configuration: Configuration) -> some View {
-        ZStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.staticWhite))
-                .frame(height: 8)
-            
-            if let fractionCompleted = configuration.fractionCompleted {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.primaryLight))
-                    .frame(
-                        width: UIScreen.main.bounds.width * CGFloat(fractionCompleted),
-                        height: 8
-                    )
+                    .fill(Color(.staticWhite))
+                    .frame(height: 8)
+                
+                if let fractionCompleted = configuration.fractionCompleted {
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color(.primaryLight))
+                        .frame(
+                            width: geometry.size.width * CGFloat(fractionCompleted),
+                            height: 8
+                        )
+                }
             }
         }
+        .frame(height: 8)
     }
 }

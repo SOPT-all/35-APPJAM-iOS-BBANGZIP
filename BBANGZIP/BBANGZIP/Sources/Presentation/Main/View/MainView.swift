@@ -9,7 +9,15 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-        MyPageMainView(level: 1, currentScore: 20, badgeCount: 8)
+        MyPageMainView(
+            viewModel: MyPageMainViewModel(
+                level: 1,
+                currentScore: 100,
+                badgeCount: 4,
+                maxScore: 200
+            )
+        )
+        
     }
 }
 
