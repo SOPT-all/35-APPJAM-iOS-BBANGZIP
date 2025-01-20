@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     var body: some View {
-        MyPageMainView()
+        MyPageMainView(level: 1, currentScore: 20, badgeCount: 8)
     }
 }
 
