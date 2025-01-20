@@ -45,7 +45,10 @@ struct HeaderView: View {
                         }
                     )
                 }
-                .padding(.top, 330)
+                .padding(
+                    .top,
+                    330
+                )
                 Spacer()
             }
         }
@@ -54,7 +57,13 @@ struct HeaderView: View {
     
     var backgroundView: some View {
         Color(.backgroundAccent)
-            .cornerRadius(32, corners: [.bottomLeft, .bottomRight])
+            .cornerRadius(
+                32,
+                corners: [
+                    .bottomLeft,
+                    .bottomRight
+                ]
+            )
             .frame(height: 416)
             .onTapGesture {
                 print("레벨업 상태 화면으로 change 예정")
@@ -62,7 +71,10 @@ struct HeaderView: View {
     }
     
     var experienceView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(
+            alignment: .leading,
+            spacing: 8
+        ) {
             HStack {
                 Chip(type: .level(viewModel.level))
                 CustomText(
@@ -96,13 +108,19 @@ struct BadgeSection: View {
     let onBadgeCollectionTap: () -> Void
     
     var body: some View {
-        HStack(alignment: .bottom, spacing: 73.5) {
+        HStack(
+            alignment: .bottom,
+            spacing: 73.5
+        ) {
             VStack(spacing: 6) {
                 Button(action: onBadgeSettingTap) {
                     Image(.badge)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 80, height: 80)
+                        .frame(
+                            width: 80,
+                            height: 80
+                        )
                 }
                 CustomText(
                     "뱃지 설정하기",
@@ -112,32 +130,32 @@ struct BadgeSection: View {
             }
             
             VStack(spacing: 6) {
-                VStack {
-                    Spacer()
-                    HStack(spacing: 2) {
-                        CustomText(
-                            "\(badgeCount)",
-                            fontType: .title2Bold,
-                            color: Color(.labelNormal)
-                        )
-                        CustomText(
-                            "개",
-                            fontType: .body1Medium,
-                            color: Color(.labelNormal)
-                        )
-                        Image(.chevronRight)
+                Button(action: onBadgeCollectionTap) {
+                    VStack {
+                        Spacer()
+                        HStack(spacing: 2) {
+                            CustomText(
+                                "\(badgeCount)",
+                                fontType: .title2Bold,
+                                color: Color(.labelNormal)
+                            )
+                            CustomText(
+                                "개",
+                                fontType: .body1Medium,
+                                color: Color(.labelNormal)
+                            )
+                            Image(.chevronRight)
+                        }
+                        Spacer()
                     }
-                    Spacer()
+                    .frame(height: 80)
                 }
-                .frame(height: 80)
+                
                 CustomText(
                     "배지 도감",
                     fontType: .caption1Medium,
                     color: Color(.labelAssistive)
                 )
-            }
-            .onTapGesture {
-                onBadgeCollectionTap()
             }
         }
         .padding(.vertical, 24)
