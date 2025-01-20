@@ -9,35 +9,54 @@
 import SwiftUI
 
 struct ProgressBar: View {
-    @Binding var category: Step
+    private var type: ProgressBarType
+    
+    init(type: ProgressBarType) {
+        self.type = type
+    }
     
     var body: some View {
-        ProgressView(value: category.percentage) {            
-            HStack {
-                StepCircle(
-                    step: Step.first,
-                    complete: true
+        VStack {
+            switch type {
+            case .withCircle(let category):
+                ProgressView(value: category.percentage) {
+                    HStack {
+                        StepCircle(
+                            step: Step.first,
+                            complete: category.rawValue >= Step.first.rawValue
+                        )
+                        
+                        Spacer()
+                        
+                        StepCircle(
+                            step: Step.second,
+                            complete: category.rawValue >= Step.second.rawValue
+                        )
+                        
+                        Spacer()
+                        
+                        StepCircle(
+                            step: Step.third,
+                            complete: category.rawValue >= Step.third.rawValue
+                        )
+                    }
+                    .padding(.bottom, 8)
+                }
+                .progressViewStyle(LinearProgressViewStyle(tint: Color(.labelNormal)))
+                .background(
+                    Capsule()
+                        .fill(Color(.fillStrong))
                 )
                 
-                Spacer()
-                
-                StepCircle(
-                    step: Step.second,
-                    complete: category != .first
-                )
-                
-                Spacer()
-                
-                StepCircle(
-                    step: Step.third,
-                    complete: category == .third
-                )
+            case .basic(let progress):
+                ProgressView(value: progress)
+                    .progressViewStyle(LinearProgressViewStyle(tint: Color(.labelNormal)))
+                    .frame(height: 8)
+                    .background(
+                        Capsule()
+                            .fill(Color(.staticWhite))
+                    )
             }
-            .padding(
-                .bottom,
-                8
-            )
         }
-        .progressViewStyle(LinearProgressViewStyle(tint: Color(.statusPositive)))
     }
 }
