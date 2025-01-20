@@ -39,12 +39,12 @@ struct SubjectCard: View {
                     .lineLimit(1)
                     
                     CustomText(
-                        subjectCardData.studyList.examName,
+                        subjectCardData.studyList[0].examName,
                         fontType: .label2Bold,
                         color: Color(.labelNeutral)
                     )
                     
-                    Chip(type: .daysLeftBlack(-subjectCardData.studyList.examDday))
+                    Chip(type: .daysLeftBlack(-subjectCardData.studyList[0].examDday))
                     
                     Spacer()
                     
@@ -91,7 +91,7 @@ struct SubjectCard: View {
     private var delayedStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.studyList.pendingCount,
+                number: subjectCardData.studyList[0].pendingCount,
                 type: .orange
             )
             
@@ -106,7 +106,7 @@ struct SubjectCard: View {
     private var inProgressStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.studyList.inProgressCount,
+                number: subjectCardData.studyList[0].inProgressCount,
                 type: .black
             )
             

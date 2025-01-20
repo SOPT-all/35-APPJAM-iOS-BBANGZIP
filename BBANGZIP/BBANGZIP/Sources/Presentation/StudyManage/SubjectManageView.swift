@@ -72,7 +72,6 @@ struct SubjectManageView: View {
             )
             
             Spacer()
-            
         }
         .bottomSheet(
             isShowing: $viewModel.isShowingBottomSheet,
@@ -123,23 +122,16 @@ struct SubjectManageView: View {
                 spacing: 20
             ) {
                 ForEach(
-                    Array(viewModel.modelList.indices),
+                    $viewModel.modelList,
                     id: \.self
                 ) {
-                    index in
+                    $model in
                     Button {
-                        viewModel.selectSubject(id: index)
+                        model.state = model.state == .cardDefault ? .cardDefault : model.state == .selectable ? .selected : .selectable
                     } label: {
                         SubjectCard(
-                            state: viewModel.getState(for: index),
-                            subjectCardData: viewModel.modelList[index]
-                        )
-                        .modifier(
-                            LastRowPadding(
-                                index: index,
-                                totalCount: viewModel.modelList.count,
-                                columns: columns.count
-                            )
+                            state: model.state,
+                            subjectCardData: model
                         )
                     }
                     .buttonStyle(PressedButtonStyle())
@@ -150,12 +142,12 @@ struct SubjectManageView: View {
                 } label: {
                     SubjectAddCard()
                 }
-                .padding(
-                    .bottom,
-                    80
-                )
                 .buttonStyle(PressedButtonStyle())
             }
+            .padding(
+                .bottom,
+                80
+            )
         }
         .scrollIndicators(.hidden)
     }
