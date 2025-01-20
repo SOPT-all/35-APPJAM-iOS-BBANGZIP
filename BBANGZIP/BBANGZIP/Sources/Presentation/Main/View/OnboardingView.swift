@@ -8,6 +8,18 @@
 
 import SwiftUI
 
+extension View {
+    func hideKeyboard() {
+        let resign = #selector(UIResponder.resignFirstResponder)
+        UIApplication.shared.sendAction(
+            resign,
+            to: nil,
+            from: nil,
+            for: nil
+        )
+    }
+}
+
 enum OnboardingButtonText {
     case start
     case inProgress
@@ -59,7 +71,11 @@ struct OnboardingView: View {
                     
                     nextButton
                 }
+                .ignoresSafeArea(.keyboard)
             }
+        }
+        .onTapGesture {
+            hideKeyboard()
         }
     }
     
@@ -97,34 +113,34 @@ struct OnboardingView: View {
     
     @ViewBuilder
     private var inputView: some View {
-            ZStack {
-                if currentState == .nameInput {
-                    NameInputView(nickname: $nickname)
-                        .transition(.move(edge: .leading))
-                } else if currentState == .semesterInput {
-                    SemesterInputView(
-                        nickname: $nickname,
-                        selectedYear: $year,
-                        selectedSemester: $semester
+        ZStack {
+            if currentState == .nameInput {
+                NameInputView(nickname: $nickname)
+                    .transition(.move(edge: .leading))
+            } else if currentState == .semesterInput {
+                SemesterInputView(
+                    nickname: $nickname,
+                    selectedYear: $year,
+                    selectedSemester: $semester
+                )
+                .transition(
+                    .asymmetric(
+                        insertion: .move(edge: isForward ? .trailing : .leading),
+                        removal: .move(edge: isForward ? .leading : .trailing)
                     )
-                        .transition(
-                            .asymmetric(
-                                insertion: .move(edge: isForward ? .trailing : .leading),
-                                removal: .move(edge: isForward ? .leading : .trailing)
-                            )
-                        )
-                } else if currentState == .subjectInput {
-                    SubjectInputView(
-                        subject: $subject,
-                        selectedYear: $year,
-                        selectedSemester: $semester
-                    )
-                        .transition(.move(edge: .trailing))
-                }
+                )
+            } else if currentState == .subjectInput {
+                SubjectInputView(
+                    subject: $subject,
+                    selectedYear: $year,
+                    selectedSemester: $semester
+                )
+                .transition(.move(edge: .trailing))
             }
-            .animation(.easeInOut, value: currentState)
+        }
+        .animation(.easeInOut, value: currentState)
     }
-
+    
     private func goBack() {
         withAnimation {
             isForward = false
