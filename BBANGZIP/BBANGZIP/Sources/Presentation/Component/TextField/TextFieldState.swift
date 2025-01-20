@@ -11,15 +11,15 @@ import SwiftUI
 enum TextFieldState {
     case defaultState
     case placeholder
+    case typing
     case alert
-    case complete
-    case filled
+    case field
     
     var backgroundColor: Color {
         switch self {
-        case .defaultState, .alert, .complete, .filled:
+        case .defaultState, .alert, .field:
             Color(.fillNormal)
-        case .placeholder:
+        case .placeholder, .typing:
             Color(.fillStrong)
         }
     }
@@ -28,28 +28,19 @@ enum TextFieldState {
         switch self {
         case .defaultState:
             Color(.labelAssistive)
-        case .placeholder, .alert, .complete, .filled:
-            Color(.labelAlternative)
-        }
-    }
-    
-    var textColor: Color {
-        switch self {
-        case .defaultState:
-            Color(.labelDisable)
-        case .placeholder, .alert, .complete, .filled:
+        case .placeholder, .typing, .alert, .field:
             Color(.labelAlternative)
         }
     }
     
     var announceColor: Color {
         switch self {
-        case .defaultState, .placeholder, .filled:
+        case .defaultState, .field:
             Color(.labelAssistive)
         case .alert:
             Color(.statusDestructive)
-        case .complete:
-            Color(.statusPositive)
+        case .placeholder, .typing:
+            Color(.labelAlternative)
         }
     }
     
@@ -57,8 +48,6 @@ enum TextFieldState {
         switch self {
         case .alert:
             Color(.statusDestructive)
-        case .complete:
-            Color(.statusPositive)
         default:
             Color.clear
         }
@@ -66,9 +55,9 @@ enum TextFieldState {
     
     var showCancelButton: Bool {
         switch self {
-        case .defaultState, .placeholder, .filled:
+        case .defaultState, .placeholder:
             false
-        case .alert, .complete:
+        case .typing, .alert, .field:
             true
         }
     }
