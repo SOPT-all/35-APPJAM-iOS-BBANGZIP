@@ -77,7 +77,7 @@ struct OnboardingView: View {
     }
     
     private var progressBar: some View {
-        ProgressBar(category: $viewModel.currentStep)
+        ProgressBar(type: .withCircle(category: viewModel.currentStep))
             .padding(
                 .horizontal,
                 44
@@ -95,9 +95,11 @@ struct OnboardingView: View {
         )
             .buttonStyle(
                 SolidIconButton(
-                    buttonImage: Image(.chevronRight)
+                    buttonImage: Image(.chevronRightThickSmall),
+                    viewModel.isButtonEnabled
                 )
             )
+            .disabled(!viewModel.isButtonEnabled)
             .padding(.horizontal, 20)
     }
     

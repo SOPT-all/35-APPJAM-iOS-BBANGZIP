@@ -25,16 +25,6 @@ struct NameInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProgressBar(type: .withCircle(category: viewModel.currentStep))
-                .padding(
-                    .horizontal,
-                    44
-                )
-                .padding(
-                    .bottom,
-                    78
-                )
-            
             VStack(spacing: 32) {
                 mainDescription
                 

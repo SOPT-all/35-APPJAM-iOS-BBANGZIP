@@ -63,7 +63,7 @@ struct SubjectCard: View {
                 
                 Spacer()
                 
-                Image(.chevronRight)
+                Image(.chevronRightThickSmall)
                     .renderingMode(.template)
                     .foregroundStyle(Color(.labelAssistive))
                     .padding(

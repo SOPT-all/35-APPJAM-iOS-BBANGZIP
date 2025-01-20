@@ -23,6 +23,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var nicknameState: TextFieldState
     @Published var isNicknameFocused: Bool = false
     @Published var isSubjectFocused: Bool = false
+    @Published var isButtonEnabled: Bool = true
     
     init(
         currentState: OnboardingState = .start,
@@ -89,9 +90,16 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func goNext() {
+    func goNext() {        
         withAnimation {
             isForward = true
+            
+            switch currentState {
+            case .start, .complete:
+                isButtonEnabled = false
+            default:
+                break
+            }
             
             switch currentState {
             case .start:
@@ -137,19 +145,20 @@ class OnboardingViewModel: ObservableObject {
         newText: String,
         isNicknameFocused: Bool
     ) {
-        
-        if !isNicknameFocused {
-            nicknameState = newText.isEmpty ? .defaultState : .field
-            return
-        }
-        
         if newText.isEmpty {
             nicknameState = .placeholder
-        } else if newText.containsEmoji || newText.containsSymbol {
-            nicknameState = .alert
-        } else {
+        } else if isNicknameFocused {
             nicknameState = .typing
+            if newText.containsEmoji || newText.containsSymbol {
+                nicknameState = .alert
+                nicknameAnnounceState = .alert
+            }
+        } else if !isNicknameFocused || !newText.containsEmoji  || !newText.containsSymbol {
+            nicknameState = .field
+            nicknameAnnounceState = .enable
+            isButtonEnabled = true
         }
+    
         
         if let maxLength = TextFieldStyleCase.nickname.maxLength {
             nickname = String(newText.prefix(maxLength))
@@ -188,7 +197,14 @@ class OnboardingViewModel: ObservableObject {
         text: String
     ) {
         if !isNicknameFocused {
-            nicknameState = text.isEmpty ? .defaultState : .field
+            if text.containsEmoji || text.containsSymbol {
+                nicknameState = .alert
+                nicknameAnnounceState = .alert
+            } else if !text.containsEmoji  || !text.containsSymbol {
+                nicknameState = .field
+                nicknameAnnounceState = .enable
+                isButtonEnabled = true
+            }
         }
     }
     
