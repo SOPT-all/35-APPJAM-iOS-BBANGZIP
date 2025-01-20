@@ -38,6 +38,8 @@ struct ProgressBar: View {
                 8
             )
         }
-        .progressViewStyle(LinearProgressViewStyle(tint: Color(.statusPositive)))
+        .progressViewStyle(
+            LinearProgressViewStyle(tint: Color(.statusPositive))
+        )
     }
 }
