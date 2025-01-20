@@ -34,9 +34,12 @@ final class SubjectManageViewModel: ObservableObject {
         let currentState = state.values.first ?? SubjectCardState.cardDefault
         
         let newState: CardState = switch currentState {
-        case SubjectCardState.cardDefault: SubjectCardState.selectable
-        case SubjectCardState.selectable: SubjectCardState.cardDefault
-        default: currentState
+        case SubjectCardState.cardDefault:
+            SubjectCardState.selectable
+        case SubjectCardState.selectable:
+            SubjectCardState.cardDefault
+        default:
+            currentState
         }
         
         for key in state.keys {

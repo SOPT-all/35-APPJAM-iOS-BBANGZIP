@@ -11,14 +11,17 @@ import SwiftUI
 struct SubjectManageView: View {
     @StateObject private var viewModel: SubjectManageViewModel
     private let selectedBottomSheetType: BottomSheetType?
+    @Binding var isBottomSheetShowing: Bool
     
     init(
         // TODO: dataCount API 연동 후 수정 필요
         viewModel: SubjectManageViewModel = SubjectManageViewModel(dataCount: 8),
-        selectedBottomSheetType: BottomSheetType? = .changeSemester
+        selectedBottomSheetType: BottomSheetType? = .changeSemester,
+        isBottomSheetShowing: Binding<Bool>
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.selectedBottomSheetType = selectedBottomSheetType
+        _isBottomSheetShowing = isBottomSheetShowing
     }
     
     // TODO: API 연동 후 수정 필요
@@ -82,7 +85,9 @@ struct SubjectManageView: View {
                 type.contentView(isPresented: $viewModel.isShowingBottomSheet)
             }
         }
-        
+        .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+            isBottomSheetShowing = newValue
+        }
     }
     
     var subjectSection: some View {
@@ -165,8 +170,4 @@ struct PressedButtonStyle: ButtonStyle {
                     .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
             )
     }
-}
-
-#Preview {
-    SubjectManageView()
 }
