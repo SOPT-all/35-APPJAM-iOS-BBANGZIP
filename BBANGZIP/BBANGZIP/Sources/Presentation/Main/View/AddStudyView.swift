@@ -167,6 +167,7 @@ struct AddStudyView: View {
         )
     }
     
+    // TODO: 기본 키패드 아닌 숫자 키패드 뜨도록 종류 지정 필요
     private var startRangeTextField: some View {
         TextField(
             "시작 페이지",
