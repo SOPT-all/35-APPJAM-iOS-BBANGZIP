@@ -21,11 +21,6 @@ struct MenuTab: View {
             RoundedRectangle(cornerRadius: 32)
                 .fill(Color(.staticWhite))
                 .frame(height: 64)
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    y: 4
-                )
             HStack {
                 Spacer()
                 ForEach(tabNames, id: \.self) { tabName in
@@ -56,6 +51,7 @@ struct MenuTab: View {
             }
             .padding(.horizontal, 16)
         }
+        .customShadow(.emphasize)
     }
     
     private func calculateTextWidth(_ text: String) -> CGFloat {
