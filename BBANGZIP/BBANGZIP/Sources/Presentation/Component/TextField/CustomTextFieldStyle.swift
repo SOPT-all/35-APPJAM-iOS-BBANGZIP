@@ -47,7 +47,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                     
                     configuration
                         .applyFont(font: .label1Medium)
-                        .foregroundStyle(state.textColor)
+                        .foregroundStyle(Color(.labelAlternative))
                         .padding(
                             .leading,
                             6
@@ -90,7 +90,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                 CustomText(
                     "\(text.count)/\(maxLength)",
                     fontType: .caption1Medium,
-                    color: state.textColor
+                    color: Color(.labelAlternative)
                 )
             }
             
@@ -101,7 +101,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                         width: 24,
                         height: 24
                     )
-                    .foregroundStyle(state.textColor)
+                    .foregroundStyle(Color(.labelAlternative))
                     .onTapGesture {
                         text = ""
                     }
