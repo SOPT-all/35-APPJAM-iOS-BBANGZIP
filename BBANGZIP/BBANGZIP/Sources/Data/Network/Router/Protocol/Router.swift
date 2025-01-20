@@ -10,7 +10,7 @@ import Foundation
 
 import Alamofire
 
-protocol Router {
+protocol Router: URLRequestConvertible {
     var baseURL: String { get }
     var path: String { get }
     var method: HTTPMethod { get }

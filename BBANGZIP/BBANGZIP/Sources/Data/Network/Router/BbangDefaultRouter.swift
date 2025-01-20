@@ -25,7 +25,6 @@ enum BbangDefaultRouter {
     case deleteSubject
     case studyCompleteCheck(pieceID: Float)
     case notCompletedCheck(pieceID: Float)
-    case sortedTodoList
     case sortedDelayedTodoList
     case addTodoList
     case addTodo
@@ -34,6 +33,9 @@ enum BbangDefaultRouter {
     case myPageStatus
     case aquireBadge
     case badgeDetail(badgeID: Float)
+    
+    //성민
+    case fetchSortedTodoList(dto: TodayStudyRequestDTO)
 }
 
 extension BbangDefaultRouter: Router {
@@ -71,8 +73,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces/\(pieceID)/mark-done"
         case .notCompletedCheck(let pieceID):
             return "/api/v1/pieces/\(pieceID)/mark-undone"
-        case .sortedTodoList:
-            return "/api/v1/pieces/today"
+        case .fetchSortedTodoList:
+            return "/api/v1/pieces/today/orders"
         case .sortedDelayedTodoList:
             return "/api/v1/pieces/pending"
         case .addTodoList:
@@ -109,7 +111,7 @@ extension BbangDefaultRouter: Router {
                 .subjectFiltering,
                 .testSelect,
                 .motivationMessage,
-                .sortedTodoList,
+                .fetchSortedTodoList,
                 .sortedDelayedTodoList,
                 .myPageStatus,
                 .aquireBadge,
@@ -133,12 +135,17 @@ extension BbangDefaultRouter: Router {
     var headers: [String : String]? {
         switch self {
         case .signup(let signInRequest):
-            return [
+            [
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(signInRequest.authorization)"
             ]
+        case .fetchSortedTodoList: // TODO: 추후 삭제 (임시)
+            [
+                "Conttent-Type": "application/json",
+                "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mzc0MDA1MDQsImV4cCI6MTczODYxMDEwNCwic3ViIjoiQUNDRVNTX1RPS0VOIiwidWlkIjoxLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIn0.qAKLZkrmk_Tk8YilYVH7wOZRXwQbJeAkxNgLpa87-U1xQC_E7rGN3JmeJLaavQ3QVoittKVqX53mvzw9ewnjEg"
+            ]
         default:
-            return [
+            [
                 "Conttent-Type": "application/json"
             ]
         }
@@ -162,6 +169,8 @@ extension BbangDefaultRouter: Router {
             return ["pieceID": pieceID]
         case .badgeDetail(let badgeID):
             return ["badgeID": badgeID]
+        case .fetchSortedTodoList(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }
@@ -169,7 +178,7 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup:
+        case .signup, .fetchSortedTodoList:
             return URLEncoding.default
         default:
             return JSONEncoding.default

@@ -1,0 +1,16 @@
+//
+//  StudyRepository.swift
+//  BBANGZIP
+//
+//  Created by 조성민 on 1/21/25.
+//  Copyright © 2025 com.bbangzip. All rights reserved.
+//
+
+protocol StudyRepository: Sendable{
+    func fetchTodayStudy(
+        area: TodayStudyArea,
+        year: Int,
+        semester: Semester,
+        sortOption: FetchTodayStudySortOption
+    ) async throws -> TodayStudyContent
+}
