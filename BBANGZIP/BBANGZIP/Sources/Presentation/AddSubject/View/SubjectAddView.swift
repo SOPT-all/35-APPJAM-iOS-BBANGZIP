@@ -1,5 +1,5 @@
 //
-//  SubjectAddView.swift
+//  AddSubjectView.swift
 //  BBANGZIP
 //
 //  Created by 최유빈 on 1/19/25.
@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-struct SubjectAddView: View {
-    @StateObject private var viewModel: SubjectAddViewModel
+struct AddSubjectView: View {
+    @StateObject private var viewModel: AddSubjectViewModel
     
     init(
-        viewModel: SubjectAddViewModel = SubjectAddViewModel()
+        viewModel: AddSubjectViewModel = AddSubjectViewModel()
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -76,5 +76,5 @@ struct SubjectAddView: View {
 }
 
 #Preview {
-    SubjectAddView()
+    AddSubjectView()
 }

@@ -1,5 +1,5 @@
 //
-//  SubjectAddViewModel.swift
+//  AddSubjectViewModel.swift
 //  BBANGZIP
 //
 //  Created by 최유빈 on 1/19/25.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-class SubjectAddViewModel: ObservableObject {
+class AddSubjectViewModel: ObservableObject {
     @Published var subject: String
     @Published var state: TextFieldState
     @Published var alertCase: SubjectTextFieldAlterCase?
