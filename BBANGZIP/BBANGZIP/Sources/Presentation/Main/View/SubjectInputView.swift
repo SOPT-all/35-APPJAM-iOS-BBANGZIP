@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct SubjectInputView: View {
-    @State private var currentStep: Step
     @State private var subject: String
     @State private var selectedYear: Int
     @State private var selectedSemester: Semester
@@ -17,15 +16,12 @@ struct SubjectInputView: View {
     @State private var state: TextFieldState
     
     init(
-        // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
-        currentStep: Step = .third,
         subject: String = "",
         selectedYear: Int = 2025,
         selectedSemester: Semester = Semester.first,
         announceState: NicknameTextFieldAlertCase? = nil,
         state: TextFieldState = .defaultState
     ) {
-        self.currentStep = currentStep
         self.subject = subject
         self.selectedYear = selectedYear
         self.selectedSemester = selectedSemester
@@ -35,16 +31,6 @@ struct SubjectInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-//            ProgressBar(category: $currentStep)
-//                .padding(
-//                    .horizontal,
-//                    44
-//                )
-//                .padding(
-//                    .bottom,
-//                    48
-//                )
-            
             VStack(spacing: 0) {
                 headerDescription
                 
@@ -53,32 +39,12 @@ struct SubjectInputView: View {
                 subjectTextField
                 
                 Spacer()
-                
-//                nextButton
             }
             .padding(
                 .horizontal,
                 20
             )
         }
-//        .navigationBarBackButtonHidden()
-//        .toolbar {
-//            ToolbarItemGroup(placement: .topBarLeading) {
-//                backButton
-//            }
-//        }
-    }
-    
-    private var backButton: some View {
-        Button(action: {
-            // TODO: 뒤로가기 버튼 누르면 상태 변경하도록
-        }) {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
-            Spacer()
-        }
-        .padding(16)
     }
     
     private var headerDescription: some View {
@@ -127,18 +93,6 @@ struct SubjectInputView: View {
                 alertText: announceState
             )
         )
-    }
-    
-    private var nextButton: some View {
-        NavigationLink("다음으로") {
-            // TODO: 다음 버튼 입력 시 화면 전환 필요
-        }
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRight)
-            )
-        )
-        
     }
 }
 

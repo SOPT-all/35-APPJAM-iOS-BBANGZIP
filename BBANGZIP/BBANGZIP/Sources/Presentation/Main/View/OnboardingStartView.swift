@@ -31,14 +31,14 @@ struct OnboardingStartView: View {
             
             Spacer()
             
-            Button("빵집 오픈하러 가기") {
-                // TODO: 버튼 터치 시 화면 전환 로직 추가 필요
-            }
-            .buttonStyle(
-                SolidIconButton(
-                    buttonImage: Image(.chevronRightThickSmall)
-                )
-            )
+//            Button("빵집 오픈하러 가기") {
+//                // TODO: 버튼 터치 시 화면 전환 로직 추가 필요
+//            }
+//            .buttonStyle(
+//                SolidIconButton(
+//                    buttonImage: Image(.chevronRightThickSmall)
+//                )
+//            )
         }
         .padding(
             .horizontal,

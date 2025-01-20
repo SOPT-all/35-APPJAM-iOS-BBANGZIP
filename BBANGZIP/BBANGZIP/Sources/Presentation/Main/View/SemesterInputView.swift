@@ -9,21 +9,17 @@
 import SwiftUI
 
 struct SemesterInputView: View {
-    @State private var currentStep: Step
     @State private var nickname: String
     @State private var selectedYear: Int
     @State private var selectedSemester: Semester
     @State private var isPickerPresented: Bool
     
     init(
-        // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
-        currentStep: Step = .second,
         nickname: String = "",
         selectedYear: Int = 2025,
         selectedSemester: Semester = Semester.first,
         isPickerPresented: Bool = false
     ) {
-        self.currentStep = currentStep
         self.nickname = nickname
         self.selectedYear = selectedYear
         self.selectedSemester = selectedSemester
@@ -33,17 +29,7 @@ struct SemesterInputView: View {
     private let years = Array(2025...2028)
     
     var body: some View {
-        VStack(spacing: 0) {            
-//            ProgressBar(category: $currentStep)
-//                .padding(
-//                    .horizontal,
-//                    44
-//                )
-//                .padding(
-//                    .bottom,
-//                    48
-//                )
-            
+        VStack(spacing: 0) {
             VStack(spacing: 0) {
                 headerDescription
                 
@@ -60,20 +46,12 @@ struct SemesterInputView: View {
                 )
                 
                 Spacer()
-                
-//                nextButton
             }
             .padding(
                 .horizontal,
                 20
             )
         }
-//        .navigationBarBackButtonHidden(true)
-//        .toolbar {
-//            ToolbarItemGroup(placement: .topBarLeading) {
-//                backButton
-//            }
-//        }
     }
     
     private var headerDescription: some View {
@@ -106,19 +84,6 @@ struct SemesterInputView: View {
             .bottom,
             32
         )
-    }
-    
-    private var backButton: some View {
-        Button(action: {
-            // TODO: 뒤로가기 버튼 누르면 상태 변경
-        }) {
-            HStack {
-                Image(.chevronLeftThickSmall)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.labelAlternative))
-                Spacer()
-            }
-        }
     }
     
     private var yearPicker: some View {
@@ -177,17 +142,6 @@ struct SemesterInputView: View {
             -5
         )
         .clipped()
-    }
-    
-    private var nextButton: some View {
-        NavigationLink("다음으로") {
-            // TODO: 버튼 눌렀을 때 화면 전환 필요
-        }
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRight)
-            )
-        )
     }
 }
 

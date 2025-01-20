@@ -8,8 +8,10 @@
 
 import SwiftUI
 
-enum OnbordingState {
+enum OnboardingState {
+    case start
     case nameInput
     case semesterInput
     case subjectInput
+    case complete
 }
