@@ -155,35 +155,3 @@ extension View {
     }
 }
 
-#Preview {
-    let subjectCard = SubjectCard(
-        state: SubjectCardState.cardDefault,
-        subjectCardData: SubjectCardData.mockData
-    )
-    ZStack {
-        Color(.statusCautionary)
-        
-        VStack {
-            HStack {
-                subjectCard
-                    .customShadow()
-                
-                Spacer()
-                
-                subjectCard
-                    .customShadow(.emphasize)
-            }
-            HStack {
-                subjectCard
-                    .customShadow(.strong)
-                
-                Spacer()
-                
-                subjectCard
-                    .customShadow(.heavy)
-            }
-        }
-        .padding(.horizontal, 20)
-    }
-}
-
