@@ -17,7 +17,7 @@ struct SemesterInputView: View {
     
     init(
         // TODO: 부모 뷰에서 공통적으로 사용할 currentStep은 삭제 필요
-        currentStep: Step = .Second,
+        currentStep: Step = .second,
         nickname: String,
         selectedYear: Int,
         selectedSemester: Semester,
