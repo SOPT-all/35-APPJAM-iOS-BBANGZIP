@@ -35,6 +35,7 @@ struct SubjectAddView: View {
             
             Button("추가하기") {
                 viewModel.addSubject()
+                print("dd")
             }
             .buttonStyle(
                 SolidIconButton(
@@ -42,6 +43,7 @@ struct SubjectAddView: View {
                     viewModel.isEnabled
                 )
             )
+            .disabled(!viewModel.isEnabled)
         }
         .padding(
             .horizontal,
