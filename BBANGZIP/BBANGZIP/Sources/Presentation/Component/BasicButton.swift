@@ -51,25 +51,36 @@ struct OutlinedLargeButton: ButtonStyle {
 }
 
 struct SolidButton: ButtonStyle {
+    private let isEnabled: Bool
+    
+    init(_ isEnabled: Bool = true) {
+        self.isEnabled = isEnabled
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body1Bold)
-            .foregroundStyle(Color(.staticWhite))
+            .foregroundStyle(Color(isEnabled ? .staticWhite : .labelDisable))
             .padding(
                 .vertical,
                 16
             )
             .frame(maxWidth: .infinity)
-            .background(Color(.primaryNormal))
+            .background(Color(isEnabled ? .primaryNormal : .interactionDisable))
             .cornerRadius(24)
     }
 }
 
 struct SolidIconButton: ButtonStyle {
     private let buttonImage: Image
+    private let isEnabled: Bool
     
-    init(buttonImage: Image) {
+    init(
+        buttonImage: Image,
+        _ isEnabled: Bool = true
+    ) {
         self.buttonImage = buttonImage
+        self.isEnabled = isEnabled
     }
     
     func makeBody(configuration: Configuration) -> some View {
@@ -78,24 +89,25 @@ struct SolidIconButton: ButtonStyle {
             
             configuration.label
                 .applyFont(font: .body1Bold)
-                .foregroundStyle(Color(.staticWhite))
+                .foregroundStyle(Color(isEnabled ? .staticWhite : .labelDisable))
                 .padding(
                     .vertical,
                     16
                 )
            
             buttonImage
+                .resizable()
                 .renderingMode(.template)
-                .foregroundStyle(Color(.staticWhite))
-                .padding(
-                    .vertical,
-                    18
+                .foregroundStyle(Color(isEnabled ? .staticWhite : .labelDisable))
+                .frame(
+                    width: 20,
+                    height: 20
                 )
             
             Spacer()
         }
         .frame(maxWidth: .infinity)
-        .background(Color(.primaryNormal))
+        .background(Color(isEnabled ? .primaryNormal : .interactionDisable))
         .cornerRadius(24)
     }
 }
