@@ -99,3 +99,13 @@ struct SolidIconButton: ButtonStyle {
         .cornerRadius(24)
     }
 }
+
+struct PressedButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
+            )
+    }
+}
