@@ -139,6 +139,12 @@ struct SubjectManageView: View {
                         )
                     }
                 }
+                
+                SubjectAddCard()
+                    .padding( 
+                        .bottom,
+                        80
+                    )
             }
         }
         .scrollIndicators(.hidden)

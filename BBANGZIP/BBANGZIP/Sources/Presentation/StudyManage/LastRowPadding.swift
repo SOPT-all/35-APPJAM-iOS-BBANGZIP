@@ -13,22 +13,18 @@ struct LastRowPadding: ViewModifier {
     private let totalCount: Int
     private let columns: Int
     
-    init(index: Int, totalCount: Int, columns: Int) {
+    init(
+        index: Int,
+        totalCount: Int,
+        columns: Int
+    ) {
         self.index = index
         self.totalCount = totalCount
         self.columns = columns
     }
     
     func body(content: Content) -> some View {
-        if isLastRow {
-            content
-                .padding(
-                    .bottom,
-                    80
-                )
-        } else {
-            content
-        }
+        content.padding(.bottom, totalCount % 2 != 0 && isLastRow ? 80 : 0)
     }
     
     private var isLastRow: Bool {

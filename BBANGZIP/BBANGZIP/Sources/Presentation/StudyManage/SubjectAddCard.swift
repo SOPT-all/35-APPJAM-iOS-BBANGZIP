@@ -9,44 +9,40 @@
 import SwiftUI
 
 struct SubjectAddCard: View {
+    // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
+    private let borderPadding: CGFloat = 3
     
     var body: some View {
-        VStack(spacing: 8) {
-            CircleIcon(name: "Plus")
-                .padding(
-                    .horizontal,
-                    59
-                )
+        ZStack {
+            backgroundView
             
-            CustomText(
-                "과목추가",
-                fontType: .body1Bold,
-                color: Color(.labelDisable)
-            )
-        }
-        .padding(
-            .vertical,
-            59
-        )
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .foregroundStyle(Color(.staticWhite))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(
-                            Color(.lineAlternative),
-                            lineWidth: 2
-                        )
-                )
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    y: 4
-                )
-        )
-    }
-}
+            VStack(spacing: 8) {
+                CircleIcon(name: "Plus")
+                    .padding(
+                        .horizontal,
+                        59
+                    )
 
-#Preview {
-    SubjectAddCard()
+                CustomText(
+                    "과목추가",
+                    fontType: .body1Bold,
+                    color: Color(.labelDisable)
+                )
+            }
+        }
+        .frame(height: 190)
+        .padding(borderPadding)
+    }
+    
+    private var backgroundView: some View {
+        RoundedRectangle(cornerRadius: 24)
+            .fill(Color(.backgroundNormal))
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(
+                        Color(.lineAlternative),
+                        lineWidth: 1
+                    )
+            )
+    }
 }
