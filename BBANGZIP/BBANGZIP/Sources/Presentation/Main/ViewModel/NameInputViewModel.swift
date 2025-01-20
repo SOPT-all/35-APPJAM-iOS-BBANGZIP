@@ -10,14 +10,14 @@ import SwiftUI
 
 final class NameInputViewModel: ObservableObject {
     @Published var nickname: String
-    @Published var announceState: NicknameTextFieldAlertCase?
+    @Published var announceState: NicknameTextFieldAlertCase
     @Published var state: TextFieldState
     
     // TODO: TextField 로직 변경 후 수정 필요
     
     init(
         nickname: String = "",
-        announceState: NicknameTextFieldAlertCase? = .alert,
+        announceState: NicknameTextFieldAlertCase = .alert,
         state: TextFieldState = .defaultState
     ) {
         self.nickname = nickname
