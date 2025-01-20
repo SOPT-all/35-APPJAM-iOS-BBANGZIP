@@ -21,7 +21,8 @@ class OnboardingViewModel: ObservableObject {
     @Published var nickname: String
     @Published var nicknameAnnounceState: NicknameTextFieldAlertCase?
     @Published var nicknameState: TextFieldState
-    @Published var isFocused: Bool = false
+    @Published var isNicknameFocused: Bool = false
+    @Published var isSubjectFocused: Bool = false
     
     init(
         currentState: OnboardingState = .start,
@@ -134,9 +135,10 @@ class OnboardingViewModel: ObservableObject {
     func verifyNickname(
         oldText: String,
         newText: String,
-        isFocused: Bool
+        isNicknameFocused: Bool
     ) {
-        if !isFocused {
+        
+        if !isNicknameFocused {
             nicknameState = newText.isEmpty ? .defaultState : .field
             return
         }
@@ -156,9 +158,46 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func handleFocusChange(isFocused: Bool, text: String) {
-        if !isFocused {
+    func verifySubject(
+        oldText: String,
+        newText: String,
+        isSubjectFocused: Bool
+    ) {
+        if !isSubjectFocused {
+            subjectState = newText.isEmpty ? .defaultState : .field
+            return
+        }
+        
+        if newText.isEmpty {
+            subjectState = .placeholder
+        } else if newText.containsEmoji || newText.containsSymbol {
+            subjectState = .alert
+        } else {
+            subjectState = .typing
+        }
+        
+        if let maxLength = TextFieldStyleCase.subject.maxLength {
+            subject = String(newText.prefix(maxLength))
+        } else {
+            subject = newText
+        }
+    }
+    
+    func handleNicknameFocusChange(
+        isNicknameFocused: Bool,
+        text: String
+    ) {
+        if !isNicknameFocused {
             nicknameState = text.isEmpty ? .defaultState : .field
+        }
+    }
+    
+    func handleSubjectFocusChange(
+        isSubjectFocused: Bool,
+        text: String
+    ) {
+        if !isSubjectFocused {
+            subjectState = text.isEmpty ? .defaultState : .field
         }
     }
 }

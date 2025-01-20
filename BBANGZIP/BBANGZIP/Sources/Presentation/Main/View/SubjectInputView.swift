@@ -10,10 +10,23 @@ import SwiftUI
 
 struct SubjectInputView: View {
     @Binding var subject: String
+    @State var oldSubject: String = ""
     @Binding var selectedYear: Int
     @Binding var selectedSemester: Semester
-    @State var announceState: SubjectTextFieldAlertCase? = .alert
-    @State var state: TextFieldState = .defaultState
+    @FocusState private var isSubjectFocused: Bool
+    @StateObject private var viewModel: OnboardingViewModel
+    
+    init(
+        viewModel: OnboardingViewModel = OnboardingViewModel(),
+        subject: Binding<String>,
+        selectedYear: Binding<Int>,
+        selectedSemester: Binding<Semester>
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self._subject = subject
+        self._selectedYear = selectedYear
+        self._selectedSemester = selectedSemester
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -71,21 +84,33 @@ struct SubjectInputView: View {
             "예) 거시경제학",
             text: $subject
         )
+        .focused($isSubjectFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $subject,
                 style: .subject,
-                state: state,
-                alertText: announceState
+                state: viewModel.subjectState,
+                alertText: viewModel.subjectAnnounceState
             )
         )
+        .onChange(of: subject) { newSubject in
+            if newSubject.count > 10 {
+                subject = String(newSubject.prefix(10))
+            }
+            
+            viewModel.verifySubject(
+                oldText: oldSubject,
+                newText: newSubject,
+                isSubjectFocused: isSubjectFocused
+            )
+            
+            oldSubject = viewModel.subject
+        }
+        .onChange(of: isSubjectFocused) { isFocused in
+            viewModel.handleSubjectFocusChange(
+                isSubjectFocused: isSubjectFocused,
+                text: subject
+            )
+        }
     }
-}
-
-#Preview {
-    SubjectInputView(
-        subject: .constant("경제학원론"),
-        selectedYear: .constant(2025),
-        selectedSemester: .constant(Semester.summer)
-    )
 }

@@ -77,14 +77,14 @@ struct NameInputView: View {
             viewModel.verifyNickname(
                 oldText: oldNickname,
                 newText: newNickname,
-                isFocused: isNicknameFocused
+                isNicknameFocused: isNicknameFocused
             )
             
             oldNickname = viewModel.nickname
         }
-        .onChange(of: isNicknameFocused) { isFocused in
-            viewModel.handleFocusChange(
-                isFocused: isFocused,
+        .onChange(of: isNicknameFocused) { isNicknameFocused in
+            viewModel.handleNicknameFocusChange(
+                isNicknameFocused: isNicknameFocused,
                 text: nickname
             )
         }
