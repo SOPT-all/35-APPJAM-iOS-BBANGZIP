@@ -11,8 +11,8 @@ import SwiftUI
 struct CircleIcon: View {
     private let name: String
     
-    init(iconName: String) {
-        self.name = iconName
+    init(name: String) {
+        self.name = name
     }
     
     var body: some View {

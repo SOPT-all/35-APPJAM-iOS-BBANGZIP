@@ -32,7 +32,7 @@ enum TextFieldStyleCase {
     
     var clearable: Bool {
         switch self {
-        case .nickname:
+        case .nickname, .subject:
             true
         case .subject:
             false

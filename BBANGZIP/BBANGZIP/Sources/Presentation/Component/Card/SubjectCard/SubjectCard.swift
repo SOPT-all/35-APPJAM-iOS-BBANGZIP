@@ -9,13 +9,14 @@
 import SwiftUI
 
 struct SubjectCard: View {
-    @State private var state: CardState
+    private var state: CardState
     // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
-    private let subjectCardData: SubjectCardData
+    private let subjectCardData: SubjectCardModel
+    private let borderPadding: CGFloat = 2
     
     init(
         state: CardState,
-        subjectCardData: SubjectCardData
+        subjectCardData: SubjectCardModel
     ) {
         self.state = state
         self.subjectCardData = subjectCardData
@@ -31,18 +32,19 @@ struct SubjectCard: View {
                     spacing: 4
                 ) {
                     CustomText(
-                        subjectCardData.title,
+                        subjectCardData.subjectName,
                         fontType: .body1Bold,
                         color: Color(.labelNormal)
                     )
+                    .lineLimit(1)
                     
                     CustomText(
-                        subjectCardData.test,
+                        subjectCardData.studyList[0].examName,
                         fontType: .label2Bold,
                         color: Color(.labelNeutral)
                     )
                     
-                    Chip(type: subjectCardData.chipType)
+                    Chip(type: .daysLeftBlack(-subjectCardData.studyList[0].examDday))
                     
                     Spacer()
                     
@@ -69,12 +71,9 @@ struct SubjectCard: View {
                         6
                     )
             }
-            
         }
-        .frame(
-            width: 158,
-            height: 190
-        )
+        .frame(height: 190)
+        .padding(borderPadding)
     }
     
     private var backgroundView: some View {
@@ -84,7 +83,7 @@ struct SubjectCard: View {
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(
                         state.borderColor,
-                        lineWidth: 3
+                        lineWidth: state.borderWidth
                     )
             )
     }
@@ -92,7 +91,7 @@ struct SubjectCard: View {
     private var delayedStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.delayedStudyCount,
+                number: subjectCardData.studyList[0].pendingCount,
                 type: .orange
             )
             
@@ -107,7 +106,7 @@ struct SubjectCard: View {
     private var inProgressStudyView: some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.inProgressStudyCount,
+                number: subjectCardData.studyList[0].inProgressCount,
                 type: .black
             )
             
@@ -115,26 +114,6 @@ struct SubjectCard: View {
                 "진행 중인 공부",
                 fontType: .caption1Bold,
                 color: Color(.labelAssistive)
-            )
-        }
-    }
-}
-
-#Preview {
-    ZStack {
-        Color(.systemPink)
-        VStack(spacing: 10) {
-            SubjectCard(
-                state: SubjectCardState.cardDefault,
-                subjectCardData: .mockData
-            )
-            SubjectCard(
-                state: SubjectCardState.selected,
-                subjectCardData: .mockData
-            )
-            SubjectCard(
-                state: SubjectCardState.selectable,
-                subjectCardData: .mockData
             )
         }
     }
