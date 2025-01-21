@@ -187,7 +187,7 @@ struct SemesterInputView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.chevronRight)
+                buttonImage: Image(.chevronRightThickSmall)
             )
         )
     }

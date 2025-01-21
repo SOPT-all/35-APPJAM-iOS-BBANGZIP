@@ -173,7 +173,7 @@ struct BadgeSection: View {
                                 color: Color(.labelNormal)
                             )
                             
-                            Image(.chevronRight)
+                            Image(.chevronRightThickSmall)
                         }
                         
                         Spacer()
