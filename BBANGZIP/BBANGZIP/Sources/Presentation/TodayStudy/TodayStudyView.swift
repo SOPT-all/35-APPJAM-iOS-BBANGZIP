@@ -56,16 +56,68 @@ struct TodayStudyView: View {
                 }
             }
             .ignoresSafeArea(edges: .top)
-            .onAppear {
-                Task { @MainActor in
-                    await viewModel.fetchData()
-                }
-            }
             
             if viewModel.isDeleteMode {
                 deleteButton
             }
+            
+            BottomSheet(
+                isShowing: $viewModel.isRevertBottomSheetPresent,
+                height: 265) {
+                    VStack(spacing: 0) {
+                        CustomText(
+                            "미완료 상태로 되돌릴까요?",
+                            fontType: .headline1Bold,
+                            color: Color(.labelNeutral)
+                        )
+                        .padding(
+                            .top,
+                            15
+                        )
+                        .padding(
+                            .bottom,
+                            31
+                        )
+                        
+                        Button {
+                            //TODO: 되돌리기 API
+                            print("되돌리기 Tapped")
+                        } label: {
+                            CustomText(
+                                "되돌리기",
+                                fontType: .body1Bold,
+                                color: Color(.staticWhite)
+                            )
+                        }
+                        .buttonStyle(SolidButton(true))
+                        .padding(
+                            .bottom,
+                            8
+                        )
+                        
+                        Button {
+                            viewModel.isRevertBottomSheetPresent.toggle()
+                        } label: {
+                            CustomText(
+                                "취소",
+                                fontType: .body1Bold,
+                                color: Color(.primaryNormal)
+                            )
+                        }
+                        .buttonStyle(OutlinedLargeButton())
+                    }
+                    .padding(
+                        .horizontal,
+                        20
+                    )
+                }
         }
+        .onAppear {
+            Task { @MainActor in
+                await viewModel.fetchData()
+            }
+        }
+        .toastView(toast: $viewModel.toast)
     }
     
     private var backgroundView: some View {
@@ -216,13 +268,14 @@ struct TodayStudyView: View {
                 Button {
                     if piece.state == .cardDefault {
                         piece.state = .complete
+                        // TODO: API 완료하기
                     } else if piece.state == .complete {
                         if viewModel.isDeleteMode {
-                            // TODO: Toast Present
-                            print("Toast Present")
+                            viewModel.toast = Toast("이미 완료한 일은 삭제할 수 없어요")
                         } else {
                             // TODO: 되돌리기 Bottom Sheet Present
                             print("되돌리기 Bottom Sheet Present")
+                            viewModel.isRevertBottomSheetPresent.toggle()
                         }
                     } else if piece.state == .selectable {
                         piece.state = .selected

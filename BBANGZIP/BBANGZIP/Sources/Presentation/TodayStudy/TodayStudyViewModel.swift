@@ -12,6 +12,8 @@ final class TodayStudyViewModel: ObservableObject {
     private let fetchTodayStudyUseCase: FetchTodayStudyUseCase
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
+    @Published var toast: Toast?
+    @Published var isRevertBottomSheetPresent: Bool = false
     
     @Published var todayCount: Int = 0
     @Published var completeCount: Int = 0
@@ -27,23 +29,30 @@ final class TodayStudyViewModel: ObservableObject {
     @MainActor
     func fetchData() async {
         do {
-            let todayStudyContent = try await fetchTodayStudyUseCase.execute(
-                area: .todo,
-                year: 2025, // TODO: 스프린트에서 변경 예정
-                semester: .first, // TODO: 스프린트에서 변경 예정
-                sortOption: .recent
-            )
-            todayCount = todayStudyContent.todayCount
-            completeCount = todayStudyContent.completeCount
-            pendingCount = todayStudyContent.pendingCount
-            todoPiecesList = todayStudyContent.todoPiecesList
-            completeAnnounceText = todayStudyContent.completeAnnounceText
-            pendingAnnounceText = todayStudyContent.pendingAnnounceText
+//            let todayStudyContent = try await fetchTodayStudyUseCase.execute(
+//                area: .todo,
+//                year: 2025, // TODO: 스프린트에서 변경 예정
+//                semester: .first, // TODO: 스프린트에서 변경 예정
+//                sortOption: .recent
+//            )
+//            todayCount = todayStudyContent.todayCount
+//            completeCount = todayStudyContent.completeCount
+//            pendingCount = todayStudyContent.pendingCount
+//            todoPiecesList = todayStudyContent.todoPiecesList
+//            completeAnnounceText = todayStudyContent.completeAnnounceText
+//            pendingAnnounceText = todayStudyContent.pendingAnnounceText
+            
+            todayCount = 1
+            completeCount = 1
+            pendingCount = 1
+            todoPiecesList = StudyPiece.mockList
+            completeAnnounceText = "사장님 퇴근 준비 완료"
+            pendingAnnounceText = "오늘의 공부를 모두 끝냈어요!"
         } catch {
             dump(error)
             todayCount = 1
-            completeCount = 0
-            pendingCount = 0
+            completeCount = 1
+            pendingCount = 1
             todoPiecesList = StudyPiece.mockList
             completeAnnounceText = "사장님 퇴근 준비 완료"
             pendingAnnounceText = "오늘의 공부를 모두 끝냈어요!"
