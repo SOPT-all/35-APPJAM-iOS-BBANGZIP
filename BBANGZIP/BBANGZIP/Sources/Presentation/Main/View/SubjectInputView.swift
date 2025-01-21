@@ -35,7 +35,7 @@ struct SubjectInputView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            ProgressBar(category: $currentStep)
+            ProgressBar(type: .withCircle(category: currentStep))
                 .padding(
                     .horizontal,
                     44
@@ -135,10 +135,9 @@ struct SubjectInputView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.chevronRight)
+                buttonImage: Image(.chevronRightThickSmall)
             )
         )
-        
     }
 }
 

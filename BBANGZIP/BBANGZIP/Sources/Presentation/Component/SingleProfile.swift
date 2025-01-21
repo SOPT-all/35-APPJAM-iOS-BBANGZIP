@@ -21,7 +21,7 @@ struct SingleProfile: View {
     }
     
     var body: some View {
-        Image(.person)
+        Image(.user)
             .resizable()
             .scaledToFit()
             .frame(

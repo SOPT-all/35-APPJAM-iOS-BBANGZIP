@@ -9,26 +9,27 @@
 import SwiftUI
 
 struct CheckBox: View {
-    private let isCompleted: Bool
+    private let state: StudyCardState
     
-    init(isCompleted: Bool) {
-        self.isCompleted = isCompleted
+    init(state: StudyCardState) {
+        self.state = state
     }
     
     var body: some View {
+        
         Image(.checkIcon)
             .renderingMode(.template)
-            .foregroundStyle(isCompleted ? Color(.staticWhite) : .clear)
+            .foregroundStyle(state == StudyCardState.complete ? Color(.staticWhite) : .clear)
             .padding(2)
             .background(RoundedRectangle(cornerRadius: 12)
-                .fill(isCompleted ? Color(.secondaryNormal) : Color(.fillStrong)))
+                .fill(state == StudyCardState.complete ? Color(.secondaryNormal) : Color(.fillStrong)))
     }
 }
 
 #Preview {
-    VStack (spacing: 20) {
-        CheckBox(isCompleted: true)
-        
-        CheckBox(isCompleted: false)
-    }
+//    VStack (spacing: 20) {
+//        CheckBox(isCompleted: true)
+//        
+//        CheckBox(isCompleted: false)
+//    }
 }
