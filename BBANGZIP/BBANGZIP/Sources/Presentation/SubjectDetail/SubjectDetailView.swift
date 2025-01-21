@@ -9,6 +9,11 @@
 import SwiftUI
 
 struct SubjectDetailView: View {
+    @StateObject private var viewModel: SubjectDetailViewModel
+    
+    init(viewModel: SubjectDetailViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -31,7 +36,10 @@ struct SubjectDetailView: View {
                                 .bottomRight
                             ]
                         )
-                        .ignoresSafeArea(.all, edges: .top)
+                        .ignoresSafeArea(
+                            .all,
+                            edges: .top
+                        )
                     
                     Spacer()
                 }
@@ -39,7 +47,10 @@ struct SubjectDetailView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         backgroundView
-                            .padding(.top, 25)
+                            .padding(
+                                .top,
+                                25
+                            )
                         
                         MenuTab(
                             tabNames: [
@@ -47,8 +58,14 @@ struct SubjectDetailView: View {
                                 "기말고사"
                             ]
                         )
-                        .padding(.top, 28)
-                        .padding(.horizontal, 20)
+                        .padding(
+                            .top,
+                            28
+                        )
+                        .padding(
+                            .horizontal,
+                            20
+                        )
                         
                         HStack(spacing: 8) {
                             Chip(type: .daysLeftWithText(24))
@@ -61,19 +78,20 @@ struct SubjectDetailView: View {
                         }
                         
                         studyListHeaderView
-                            .padding(.top, 32)
-                            .padding(.horizontal, 20)
+                            .padding(
+                                .top,
+                                32
+                            )
+                            .padding(
+                                .horizontal,
+                                20
+                            )
                         
-                        VStack(spacing: 16) {
-                            Button {
-                                
-                            } label: {
-                                StudyCard(state: .cardDefault)
-                            }
-                            .buttonStyle(PressedButtonStyle())
-                            .customShadow(.normal)
-                        }
-                        .padding(.horizontal, 20)
+                        studyPieceList
+                            .padding(
+                                .horizontal,
+                                20
+                            )
                     }
                 }
                 .navigationBarHidden(true)
@@ -89,8 +107,14 @@ struct SubjectDetailView: View {
                 color: Color(.labelAssistive)
             )
             .lineLimit(2)
-            .padding(.leading, 24)
-            .padding(.trailing, 151)
+            .padding(
+                .leading,
+                24
+            )
+            .padding(
+                .trailing,
+                151
+            )
             
             Spacer()
         }
@@ -112,7 +136,10 @@ struct SubjectDetailView: View {
                 Image(.trash)
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(
+                        width: 24,
+                        height: 24
+                    )
                     .foregroundStyle(Color(.labelAlternative))
             }
             
@@ -122,13 +149,32 @@ struct SubjectDetailView: View {
                 Image(.plus)
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: 24, height: 24)
+                    .frame(
+                        width: 24,
+                        height: 24
+                    )
                     .foregroundStyle(Color(.labelAlternative))
             }
         }
     }
-}
-
-#Preview {
-    SubjectDetailView()
+    
+    var studyPieceList: some View {
+        VStack(spacing: 16) {
+            ForEach(
+                $viewModel.modelList,
+                id: \.self
+            ) { $model in
+                Button {
+                
+                } label: {
+                    StudyCard(
+                        state: model.state,
+                        studyCardData: model
+                    )
+                }
+                .buttonStyle(PressedButtonStyle())
+                .customShadow(.normal)
+            }
+        }
+    }
 }

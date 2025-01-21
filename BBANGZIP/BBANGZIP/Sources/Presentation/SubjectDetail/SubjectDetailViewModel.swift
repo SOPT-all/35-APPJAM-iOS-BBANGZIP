@@ -9,22 +9,22 @@
 import SwiftUI
 
 final class SubjectDetailViewModel: ObservableObject {
-    @Published var modelList: [StudyCardModel]
+    @Published var modelList: [StudyPieceModel]
     
-    init(modelList: [StudyCardModel]) {
+    init(modelList: [StudyPieceModel]) {
         self.modelList = modelList
     }
     
     func deleteStudyPiece() {
-        let currentState: StudyCardState = modelList.first?.studyList.first?.state ?? .cardDefault
-        
-        let newState: StudyCardState = switch currentState {
-        case .cardDefault:
-            .selectable
-        case .selectable:
-            .cardDefault
-        default:
-            currentState
-        }
+//        let currentState: StudyCardState = modelList.first?.studyList.first?.state ?? .cardDefault
+//        
+//        let newState: StudyCardState = switch currentState {
+//        case .cardDefault:
+//            .selectable
+//        case .selectable:
+//            .cardDefault
+//        default:
+//            currentState
+//        }
     }
 }

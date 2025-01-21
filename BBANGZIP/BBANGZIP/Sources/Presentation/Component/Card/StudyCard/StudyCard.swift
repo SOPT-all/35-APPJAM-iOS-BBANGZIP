@@ -11,12 +11,12 @@ import SwiftUI
 struct StudyCard: View {
     private let state: StudyCardState
     // TODO: 수정필요
-    private let studyCardData: SampleStudyData
+    private let studyCardData: StudyPieceModel
     private let borderPadding: CGFloat = 2
     
     init(
         state: StudyCardState,
-        studyCardData: SampleStudyData = SampleStudyData.sampleStudy
+        studyCardData: StudyPieceModel = StudyPieceModel.mockList[0]
     ) {
         self.state = state
         self.studyCardData = studyCardData
@@ -62,15 +62,15 @@ struct StudyCard: View {
             spacing: 2
         ) {
             
-            CustomText(
-                "\(studyCardData.subjectName) / \(studyCardData.examName)",
-                fontType: .caption2Medium,
-                color: Color(.labelAssistive)
-            )
-            .padding(
-                .leading,
-                4
-            )
+//            CustomText(
+//                "\(studyCardData.subjectName) / \(studyCardData.examName)",
+//                fontType: .caption2Medium,
+//                color: Color(.labelAssistive)
+//            )
+//            .padding(
+//                .leading,
+//                4
+//            )
             
             
             CustomText(

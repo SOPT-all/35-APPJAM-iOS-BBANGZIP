@@ -54,3 +54,68 @@ extension StudyCardModel {
         )
     ]
 }
+
+extension StudyPieceModel {
+    static let mockList: [Self] = [
+        .init(
+            pieceID: 1,
+            studyContents: "경제통계학",
+            startPage: 10,
+            finishPage: 35,
+            deadline: "2025-05-01",
+            remainingDays: -5,
+            isFinished: true,
+            state: .cardDefault
+        ),
+        .init(
+            pieceID: 2,
+            studyContents: "디자인 프로덕트",
+            startPage: 36,
+            finishPage: 60,
+            deadline: "2025-05-07",
+            remainingDays: 1,
+            isFinished: false,
+            state: .cardDefault
+        ),
+        .init(
+            pieceID: 3,
+            studyContents: "디자인 프로덕트",
+            startPage: 36,
+            finishPage: 60,
+            deadline: "2025-05-07",
+            remainingDays: 1,
+            isFinished: false,
+            state: .cardDefault
+        ),
+        .init(
+            pieceID: 4,
+            studyContents: "디자인 프로덕트",
+            startPage: 36,
+            finishPage: 60,
+            deadline: "2025-05-07",
+            remainingDays: 1,
+            isFinished: false,
+            state: .cardDefault
+        ),
+        .init(
+            pieceID: 5,
+            studyContents: "디자인 프로덕트",
+            startPage: 36,
+            finishPage: 60,
+            deadline: "2025-05-07",
+            remainingDays: 1,
+            isFinished: false,
+            state: .cardDefault
+        ),
+        .init(
+            pieceID: 6,
+            studyContents: "디자인 프로덕트",
+            startPage: 36,
+            finishPage: 60,
+            deadline: "2025-05-07",
+            remainingDays: 1,
+            isFinished: false,
+            state: .cardDefault
+        )
+    ]
+}
