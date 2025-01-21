@@ -17,48 +17,53 @@ struct TodayStudyView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                ZStack {
-                    backgroundView
+        ZStack {
+            ScrollView {
+                VStack(spacing: 0) {
+                    ZStack {
+                        backgroundView
+                        
+                        headerView
+                    }
+                    .padding(
+                        .bottom,
+                        48
+                    )
                     
-                    headerView
+                    if viewModel.todayCount + viewModel.completeCount == 0 {
+                        emptyView
+                            .padding(
+                                .bottom,
+                                16
+                            )
+                        
+                        addTodayStudyButton
+                    } else {
+                        announceTextView
+                            .padding(
+                                .bottom,
+                                16
+                            )
+                        
+                        buttonView
+                            .padding(
+                                .bottom,
+                                24
+                            )
+                        
+                        todayStudyList
+                    }
                 }
-                .padding(
-                    .bottom,
-                    48
-                )
-                
-                if viewModel.todayCount + viewModel.completeCount > 0 {
-                    announceTextView
-                        .padding(
-                            .bottom,
-                            16
-                        )
-                    
-                    buttonView
-                        .padding(
-                            .bottom,
-                            24
-                        )
-                    
-                    todayStudyList
-                } else {
-                    emptyView
-                        .padding(
-                            .bottom,
-                            16
-                        )
-                    
-                    addTodayStudyButton
-                }
-                
             }
-        }
-        .ignoresSafeArea()
-        .onAppear {
-            Task { @MainActor in
-                await viewModel.fetchData()
+            .ignoresSafeArea(edges: .top)
+            .onAppear {
+                Task { @MainActor in
+                    await viewModel.fetchData()
+                }
+            }
+            
+            if viewModel.isDeleteMode {
+                deleteButton
             }
         }
     }
@@ -224,6 +229,7 @@ struct TodayStudyView: View {
                     } else {
                         piece.state = .selectable
                     }
+                    viewModel.validateDeleteButton()
                 } label: {
                     StudyCard(model: piece)
                 }
@@ -249,6 +255,36 @@ struct TodayStudyView: View {
             .horizontal,
             20
         )
+    }
+    
+    private var deleteButton: some View {
+        VStack {
+            Spacer()
+            
+            Button {
+                print("삭제하기 Tapped")
+            } label: {
+                CustomText(
+                    "삭제하기",
+                    fontType: .body1Bold,
+                    color: viewModel.isDeleteButtonEnable ? Color(.staticWhite) : Color(.labelDisable)
+                )
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.trash),
+                    viewModel.isDeleteButtonEnable
+                )
+            )
+            .padding(
+                .horizontal,
+                20
+            )
+            .padding(
+                .bottom,
+                16
+            )
+        }
     }
 }
 

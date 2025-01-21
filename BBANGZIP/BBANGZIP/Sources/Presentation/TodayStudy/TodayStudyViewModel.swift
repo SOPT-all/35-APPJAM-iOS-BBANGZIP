@@ -11,6 +11,8 @@ import SwiftUI
 final class TodayStudyViewModel: ObservableObject {
     private let fetchTodayStudyUseCase: FetchTodayStudyUseCase
     @Published var isDeleteMode: Bool = false
+    @Published var isDeleteButtonEnable: Bool = false
+    
     @Published var todayCount: Int = 0
     @Published var completeCount: Int = 0
     @Published var pendingCount: Int = 0
@@ -66,5 +68,10 @@ final class TodayStudyViewModel: ObservableObject {
                 )
             }
         )
+        validateDeleteButton()
+    }
+    
+    func validateDeleteButton() {
+        isDeleteButtonEnable = todoPiecesList.count(where: { $0.state == .selected }) > 0
     }
 }
