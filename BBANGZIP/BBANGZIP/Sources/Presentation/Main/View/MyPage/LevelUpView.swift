@@ -19,6 +19,12 @@ struct LevelUpView: View {
     
     var body: some View {
         VStack (spacing: 0) {
+            CustomNavBarView(
+                showBackButton: true,
+                title: "내 제과제빵점",
+                backgroundColor: Color(.backgroundAccent)
+            )
+            
             ZStack {
                 Color(.backgroundAccent)
                 
@@ -30,9 +36,8 @@ struct LevelUpView: View {
                 }
                 .tabViewStyle(.page(indexDisplayMode: .always))
             }
-            .frame(height: 519)
+            .frame(height: 416)
             .cornerRadius(32, corners: [.bottomLeft, .bottomRight])
-
             
             VStack (spacing: 8) {
                 HStack(spacing:8) {
@@ -61,20 +66,16 @@ struct LevelUpView: View {
                         }
                         .multilineTextAlignment(.center)
                     }
+                    .ignoresSafeArea()
                 }
                 
                 Spacer()
             }
             .padding(.top, 24)
         }
-        .ignoresSafeArea()
+        .navigationBarHidden(true)
     }
 }
-
-
-
-
-
 
 struct BbangZipView: View {
     let badgeLevel: Int
@@ -88,3 +89,62 @@ struct BbangZipView: View {
     
 }
 
+struct CustomNavBarView: View {
+    @SwiftUI.Environment(\.presentationMode) var presentationMode
+    let showBackButton: Bool
+    let title: String
+    let backgroundColor: Color?
+    
+    init(showBackButton: Bool, title: String, backgroundColor: Color) {
+        self.showBackButton = showBackButton
+        self.title = title
+        self.backgroundColor = backgroundColor
+    }
+    
+    var body: some View {
+        ZStack {
+            backgroundColor
+                .ignoresSafeArea(edges: .top)
+            
+            HStack {
+                
+                if showBackButton {
+                    backButton
+                }
+                
+                Spacer()
+                
+                CustomText(
+                    title,
+                    fontType: .headline1Bold,
+                    color: Color(.labelNeutral)
+                )
+                
+                Spacer()
+                
+                ZStack{
+                    
+                }
+                .frame(width: 24, height: 24)
+            }
+            .padding(.horizontal)
+        }
+        .ignoresSafeArea()
+        .frame(height: 103)
+    }
+}
+
+extension CustomNavBarView {
+    private var backButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }) {
+            Image(.chevronLeftThickSmall)
+                .resizable()
+                .frame(
+                    width: 24,
+                    height: 24
+                )
+        }
+    }
+}

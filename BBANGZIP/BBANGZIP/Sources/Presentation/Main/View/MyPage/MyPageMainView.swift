@@ -10,22 +10,22 @@ import SwiftUI
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
-    @State private var ShowLevelUpView = false
+    @State private var showLevelUpView = false
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            if ShowLevelUpView {
-                LevelUpView(viewModel: viewModel)
-            } else {
-                HeaderView(
-                    viewModel: viewModel,
-                    onBackgroudTap: {
-                    ShowLevelUpView = true
-                })
+        NavigationStack {
+            VStack(spacing: 0) {
+                NavigationLink {
+                    LevelUpView(viewModel: viewModel)
+                } label: {
+                    HeaderView(
+                        viewModel: viewModel
+                    )
+                }
             }
             
             Spacer()
@@ -33,9 +33,9 @@ struct MyPageMainView: View {
     }
 }
 
+
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
-    let onBackgroudTap: () -> Void
     
     var body: some View {
         ZStack {
@@ -81,9 +81,6 @@ struct HeaderView: View {
                 ]
             )
             .frame(height: 416)
-            .onTapGesture {
-                onBackgroudTap()
-            }
     }
     
     var experienceView: some View {
@@ -219,8 +216,13 @@ struct BadgeSection: View {
 
 #Preview {
     MyPageMainView(
-        viewModel: MyPageMainViewModel(level: 1, currentScore: 40, badgeCount: 8, maxScore: 200, title: "가판대", badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
-            
+        viewModel: MyPageMainViewModel(
+            level: 1,
+            currentScore: 40,
+            badgeCount: 8,
+            maxScore: 200,
+            title: "가판대",
+            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
         )
     )
 }
