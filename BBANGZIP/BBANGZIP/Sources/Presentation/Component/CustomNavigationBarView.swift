@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomNavigationBarView: View {
-    @SwiftUI.Environment(\.presentationMode) var presentationMode
+    @SwiftUI.Environment(\.dismiss) var dismiss
     let showBackButton: Bool
     let showMenu: Bool
     let title: String
@@ -73,7 +73,7 @@ struct CustomNavigationBarView: View {
 extension CustomNavigationBarView {
     private var backButton: some View {
         Button(action: {
-            presentationMode.wrappedValue.dismiss()
+            dismiss()
         }) {
             Image(.chevronLeftThickSmall)
                 .resizable()
