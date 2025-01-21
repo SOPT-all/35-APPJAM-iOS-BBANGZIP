@@ -138,7 +138,6 @@ struct SubjectInputView: View {
                 buttonImage: Image(.chevronRightThickSmall)
             )
         )
-        
     }
 }
 

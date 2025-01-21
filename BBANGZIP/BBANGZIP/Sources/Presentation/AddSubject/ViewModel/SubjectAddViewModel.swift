@@ -48,25 +48,22 @@ class AddSubjectViewModel: ObservableObject {
                     }
                 }
                 
-//                if result.isEmpty {
-//                    // TODO: 공백인 경우 로직 추가 필요
-//                } else {
-//                    if result.containsEmoji {
-//                        state = .alert
-//                        alertCase = .emojiWrong
-//                    } else if result.containsSymbol {
-//                        state = .alert
-//                        alertCase = .symbolWrong
-//                    } else {
-//                        if newText.isEmpty {
-//                            state = .placeholder
-//                            alertCase = .defaultCorrect
-//                        } else {
-//                            state = .complete
-//                            alertCase = .completeCorrect
-//                        }
-//                    }
-//                }
+                if result.isEmpty {
+                    // TODO: 공백인 경우 로직 추가 필요
+                } else {
+                    if result.containsEmoji {
+                        state = .alert
+                        alertCase = .emojiWrong
+                    } else if result.containsSymbol {
+                        state = .alert
+                        alertCase = .symbolWrong
+                    } else {
+                        if newText.isEmpty {
+                            state = .placeholder
+                            alertCase = .defaultCorrect
+                        }
+                    }
+                }
             }
         }
     }
