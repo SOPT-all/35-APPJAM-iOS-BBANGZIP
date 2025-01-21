@@ -10,9 +10,6 @@ import SwiftUI
 
 struct OnboardingView: View {
     @StateObject private var viewModel: OnboardingViewModel
-    
-    @State var oldNickname: String = ""
-    @State var oldSubject: String = ""
     @FocusState private var isNicknameFocused: Bool
     @FocusState private var isSubjectFocused: Bool
     @State private var isPickerPresented: Bool = false
@@ -49,8 +46,8 @@ struct OnboardingView: View {
                     nextButton
                 }
             }
+            .ignoresSafeArea(.keyboard)
         }
-        .ignoresSafeArea(.keyboard)
         .onTapGesture {
             hideKeyboard()
         }
@@ -198,17 +195,14 @@ struct OnboardingView: View {
             }
             
             viewModel.verifyNickname(
-                oldText: oldNickname,
                 newText: newNickname,
                 isNicknameFocused: isNicknameFocused
-            )
-            
-            oldNickname = viewModel.nickname
+            )            
         }
         .onChange(of: isNicknameFocused) { isNicknameFocused in
             viewModel.handleNicknameFocusChange(
-                isNicknameFocused: isNicknameFocused,
-                text: viewModel.nickname
+                newText: viewModel.nickname,
+                isNicknameFocused: isNicknameFocused
             )
         }
     }
@@ -396,12 +390,9 @@ struct OnboardingView: View {
             }
             
             viewModel.verifySubject(
-                oldText: oldSubject,
                 newText: newSubject,
                 isSubjectFocused: isSubjectFocused
             )
-            
-            oldSubject = viewModel.subject
         }
         .onChange(of: isSubjectFocused) { isFocused in
             viewModel.handleSubjectFocusChange(

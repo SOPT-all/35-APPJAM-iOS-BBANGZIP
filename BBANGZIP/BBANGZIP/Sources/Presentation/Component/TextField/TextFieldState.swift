@@ -61,4 +61,13 @@ enum TextFieldState {
             true
         }
     }
+    
+    var countColor: Color {
+        switch self {
+        case .defaultState:
+            Color(.labelDisable)
+        default:
+            Color(.labelAlternative)
+        }
+    }
 }

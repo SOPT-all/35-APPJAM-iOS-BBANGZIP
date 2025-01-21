@@ -12,7 +12,6 @@ class OnboardingViewModel: ObservableObject {
     @Published var currentState: OnboardingState
     @Published var currentStep: Step
     @Published var isForward: Bool
-    @Published var buttonText: OnboardingButtonText
     @Published var year: Int
     @Published var semester: Semester
     @Published var subject: String
@@ -29,7 +28,6 @@ class OnboardingViewModel: ObservableObject {
         currentState: OnboardingState = .start,
         currentStep: Step = .first,
         isForward: Bool = true,
-        buttonText: OnboardingButtonText = .start,
         year: Int = 2025,
         semester: Semester = .first,
         nickname: String = "",
@@ -42,7 +40,6 @@ class OnboardingViewModel: ObservableObject {
         self.currentState = currentState
         self.currentStep = currentStep
         self.isForward = isForward
-        self.buttonText = buttonText
         self.year = year
         self.semester = semester
         self.nickname = nickname
@@ -78,22 +75,13 @@ class OnboardingViewModel: ObservableObject {
             default:
                 break
             }
-            
-            switch currentState {
-            case .start:
-                buttonText = OnboardingButtonText.start
-            case .nameInput, .semesterInput, .subjectInput:
-                buttonText = OnboardingButtonText.inProgress
-            case .complete:
-                buttonText = OnboardingButtonText.complete
-            }
         }
     }
     
-    func goNext() {        
+    func goNext() {
         withAnimation {
             isForward = true
-                    
+            
             switch currentState {
             case .start:
                 currentState = .nameInput
@@ -118,15 +106,6 @@ class OnboardingViewModel: ObservableObject {
                 break
             }
             
-            switch currentState {
-            case .start:
-                buttonText = OnboardingButtonText.start
-            case .nameInput, .semesterInput, .subjectInput:
-                buttonText = OnboardingButtonText.inProgress
-            case .complete:
-                buttonText = OnboardingButtonText.complete
-            }
-            
             if(currentState == .start) {
                 // TODO: nickname, year, semester, subjectName 서버 전달
             }
@@ -136,36 +115,38 @@ class OnboardingViewModel: ObservableObject {
     // TODO: 텍스트필드 focused 되고 입력 없으면 placeholer로 상태 처리하는 로직 필요
     // TODO: 텍스트 앞뒤에 공백 입력될 시 자동으로 제거되는 로직 필요
     func verifyNickname(
-        oldText: String,
         newText: String,
         isNicknameFocused: Bool
     ) {
-        if newText.isEmpty {
-            nicknameState = .placeholder
-        } else if isNicknameFocused {
+        // textfield가 눌린 상태
+        if isNicknameFocused {
             nicknameState = .typing
-            if newText.containsEmoji || newText.containsSymbol {
-                nicknameState = .alert
+            
+            // 눌렸는데 비어 있으면 (X 누르면)
+            if newText.isEmpty {
+                nicknameState = .defaultState
                 nicknameAnnounceState = .alert
+                isNicknameValid = false
+            } else { // 눌렸는데 안 비어있으면
+                if newText.isValidNickname { // 규칙 맞으면
+                    nicknameState = .typing
+                    nicknameAnnounceState = .enable
+                    isNicknameValid = true
+                } else { // 규칙 안 맞으면
+                    nicknameState = .alert
+                    nicknameAnnounceState = .alert
+                    isNicknameValid = false
+                }
             }
-        } else if !isNicknameFocused || !newText.containsEmoji  || !newText.containsSymbol {
-            nicknameState = .field
-            nicknameAnnounceState = .enable
-            isNicknameValid = true
+        } else if newText.isEmpty { // 안 눌렸는데 비어 있으면 (초기 상태)
+            nicknameState = .defaultState
+            nicknameAnnounceState = .alert
+            isNicknameValid = false
         }
-        
-        if let maxLength = TextFieldStyleCase.nickname.maxLength {
-            nickname = String(newText.prefix(maxLength))
-        } else {
-            nickname = newText
-        }
-                
-//        print("change viewmodel: \(isNicknameValid)")
     }
     
     // TODO: verifyNickname 로직 완성 후 subject도 전면 수정 필요
     func verifySubject(
-        oldText: String,
         newText: String,
         isSubjectFocused: Bool
     ) {
@@ -190,23 +171,26 @@ class OnboardingViewModel: ObservableObject {
     }
     
     func handleNicknameFocusChange(
-        isNicknameFocused: Bool,
-        text: String
+        newText: String,
+        isNicknameFocused: Bool
     ) {
         if !isNicknameFocused {
-            if text.isEmpty {
+            if newText.isEmpty {
                 nicknameState = .defaultState
-                nicknameAnnounceState = .alert
-            } else if text.containsEmoji || text.containsSymbol {
-                nicknameState = .alert
-                nicknameAnnounceState = .alert
-            } else if !text.containsEmoji  || !text.containsSymbol {
+                isNicknameValid = false
+            } else if newText.isValidNickname { // 규칙 맞으면
                 nicknameState = .field
                 nicknameAnnounceState = .enable
                 isNicknameValid = true
+            } else { // 규칙 안 맞으면
+                nicknameState = .alert
+                nicknameAnnounceState = .alert
+                isNicknameValid = false
             }
+        } else {
+            nicknameState = .placeholder
+            isNicknameValid = false
         }
-//        print("focus viewmodel: \(isNicknameValid)")
     }
     
     // TODO: handleNicknameForcusChange 로직 완성 후 subject도 전면 수정 필요

@@ -90,7 +90,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                 CustomText(
                     "\(text.count)/\(maxLength)",
                     fontType: .caption1Medium,
-                    color: Color(.labelAlternative)
+                    color: state.countColor
                 )
             }
             
