@@ -11,71 +11,74 @@ import SwiftUI
 struct SubjectDetailView: View {
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                ZStack {
-                    VStack {
-                        backgroundView
-                        
-                        Spacer()
-                    }
+        VStack(spacing: 0) {
+            CustomNavigationBarView(
+                showBackButton: true,
+                showMenu: true,
+                title: "경제통계학",
+                backgroundColor: Color(.backgroundAccent)
+            )
+            
+            
+            ZStack {
+                VStack {
+                    Color(.backgroundAccent)
+                        .frame(height: 153)
+                        .cornerRadius(
+                            32,
+                            corners: [
+                                .bottomLeft,
+                                .bottomRight
+                            ]
+                        )
+                        .ignoresSafeArea(.all, edges: .top)
                     
+                    Spacer()
+                }
+                
+                ScrollView {
                     VStack(spacing: 16) {
+                        backgroundView
+                            .padding(.top, 25)
+                        
                         MenuTab(
                             tabNames: [
                                 "중간고사",
                                 "기말고사"
                             ]
                         )
-                        .padding(.top, 125)
+                        .padding(.top, 28)
+                        .padding(.horizontal, 20)
+                        
+                        HStack(spacing: 8) {
+                            Chip(type: .daysLeftWithText(24))
+                            
+                            CustomText(
+                                "2025년 5월 13일",
+                                fontType: .label1Bold,
+                                color: Color(.labelAlternative)
+                            )
+                        }
+                        
+                        studyListHeaderView
+                            .padding(.top, 32)
+                            .padding(.horizontal, 20)
+                        
+                        VStack(spacing: 16) {
+                            Button {
+                                
+                            } label: {
+                                StudyCard(state: .cardDefault)
+                            }
+                            .buttonStyle(PressedButtonStyle())
+                            .customShadow(.normal)
+                        }
                         .padding(.horizontal, 20)
                     }
                 }
-                
-                HStack(spacing: 8) {
-                    Chip(type: .daysLeftWithText(24))
-                    
-                    CustomText(
-                        "2025년 5월 13일",
-                        fontType: .label1Bold,
-                        color: Color(.labelAlternative)
-                    )
-                }
-                
-                HStack(spacing: 16) {
-                    CustomText(
-                        "학습 내용",
-                        fontType: .headline2Bold,
-                        color: Color(.labelAlternative)
-                    )
-                    
-                    Spacer()
-                    
-                    Button {
-                        
-                    } label: {
-                        Image(.trash)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundStyle(Color(.labelAlternative))
-                    }
-                    
-                    Button {
-                        
-                    } label: {
-                        Image(.plus)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundStyle(Color(.labelAlternative))
-                    }
-                }
-                .padding(.top, 32)
-                .padding(.horizontal, 20)
+                .navigationBarHidden(true)
             }
         }
-        .navigationBarBackground({
-            Color(.backgroundAccent)
-        })
     }
     
     var backgroundView: some View {
@@ -91,18 +94,38 @@ struct SubjectDetailView: View {
             
             Spacer()
         }
-        .padding(.top, 25)
-        .padding(.bottom, 72)
-        .background(
-            Color(.backgroundAccent)
-                .cornerRadius(
-                    32,
-                    corners: [
-                        .bottomLeft,
-                        .bottomRight
-                    ]
-                )
-        )
+    }
+    
+    var studyListHeaderView: some View {
+        HStack(spacing: 16) {
+            CustomText(
+                "학습 내용",
+                fontType: .headline2Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                Image(.trash)
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(Color(.labelAlternative))
+            }
+            
+            Button {
+                
+            } label: {
+                Image(.plus)
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(Color(.labelAlternative))
+            }
+        }
     }
 }
 
