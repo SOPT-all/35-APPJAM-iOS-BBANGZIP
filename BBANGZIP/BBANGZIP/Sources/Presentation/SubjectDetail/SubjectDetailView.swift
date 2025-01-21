@@ -12,7 +12,7 @@ struct SubjectDetailView: View {
     
     var body: some View {
         ScrollView {
-            VStack {
+            VStack(spacing: 16) {
                 ZStack {
                     VStack {
                         backgroundView
@@ -29,20 +29,19 @@ struct SubjectDetailView: View {
                         )
                         .padding(.top, 125)
                         .padding(.horizontal, 20)
-                        
-                        HStack(spacing: 8) {
-                            Chip(type: .daysLeftWithText(24))
-                            
-                            CustomText(
-                                "2025년 5월 13일",
-                                fontType: .label1Bold,
-                                color: Color(.labelAlternative)
-                            )
-                        }
-                        
-                        Spacer()
                     }
                 }
+                
+                HStack(spacing: 8) {
+                    Chip(type: .daysLeftWithText(24))
+                    
+                    CustomText(
+                        "2025년 5월 13일",
+                        fontType: .label1Bold,
+                        color: Color(.labelAlternative)
+                    )
+                }
+                
             }
         }
         .navigationBarBackground({
