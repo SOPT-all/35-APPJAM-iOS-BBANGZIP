@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct CustomNavigationBarView: View {
+struct CustomNavigationBar: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     let showBackButton: Bool
     let showMenu: Bool
@@ -70,7 +70,7 @@ struct CustomNavigationBarView: View {
     }
 }
 
-extension CustomNavigationBarView {
+extension CustomNavigationBar {
     private var backButton: some View {
         Button(action: {
             dismiss()
