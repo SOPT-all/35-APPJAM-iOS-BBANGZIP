@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "ChevronRight.png",
+      "filename" : "Badge.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "ChevronRight@2x.png",
+      "filename" : "Badge@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "ChevronRight@3x.png",
+      "filename" : "Badge@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "chevronRightThickSmall.png",
+      "filename" : "Subtract.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "chevronRightThickSmall@2x.png",
+      "filename" : "Subtract@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "chevronRightThickSmall@3x.png",
+      "filename" : "Subtract@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
