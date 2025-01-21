@@ -10,32 +10,22 @@ import SwiftUI
 
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
-    @State private var isBottomSheetShowing: Bool
-    
-    init(isBottomSheetShowing: Bool = false) {
-        self.isBottomSheetShowing = isBottomSheetShowing
-    }
+    @State private var isBottomSheetShowing = false
     
     var body: some View {
         ZStack {
             TabView(selection: $selected) {
-                Group {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
-                        .tag(Tab.subjectManage)
-                    
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                    
-                    Text("이웃 목록")
-                        .tag(Tab.networking)
-                    
-                    Text("마이페이지")
-                        .tag(Tab.mypage)
-                }
-                .toolbar(
-                    .hidden,
-                    for: .tabBar
-                )
+                SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
+                    .tag(Tab.subjectManage)
+                
+                Text("오늘 할 일")
+                    .tag(Tab.todo)
+                
+                Text("이웃 목록")
+                    .tag(Tab.networking)
+                
+                MyPageMainView(viewModel: MyPageMainViewModel(level: 1, currentScore: 2, badgeCount: 3))
+                    .tag(Tab.mypage)
             }
             
             VStack {

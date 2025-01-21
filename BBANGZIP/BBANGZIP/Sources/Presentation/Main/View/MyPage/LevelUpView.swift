@@ -15,4 +15,3 @@ struct LevelUpView: View {
         Text("LevelUpView")
     }
 }
-
