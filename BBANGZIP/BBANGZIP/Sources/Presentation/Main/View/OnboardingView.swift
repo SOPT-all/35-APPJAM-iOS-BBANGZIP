@@ -8,22 +8,15 @@
 
 import SwiftUI
 
-enum OnboardingButtonText {
-    case start
-    case inProgress
-    case complete
-    
-    var text: String {
-        switch self {
-        case .start: "빵집 오픈하러 가기"
-        case .inProgress: "다음으로"
-        case .complete: "빵점 탈출하러 가기"
-        }
-    }
-}
-
 struct OnboardingView: View {
     @StateObject private var viewModel: OnboardingViewModel
+    
+    @State var oldNickname: String = ""
+    @State var oldSubject: String = ""
+    @FocusState private var isNicknameFocused: Bool
+    @FocusState private var isSubjectFocused: Bool
+    @State private var isPickerPresented: Bool = false
+    private let years = Array(2025...2028)
     
     init(
         viewModel: OnboardingViewModel = OnboardingViewModel()
@@ -87,7 +80,7 @@ struct OnboardingView: View {
     
     private var startButton: some View {
         Button(
-            viewModel.buttonText.text,
+            "빵집 오픈하러 가기",
             action: viewModel.goNext
         )
         .buttonStyle(
@@ -101,7 +94,7 @@ struct OnboardingView: View {
     // TODO: 입력값 valid 여부에 따라 버튼 disable 처리 필요
     private var nextButton: some View {
         Button(
-            viewModel.buttonText.text,
+            "다음으로",
             action: viewModel.goNext
         )
         .buttonStyle(
@@ -116,7 +109,7 @@ struct OnboardingView: View {
     
     private var completeButton: some View {
         Button(
-            viewModel.buttonText.text,
+            "빵점 탈출하러 가기",
             action: viewModel.goNext
         )
         .buttonStyle(
@@ -130,28 +123,20 @@ struct OnboardingView: View {
     private var inputView: some View {
         ZStack {
             if viewModel.currentState == .nameInput {
-                NameInputView(
-                    nickname: $viewModel.nickname
-                )
+//                NameInputView(
+//                    nickname: $viewModel.nickname
+//                )
+                nameInputView
                 .transition(.move(edge: .leading))
             } else if viewModel.currentState == .semesterInput {
-                SemesterInputView(
-                    nickname: $viewModel.nickname,
-                    selectedYear: $viewModel.year,
-                    selectedSemester: $viewModel.semester
-                )
-                .transition(
+                semesterInputView                .transition(
                     .asymmetric(
                         insertion: .move(edge: viewModel.isForward ? .trailing : .leading),
                         removal: .move(edge: viewModel.isForward ? .leading : .trailing)
                     )
                 )
             } else if viewModel.currentState == .subjectInput {
-                SubjectInputView(
-                    subject: $viewModel.subject,
-                    selectedYear: $viewModel.year,
-                    selectedSemester: $viewModel.semester
-                )
+                subjectInputView
                 .transition(.move(edge: .trailing))
             }
         }
@@ -159,6 +144,271 @@ struct OnboardingView: View {
             .easeInOut,
             value: viewModel.currentState
         )
+    }
+    
+    private var nameInputView: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 32) {
+                mainDescription
+                
+                nicknameTextField
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    
+    private var mainDescription: some View {
+        HStack {
+            CustomText(
+                "사장님의 이름을\n알려주세요",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            .padding(
+                .top,
+                30
+            )
+            
+            Spacer()
+        }
+    }
+    
+    private var nicknameTextField: some View {
+        TextField(
+            "예) 탁구왕김제빵",
+            text: $viewModel.nickname
+        )
+        .focused($isNicknameFocused)
+        .textFieldStyle(
+            CustomTextFieldStyle(
+                text: $viewModel.nickname,
+                style: .nickname,
+                state: viewModel.nicknameState,
+                alertText: viewModel.nicknameAnnounceState
+            )
+        )
+        .onChange(of: viewModel.nickname) { newNickname in
+            if newNickname.count > 10 {
+                viewModel.nickname = String(newNickname.prefix(10))
+            }
+            
+            viewModel.verifyNickname(
+                oldText: oldNickname,
+                newText: newNickname,
+                isNicknameFocused: isNicknameFocused
+            )
+            
+            oldNickname = viewModel.nickname
+        }
+        .onChange(of: isNicknameFocused) { isNicknameFocused in
+            viewModel.handleNicknameFocusChange(
+                isNicknameFocused: isNicknameFocused,
+                text: viewModel.nickname
+            )
+        }
+    }
+
+    private var semesterInputView: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                subjectHeaderDescription
+                
+                subjectMainDescription
+                
+                HStack(spacing: 0) {
+                    yearPicker
+                    
+                    semesterPicker
+                }
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    
+    private var subjectHeaderDescription: some View {
+        HStack {
+            CustomText(
+                "\(viewModel.nickname) 사장님, 안녕하세요!",
+                fontType: .body2Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            Spacer()
+        }
+        .padding(
+            .bottom,
+            8
+        )
+    }
+    
+    private var subjectMainDescription: some View {
+        HStack {
+            CustomText(
+                "현재 재학 중인\n학기를 알려주세요",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            
+            Spacer()
+        }
+        .padding(
+            .bottom,
+            32
+        )
+    }
+    
+    private var yearPicker: some View {
+        Picker(
+            "Year",
+            selection: $viewModel.year
+        ) {
+            ForEach(
+                years,
+                id: \.self
+            ) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(year)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(
+            .leading,
+            -5
+        )
+        .padding(
+            .trailing,
+            -15
+        )
+        .clipped()
+    }
+    
+    private var semesterPicker: some View {
+        Picker(
+            "Semester",
+            selection: $viewModel.semester
+        ) {
+            ForEach(
+                Semester.allCases,
+                id: \.self
+            ) { semester in
+                CustomText(
+                    semester.rawValue,
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(semester)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .padding(
+            .leading,
+            -15
+        )
+        .padding(
+            .trailing,
+            -5
+        )
+        .clipped()
+    }
+    
+    private var subjectInputView: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                subjectHeaderDescription
+                
+                subjectMainDescription
+                
+                subjectTextField
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    
+    private var SubjectHeaderDescription: some View {
+        HStack(spacing: 0) {
+            CustomText(
+                "\(viewModel.year)년 \(viewModel.semester.rawValue)에 재학 중이시네요!",
+                fontType: .body2Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            Spacer()
+        }
+        .padding(
+            .bottom,
+            8
+        )
+    }
+    
+    private var SubjectMainDescription: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
+                CustomText(
+                    "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
+                    fontType: .title2Bold,
+                    color: Color(.labelNormal)
+                )
+                Spacer()
+            }
+            .padding(
+                .bottom,
+                33
+            )
+        }
+    }
+    
+    private var subjectTextField: some View {
+        TextField(
+            "예) 거시경제학",
+            text: $viewModel.subject
+        )
+        .focused($isSubjectFocused)
+        .textFieldStyle(
+            CustomTextFieldStyle(
+                text: $viewModel.subject,
+                style: .subject,
+                state: viewModel.subjectState,
+                alertText: viewModel.subjectAnnounceState
+            )
+        )
+        .onChange(of: viewModel.subject) { newSubject in
+            if newSubject.count > 10 {
+                viewModel.subject = String(newSubject.prefix(10))
+            }
+            
+            viewModel.verifySubject(
+                oldText: oldSubject,
+                newText: newSubject,
+                isSubjectFocused: isSubjectFocused
+            )
+            
+            oldSubject = viewModel.subject
+        }
+        .onChange(of: isSubjectFocused) { isFocused in
+            viewModel.handleSubjectFocusChange(
+                isSubjectFocused: isSubjectFocused,
+                text: viewModel.subject
+            )
+        }
     }
 }
 
