@@ -52,7 +52,7 @@ struct ToDoPieceDTO: Decodable {
     
     func toDomain() -> StudyPiece {
         StudyPiece(
-            pieceID: pieceID,
+            id: pieceID,
             subjectName: subjectName,
             examName: examName,
             studyContents: studyContents,
@@ -60,7 +60,8 @@ struct ToDoPieceDTO: Decodable {
             finishPage: finishPage,
             deadline: deadline,
             remainingDays: remainingDays,
-            isFinished: isFinished
+            isFinished: isFinished,
+            state: isFinished ? .complete : .cardDefault
         )
     }
 }

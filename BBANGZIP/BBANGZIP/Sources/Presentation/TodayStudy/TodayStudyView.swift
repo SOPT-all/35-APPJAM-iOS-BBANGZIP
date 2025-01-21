@@ -29,17 +29,29 @@ struct TodayStudyView: View {
                     48
                 )
                 
-                announceTextView
-                    .padding(
-                        .bottom,
-                        16
-                    )
-                
-                buttonView
-                    .padding(
-                        .bottom,
-                        24
-                    )
+                if viewModel.todayCount + viewModel.completeCount > 0 {
+                    announceTextView
+                        .padding(
+                            .bottom,
+                            16
+                        )
+                    
+                    buttonView
+                        .padding(
+                            .bottom,
+                            24
+                        )
+                    
+                    todayStudyList
+                } else {
+                    emptyView
+                        .padding(
+                            .bottom,
+                            16
+                        )
+                    
+                    addTodayStudyButton
+                }
                 
             }
         }
@@ -82,7 +94,19 @@ struct TodayStudyView: View {
                 }
                 
                 HStack {
-                    DelayedStudyButton(count: viewModel.pendingCount)
+                    if viewModel.pendingCount > 0 {
+                        DelayedStudyButton(count: viewModel.pendingCount)
+                    } else {
+                        CustomText(
+                            "사장님의 밀린 공부는 빵 개!",
+                            fontType: .headline1Bold,
+                            color: Color(.labelAlternative)
+                        )
+                        .padding(
+                            .leading,
+                            8
+                        )
+                    }
                     
                     Spacer()
                 }
@@ -136,26 +160,93 @@ struct TodayStudyView: View {
         HStack {
             Spacer()
             
-            HStack(spacing: 16) {
+            if viewModel.isDeleteMode {
                 Button {
-                    //TODO: Trash Button 동작
+                    viewModel.trashButtonTapped()
                 } label: {
-                    Image(.trash)
+                    Image(.xlarge)
                         .renderingMode(.template)
                         .foregroundStyle(Color(.labelAlternative))
                 }
-                
-                Button {
-                    //TODO: Filter Button 동작
-                } label: {
-                    Image(.filter)
-                        .renderingMode(.template)
-                        .foregroundStyle(Color(.labelAlternative))
+            } else {
+                HStack(spacing: 16) {
+                    Button {
+                        viewModel.trashButtonTapped()
+                    } label: {
+                        Image(.trash)
+                            .renderingMode(.template)
+                            .foregroundStyle(Color(.labelAlternative))
+                    }
+                    
+                    Button {
+                        //TODO: Filter Button 동작
+                        print("Filter Button Tapped")
+                    } label: {
+                        Image(.filter)
+                            .renderingMode(.template)
+                            .foregroundStyle(Color(.labelAlternative))
+                    }
                 }
             }
         }
         .padding(
             .trailing,
+            20
+        )
+    }
+    
+    private var emptyView: some View {
+        RoundedRectangle(cornerRadius: 32)
+            .fill(Color(.systemGray6))
+            .padding(
+                .horizontal,
+                20
+            )
+            .frame(height: 308)
+    }
+    
+    private var todayStudyList: some View {
+        VStack(spacing: 12) {
+            ForEach($viewModel.todoPiecesList) { $piece in
+                Button {
+                    if piece.state == .cardDefault {
+                        piece.state = .complete
+                    } else if piece.state == .complete {
+                        if viewModel.isDeleteMode {
+                            // TODO: Toast Present
+                            print("Toast Present")
+                        } else {
+                            // TODO: 되돌리기 Bottom Sheet Present
+                            print("되돌리기 Bottom Sheet Present")
+                        }
+                    } else if piece.state == .selectable {
+                        piece.state = .selected
+                    } else {
+                        piece.state = .selectable
+                    }
+                } label: {
+                    StudyCard(model: piece)
+                }
+                .buttonStyle(PressedButtonStyle())
+                .customShadow(.emphasize)
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    private var addTodayStudyButton: some View {
+        Button {
+            print("오늘 할 공부 추가하기 Tapped")
+        } label: {
+            CustomText(
+                "오늘 할 공부 추가하기",
+                fontType: .body1Bold,
+                color: Color(.staticWhite)
+            )
+        }
+        .buttonStyle(SolidIconButton(buttonImage: Image(.plus)))
+        .padding(
+            .horizontal,
             20
         )
     }
@@ -178,6 +269,7 @@ struct TodayStudyDateView: View {
                     fontType: .title3Bold,
                     color: Color(.labelNormal)
                 )
+                
                 CustomText(
                     "월",
                     fontType: .heading1Bold,
@@ -191,6 +283,7 @@ struct TodayStudyDateView: View {
                     fontType: .title3Bold,
                     color: Color(.labelNormal)
                 )
+                
                 CustomText(
                     "일",
                     fontType: .heading1Bold,
@@ -247,7 +340,7 @@ struct DelayedStudyButton: View {
                     color: Color(.primaryNormal)
                 )
                 
-                Image(.chevronRight)
+                Image(.chevronRightThickSmall)
             }
             .padding(
                 .horizontal,

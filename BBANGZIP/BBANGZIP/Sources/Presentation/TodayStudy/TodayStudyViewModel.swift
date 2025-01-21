@@ -10,6 +10,7 @@ import SwiftUI
 
 final class TodayStudyViewModel: ObservableObject {
     private let fetchTodayStudyUseCase: FetchTodayStudyUseCase
+    @Published var isDeleteMode: Bool = false
     @Published var todayCount: Int = 0
     @Published var completeCount: Int = 0
     @Published var pendingCount: Int = 0
@@ -38,13 +39,32 @@ final class TodayStudyViewModel: ObservableObject {
             pendingAnnounceText = todayStudyContent.pendingAnnounceText
         } catch {
             dump(error)
-            
-            todayCount = 0
+            todayCount = 1
             completeCount = 0
             pendingCount = 0
-            todoPiecesList = []
+            todoPiecesList = StudyPiece.mockList
             completeAnnounceText = "사장님 퇴근 준비 완료"
             pendingAnnounceText = "오늘의 공부를 모두 끝냈어요!"
         }
+    }
+    
+    func trashButtonTapped() {
+        isDeleteMode.toggle()
+        todoPiecesList = todoPiecesList.map(
+            {
+                StudyPiece(
+                    id: $0.id,
+                    subjectName: $0.subjectName,
+                    examName: $0.examName,
+                    studyContents: $0.studyContents,
+                    startPage: $0.startPage,
+                    finishPage: $0.finishPage,
+                    deadline: $0.deadline,
+                    remainingDays: $0.remainingDays,
+                    isFinished: $0.isFinished,
+                    state: $0.state == .complete ? .complete : ($0.state == .cardDefault ? .selectable : .cardDefault)
+                )
+            }
+        )
     }
 }

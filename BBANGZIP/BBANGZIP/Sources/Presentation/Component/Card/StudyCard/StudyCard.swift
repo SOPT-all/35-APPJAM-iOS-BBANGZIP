@@ -9,38 +9,45 @@
 import SwiftUI
 
 struct StudyCard: View {
-    private let state: StudyCardState
-    // TODO: 수정필요
-    private let studyCardData: SampleStudyData
-    private let borderPadding: CGFloat = 2
+    private let model: StudyPiece
     
-    init(
-        state: StudyCardState,
-        studyCardData: SampleStudyData = SampleStudyData.sampleStudy
-    ) {
-        self.state = state
-        self.studyCardData = studyCardData
+    init(model: StudyPiece) {
+        self.model = model
     }
     
     var body: some View {
-        
-        HStack(alignment: .top) {
-            // TODO: complete 상태 시 opacity 추가 필요
-            StudyDataArea
+        ZStack {
+            backgroundView
             
-            Spacer()
-            
-            CheckBox(state: state)
+            HStack(alignment: .top) {
+                StudyDataArea
+                
+                Spacer()
+                
+                CheckBox(state: model.state)
+            }
+            .padding(
+                .vertical,
+                10
+            )
+            .padding(
+                .horizontal,
+                16
+            )
+            .opacity(model.state == .complete ? 0.4 : 1)
         }
-        .padding(
-            .vertical,
-            10
-        )
-        .padding(
-            .horizontal,
-            16
-        )
-        
+    }
+    
+    var backgroundView: some View {
+        RoundedRectangle(cornerRadius: 24)
+            .fill(model.state.backgroundColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(
+                        model.state.borderColor,
+                        lineWidth: model.state.borderWidth
+                  )
+                )
     }
     
     var StudyDataArea: some View {
@@ -48,9 +55,8 @@ struct StudyCard: View {
             alignment: .leading,
             spacing: 2
         ) {
-            
             CustomText(
-                "\(studyCardData.subjectName) / \(studyCardData.examName)",
+                "\(model.subjectName) / \(model.examName)",
                 fontType: .caption2Medium,
                 color: Color(.labelAssistive)
             )
@@ -59,9 +65,8 @@ struct StudyCard: View {
                 4
             )
             
-            
             CustomText(
-                studyCardData.studyContents,
+                model.studyContents,
                 fontType: .caption1Medium,
                 color: Color(.labelAlternative)
             )
@@ -71,7 +76,7 @@ struct StudyCard: View {
             )
             
             CustomText(
-                "\(studyCardData.startPage)p - \(studyCardData.finishPage)",
+                "\(model.startPage)p - \(model.finishPage)",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )
@@ -86,10 +91,11 @@ struct StudyCard: View {
             
             HStack(spacing: 8) {
                 Chip(
-                    type: studyCardData.remainingDays >= 0 ? .delayedDate(studyCardData.remainingDays) : .daysLeftWithText(studyCardData.remainingDays)
+                    type: model.remainingDays >= 0 ? .delayedDate(model.remainingDays) : .daysLeftWithText(model.remainingDays)
                 )
+                    
                 CustomText(
-                    "\(studyCardData.deadline) 까지",
+                    "\(model.deadline) 까지",
                     fontType: .caption1Bold,
                     color: Color(.labelAlternative)
                 )
