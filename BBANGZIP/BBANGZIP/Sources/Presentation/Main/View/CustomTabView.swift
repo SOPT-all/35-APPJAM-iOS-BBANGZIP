@@ -14,6 +14,7 @@ struct CustomTabView: View {
     
     init(isBottomSheetShowing: Bool = false) {
         self.isBottomSheetShowing = isBottomSheetShowing
+        UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
