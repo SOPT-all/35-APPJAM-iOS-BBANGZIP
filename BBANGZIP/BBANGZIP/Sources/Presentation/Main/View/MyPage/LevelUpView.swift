@@ -20,7 +20,9 @@ struct LevelUpView: View {
     var body: some View {
         VStack(spacing: 0) {
             navBar
+            
             levelTabView
+            
             content
         }
         .navigationBarHidden(true)
@@ -61,8 +63,11 @@ struct LevelUpView: View {
     private var content: some View {
         VStack(spacing: 8) {
             header
+            
             Spacer()
+            
             levelContent
+            
             Spacer()
         }
         .padding(.top, 24)
@@ -71,12 +76,15 @@ struct LevelUpView: View {
     private var header: some View {
         HStack(spacing: 8) {
             Spacer()
+
             Chip(type: .level(selectedIndex + 1))
+            
             CustomText(
                 viewModel.title,
                 fontType: .body1Bold,
                 color: Color(.labelNormal)
             )
+            
             Spacer()
         }
     }
@@ -145,17 +153,22 @@ struct CustomNavBarView: View {
         ZStack {
             backgroundColor
                 .ignoresSafeArea(edges: .top)
+            
             HStack {
                 if showBackButton {
                     backButton
                 }
+                
                 Spacer()
+                
                 CustomText(
                     title,
                     fontType: .headline1Bold,
                     color: Color(.labelNeutral)
                 )
+                
                 Spacer()
+                
                 ZStack {}
                     .frame(
                         width: 24,
