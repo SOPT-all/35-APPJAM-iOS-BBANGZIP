@@ -219,11 +219,8 @@ struct BadgeSection: View {
 
 #Preview {
     MyPageMainView(
-        viewModel: MyPageMainViewModel(
-            level: 1,
-            currentScore: 100,
-            badgeCount: 4,
-            maxScore: 200
+        viewModel: MyPageMainViewModel(level: 1, currentScore: 40, badgeCount: 8, maxScore: 200, title: "가판대", badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
+            
         )
     )
 }
