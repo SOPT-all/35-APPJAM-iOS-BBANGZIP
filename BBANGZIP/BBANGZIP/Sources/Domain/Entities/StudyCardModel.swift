@@ -21,7 +21,7 @@ struct StudyPieceModel: Hashable {
     let deadline: String
     let remainingDays: Int
     let isFinished: Bool
-    var state: StudyCardState
+    var state: StudyPieceCardState
 }
 
 extension StudyCardModel {

@@ -165,11 +165,26 @@ struct SubjectDetailView: View {
                 id: \.self
             ) { $model in
                 Button {
-                
+                    if model.state == .cardDefault {
+                        model.state = .complete
+                    } else if model.state == .complete {
+                        if viewModel.isDeleteMode {
+                            // TODO: Toast Present
+                            print("Toast Present")
+                        } else {
+                            // TODO: 되돌리기 Bottom Sheet Present
+                            print("되돌리기 Bottom Sheet Present")
+                        }
+                    } else if model.state == .selectable {
+                        model.state = .selected
+                    } else {
+                        model.state = .selectable
+                    }
+                    viewModel.validateDeleteButton()
                 } label: {
-                    StudyCard(
+                    StudyPieceCard(
                         state: model.state,
-                        studyCardData: model
+                        StudyPieceCardData: model
                     )
                 }
                 .buttonStyle(PressedButtonStyle())

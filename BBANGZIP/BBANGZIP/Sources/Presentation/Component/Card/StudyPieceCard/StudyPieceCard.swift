@@ -1,25 +1,25 @@
 //
-//  StudyCard.swift
+//  StudyPieceCard.swift
 //  BBANGZIP
 //
-//  Created by 최유빈 on 1/15/25.
+//  Created by 최유빈 on 1/22/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
 import SwiftUI
 
-struct StudyCard: View {
-    private let state: StudyCardState
+struct StudyPieceCard: View {
+    private let state: StudyPieceCardState
     // TODO: 수정필요
-    private let studyCardData: StudyPieceModel
+    private let StudyPieceCardData: StudyPieceModel
     private let borderPadding: CGFloat = 2
     
     init(
-        state: StudyCardState,
-        studyCardData: StudyPieceModel = StudyPieceModel.mockList[0]
+        state: StudyPieceCardState,
+        StudyPieceCardData: StudyPieceModel = StudyPieceModel.mockList[0]
     ) {
         self.state = state
-        self.studyCardData = studyCardData
+        self.StudyPieceCardData = StudyPieceCardData
     }
     
     var body: some View {
@@ -32,7 +32,7 @@ struct StudyCard: View {
                 
                 Spacer()
                 
-                CheckBox(state: state)
+                StudyCheckBox(state: state)
             }
             .padding(
                 .vertical,
@@ -64,7 +64,7 @@ struct StudyCard: View {
         ) {
             
 //            CustomText(
-//                "\(studyCardData.subjectName) / \(studyCardData.examName)",
+//                "\(StudyPieceCardData.subjectName) / \(StudyPieceCardData.examName)",
 //                fontType: .caption2Medium,
 //                color: Color(.labelAssistive)
 //            )
@@ -75,7 +75,7 @@ struct StudyCard: View {
             
             
             CustomText(
-                studyCardData.studyContents,
+                StudyPieceCardData.studyContents,
                 fontType: .caption1Medium,
                 color: Color(.labelAlternative)
             )
@@ -85,7 +85,7 @@ struct StudyCard: View {
             )
             
             CustomText(
-                "\(studyCardData.startPage)p - \(studyCardData.finishPage)",
+                "\(StudyPieceCardData.startPage)p - \(StudyPieceCardData.finishPage)",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )
@@ -100,10 +100,10 @@ struct StudyCard: View {
             
             HStack(spacing: 8) {
                 Chip(
-                    type: studyCardData.remainingDays >= 0 ? .delayedDate(studyCardData.remainingDays) : .daysLeftWithText(studyCardData.remainingDays)
+                    type: StudyPieceCardData.remainingDays >= 0 ? .delayedDate(StudyPieceCardData.remainingDays) : .daysLeftWithText(StudyPieceCardData.remainingDays)
                 )
                 CustomText(
-                    "\(studyCardData.deadline) 까지",
+                    "\(StudyPieceCardData.deadline) 까지",
                     fontType: .caption1Bold,
                     color: Color(.labelAlternative)
                 )
