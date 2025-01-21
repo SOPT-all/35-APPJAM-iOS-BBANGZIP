@@ -23,7 +23,7 @@ class OnboardingViewModel: ObservableObject {
     @Published var nicknameState: TextFieldState
     @Published var isNicknameFocused: Bool = false
     @Published var isSubjectFocused: Bool = false
-    @Published var isButtonEnabled: Bool = true
+    @Published var isNicknameValid: Bool = false
     
     init(
         currentState: OnboardingState = .start,
@@ -93,14 +93,7 @@ class OnboardingViewModel: ObservableObject {
     func goNext() {        
         withAnimation {
             isForward = true
-            
-            switch currentState {
-            case .start, .complete:
-                isButtonEnabled = false
-            default:
-                break
-            }
-            
+                    
             switch currentState {
             case .start:
                 currentState = .nameInput
@@ -140,6 +133,8 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
+    // TODO: 텍스트필드 focused 되고 입력 없으면 placeholer로 상태 처리하는 로직 필요
+    // TODO: 텍스트 앞뒤에 공백 입력될 시 자동으로 제거되는 로직 필요
     func verifyNickname(
         oldText: String,
         newText: String,
@@ -156,17 +151,19 @@ class OnboardingViewModel: ObservableObject {
         } else if !isNicknameFocused || !newText.containsEmoji  || !newText.containsSymbol {
             nicknameState = .field
             nicknameAnnounceState = .enable
-            isButtonEnabled = true
+            isNicknameValid = true
         }
-    
         
         if let maxLength = TextFieldStyleCase.nickname.maxLength {
             nickname = String(newText.prefix(maxLength))
         } else {
             nickname = newText
         }
+                
+//        print("change viewmodel: \(isNicknameValid)")
     }
     
+    // TODO: verifyNickname 로직 완성 후 subject도 전면 수정 필요
     func verifySubject(
         oldText: String,
         newText: String,
@@ -197,17 +194,22 @@ class OnboardingViewModel: ObservableObject {
         text: String
     ) {
         if !isNicknameFocused {
-            if text.containsEmoji || text.containsSymbol {
+            if text.isEmpty {
+                nicknameState = .defaultState
+                nicknameAnnounceState = .alert
+            } else if text.containsEmoji || text.containsSymbol {
                 nicknameState = .alert
                 nicknameAnnounceState = .alert
             } else if !text.containsEmoji  || !text.containsSymbol {
                 nicknameState = .field
                 nicknameAnnounceState = .enable
-                isButtonEnabled = true
+                isNicknameValid = true
             }
         }
+//        print("focus viewmodel: \(isNicknameValid)")
     }
     
+    // TODO: handleNicknameForcusChange 로직 완성 후 subject도 전면 수정 필요
     func handleSubjectFocusChange(
         isSubjectFocused: Bool,
         text: String

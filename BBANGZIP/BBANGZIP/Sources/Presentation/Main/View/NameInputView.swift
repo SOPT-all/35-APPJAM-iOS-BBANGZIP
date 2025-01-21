@@ -11,7 +11,6 @@ import SwiftUI
 struct NameInputView: View {
     @Binding var nickname: String
     @State var oldNickname: String = ""
-    
     @FocusState private var isNicknameFocused: Bool
     @StateObject private var viewModel: OnboardingViewModel
     

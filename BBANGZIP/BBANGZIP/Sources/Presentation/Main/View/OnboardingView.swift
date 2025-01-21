@@ -33,23 +33,20 @@ struct OnboardingView: View {
     
     var body: some View {
         NavigationStack {
-            switch viewModel.currentState {
-            case .start:
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                switch viewModel.currentState {
+                case .start:
                     OnboardingStartView()
                     
-                    nextButton
-                }
-            case .complete:
-                VStack(spacing: 0) {
+                    startButton
+                    
+                case .complete:
                     backButton
                     
                     OnboardingCompleteView()
                     
-                    nextButton
-                }
-            default:
-                VStack(spacing: 0) {
+                    completeButton
+                default:
                     backButton
                     
                     progressBar
@@ -58,9 +55,9 @@ struct OnboardingView: View {
                     
                     nextButton
                 }
-                .ignoresSafeArea(.keyboard)
             }
         }
+        .ignoresSafeArea(.keyboard)
         .onTapGesture {
             hideKeyboard()
         }
@@ -88,27 +85,55 @@ struct OnboardingView: View {
             )
     }
     
+    private var startButton: some View {
+        Button(
+            viewModel.buttonText.text,
+            action: viewModel.goNext
+        )
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronRightThickSmall)
+            )
+        )
+        .padding(.horizontal, 20)
+    }
+    
+    // TODO: 입력값 valid 여부에 따라 버튼 disable 처리 필요
     private var nextButton: some View {
         Button(
             viewModel.buttonText.text,
             action: viewModel.goNext
         )
-            .buttonStyle(
-                SolidIconButton(
-                    buttonImage: Image(.chevronRightThickSmall),
-                    viewModel.isButtonEnabled
-                )
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronRightThickSmall),
+                viewModel.isNicknameValid
             )
-            .disabled(!viewModel.isButtonEnabled)
-            .padding(.horizontal, 20)
+        )
+        .disabled(!viewModel.isNicknameValid)
+        .padding(.horizontal, 20)
     }
     
-    @ViewBuilder
+    private var completeButton: some View {
+        Button(
+            viewModel.buttonText.text,
+            action: viewModel.goNext
+        )
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronRightThickSmall)
+            )
+        )
+        .padding(.horizontal, 20)
+    }
+    
     private var inputView: some View {
         ZStack {
             if viewModel.currentState == .nameInput {
-                NameInputView(nickname: $viewModel.nickname)
-                    .transition(.move(edge: .leading))
+                NameInputView(
+                    nickname: $viewModel.nickname
+                )
+                .transition(.move(edge: .leading))
             } else if viewModel.currentState == .semesterInput {
                 SemesterInputView(
                     nickname: $viewModel.nickname,
