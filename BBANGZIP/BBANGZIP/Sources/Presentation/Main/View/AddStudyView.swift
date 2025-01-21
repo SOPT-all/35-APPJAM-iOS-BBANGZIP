@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct AddStudyView: View {
-    @ObservedObject var viewModel: AddStudyViewModel
+    @ObservedObject private var viewModel: AddStudyViewModel
     @State private var isDatePickerPresented = false
     
     var body: some View {

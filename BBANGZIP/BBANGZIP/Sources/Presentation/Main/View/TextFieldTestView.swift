@@ -26,9 +26,6 @@ struct TextFieldTestView: View {
                 alertText: endRangeAnnounceState
             )
         )
-        .onAppear {
-            print("endRangeAnnounceState alertText: \(endRangeAnnounceState?.alertText ?? "nil")")
-        }
     }
 }
 

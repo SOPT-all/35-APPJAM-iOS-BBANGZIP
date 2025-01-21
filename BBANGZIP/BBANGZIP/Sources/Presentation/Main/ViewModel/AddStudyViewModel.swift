@@ -25,6 +25,7 @@ final class AddStudyViewModel: ObservableObject {
     
     var formattedDate: String {
         guard let date = date else {
+            // TODO: 날짜 받아와서 처리
             return ""
         }
         let formatter = DateFormatter()
