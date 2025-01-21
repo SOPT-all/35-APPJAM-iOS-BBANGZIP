@@ -9,8 +9,15 @@
 import SwiftUI
 
 struct AddStudyView: View {
-    @ObservedObject private var viewModel: AddStudyViewModel
+    @StateObject var viewModel: AddStudyViewModel
     @State private var isDatePickerPresented = false
+    
+    init(viewModel: AddStudyViewModel = AddStudyViewModel(),
+         isDatePickerPresented: Bool = false
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.isDatePickerPresented = isDatePickerPresented
+    }
     
     var body: some View {
         VStack{
@@ -241,10 +248,4 @@ struct AddStudyView: View {
             )
         )
     }
-}
-
-#Preview {
-    AddStudyView(
-        viewModel: AddStudyViewModel()
-    )
 }
