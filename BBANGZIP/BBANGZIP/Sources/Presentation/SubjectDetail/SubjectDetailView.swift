@@ -131,7 +131,7 @@ struct SubjectDetailView: View {
             Spacer()
             
             Button {
-                
+                viewModel.deleteStudyPiece()
             } label: {
                 Image(.trash)
                     .renderingMode(.template)
