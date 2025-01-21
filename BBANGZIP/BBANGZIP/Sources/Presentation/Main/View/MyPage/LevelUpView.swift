@@ -14,6 +14,7 @@ struct LevelUpView: View {
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _selectedIndex = State(initialValue: viewModel.level - 1)
     }
     
     var body: some View {
@@ -38,7 +39,7 @@ struct LevelUpView: View {
                     
                     Spacer()
                     
-                    Chip(type: .level(viewModel.level))
+                    Chip(type: .level(selectedIndex + 1))
                     
                     CustomText(
                         viewModel.title, fontType: .body1Bold, color: Color(.labelNormal))
@@ -53,7 +54,13 @@ struct LevelUpView: View {
                         .multilineTextAlignment(.center)
                 }
                 else {
-                    CustomText("열심히 포인트를 모아서\n 멋진 빵집을 차려봐요!", fontType: .body1Bold, color: Color(.labelAlternative))
+                    ZStack {
+                        Image(.private)
+                        VStack {
+                            CustomText("열심히 포인트를 모아서\n멋진 빵집을 차려봐요!", fontType: .body1Bold, color: Color(.labelAlternative))
+                        }
+                        .multilineTextAlignment(.center)
+                    }
                 }
                 
                 Spacer()
@@ -61,7 +68,6 @@ struct LevelUpView: View {
             .padding(.top, 24)
         }
         .ignoresSafeArea()
-        
     }
 }
 
@@ -75,7 +81,7 @@ struct BbangZipView: View {
     
     var body: some View {
         ZStack {
-            //TODO: 여기에 빵지비 레벨업 이미지 들어올 예정 아직 미정.
+            //TODO: 여기에 빵집 레벨업 이미지 들어올 예정 아직 미정.
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
