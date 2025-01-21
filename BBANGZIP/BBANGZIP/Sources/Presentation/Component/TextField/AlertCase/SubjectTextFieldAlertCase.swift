@@ -17,7 +17,7 @@ enum SubjectTextFieldAlertCase: TextFieldAlertable {
         case .alert:
             "한글/영문/숫자 조합으로 최대 10자까지 입력 가능해요"
         case .enable:
-            "사용 가능한 이름이에요"
+            "사용 가능한 과목 이름이에요"
         }
     }
 }

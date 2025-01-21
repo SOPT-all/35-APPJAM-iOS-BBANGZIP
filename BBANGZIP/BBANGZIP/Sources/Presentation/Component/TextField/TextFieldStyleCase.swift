@@ -34,8 +34,6 @@ enum TextFieldStyleCase {
         switch self {
         case .nickname, .subject:
             true
-        case .subject:
-            false
         }
     }
 }

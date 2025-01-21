@@ -15,9 +15,7 @@ struct OnboardingView: View {
     @State private var isPickerPresented: Bool = false
     private let years = Array(2025...2028)
     
-    init(
-        viewModel: OnboardingViewModel = OnboardingViewModel()
-    ) {
+    init(viewModel: OnboardingViewModel = OnboardingViewModel()) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -88,7 +86,6 @@ struct OnboardingView: View {
         .padding(.horizontal, 20)
     }
     
-    // TODO: 입력값 valid 여부에 따라 버튼 disable 처리 필요
     private var nextButton: some View {
         Button(
             "다음으로",
@@ -97,10 +94,18 @@ struct OnboardingView: View {
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.chevronRightThickSmall),
-                viewModel.isNicknameValid
+                (viewModel.currentState == .nameInput) ? viewModel.isNicknameValid
+                : (viewModel.currentState == .subjectInput) ? viewModel.isSubjectValid
+                : (viewModel.currentState == .semesterInput) ? viewModel.isSemesterValid
+                : true
             )
         )
-        .disabled(!viewModel.isNicknameValid)
+        .disabled(
+            (viewModel.currentState == .nameInput) ? !viewModel.isNicknameValid
+            : (viewModel.currentState == .subjectInput) ? !viewModel.isSubjectValid
+            : (viewModel.currentState == .semesterInput) ? !viewModel.isSemesterValid
+            : false
+        )
         .padding(.horizontal, 20)
     }
     
@@ -120,25 +125,15 @@ struct OnboardingView: View {
     private var inputView: some View {
         ZStack {
             if viewModel.currentState == .nameInput {
-//                NameInputView(
-//                    nickname: $viewModel.nickname
-//                )
                 nameInputView
-                .transition(.move(edge: .leading))
             } else if viewModel.currentState == .semesterInput {
-                semesterInputView                .transition(
-                    .asymmetric(
-                        insertion: .move(edge: viewModel.isForward ? .trailing : .leading),
-                        removal: .move(edge: viewModel.isForward ? .leading : .trailing)
-                    )
-                )
+                semesterInputView
             } else if viewModel.currentState == .subjectInput {
                 subjectInputView
-                .transition(.move(edge: .trailing))
             }
         }
         .animation(
-            .easeInOut,
+            .bouncy,
             value: viewModel.currentState
         )
     }
@@ -146,7 +141,7 @@ struct OnboardingView: View {
     private var nameInputView: some View {
         VStack(spacing: 0) {
             VStack(spacing: 32) {
-                mainDescription
+                nameMainDescription
                 
                 nicknameTextField
                 
@@ -159,7 +154,7 @@ struct OnboardingView: View {
         }
     }
     
-    private var mainDescription: some View {
+    private var nameMainDescription: some View {
         HStack {
             CustomText(
                 "사장님의 이름을\n알려주세요",
@@ -210,9 +205,9 @@ struct OnboardingView: View {
     private var semesterInputView: some View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
-                subjectHeaderDescription
+                semesterHeaderDescription
                 
-                subjectMainDescription
+                semesterMainDescription
                 
                 HStack(spacing: 0) {
                     yearPicker
@@ -229,7 +224,7 @@ struct OnboardingView: View {
         }
     }
     
-    private var subjectHeaderDescription: some View {
+    private var semesterHeaderDescription: some View {
         HStack {
             CustomText(
                 "\(viewModel.nickname) 사장님, 안녕하세요!",
@@ -245,7 +240,7 @@ struct OnboardingView: View {
         )
     }
     
-    private var subjectMainDescription: some View {
+    private var semesterMainDescription: some View {
         HStack {
             CustomText(
                 "현재 재학 중인\n학기를 알려주세요",
@@ -279,6 +274,9 @@ struct OnboardingView: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
+        .onChange(of: viewModel.year) { _ in
+            viewModel.verifySemester()
+            }
         .padding(
             .leading,
             -5
@@ -308,6 +306,9 @@ struct OnboardingView: View {
             }
         }
         .pickerStyle(WheelPickerStyle())
+        .onChange(of: viewModel.semester) { _ in
+            viewModel.verifySemester()
+            }
         .padding(
             .leading,
             -15
@@ -337,7 +338,7 @@ struct OnboardingView: View {
         }
     }
     
-    private var SubjectHeaderDescription: some View {
+    private var subjectHeaderDescription: some View {
         HStack(spacing: 0) {
             CustomText(
                 "\(viewModel.year)년 \(viewModel.semester.rawValue)에 재학 중이시네요!",
@@ -353,7 +354,7 @@ struct OnboardingView: View {
         )
     }
     
-    private var SubjectMainDescription: some View {
+    private var subjectMainDescription: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 CustomText(
@@ -396,8 +397,8 @@ struct OnboardingView: View {
         }
         .onChange(of: isSubjectFocused) { isFocused in
             viewModel.handleSubjectFocusChange(
-                isSubjectFocused: isSubjectFocused,
-                text: viewModel.subject
+                newText: viewModel.subject,
+                isSubjectFocused: isSubjectFocused
             )
         }
     }

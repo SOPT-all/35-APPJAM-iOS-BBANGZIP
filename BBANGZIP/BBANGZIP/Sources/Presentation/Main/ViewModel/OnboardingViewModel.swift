@@ -23,7 +23,9 @@ class OnboardingViewModel: ObservableObject {
     @Published var isNicknameFocused: Bool = false
     @Published var isSubjectFocused: Bool = false
     @Published var isNicknameValid: Bool = false
-    
+    @Published var isSemesterValid: Bool = true
+    @Published var isSubjectValid: Bool = false
+
     init(
         currentState: OnboardingState = .start,
         currentStep: Step = .first,
@@ -83,6 +85,15 @@ class OnboardingViewModel: ObservableObject {
             isForward = true
             
             switch currentState {
+            case .nameInput:
+                nickname = nickname.trimmingCharacters(in: .whitespaces)
+            case .subjectInput:
+                subject = subject.trimmingCharacters(in: .whitespaces)
+            default:
+                break
+            }
+            
+            switch currentState {
             case .start:
                 currentState = .nameInput
             case .nameInput:
@@ -112,61 +123,69 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    // TODO: 텍스트필드 focused 되고 입력 없으면 placeholer로 상태 처리하는 로직 필요
-    // TODO: 텍스트 앞뒤에 공백 입력될 시 자동으로 제거되는 로직 필요
     func verifyNickname(
         newText: String,
         isNicknameFocused: Bool
     ) {
-        // textfield가 눌린 상태
         if isNicknameFocused {
             nicknameState = .typing
             
-            // 눌렸는데 비어 있으면 (X 누르면)
             if newText.isEmpty {
                 nicknameState = .defaultState
                 nicknameAnnounceState = .alert
                 isNicknameValid = false
-            } else { // 눌렸는데 안 비어있으면
-                if newText.isValidNickname { // 규칙 맞으면
+            } else {
+                if newText.isValidNickname {
                     nicknameState = .typing
                     nicknameAnnounceState = .enable
                     isNicknameValid = true
-                } else { // 규칙 안 맞으면
+                } else {
                     nicknameState = .alert
                     nicknameAnnounceState = .alert
                     isNicknameValid = false
                 }
             }
-        } else if newText.isEmpty { // 안 눌렸는데 비어 있으면 (초기 상태)
+        } else if newText.isEmpty {
             nicknameState = .defaultState
             nicknameAnnounceState = .alert
             isNicknameValid = false
         }
     }
     
-    // TODO: verifyNickname 로직 완성 후 subject도 전면 수정 필요
+    func verifySemester() {
+        if year == 2025 && semester == .first {
+            isSemesterValid = true
+        } else {
+            isSemesterValid = false
+        }
+    }
+    
     func verifySubject(
         newText: String,
         isSubjectFocused: Bool
     ) {
-        if !isSubjectFocused {
-            subjectState = newText.isEmpty ? .defaultState : .field
-            return
-        }
-        
-        if newText.isEmpty {
-            subjectState = .placeholder
-        } else if newText.containsEmoji || newText.containsSymbol {
-            subjectState = .alert
-        } else {
+        if isSubjectFocused {
             subjectState = .typing
-        }
-        
-        if let maxLength = TextFieldStyleCase.subject.maxLength {
-            subject = String(newText.prefix(maxLength))
-        } else {
-            subject = newText
+            
+            if newText.isEmpty {
+                subjectState = .defaultState
+                subjectAnnounceState = .alert
+                isSubjectValid = false
+            } else {
+                if newText.isValidSubject {
+                    subjectState = .typing
+                    subjectAnnounceState = .enable
+                    isSubjectValid = true
+                } else {
+                    subjectState = .alert
+                    subjectAnnounceState = .alert
+                    isSubjectValid = false
+                }
+            }
+        } else if newText.isEmpty {
+            subjectState = .defaultState
+            subjectAnnounceState = .alert
+            isSubjectValid = false
         }
     }
     
@@ -178,11 +197,11 @@ class OnboardingViewModel: ObservableObject {
             if newText.isEmpty {
                 nicknameState = .defaultState
                 isNicknameValid = false
-            } else if newText.isValidNickname { // 규칙 맞으면
+            } else if newText.isValidNickname {
                 nicknameState = .field
                 nicknameAnnounceState = .enable
                 isNicknameValid = true
-            } else { // 규칙 안 맞으면
+            } else {
                 nicknameState = .alert
                 nicknameAnnounceState = .alert
                 isNicknameValid = false
@@ -193,13 +212,26 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    // TODO: handleNicknameForcusChange 로직 완성 후 subject도 전면 수정 필요
     func handleSubjectFocusChange(
-        isSubjectFocused: Bool,
-        text: String
+        newText: String,
+        isSubjectFocused: Bool
     ) {
         if !isSubjectFocused {
-            subjectState = text.isEmpty ? .defaultState : .field
+            if newText.isEmpty {
+                subjectState = .defaultState
+                isSubjectValid = false
+            } else if newText.isValidSubject {
+                subjectState = .field
+                subjectAnnounceState = .enable
+                isSubjectValid = true
+            } else {
+                subjectState = .alert
+                subjectAnnounceState = .alert
+                isSubjectValid = false
+            }
+        } else {
+            subjectState = .placeholder
+            isSubjectValid = false
         }
     }
 }
