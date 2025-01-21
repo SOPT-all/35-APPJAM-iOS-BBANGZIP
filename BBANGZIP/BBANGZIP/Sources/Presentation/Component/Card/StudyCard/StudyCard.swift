@@ -23,24 +23,37 @@ struct StudyCard: View {
     }
     
     var body: some View {
-        
-        HStack(alignment: .top) {
-            // TODO: complete 상태 시 opacity 추가 필요
-            StudyDataArea
+        ZStack {
+            backgroundView
             
-            Spacer()
-            
-            CheckBox(state: state)
+            HStack(alignment: .top) {
+                StudyDataArea
+                
+                Spacer()
+                
+                CheckBox(state: state)
+            }
+            .padding(
+                .vertical,
+                10
+            )
+            .padding(
+                .horizontal,
+                16
+            )
         }
-        .padding(
-            .vertical,
-            10
-        )
-        .padding(
-            .horizontal,
-            16
-        )
-        
+    }
+    
+    var backgroundView: some View {
+        RoundedRectangle(cornerRadius: 24)
+            .fill(state.backgroundColor)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(
+                        state.borderColor,
+                        lineWidth: state.borderWidth
+                    )
+            )
     }
     
     var StudyDataArea: some View {
