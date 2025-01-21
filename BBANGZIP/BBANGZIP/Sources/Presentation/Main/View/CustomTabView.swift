@@ -11,6 +11,7 @@ import SwiftUI
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
     @State private var isBottomSheetShowing: Bool
+    @State private var isCustomTabBarHidden = false
     
     init(isBottomSheetShowing: Bool = false) {
         self.isBottomSheetShowing = isBottomSheetShowing
@@ -19,30 +20,32 @@ struct CustomTabView: View {
     
     var body: some View {
         ZStack {
-            TabView(selection: $selected) {
-                Group {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
-                        .tag(Tab.subjectManage)
-                    
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                    
-                    Text("이웃 목록")
-                        .tag(Tab.networking)
-                    
-                    Text("마이페이지")
-                        .tag(Tab.mypage)
+            NavigationStack{
+                TabView(selection: $selected) {
+                    Group {
+                        SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
+                            .tag(Tab.subjectManage)
+                        
+                        Text("오늘 할 일")
+                            .tag(Tab.todo)
+                        
+                        Text("이웃 목록")
+                            .tag(Tab.networking)
+                        
+                        Text("마이페이지")
+                            .tag(Tab.mypage)
+                    }
+                    .toolbar(
+                        .hidden,
+                        for: .tabBar
+                    )
                 }
-                .toolbar(
-                    .hidden,
-                    for: .tabBar
-                )
             }
             
             VStack {
                 Spacer()
                 
-                if !isBottomSheetShowing {
+                if !isBottomSheetShowing && !isCustomTabBarHidden {
                     CustomTabBar(selected: $selected)
                 }
             }
