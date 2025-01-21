@@ -33,8 +33,10 @@ struct SemesterInputView: View {
     private let years = Array(2025...2028)
     
     var body: some View {
-        VStack(spacing: 0) {            
-            ProgressBar(category: $currentStep)
+        VStack(spacing: 0) {
+            ProgressBar(type: .withCircle(category: currentStep))
+                .padding(.horizontal, 44)
+                .padding(.bottom, 48)
                 .padding(
                     .horizontal,
                     44
