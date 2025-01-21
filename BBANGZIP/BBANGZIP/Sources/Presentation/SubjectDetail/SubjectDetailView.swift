@@ -17,7 +17,7 @@ struct SubjectDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavigationBarView(
+            CustomNavigationBar(
                 showBackButton: true,
                 showMenu: true,
                 title: "경제통계학",

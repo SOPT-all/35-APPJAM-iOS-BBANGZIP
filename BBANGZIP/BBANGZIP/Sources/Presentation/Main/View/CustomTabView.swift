@@ -22,7 +22,7 @@ struct CustomTabView: View {
         ZStack {
             NavigationStack {
                 TabView(selection: $selected) {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
+                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
                         .tag(Tab.subjectManage)
                 
                     Text("오늘 할 일")
