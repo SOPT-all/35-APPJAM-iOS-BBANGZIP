@@ -42,6 +42,35 @@ struct SubjectDetailView: View {
                     )
                 }
                 
+                HStack(spacing: 16) {
+                    CustomText(
+                        "학습 내용",
+                        fontType: .headline2Bold,
+                        color: Color(.labelAlternative)
+                    )
+                    
+                    Spacer()
+                    
+                    Button {
+                        
+                    } label: {
+                        Image(.trash)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color(.labelAlternative))
+                    }
+                    
+                    Button {
+                        
+                    } label: {
+                        Image(.plus)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color(.labelAlternative))
+                    }
+                }
+                .padding(.top, 32)
+                .padding(.horizontal, 20)
             }
         }
         .navigationBarBackground({
