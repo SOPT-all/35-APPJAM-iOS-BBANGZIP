@@ -38,6 +38,13 @@ final class TodayStudyViewModel: ObservableObject {
             pendingAnnounceText = todayStudyContent.pendingAnnounceText
         } catch {
             dump(error)
+            
+            todayCount = 0
+            completeCount = 0
+            pendingCount = 0
+            todoPiecesList = []
+            completeAnnounceText = "사장님 퇴근 준비 완료"
+            pendingAnnounceText = "오늘의 공부를 모두 끝냈어요!"
         }
     }
 }

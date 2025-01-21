@@ -13,42 +13,34 @@ struct TodayStudyView: View {
     
     init(viewModel: TodayStudyViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
         ScrollView {
-            ZStack {
-                backgroundView
-                
-                headerView
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        CustomText(
-                            viewModel.completeAnnounceText,
-                            fontType: .label1Bold,
-                            color: Color(.labelAlternative)
-                        )
-                        
-                        CustomText(
-                            viewModel.pendingAnnounceText,
-                            fontType: .title3Bold,
-                            color: Color(.labelNormal)
-                        )
-                        
-                        Spacer()
-                    }
+            VStack(spacing: 0) {
+                ZStack {
+                    backgroundView
                     
-                    Spacer()
+                    headerView
                 }
                 .padding(
-                    .leading,
-                    28
+                    .bottom,
+                    48
                 )
-                .padding(
-                    .top,
-                    280
-                )
+                
+                announceTextView
+                    .padding(
+                        .bottom,
+                        16
+                    )
+                
+                buttonView
+                    .padding(
+                        .bottom,
+                        24
+                    )
+                
             }
         }
         .ignoresSafeArea()
@@ -59,7 +51,7 @@ struct TodayStudyView: View {
         }
     }
     
-    var backgroundView: some View {
+    private var backgroundView: some View {
         VStack {
             Color(.backgroundAccent)
                 .cornerRadius(
@@ -69,13 +61,14 @@ struct TodayStudyView: View {
                         .bottomRight
                     ]
                 )
-                .frame(height: 208)
-            
-            Spacer()
+                .padding(
+                    .bottom,
+                    24
+                )
         }
     }
     
-    var headerView: some View {
+    private var headerView: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
                 HStack {
@@ -89,7 +82,7 @@ struct TodayStudyView: View {
                 }
                 
                 HStack {
-                    DelayedStudyButton(count: 2) // TODO: 2삭제
+                    DelayedStudyButton(count: viewModel.pendingCount)
                     
                     Spacer()
                 }
@@ -112,9 +105,59 @@ struct TodayStudyView: View {
                 .horizontal,
                 20
             )
+        }
+    }
+    
+    private var announceTextView: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                CustomText(
+                    viewModel.completeAnnounceText,
+                    fontType: .label1Bold,
+                    color: Color(.labelAlternative)
+                )
+                
+                CustomText(
+                    viewModel.pendingAnnounceText,
+                    fontType: .title3Bold,
+                    color: Color(.labelNormal)
+                )
+            }
             
             Spacer()
         }
+        .padding(
+            .leading,
+            28
+        )
+    }
+    
+    private var buttonView: some View {
+        HStack {
+            Spacer()
+            
+            HStack(spacing: 16) {
+                Button {
+                    //TODO: Trash Button 동작
+                } label: {
+                    Image(.trash)
+                        .renderingMode(.template)
+                        .foregroundStyle(Color(.labelAlternative))
+                }
+                
+                Button {
+                    //TODO: Filter Button 동작
+                } label: {
+                    Image(.filter)
+                        .renderingMode(.template)
+                        .foregroundStyle(Color(.labelAlternative))
+                }
+            }
+        }
+        .padding(
+            .trailing,
+            20
+        )
     }
 }
 
