@@ -24,27 +24,27 @@ struct SubjectDetailView: View {
                 backgroundColor: Color(.backgroundAccent)
             )
             
-            
-            ZStack {
-                VStack {
-                    Color(.backgroundAccent)
-                        .frame(height: 153)
-                        .cornerRadius(
-                            32,
-                            corners: [
-                                .bottomLeft,
-                                .bottomRight
-                            ]
-                        )
-                        .ignoresSafeArea(
-                            .all,
-                            edges: .top
-                        )
+            ScrollView {
+                ZStack {
+                    VStack {
+                        Color(.backgroundAccent)
+                            .frame(height: 153)
+                            .cornerRadius(
+                                32,
+                                corners: [
+                                    .bottomLeft,
+                                    .bottomRight
+                                ]
+                            )
+                            .ignoresSafeArea(
+                                .all,
+                                edges: .top
+                            )
+                        
+                        Spacer()
+                    }
                     
-                    Spacer()
-                }
-                
-                ScrollView {
+                    
                     VStack(spacing: 16) {
                         backgroundView
                             .padding(
