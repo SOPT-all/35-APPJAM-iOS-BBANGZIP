@@ -94,7 +94,7 @@ struct NameInputView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.chevronRight)
+                buttonImage: Image(.chevronRightThickSmall)
             )
         )
     }
