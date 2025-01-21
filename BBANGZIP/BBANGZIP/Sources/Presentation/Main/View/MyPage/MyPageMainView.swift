@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
+    @State private var ShowLevelUpView = false
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -17,7 +18,16 @@ struct MyPageMainView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            HeaderView(viewModel: viewModel)
+            if ShowLevelUpView {
+                LevelUpView(viewModel: viewModel)
+            } else {
+                HeaderView(
+                    viewModel: viewModel,
+                    onBackgroudTap: {
+                    ShowLevelUpView = true
+                })
+            }
+            
             Spacer()
         }
     }
@@ -25,6 +35,7 @@ struct MyPageMainView: View {
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
+    let onBackgroudTap: () -> Void
     
     var body: some View {
         ZStack {
@@ -71,8 +82,7 @@ struct HeaderView: View {
             )
             .frame(height: 416)
             .onTapGesture {
-                print("레벨업 상태 화면으로 change 예정")
-                //TODO: 추후 화면 전환 예정
+                onBackgroudTap()
             }
     }
     
@@ -173,7 +183,7 @@ struct BadgeSection: View {
                                 color: Color(.labelNormal)
                             )
                             
-                            Image(.chevronRight)
+                            Image(.chevronRightThickSmall)
                         }
                         
                         Spacer()
