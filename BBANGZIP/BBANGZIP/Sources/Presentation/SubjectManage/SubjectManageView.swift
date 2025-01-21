@@ -33,59 +33,70 @@ struct SubjectManageView: View {
     ]
     
     var body: some View {
-        VStack {
-            HStack {
-                ChangeSemesterButton(viewModel: viewModel)
+        NavigationStack {
+            ScrollView {
+                VStack {
+                    HStack {
+                        ChangeSemesterButton(viewModel: viewModel)
+                            .padding(
+                                .leading,
+                                24
+                            )
+                        
+                        Spacer()
+                    }
                     .padding(
-                        .leading,
-                        24
+                        .top,
+                        55
                     )
-                
-                Spacer()
+                    .padding(
+                        .bottom,
+                        169
+                    )
+                    .background(
+                        Color(.backgroundAccent)
+                            .cornerRadius(
+                                32,
+                                corners: [
+                                    .bottomLeft,
+                                    .bottomRight
+                                ]
+                            )
+                    )
+                    
+                    VStack(spacing: 32) {
+                        subjectSection
+                        
+                        subjectCardScrollSection
+                    }
+                    .padding(
+                        .top,
+                        48
+                    )
+                    .padding(
+                        .horizontal,
+                        20
+                    )
+                    
+                    Spacer()
+                }
+                .bottomSheet(
+                    isShowing: $viewModel.isShowingBottomSheet,
+                    height: 453
+                ) {
+                    if let type = selectedBottomSheetType {
+                        type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                    }
+                }
+                .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+                    isBottomSheetShowing = newValue
+                }
+                .onAppear {
+                    viewModel.fetchSubjectData()
+                }
             }
-            .padding(
-                .top,
-                16
-            )
-            .padding(
-                .bottom,
-                169
-            )
-            .background(
-                RoundedRectangle(cornerRadius: 32)
-                    .fill(Color(.backgroundAccent))
-                    .edgesIgnoringSafeArea(.top)
-            )
-            
-            VStack(spacing: 32) {
-                subjectSection
-                
-                subjectCardScrollSection
-            }
-            .padding(
-                .top,
-                48
-            )
-            .padding(
-                .horizontal,
-                20
-            )
-            
-            Spacer()
-        }
-        .bottomSheet(
-            isShowing: $viewModel.isShowingBottomSheet,
-            height: 453
-        ) {
-            if let type = selectedBottomSheetType {
-                type.contentView(isPresented: $viewModel.isShowingBottomSheet)
-            }
-        }
-        .onChange(of: viewModel.isShowingBottomSheet) { newValue in
-            isBottomSheetShowing = newValue
-        }
-        .onAppear {
-            viewModel.fetchSubjectData()
+            .edgesIgnoringSafeArea(.top)
+            .scrollIndicators(.hidden)
         }
     }
     
@@ -116,7 +127,6 @@ struct SubjectManageView: View {
     }
     
     var subjectCardScrollSection: some View {
-        ScrollView {
             LazyVGrid(
                 columns: columns,
                 spacing: 20
@@ -126,15 +136,21 @@ struct SubjectManageView: View {
                     id: \.self
                 ) {
                     $model in
-                    Button {
-                        model.state = model.state == .cardDefault ? .cardDefault : model.state == .selectable ? .selected : .selectable
-                    } label: {
+//                    Button {
+//                        model.state = model.state == .cardDefault ? .cardDefault : model.state == .selectable ? .selected : .selectable
+//                    } label: {
+//                        SubjectCard(
+//                            state: model.state,
+//                            subjectCardData: model
+//                        )
+//                    }
+//                    .buttonStyle(PressedButtonStyle())
+                    NavigationLink(destination: SubjectDetailView()) {
                         SubjectCard(
                             state: model.state,
                             subjectCardData: model
                         )
                     }
-                    .buttonStyle(PressedButtonStyle())
                 }
                 
                 Button {
@@ -146,9 +162,7 @@ struct SubjectManageView: View {
             }
             .padding(
                 .bottom,
-                80
+                76
             )
-        }
-        .scrollIndicators(.hidden)
     }
 }
