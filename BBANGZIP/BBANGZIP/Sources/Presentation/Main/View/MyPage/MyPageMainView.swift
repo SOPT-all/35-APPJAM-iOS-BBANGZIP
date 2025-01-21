@@ -10,18 +10,29 @@ import SwiftUI
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
+    @State private var showLevelUpView = false
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            HeaderView(viewModel: viewModel)
+        NavigationStack {
+            VStack(spacing: 0) {
+                NavigationLink {
+                    LevelUpView(viewModel: viewModel)
+                } label: {
+                    HeaderView(
+                        viewModel: viewModel
+                    )
+                }
+            }
+            
             Spacer()
         }
     }
 }
+
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
@@ -70,10 +81,6 @@ struct HeaderView: View {
                 ]
             )
             .frame(height: 416)
-            .onTapGesture {
-                print("레벨업 상태 화면으로 change 예정")
-                //TODO: 추후 화면 전환 예정
-            }
     }
     
     var experienceView: some View {
@@ -211,9 +218,11 @@ struct BadgeSection: View {
     MyPageMainView(
         viewModel: MyPageMainViewModel(
             level: 1,
-            currentScore: 100,
-            badgeCount: 4,
-            maxScore: 200
+            currentScore: 40,
+            badgeCount: 8,
+            maxScore: 200,
+            title: "가판대",
+            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
         )
     )
 }
