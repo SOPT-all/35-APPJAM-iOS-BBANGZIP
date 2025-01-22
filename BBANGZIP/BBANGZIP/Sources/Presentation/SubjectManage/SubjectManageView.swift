@@ -95,6 +95,7 @@ struct SubjectManageView: View {
             }
             .onAppear {
                 viewModel.fetchSubjectData()
+                isCustomTabBarHidden = false
             }
         }
         .edgesIgnoringSafeArea(.top)
@@ -150,7 +151,6 @@ struct SubjectManageView: View {
                 
                 NavigationLink(destination: SubjectDetailView(viewModel: SubjectDetailViewModel(modelList: StudyPieceModel.mockList), isBottomSheetShowing: $isBottomSheetShowing)
                     .onAppear { isCustomTabBarHidden = true }
-                    .onDisappear { isCustomTabBarHidden = false }
                 ) {
                     SubjectCard(
                         state: model.state,
