@@ -71,6 +71,7 @@ struct SubjectManageView: View {
                         subjectSection
                         
                         subjectCardScrollSection
+                            .padding(.bottom, 16)
                     }
                     .padding(
                         .top,
@@ -81,7 +82,10 @@ struct SubjectManageView: View {
                         20
                     )
                     
-                    Spacer()
+                    if viewModel.isDeleteMode {
+                        Spacer()
+                            .frame(height: 56)
+                    }
                 }
                 .bottomSheet(
                     isShowing: $viewModel.isShowingBottomSheet,
@@ -106,7 +110,7 @@ struct SubjectManageView: View {
             VStack {
                 Spacer()
                 
-                if viewModel.isDeleteMode {
+                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
                     deleteButton
                         .padding(.bottom, 16)
                 }
@@ -200,12 +204,14 @@ struct SubjectManageView: View {
                 .customShadow(.normal)
             }
             
-            Button {
-                // TODO: 추가 페이지 이동
-            } label: {
-                SubjectAddCard()
+            if !viewModel.isDeleteMode {
+                Button {
+                    // TODO: 추가 페이지 이동
+                } label: {
+                    SubjectAddCard()
+                }
+                .buttonStyle(PressedButtonStyle())
             }
-            .buttonStyle(PressedButtonStyle())
         }
         .padding(
             .bottom,
@@ -214,7 +220,7 @@ struct SubjectManageView: View {
     }
     
     var deleteButton: some View {
-        let title = viewModel.selectedItemCount == 0 ? "삭제하기" : "\(viewModel.selectedItemCount)개 삭제하기"
+        let title = "\(viewModel.selectedItemCount)개 삭제하기"
         
         return VStack {
             Spacer()
@@ -225,8 +231,7 @@ struct SubjectManageView: View {
             }
             .buttonStyle(
                 SolidIconButton(
-                    buttonImage: Image(.trash),
-                    viewModel.selectedItemCount > 0
+                    buttonImage: Image(.trash)
                 )
             )
             .padding(
@@ -237,7 +242,6 @@ struct SubjectManageView: View {
                 .bottom,
                 8
             )
-            .disabled(viewModel.selectedItemCount == 0)
         }
     }
 }

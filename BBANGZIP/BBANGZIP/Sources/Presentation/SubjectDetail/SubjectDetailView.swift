@@ -102,6 +102,15 @@ struct SubjectDetailView: View {
                                     .horizontal,
                                     20
                                 )
+                                .padding(
+                                    .bottom,
+                                    16
+                                )
+                            
+                            if viewModel.isDeleteMode {
+                                Spacer()
+                                    .frame(height: 56)
+                            }
                         }
                     }
                     .navigationBarHidden(true)
@@ -115,31 +124,9 @@ struct SubjectDetailView: View {
                     }
                 }
                 
-                if viewModel.isDeleteMode {
-                    let title = viewModel.selectedItemCount == 0 ? "삭제하기" : "\(viewModel.selectedItemCount)개 삭제하기"
-                    
-                    VStack {
-                        Spacer()
-                        Button(title) {
-                            viewModel.deleteStudyPiece()
-                            viewModel.makeStudyPieceSelectable()
-                        }
-                        .buttonStyle(
-                            SolidIconButton(
-                                buttonImage: Image(.trash),
-                                viewModel.selectedItemCount > 0
-                            )
-                        )
-                        .padding(
-                            .horizontal,
-                            20
-                        )
-                        .padding(
-                            .bottom,
-                            8
-                        )
-                        .disabled(viewModel.selectedItemCount == 0)
-                    }
+                
+                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                    deleteButton
                 }
             }
         }
@@ -231,7 +218,6 @@ struct SubjectDetailView: View {
         }
     }
     
-    
     var studyPieceList: some View {
         VStack(spacing: 16) {
             ForEach(
@@ -264,6 +250,40 @@ struct SubjectDetailView: View {
                 .buttonStyle(PressedButtonStyle())
                 .customShadow(.normal)
             }
+            
+            // TODO: 공부 추가 화면으로 이동
+            if !viewModel.isDeleteMode {
+                NavigationLink(destination: Text("공부추가")){
+                    AddStudyCard()
+                }
+                .buttonStyle(PressedButtonStyle())
+            }
+        }
+    }
+    
+    var deleteButton: some View {
+        let title = "\(viewModel.selectedItemCount)개 삭제하기"
+        
+        return VStack {
+            Spacer()
+            
+            Button(title) {
+                viewModel.deleteStudyPiece()
+                viewModel.makeStudyPieceSelectable()
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.trash)
+                )
+            )
+            .padding(
+                .horizontal,
+                20
+            )
+            .padding(
+                .bottom,
+                8
+            )
         }
     }
 }
