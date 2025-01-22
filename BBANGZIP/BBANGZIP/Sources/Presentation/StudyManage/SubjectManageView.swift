@@ -77,9 +77,9 @@ struct SubjectManageView: View {
             isShowing: $viewModel.isShowingBottomSheet,
             height: 453
         ) {
-            if let type = selectedBottomSheetType {
-                type.contentView(isPresented: $viewModel.isShowingBottomSheet)
-            }
+//            if let type = selectedBottomSheetType {
+//                type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+//            }
         }
         .onChange(of: viewModel.isShowingBottomSheet) { newValue in
             isBottomSheetShowing = newValue

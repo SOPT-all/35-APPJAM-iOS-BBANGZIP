@@ -10,13 +10,43 @@ import SwiftUI
 
 struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
+    @FocusState private var isStudyContentFocused: Bool
     @State private var isDatePickerPresented = false
+    @State private var isDividerPresented = false
+    @State private var selectedBottomSheetType: BottomSheetType? = .examDate
+    @State private var selectedYear: Int
+    @State private var selectedMonth: Int
+    @State private var selectedDay: Int
+    @State private var isButtonTapped: Bool
     
     init(viewModel: AddStudyViewModel = AddStudyViewModel(),
-         isDatePickerPresented: Bool = false
+         isBottomSheetPresented: Bool = false,
+         isButtonTapped: Bool = false
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        self.isDatePickerPresented = isDatePickerPresented
+        self.isDatePickerPresented = isBottomSheetPresented
+        self.isButtonTapped = isButtonTapped
+        
+        let calendar = Calendar.current
+        let today = Date()
+        self._selectedYear = State(
+            initialValue: calendar.component(
+                .year,
+                from: today
+            )
+        )
+        self._selectedMonth = State(
+            initialValue: calendar.component(
+                .month,
+                from: today
+            )
+        )
+        self._selectedDay = State(
+            initialValue: calendar.component(
+                .day,
+                from: today
+            )
+        )
     }
     
     var body: some View {
@@ -64,6 +94,35 @@ struct AddStudyView: View {
                 .horizontal,
                 20
             )
+        }
+        .ignoresSafeArea(.keyboard)
+        .bottomSheet(
+            isShowing: $isDatePickerPresented,
+            height: 453
+        ) {
+            ExamPickerBottomSheet(
+                isPresented: $isDatePickerPresented,
+                selectedYear: $selectedYear,
+                selectedMonth: $selectedMonth,
+                selectedDay: $selectedDay,
+                isButtonTapped: $isButtonTapped
+            )
+        }
+        .bottomSheet(isShowing: $isDividerPresented, height: 449) {
+            DivideStudyBottomSheet(isPresented: $isDividerPresented)
+        }
+        .onTapGesture {
+            hideKeyboard()
+        }
+        .onChange(of: isButtonTapped) { isTapped in
+            if isTapped {
+                updateDateTextField()
+            }
+        }
+        .onChange(of: isDatePickerPresented) { isPresented in
+            if isPresented {
+                isButtonTapped = false
+            }
         }
     }
     
@@ -114,7 +173,7 @@ struct AddStudyView: View {
         )
         .disabled(true)
         .onTapGesture {
-            // TODO: 바텀시트 연결
+            selectedBottomSheetType = .examDate
             isDatePickerPresented = true
         }
         .padding(
@@ -144,6 +203,7 @@ struct AddStudyView: View {
             "예) 교재 이름, PPT 1과",
             text: $viewModel.studyContent
         )
+        .focused($isStudyContentFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.studyContent,
@@ -152,6 +212,22 @@ struct AddStudyView: View {
                 alertText: viewModel.contentAnnounceState
             )
         )
+        .onChange(of: viewModel.studyContent) { newContent in
+            if newContent.count > 20 {
+                viewModel.studyContent = String(newContent.prefix(20))
+            }
+            
+            viewModel.verifyStudyContent(
+                newText: newContent,
+                isStudyContentFocused: isStudyContentFocused
+            )
+        }
+        .onChange(of: isStudyContentFocused) { isStudyContentFocused in
+            viewModel.handleStudyContentFocusChange(
+                newText: viewModel.studyContent,
+                isStudyContentFocused: isStudyContentFocused
+            )
+        }
         .padding(
             .bottom,
             32
@@ -245,6 +321,17 @@ struct AddStudyView: View {
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.plus)
+            )
+        )
+    }
+    
+    private func updateDateTextField() {
+        let calendar = Calendar.current
+        viewModel.date = calendar.date(
+            from: DateComponents(
+                year: selectedYear,
+                month: selectedMonth,
+                day: selectedDay
             )
         )
     }

@@ -22,12 +22,11 @@ final class AddStudyViewModel: ObservableObject {
     @Published var startRangeAnnounceState: StudyRangeTextFieldAlertCase?
     @Published var endRangeState: TextFieldState
     @Published var endRangeAnnounceState: StudyRangeTextFieldAlertCase?
+    @Published var isStudyContentFocused: Bool = false
+    @Published var isStudyContentValid: Bool = false
     
     var formattedDate: String {
-        guard let date = date else {
-            // TODO: 날짜 받아와서 처리
-            return ""
-        }
+        guard let date = date else { return "" }
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "yyyy년 M월 d일"
@@ -41,7 +40,7 @@ final class AddStudyViewModel: ObservableObject {
         endRange: Int? = nil,
         dateState: TextFieldState = .defaultState,
         contentState: TextFieldState = .defaultState,
-        contentAnnounceState: StudyContentTextFieldAlertCase? = .defaultCorrect,
+        contentAnnounceState: StudyContentTextFieldAlertCase? = .alert,
         startRangeState: TextFieldState = .defaultState,
         startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startDefaultCorrect,
         endRangeState: TextFieldState = .defaultState,
@@ -66,4 +65,56 @@ final class AddStudyViewModel: ObservableObject {
     // TODO: 텍스트필드 입력값에 따라 버튼 활성화하는 로직 추가 필요
     // TODO: 학습 범위에는 정수만 입력하도록 제한하는 로직 추가 필요
     // TODO: 학습 범위 숫자로 입력시 p 자동으로 붙는 로직 추가 필요
+    
+    func verifyStudyContent(
+        newText: String,
+        isStudyContentFocused: Bool
+    ) {
+        if isStudyContentFocused {
+            contentState = .typing
+            
+            if newText.isEmpty {
+                contentState = .defaultState
+                contentAnnounceState = .alert
+                isStudyContentValid = false
+            } else {
+                if newText.isValidStudyContent {
+                    contentState = .typing
+                    contentAnnounceState = .enable
+                    isStudyContentValid = true
+                } else {
+                    contentState = .alert
+                    contentAnnounceState = .alert
+                    isStudyContentValid = false
+                }
+            }
+        } else if newText.isEmpty {
+            contentState = .defaultState
+            contentAnnounceState = .alert
+            isStudyContentValid = false
+        }
+    }
+    
+    func handleStudyContentFocusChange(
+            newText: String,
+            isStudyContentFocused: Bool
+        ) {
+            if !isStudyContentFocused {
+                if newText.isEmpty {
+                    contentState = .defaultState
+                    isStudyContentValid = false
+                } else if newText.isValidStudyContent {
+                    contentState = .field
+                    contentAnnounceState = .enable
+                    isStudyContentValid = true
+                } else {
+                    contentState = .alert
+                    contentAnnounceState = .alert
+                    isStudyContentValid = false
+                }
+            } else {
+                contentState = .placeholder
+                isStudyContentValid = false
+            }
+        }
 }

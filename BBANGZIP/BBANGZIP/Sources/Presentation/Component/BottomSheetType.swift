@@ -20,7 +20,15 @@ enum BottomSheetType: Int {
     case divideStudy
     
     @MainActor @ViewBuilder
-    func contentView(isPresented: Binding<Bool>) -> some View {
+    func contentView(
+        isPresented: Binding<Bool>,
+        // TODO: View에서 날짜 관리하려면 Binding 필요
+        selectedYear: Binding<Int>,
+        selectedMonth: Binding<Int>,
+        selectedDay: Binding<Int>,
+        isButtonTapped: Binding<Bool>
+    ) -> some View {
+        // TODO: current가 왜 필요하지?
         let currentDate = Date()
         let currentYear = Calendar.current.component(
             .year,
@@ -39,16 +47,17 @@ enum BottomSheetType: Int {
         case .examDate:
             ExamPickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: currentYear,
-                selectedMonth: currentMonth,
-                selectedDay: currentDay
+                selectedYear: selectedYear,
+                selectedMonth: selectedMonth,
+                selectedDay: selectedDay,
+                isButtonTapped: isButtonTapped
             )
         case .studyFinishDate:
             StudyDeadlinePickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: currentYear,
-                selectedMonth: currentMonth,
-                selectedDay: currentDay
+                selectedYear: selectedYear,
+                selectedMonth: selectedMonth,
+                selectedDay: selectedDay
             )
         case .changeSemester:
             SemesterPickerBottomSheet(
