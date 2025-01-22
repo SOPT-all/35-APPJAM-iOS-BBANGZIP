@@ -29,7 +29,7 @@ struct AddSubjectView: View {
                 Spacer()
             }
             
-            subjectTextField
+//            subjectTextField
             
             Spacer()
             
@@ -59,20 +59,20 @@ struct AddSubjectView: View {
         )
     }
     
-    var subjectTextField: some View {
-        TextField(
-            "예) 거시경제학",
-            text: $viewModel.subject
-        )
-        .textFieldStyle(
-            CustomTextFieldStyle(
-                text: $viewModel.subject,
-                style: .subject,
-                state: viewModel.state,
-                alertText: viewModel.alertCase
-            )
-        )
-    }
+//    var subjectTextField: some View {
+//        TextField(
+//            "예) 거시경제학",
+//            text: $viewModel.subject
+//        )
+//        .textFieldStyle(
+//            CustomTextFieldStyle(
+//                text: $viewModel.subject,
+//                style: .subject,
+//                state: viewModel.state,
+//                alertText: viewModel.alertCase
+//            )
+//        )
+//    }
 }
 
 #Preview {

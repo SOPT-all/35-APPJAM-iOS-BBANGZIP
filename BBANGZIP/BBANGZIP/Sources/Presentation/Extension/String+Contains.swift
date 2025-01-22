@@ -7,16 +7,20 @@
 //
 
 extension String {
-    var containsEmoji: Bool {
-        self.unicodeScalars.contains(where: { $0.properties.isEmojiPresentation })
-    }
-    var containsSymbol: Bool {
-        self.range(
-            of: "\\p{Symbol}",
+    var isValidNickname: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{1,10}$"
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
             options: .regularExpression
-        ) != nil ||
-        self.range(
-            of: "\\p{Punctuation}",
+        ) != nil
+    }
+    
+    var isValidSubject: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{1,10}$"
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
             options: .regularExpression
         ) != nil
     }
