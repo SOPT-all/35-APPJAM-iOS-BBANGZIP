@@ -40,6 +40,7 @@ struct LevelUpView: View {
     private var levelTabView: some View {
         ZStack {
             Color(.backgroundAccent)
+            
             TabView(selection: $selectedIndex) {
                 ForEach(
                     0..<viewModel.levelStateCount,
