@@ -62,18 +62,6 @@ struct StudyCard: View {
             alignment: .leading,
             spacing: 2
         ) {
-            
-//            CustomText(
-//                "\(studyCardData.subjectName) / \(studyCardData.examName)",
-//                fontType: .caption2Medium,
-//                color: Color(.labelAssistive)
-//            )
-//            .padding(
-//                .leading,
-//                4
-//            )
-            
-            
             CustomText(
                 studyCardData.studyContents,
                 fontType: .caption1Medium,

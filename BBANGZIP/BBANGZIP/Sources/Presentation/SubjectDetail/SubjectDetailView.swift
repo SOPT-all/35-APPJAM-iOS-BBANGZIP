@@ -78,7 +78,7 @@ struct SubjectDetailView: View {
                             )
                             
                             HStack(spacing: 8) {
-                                Chip(type: .daysLeftWithText(24))
+                                Chip(type: .daysLeftWithText(-24))
                                 
                                 CustomText(
                                     "2025년 5월 13일",
