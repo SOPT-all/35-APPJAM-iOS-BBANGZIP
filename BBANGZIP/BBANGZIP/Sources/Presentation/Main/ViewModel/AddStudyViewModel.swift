@@ -261,7 +261,7 @@ final class AddStudyViewModel: ObservableObject {
             } else if newText.isValidStudyRange {
                 endRange = Int(endRangeString.dropLast()) ?? 0
                 
-                if endRange < startRange {
+                if endRange < startRange && startRange != 0 {
                     endRangeState = .alert
                     endRangeAnnounceState = .rangeFlippedWrong
                     isEndRangeValid = false

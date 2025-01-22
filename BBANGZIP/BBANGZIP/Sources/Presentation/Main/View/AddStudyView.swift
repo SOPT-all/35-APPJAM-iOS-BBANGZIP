@@ -173,6 +173,7 @@ struct AddStudyView: View {
         )
         .disabled(true)
         .onTapGesture {
+            hideKeyboard()
             selectedBottomSheetType = .examDate
             isDatePickerPresented = true
         }
@@ -341,11 +342,16 @@ struct AddStudyView: View {
             isDividerPresented = true
         }
         .buttonStyle(
-            OutlinedMediumButton()
+            OutlinedMediumButton(
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+            )
         )
         .padding(
             .bottom,
             8
+        )
+        .disabled(
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
         )
     }
     
