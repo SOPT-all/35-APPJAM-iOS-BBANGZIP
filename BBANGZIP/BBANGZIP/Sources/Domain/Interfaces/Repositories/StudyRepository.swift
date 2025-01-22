@@ -6,14 +6,14 @@
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
-protocol StudyRepository: Sendable{
+protocol StudyRepository: Sendable {
     func fetchTodayStudy(
         area: TodayStudyArea,
         year: Int,
         semester: Semester,
         sortOption: FetchTodayStudySortOption
     ) async throws -> TodayStudyContent
-    
     func completeStudy(pieceID: Int) async throws -> StudyCompleteData
     func revertCompleteStudy(pieceID: Int) async throws
+    func removeTodayStudy(pieceIDs: [Int]) async throws
 }

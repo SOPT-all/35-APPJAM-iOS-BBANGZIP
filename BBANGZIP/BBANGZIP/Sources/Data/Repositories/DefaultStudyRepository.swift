@@ -26,7 +26,7 @@ final class DefaultStudyRepository: StudyRepository {
             )
         )
             .serializingDecodable(TodayStudyResponseDTO.self)
-        .response
+            .response
         
         switch response.result {
         case .success(let resultDTO):
@@ -63,11 +63,32 @@ final class DefaultStudyRepository: StudyRepository {
                 dto: StudyCompleteRequestDTO(isFinished: true)
             )
         )
-            .serializingDecodable(StudyRevertCompleteResponseDTO.self)
+            .serializingDecodable(OnlyCodeResponseDTO.self)
             .response
         
         switch response.result {
         case .success(let resultDTO):
+            dump(resultDTO)
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
+    
+    func removeTodayStudy(pieceIDs: [Int]) async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.removeTodayStudy(
+                dto: RemoveTodayStudyDTO(
+                    pieceIds: pieceIDs
+                )
+            )
+        )
+            .serializingDecodable(OnlyCodeResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let resultDTO):
+            dump(resultDTO)
             return
         case .failure(let error):
             throw error

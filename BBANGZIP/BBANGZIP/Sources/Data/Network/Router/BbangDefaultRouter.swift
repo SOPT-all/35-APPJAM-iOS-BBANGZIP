@@ -36,6 +36,11 @@ enum BbangDefaultRouter {
     
     //성민
     case fetchSortedTodoList(dto: TodayStudyRequestDTO)
+    case completeStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
+    case revertCompleteStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
+    case removeTodayStudy(dto: RemoveTodayStudyDTO)
+    
+    
 }
 
 extension BbangDefaultRouter: Router {
@@ -91,6 +96,12 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/mypage/badge"
         case .badgeDetail(let badgeID):
             return "/api/v1/badges/\(badgeID)"
+        case .completeStudy(let pieceID, _):
+            return "/api/v1/pieces/\(pieceID)/mark-done"
+        case .revertCompleteStudy(let pieceID, _):
+            return "/api/v1/pieces/\(pieceID)/mark-undone"
+        case .removeTodayStudy:
+            return "/api/v1/pieces/hide"
         }
     }
     
@@ -104,7 +115,10 @@ extension BbangDefaultRouter: Router {
                 .addStudyScope,
                 .addTodoList,
                 .addTodo,
-                .addDelayedTodoToToday:
+                .addDelayedTodoToToday,
+                .completeStudy,
+                .revertCompleteStudy,
+                .removeTodayStudy:
             return .post
             
         case
@@ -139,10 +153,10 @@ extension BbangDefaultRouter: Router {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(signInRequest.authorization)"
             ]
-        case .fetchSortedTodoList: // TODO: 추후 삭제 (임시)
+        case .fetchSortedTodoList, .completeStudy, .revertCompleteStudy, .removeTodayStudy: // TODO: 추후 삭제 (임시)
             [
                 "Conttent-Type": "application/json",
-                "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mzc0MDA1MDQsImV4cCI6MTczODYxMDEwNCwic3ViIjoiQUNDRVNTX1RPS0VOIiwidWlkIjoxLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIn0.qAKLZkrmk_Tk8YilYVH7wOZRXwQbJeAkxNgLpa87-U1xQC_E7rGN3JmeJLaavQ3QVoittKVqX53mvzw9ewnjEg"
+                "Authorization": "Bearer "
             ]
         default:
             [
@@ -170,6 +184,12 @@ extension BbangDefaultRouter: Router {
         case .badgeDetail(let badgeID):
             return ["badgeID": badgeID]
         case .fetchSortedTodoList(let dto):
+            return dto.asDictionary()
+        case .completeStudy(_, let dto):
+            return dto.asDictionary()
+        case .revertCompleteStudy(_, let dto):
+            return dto.asDictionary()
+        case .removeTodayStudy(let dto):
             return dto.asDictionary()
         default:
             return nil

@@ -11,9 +11,14 @@ import SwiftUI
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
     @State private var isBottomSheetShowing: Bool
+    @State private var isTodayStudyViewBottomSheetShowing: Bool
     
-    init(isBottomSheetShowing: Bool = false) {
+    init(
+        isBottomSheetShowing: Bool = false,
+        isTodayStudyViewBottomSheetShowing: Bool = false
+    ) {
         self.isBottomSheetShowing = isBottomSheetShowing
+        self.isTodayStudyViewBottomSheetShowing = isTodayStudyViewBottomSheetShowing
     }
     
     var body: some View {
@@ -23,8 +28,23 @@ struct CustomTabView: View {
                     SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
                         .tag(Tab.subjectManage)
                     
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
+                    TodayStudyView(
+                        viewModel: TodayStudyViewModel(
+                            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                                studyRepository: DefaultStudyRepository()
+                            ),
+                            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            )
+                        ), isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                    )
+                    .tag(Tab.todo)
                     
                     Text("이웃 목록")
                         .tag(Tab.networking)
@@ -41,7 +61,7 @@ struct CustomTabView: View {
             VStack {
                 Spacer()
                 
-                if !isBottomSheetShowing {
+                if !isBottomSheetShowing && !isTodayStudyViewBottomSheetShowing {
                     CustomTabBar(selected: $selected)
                 }
             }

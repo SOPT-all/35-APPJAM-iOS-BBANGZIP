@@ -10,9 +10,14 @@ import SwiftUI
 
 struct TodayStudyView: View {
     @StateObject private var viewModel: TodayStudyViewModel
+    @Binding private var isBottomSheetShowing: Bool
     
-    init(viewModel: TodayStudyViewModel) {
+    init(
+        viewModel: TodayStudyViewModel,
+        isBottomSheetShowing: Binding<Bool>
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _isBottomSheetShowing = isBottomSheetShowing
         UIScrollView.appearance().bounces = false
     }
     
@@ -54,11 +59,19 @@ struct TodayStudyView: View {
                         todayStudyList
                     }
                 }
+                .padding(
+                    .bottom,
+                    80
+                )
             }
             .ignoresSafeArea(edges: .top)
             
             if viewModel.isDeleteMode {
                 deleteButton
+                    .padding(
+                        .bottom,
+                        80
+                    )
             }
             
             revertBottomSheet
@@ -71,6 +84,7 @@ struct TodayStudyView: View {
             }
         }
         .toastView(toast: $viewModel.toast)
+        // TODO: NavigationBarBackground 추가
     }
     
     private var backgroundView: some View {
@@ -219,15 +233,19 @@ struct TodayStudyView: View {
             ForEach($viewModel.todoPiecesList) { $piece in
                 Button {
                     if piece.state == .cardDefault {
-                        piece.state = .complete
                         Task {
-                            await viewModel.revertCompleteStudy()
+                            await viewModel.completeStudy(pieceID: piece.id)
+                            piece.state = .complete
                         }
                     } else if piece.state == .complete {
                         if viewModel.isDeleteMode {
-                            viewModel.toast = Toast("이미 완료한 일은 삭제할 수 없어요")
+                            viewModel.toast = Toast(
+                                "이미 완료한 일은 삭제할 수 없어요",
+                                startFrom: 80
+                            )
                         } else {
-                            viewModel.isRevertBottomSheetPresent.toggle()
+                            viewModel.revertTargetPieceID = piece.id
+                            viewModel.isRevertBottomSheetPresent = true
                         }
                     } else if piece.state == .selectable {
                         piece.state = .selected
@@ -267,8 +285,10 @@ struct TodayStudyView: View {
             Spacer()
             
             Button {
-                print("삭제하기 Tapped")
-                //TODO: 삭제 API 호출 -> FetchData
+                print("삭제하기 누름")
+                Task {
+                    await viewModel.removeTodayStudyPieces()
+                }
             } label: {
                 CustomText(
                     "삭제하기",
@@ -333,7 +353,7 @@ struct TodayStudyView: View {
                 )
                 
                 Button {
-                    viewModel.isRevertBottomSheetPresent.toggle()
+                    viewModel.isRevertBottomSheetPresent = false
                 } label: {
                     CustomText(
                         "취소",
@@ -347,6 +367,9 @@ struct TodayStudyView: View {
                 .horizontal,
                 20
             )
+        }
+        .onChange(of: viewModel.isRevertBottomSheetPresent) { newValue in
+            isBottomSheetShowing = newValue
         }
     }
     
@@ -376,6 +399,9 @@ struct TodayStudyView: View {
                         // TODO: PressedBottomSheetButtonStyle 만들기
                     }
                 }
+            }
+            .onChange(of: viewModel.isFilterBottomSheetPresent) { newValue in
+                isBottomSheetShowing = newValue
             }
     }
 }
@@ -447,7 +473,6 @@ struct TodayStudyDateView: View {
             "error"
         }
     }
-    
 }
 
 struct DelayedStudyButton: View {
@@ -478,20 +503,4 @@ struct DelayedStudyButton: View {
         }
         .buttonStyle(OutlinedMediumButton())
     }
-}
-
-#Preview {
-    TodayStudyView(
-        viewModel: TodayStudyViewModel(
-            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
-                studyRepository: DefaultStudyRepository()
-            ),
-            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
-                repository: DefaultStudyRepository()
-            ),
-            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
-                repository: DefaultStudyRepository()
-            )
-        )
-    )
 }
