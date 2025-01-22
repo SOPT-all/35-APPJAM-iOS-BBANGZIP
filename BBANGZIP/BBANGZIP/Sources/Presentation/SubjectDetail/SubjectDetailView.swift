@@ -10,9 +10,16 @@ import SwiftUI
 
 struct SubjectDetailView: View {
     @StateObject private var viewModel: SubjectDetailViewModel
+    @Binding var isBottomSheetShowing: Bool
+    private let selectedBottomSheetType: BottomSheetType?
     
-    init(viewModel: SubjectDetailViewModel) {
+    init(
+        viewModel: SubjectDetailViewModel,
+        isBottomSheetShowing: Binding<Bool>
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _isBottomSheetShowing = isBottomSheetShowing
+        self.selectedBottomSheetType = .completeCheck
     }
     
     var body: some View {
@@ -96,6 +103,14 @@ struct SubjectDetailView: View {
                 }
                 .navigationBarHidden(true)
             }
+            .bottomSheet(
+                isShowing: $viewModel.isShowingBottomSheet,
+                height: 265
+            ) {
+                if let type = selectedBottomSheetType {
+                    type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                }
+            }
         }
     }
     
@@ -162,18 +177,18 @@ struct SubjectDetailView: View {
         VStack(spacing: 16) {
             ForEach(
                 $viewModel.modelList,
-                id: \.self
+                id: \.pieceID
             ) { $model in
                 Button {
                     if model.state == .cardDefault {
                         model.state = .complete
+                        viewModel.completeStudyPiece()
                     } else if model.state == .complete {
                         if viewModel.isDeleteMode {
                             // TODO: Toast Present
                             print("Toast Present")
                         } else {
-                            // TODO: 되돌리기 Bottom Sheet Present
-                            print("되돌리기 Bottom Sheet Present")
+                            viewModel.checkCompleteOrNot()
                         }
                     } else if model.state == .selectable {
                         model.state = .selected

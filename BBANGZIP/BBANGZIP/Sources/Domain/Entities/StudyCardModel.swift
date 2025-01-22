@@ -13,7 +13,7 @@ struct StudyCardModel: Hashable {
     let studyList: [StudyPieceModel]
 }
 
-struct StudyPieceModel: Hashable {
+struct StudyPieceModel: Hashable, Equatable {
     let pieceID: Int
     let studyContents: String
     let startPage: Int
@@ -22,6 +22,15 @@ struct StudyPieceModel: Hashable {
     let remainingDays: Int
     let isFinished: Bool
     var state: StudyPieceCardState
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(pieceID)
+    }
+    
+    static func == (lhs: StudyPieceModel, rhs: StudyPieceModel) -> Bool {
+        
+        return lhs.pieceID == rhs.pieceID
+    }
 }
 
 extension StudyCardModel {

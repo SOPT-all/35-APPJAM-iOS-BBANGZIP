@@ -12,8 +12,9 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var modelList: [StudyPieceModel]
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
+    @Published var isShowingBottomSheet: Bool = false
     
-    init(modelList: [StudyPieceModel] = []) {
+    init(modelList: [StudyPieceModel]) {
         self.modelList = modelList
     }
     
@@ -33,10 +34,26 @@ final class SubjectDetailViewModel: ObservableObject {
                 )
             }
         )
-        
     }
     
     func validateDeleteButton() {
         isDeleteButtonEnable = modelList.count(where: { $0.state == .selected }) > 0
+    }
+    
+    func completeStudyPiece() {
+        // TODO: 공부 조각 완료하기 API 연동 필요
+    }
+    
+    func notCompleteStudyPiece() {
+        // TODO: 공부 조각 미완료 체크하기 API 연동 필요
+    }
+    
+    func checkCompleteOrNot() {
+        isShowingBottomSheet = true
+    }
+    
+    func resetSelectedState() {
+        // TODO: 완료 해제 로직 필요
+        isShowingBottomSheet = false
     }
 }

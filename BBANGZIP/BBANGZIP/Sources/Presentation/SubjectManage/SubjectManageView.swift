@@ -148,7 +148,7 @@ struct SubjectManageView: View {
 //                }
 //                .buttonStyle(PressedButtonStyle())
                 
-                NavigationLink(destination: SubjectDetailView(viewModel: SubjectDetailViewModel(modelList: StudyPieceModel.mockList))
+                NavigationLink(destination: SubjectDetailView(viewModel: SubjectDetailViewModel(modelList: StudyPieceModel.mockList), isBottomSheetShowing: $isBottomSheetShowing)
                     .onAppear { isCustomTabBarHidden = true }
                     .onDisappear { isCustomTabBarHidden = false }
                 ) {
