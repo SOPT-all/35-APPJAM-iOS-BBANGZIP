@@ -13,6 +13,8 @@ final class TodayStudyViewModel: ObservableObject {
     private let completeTodayStudyUseCase: CompleteTodayStudyUseCase
     private let revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
     
+    @Published var revertTargetPieceID: Int? = nil
+    
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
     @Published var toast: Toast?
@@ -107,9 +109,13 @@ final class TodayStudyViewModel: ObservableObject {
     }
     
     @MainActor
-    func revertCompleteStudy(pieceID: Int) async {
+    func revertCompleteStudy() async {
+        guard let revertTargetPieceID = revertTargetPieceID else {
+            print("revertTargetPieceID Wrong")
+            return
+        }
         do {
-            try await revertCompleteTodayStudyUseCase.execute(pieceID: pieceID)
+            try await revertCompleteTodayStudyUseCase.execute(pieceID: revertTargetPieceID)
             await fetchData()
         } catch {
             dump(error)

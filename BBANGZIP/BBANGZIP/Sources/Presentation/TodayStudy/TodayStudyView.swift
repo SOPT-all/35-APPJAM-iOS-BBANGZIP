@@ -220,8 +220,9 @@ struct TodayStudyView: View {
                 Button {
                     if piece.state == .cardDefault {
                         piece.state = .complete
-                        // TODO: API 완료하기
-                        print("완료하기 API 호출 -> 결과 반영 API")
+                        Task {
+                            await viewModel.revertCompleteStudy()
+                        }
                     } else if piece.state == .complete {
                         if viewModel.isDeleteMode {
                             viewModel.toast = Toast("이미 완료한 일은 삭제할 수 없어요")
@@ -314,7 +315,9 @@ struct TodayStudyView: View {
                 
                 Button {
                     //TODO: 되돌리기 API, 새로고침
-                    print("되돌리기 Tapped -> API 호출하기 -> 바탕으로 새로고침")
+                    Task {
+                        await viewModel.revertCompleteStudy()
+                    }
                     viewModel.isRevertBottomSheetPresent = false
                 } label: {
                     CustomText(
@@ -482,6 +485,12 @@ struct DelayedStudyButton: View {
         viewModel: TodayStudyViewModel(
             fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
                 studyRepository: DefaultStudyRepository()
+            ),
+            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                repository: DefaultStudyRepository()
+            ),
+            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                repository: DefaultStudyRepository()
             )
         )
     )
