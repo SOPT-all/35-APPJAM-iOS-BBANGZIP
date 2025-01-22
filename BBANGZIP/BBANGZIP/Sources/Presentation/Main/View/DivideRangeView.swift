@@ -8,10 +8,16 @@
 
 import SwiftUI
 
+enum FocusField: Hashable {
+    case startRange(Int)
+    case endRange(Int)
+}
+
 struct DivideRangeView: View {
     @StateObject var viewModel: DivideRangeViewModel
-    @FocusState private var isStartRangeFocused: Bool
-    @FocusState private var isEndRangeFocused: Bool
+//    @FocusState private var isStartRangeFocused: Bool
+//    @FocusState private var isEndRangeFocused: Bool
+    @FocusState private var focusedField: FocusField?
     @State private var selectedDate: Date = Date()
     let pieceCount: Int
     
@@ -133,7 +139,7 @@ struct DivideRangeView: View {
             "시작 페이지",
             text: $viewModel.startRangeStrings[index]
         )
-        .focused($isStartRangeFocused)
+        .focused($focusedField, equals: .startRange(index))
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.startRangeStrings[index],
@@ -155,14 +161,14 @@ struct DivideRangeView: View {
             viewModel.verifyStartRange(
                 for: index,
                 newText: newRange,
-                isStartRangeFocused: isStartRangeFocused
+                isStartRangeFocused: focusedField == .startRange(index)
             )
         }
-        .onChange(of: isStartRangeFocused) { isStartRangeFocused in
+        .onChange(of: focusedField) { newFocus in
             viewModel.handleStartRangeFocusChange(
                 for: index,
                 newText: viewModel.startRangeStrings[index],
-                isStartRangeFocused: isStartRangeFocused
+                isStartRangeFocused: newFocus == .startRange(index)
             )
         }
     }
@@ -172,7 +178,7 @@ struct DivideRangeView: View {
             "종료 페이지",
             text: $viewModel.endRangeStrings[index]
         )
-        .focused($isEndRangeFocused)
+        .focused($focusedField, equals: .endRange(index))
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.endRangeStrings[index],
@@ -194,14 +200,14 @@ struct DivideRangeView: View {
             viewModel.verifyEndRange(
                 for: index,
                 newText: newRange,
-                isEndRangeFocused: isEndRangeFocused
+                isEndRangeFocused: focusedField == .endRange(index)
             )
         }
-        .onChange(of: isEndRangeFocused) { isEndRangeFocused in
+        .onChange(of: focusedField) { newFocus in
             viewModel.handleEndRangeFocusChange(
                 for: index,
                 newText: viewModel.endRangeStrings[index],
-                isEndRangeFocused: isEndRangeFocused
+                isEndRangeFocused: newFocus == .endRange(index)
             )
         }
     }
@@ -232,20 +238,20 @@ struct DivideRangeView: View {
         )
     }
     
-    private func registerButton(for index: Int) -> some View {
-        Button("저장하기") {
-            // TODO: 화면 전환해야 할 다음 뷰로 연결
-        }
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.plus),
-                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
-            )
-        )
-        .disabled(
-            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
-        )
-    }
+//    private func registerButton(for index: Int) -> some View {
+//        Button("저장하기") {
+//            // TODO: 화면 전환해야 할 다음 뷰로 연결
+//        }
+//        .buttonStyle(
+//            SolidIconButton(
+//                buttonImage: Image(.plus),
+//                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
+//            )
+//        )
+//        .disabled(
+//            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
+//        )
+//    }
 }
 
 
