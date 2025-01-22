@@ -367,8 +367,12 @@ struct AddStudyView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.plus)
+                buttonImage: Image(.plus),
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
             )
+        )
+        .disabled(
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
         )
     }
     

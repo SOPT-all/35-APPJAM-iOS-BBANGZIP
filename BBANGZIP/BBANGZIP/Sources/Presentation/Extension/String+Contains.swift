@@ -9,11 +9,17 @@
 extension String {
     var isValidStudyContent: Bool {
         let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
-        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s\\p{P}\\p{S}&&[^\\p{Emoji}]]{1,20}$"
-        return !trimmedText.isEmpty && trimmedText.range(
-            of: regex,
-            options: .regularExpression
-        ) != nil
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s\\p{P}\\p{S}]{1,20}$"
+        
+        guard !trimmedText.isEmpty,
+              trimmedText.range(
+                of: regex,
+                options: .regularExpression
+              ) != nil else {
+            return false
+        }
+        
+        return !trimmedText.unicodeScalars.contains { $0.properties.isEmojiPresentation }
     }
     
     var isValidStudyRange: Bool {

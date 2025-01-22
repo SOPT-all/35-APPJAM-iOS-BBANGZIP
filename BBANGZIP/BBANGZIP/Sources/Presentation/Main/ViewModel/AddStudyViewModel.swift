@@ -214,9 +214,11 @@ final class AddStudyViewModel: ObservableObject {
                     if endRangeString.isEmpty {
                         endRangeState = .defaultState
                         endRangeAnnounceState = .endAlert
+                        isEndRangeValid = false
                     } else {
                         endRangeState = .field
                         endRangeAnnounceState = .endAlert
+                        isEndRangeValid = true
                     }
                 }
             } else {
