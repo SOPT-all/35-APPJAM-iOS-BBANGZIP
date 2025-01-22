@@ -15,7 +15,7 @@ enum StudyContentTextFieldAlertCase: TextFieldAlertable {
     var alertText: String {
         switch self {
         case .alert:
-            "한글/영문/숫자/특수문자 조합으로 최대 20자까지 입력 가능해요"
+            "한글/영문/숫자/기호 조합으로 최대 20자까지 입력 가능해요"
         case .enable:
             "사용 가능한 교재/PPT 이름이에요"
         }
