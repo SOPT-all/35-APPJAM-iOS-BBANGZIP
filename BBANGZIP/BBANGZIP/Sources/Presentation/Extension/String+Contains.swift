@@ -20,4 +20,14 @@ extension String {
             options: .regularExpression
         ) != nil
     }
+    
+    var isMessageValid: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s!@#$%^&*(),.?\":{}|<>]{1,25}$"
+        
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
+            options: .regularExpression
+        ) != nil
+    }
 }
