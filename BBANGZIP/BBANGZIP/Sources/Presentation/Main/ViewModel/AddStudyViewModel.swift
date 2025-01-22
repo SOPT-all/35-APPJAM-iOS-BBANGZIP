@@ -25,6 +25,7 @@ final class AddStudyViewModel: ObservableObject {
     @Published var isStudyContentFocused: Bool = false
     @Published var isStudyContentValid: Bool = false
     @Published var isStartRangeValid: Bool = false
+    @Published var isEndRangeValid: Bool = false
     
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -148,6 +149,35 @@ final class AddStudyViewModel: ObservableObject {
         }
     }
     
+    func verifyEndRange(
+        newText: String,
+        isEndRangeFocused: Bool
+    ) {
+        if isEndRangeFocused {
+            endRangeState = .typing
+            
+            if newText.isEmpty {
+                endRangeState = .defaultState
+                endRangeAnnounceState = .endAlert
+                isEndRangeValid = false
+            } else {
+                if newText.isValidStudyRange {
+                    endRangeState = .typing
+                    endRangeAnnounceState = .endAlert
+                    isEndRangeValid = true
+                } else {
+                    endRangeState = .alert
+                    endRangeAnnounceState = .endAlert
+                    isEndRangeValid = false
+                }
+            }
+        } else if newText.isEmpty {
+            endRangeState = .defaultState
+            endRangeAnnounceState = .startAlert
+            isEndRangeValid = false
+        }
+    }
+    
     func handleStartRangeFocusChange(
         newText: String,
         isStartRangeFocused: Bool
@@ -179,6 +209,40 @@ final class AddStudyViewModel: ObservableObject {
             
             startRangeState = .placeholder
             isStartRangeValid = false
+        }
+    }
+    
+    func handleEndRangeFocusChange(
+        newText: String,
+        isEndRangeFocused: Bool
+    ) {
+        if !isEndRangeFocused {
+            let trimmedText = newText.trimmingLeadingZeros()
+            if !trimmedText.hasSuffix("p") {
+                endRangeString = trimmedText + "p"
+            } else {
+                endRangeString = trimmedText
+            }
+            
+            if newText.isEmpty {
+                endRangeState = .defaultState
+                isEndRangeValid = false
+            } else if newText.isValidStudyRange {
+                endRangeState = .field
+                endRangeAnnounceState = .endAlert
+                isEndRangeValid = true
+            } else {
+                endRangeState = .alert
+                endRangeAnnounceState = .endAlert
+                isEndRangeValid = false
+            }
+        } else {
+            if newText.hasSuffix("p") {
+                endRangeString = String(newText.dropLast())
+            }
+            
+            endRangeState = .placeholder
+            isEndRangeValid = false
         }
     }
 }

@@ -12,7 +12,7 @@ struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
-    @FocusState private var isEndRangeContentFocused: Bool
+    @FocusState private var isEndRangeFocused: Bool
     @State private var isDatePickerPresented = false
     @State private var isDividerPresented = false
     @State private var selectedBottomSheetType: BottomSheetType?
@@ -304,6 +304,7 @@ struct AddStudyView: View {
             "종료 페이지",
             text: $viewModel.endRangeString
         )
+        .focused($isEndRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.endRangeString,
@@ -316,6 +317,23 @@ struct AddStudyView: View {
             .bottom,
             16
         )
+        .keyboardType(.decimalPad)
+        .onChange(of: viewModel.endRangeString) { newRange in
+            if newRange.count > 4 {
+                viewModel.endRangeString = String(newRange.prefix(4))
+            }
+            
+            viewModel.verifyEndRange(
+                newText: newRange,
+                isEndRangeFocused: isEndRangeFocused
+            )
+        }
+        .onChange(of: isEndRangeFocused) { isEndRangeFocused in
+            viewModel.handleEndRangeFocusChange(
+                newText: viewModel.endRangeString,
+                isEndRangeFocused: isEndRangeFocused
+            )
+        }
     }
     
     private var divideButton: some View {
