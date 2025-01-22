@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-class OnboardingViewModel: ObservableObject {
+final class OnboardingViewModel: ObservableObject {
     @Published var currentState: OnboardingState
     @Published var currentStep: Step
     @Published var isForward: Bool
