@@ -53,7 +53,7 @@ struct ChangeSubjectNameView: View {
 
                 Button("등록하기") {
                     print("click")
-                    viewModel.changeMotivationsubject()
+                    viewModel.changeSubjectName()
                     dismiss()
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
@@ -83,14 +83,6 @@ struct ChangeSubjectNameView: View {
             TextField(
                 "기존 과목명",
                 text: $viewModel.subject
-            )
-            .textFieldStyle(
-                CustomTextFieldStyle(
-                    text: $viewModel.subject,
-                    style: .subject,
-                    state: viewModel.subjectState,
-                    alertText: viewModel.subjectAnnounceState
-                )
             )
             .focused($isSubjectFocused)
             .textFieldStyle(

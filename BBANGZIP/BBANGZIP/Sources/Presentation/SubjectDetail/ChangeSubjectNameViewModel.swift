@@ -86,7 +86,7 @@ final class ChangeSubjectNameViewModel: ObservableObject {
         isButtonEnabled = subjectAnnounceState == .enable
     }
     
-    func changeMotivationsubject() {
+    func changeSubjectName() {
         // TODO: 과목명 변경 API 연동 필요
     }
 }
