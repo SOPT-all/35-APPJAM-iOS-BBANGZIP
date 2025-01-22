@@ -23,8 +23,9 @@ struct BadgeDetailView: View {
             
             rewardView
             
-            
+            closeButton
         }
+        .frame(width: 375, height: 662)
     }
     
     var badgeContentView: some View {
@@ -41,37 +42,76 @@ struct BadgeDetailView: View {
                         24
                     )
                 
-                Balloon(
+                BalloonWithout(
                     text: viewModel.badgeName,
                     balloonMode: .top
                 ).padding(.bottom, 32)
+                    .padding(.horizontal)
                 
                 hashTagTextView
-                
             }
         }
         
     }
     
     var hashTagTextView: some View {
-        VStack (spacing: 0) {
-            CustomText(
-                viewModel.hashTags.joined(separator: "\n"),  fontType: .body2Bold,
-                color: Color(.labelAssistive)
-            )
+        VStack(alignment: .center, spacing: 4) {
+            if viewModel.hashTags.count == 2 {
+                HStack {
+                    CustomText(
+                        viewModel.hashTags[0],
+                        fontType: .body2Bold,
+                        color: Color(.labelAssistive)
+                    )
+                }
+                HStack {
+                    CustomText(
+                        viewModel.hashTags[1],
+                        fontType: .body2Bold,
+                        color: Color(.labelAssistive)
+                    )
+                }
+            } else if viewModel.hashTags.count == 3 {
+                HStack {
+                    CustomText(
+                        viewModel.hashTags[0],
+                        fontType: .body2Bold,
+                        color: Color(.labelAssistive)
+                    )
+                }
+                HStack(spacing: 8) {
+                    CustomText(
+                        viewModel.hashTags[1],
+                        fontType: .body2Bold,
+                        color: Color(.labelAssistive)
+                    )
+                    CustomText(
+                        viewModel.hashTags[2],
+                        fontType: .body2Bold,
+                        color: Color(.labelAssistive)
+                    )
+                }
+            }
         }.padding(.horizontal)
     }
     
     var achievementConditionView: some View {
-        VStack (spacing: 0) {
-            CustomText("달성 조건",fontType: .body1Bold, color: Color(.labelNormal))
+        HStack {
+            VStack (alignment: .leading, spacing: 0) {
+                CustomText("달성 조건",fontType: .body1Bold, color: Color(.labelNormal))
+                
+                CustomText(viewModel.achievementCondition, fontType: .label1Bold, color: Color(.labelAlternative))
+            }.padding(
+                .top,
+                32
+            )
+            .padding(
+                .horizontal,
+                40
+            )
             
-            CustomText(viewModel.achievementCondition, fontType: .label1Bold, color: Color(.labelAlternative))
-        }.padding(
-            .top,
-            32
-        )
-        .padding(.horizontal, 40)
+            Spacer()
+        }
     }
     
     var rewardView: some View {
@@ -95,4 +135,23 @@ struct BadgeDetailView: View {
         )
         
     }
+    var closeButton: some View {
+        Button("닫기") {
+            
+        }
+        .buttonStyle(SolidButton())
+        .padding(.horizontal,20)
+        .padding(.top, 20)
+    }
+}
+
+#Preview {
+    BadgeDetailView(viewModel: BadgeDetailViewModel(
+        badgeName: "빵집 오픈 준비 중",
+        badgeImage: "bread.fill",
+        hashTags: ["#일일 빵집 오픈 알바생", "#가만히 있으면 빵도 못 간다", "#사장님 여기 빵 안나와요?"],
+        achievementCondition: "최초로 '공부 할 내용'을 추가한 경우",
+        reward: 50,
+        badgeIsLocked: false )
+    )
 }

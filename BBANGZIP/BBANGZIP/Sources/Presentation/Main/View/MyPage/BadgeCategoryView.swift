@@ -46,11 +46,11 @@ struct BadgeCategoryView: View {
                         }
                     }
                 }
-            }
-            .sheet(isPresented: $isShowingDetail) {
-                if let bedge = selectedBadge {
-                    BadgeDetailView(badge: badge)
-                }
+                
+                //            .sheet(isPresented: $isShowingDetail) {
+                //                if let bedge = selectedBadge {
+                //                    BadgeDetailView(badge: badge)
+                //                }
             }
         }
         
