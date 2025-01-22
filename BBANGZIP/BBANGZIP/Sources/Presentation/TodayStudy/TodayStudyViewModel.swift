@@ -10,6 +10,9 @@ import SwiftUI
 
 final class TodayStudyViewModel: ObservableObject {
     private let fetchTodayStudyUseCase: FetchTodayStudyUseCase
+    private let completeTodayStudyUseCase: CompleteTodayStudyUseCase
+    private let revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
+    
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
     @Published var toast: Toast?
@@ -24,8 +27,14 @@ final class TodayStudyViewModel: ObservableObject {
     @Published var completeAnnounceText: String = ""
     @Published var pendingAnnounceText: String = ""
     
-    init(fetchTodayStudyUseCase: FetchTodayStudyUseCase) {
+    init(
+        fetchTodayStudyUseCase: FetchTodayStudyUseCase,
+        completeTodayStudyUseCase: CompleteTodayStudyUseCase,
+        revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
+    ) {
         self.fetchTodayStudyUseCase = fetchTodayStudyUseCase
+        self.completeTodayStudyUseCase = completeTodayStudyUseCase
+        self.revertCompleteTodayStudyUseCase = revertCompleteTodayStudyUseCase
     }
     
     @MainActor
@@ -85,5 +94,25 @@ final class TodayStudyViewModel: ObservableObject {
     
     func validateDeleteButton() {
         isDeleteButtonEnable = todoPiecesList.count(where: { $0.state == .selected }) > 0
+    }
+    
+    @MainActor
+    func completeStudy(pieceID: Int) async {
+        do {
+            let complteResult = try await completeTodayStudyUseCase.execute(pieceID: pieceID)
+            await fetchData()
+        } catch {
+            dump(error)
+        }
+    }
+    
+    @MainActor
+    func revertCompleteStudy(pieceID: Int) async {
+        do {
+            try await revertCompleteTodayStudyUseCase.execute(pieceID: pieceID)
+            await fetchData()
+        } catch {
+            dump(error)
+        }
     }
 }

@@ -13,4 +13,7 @@ protocol StudyRepository: Sendable{
         semester: Semester,
         sortOption: FetchTodayStudySortOption
     ) async throws -> TodayStudyContent
+    
+    func completeStudy(pieceID: Int) async throws -> StudyCompleteData
+    func revertCompleteStudy(pieceID: Int) async throws
 }
