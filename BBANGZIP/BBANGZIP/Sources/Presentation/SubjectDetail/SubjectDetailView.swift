@@ -115,6 +115,7 @@ struct SubjectDetailView: View {
                     }
                     .navigationBarHidden(true)
                 }
+                .scrollIndicators(.hidden)
                 .bottomSheet(
                     isShowing: $viewModel.isShowingBottomSheet,
                     height: 265
