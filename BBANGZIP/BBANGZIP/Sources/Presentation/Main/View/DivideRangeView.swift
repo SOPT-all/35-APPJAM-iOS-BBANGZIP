@@ -12,10 +12,15 @@ struct DivideRangeView: View {
     @StateObject var viewModel: DivideRangeViewModel
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
+    @State private var selectedDate: Date = Date()
     let pieceCount: Int
     
+    private var pieces: [Int] {
+        Array(1...pieceCount)
+    }
+    
     init(
-        viewModel: DivideRangeViewModel = DivideRangeViewModel()
+        viewModel: DivideRangeViewModel = DivideRangeViewModel(),
         pieceCount: Int
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -39,51 +44,19 @@ struct DivideRangeView: View {
                         hideKeyboard()
                     }
                 
-                VStack(spacing: 0) {
-                    ZStack{
-                        navigationTitle
-                        
-                        HStack {
-                            backButton
-                                .padding(16)
-                            Spacer()
-                        }
-                    }
-                    .padding(
-                        .bottom,
-                        16
-                    )
+                VStack(spacing: 32) {
+                    entireRange
                     
-                    VStack(spacing: 32) {
-                        entireRange
-                        
-                        Divider()
-                        
-                        piece
-                        
-                        registerButton
-                    }
-                    .padding(.horizontal, 20)
+                    Divider()
+                    
+                    piece
+                    
+                    registerButton
                 }
+                .padding(.horizontal, 20)
                 .ignoresSafeArea(.keyboard)
             }
         }
-    }
-    
-    private func pieceView(piece: Piece) -> some View {
-        VStack(spacing: 16) {
-            HStack {
-                CustomText(
-                    "\(piece.index + 1)조각",
-                    fontType: .body1Bold,
-                    color: Color(.labelNormal)
-                )
-                
-                Spacer()
-            }
-            
-            HStack(spacing: 20) {
-                startRangeTextField(for: piece)
     }
     
     private var entireRange: some View {
@@ -131,23 +104,27 @@ struct DivideRangeView: View {
     
     private var piece: some View {
         VStack(spacing: 16) {
-            HStack {
-                CustomText(
-                    "\(pieceCount)조각",
-                    fontType: .body1Bold,
-                    color: Color(.labelNormal)
-                )
-                
-                Spacer()
+            ForEach(pieces, id: \.self) { piece in
+                VStack(spacing: 16) {
+                    HStack {
+                        CustomText(
+                            "\(piece)조각",
+                            fontType: .body1Bold,
+                            color: Color(.labelNormal)
+                        )
+                        
+                        Spacer()
+                    }
+                    
+                    HStack(spacing: 20) {
+                        startRangeTextField
+                        
+                        endRangeTextField
+                    }
+                    
+                    dueDateButton
+                }
             }
-            
-            HStack(spacing: 20) {
-                startRangeTextField
-                
-                endRangeTextField
-            }
-            
-            dueDateButton
         }
     }
     
@@ -225,6 +202,12 @@ struct DivideRangeView: View {
         }
     }
     
+    private var dateFormatted: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 M월 d일 까지"
+        return formatter.string(from: selectedDate)
+    }
+    
     private var dueDateButton: some View {
         Button(
             action: {
@@ -233,7 +216,7 @@ struct DivideRangeView: View {
         ) {
             HStack {
                 Image(.calenderSmall)
-                Text("2025년 4월 25일 까지")
+                Text(dateFormatted)
             }
         }
         .buttonStyle(
@@ -246,7 +229,7 @@ struct DivideRangeView: View {
     }
     
     private var registerButton: some View {
-        Button("공부 내용 등록하기") {
+        Button("저장하기") {
             // TODO: 화면 전환해야 할 다음 뷰로 연결
         }
         .buttonStyle(
@@ -263,5 +246,5 @@ struct DivideRangeView: View {
 
 
 #Preview {
-    DivideRangeView()
+    DivideRangeView(pieceCount: 10)
 }
