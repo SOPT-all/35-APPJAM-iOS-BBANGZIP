@@ -74,4 +74,8 @@ final class AddMotivationMessageViewModel: ObservableObject {
         
         isButtonEnabled = messageAnnounceState == .enable
     }
+    
+    func changeMotivationMessage() {
+        // TODO: 동기부여 메시지 작성 및 수정 API 연동 필요
+    }
 }

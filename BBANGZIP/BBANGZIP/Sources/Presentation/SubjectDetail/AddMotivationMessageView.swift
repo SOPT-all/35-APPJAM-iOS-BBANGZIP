@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct AddMotivationMessageView: View {
+    @SwiftUI.Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: AddMotivationMessageViewModel
     @FocusState private var isMessageFocused: Bool
     
@@ -52,6 +53,8 @@ struct AddMotivationMessageView: View {
                 
                 Button("등록하기") {
                     print("click")
+                    viewModel.changeMotivationMessage()
+                    dismiss()
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
                 .disabled(!viewModel.isButtonEnabled)
