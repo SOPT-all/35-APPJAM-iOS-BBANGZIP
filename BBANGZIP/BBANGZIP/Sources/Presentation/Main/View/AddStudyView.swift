@@ -282,7 +282,7 @@ struct AddStudyView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.startRangeString) { newRange in
-            if newRange.count > 4 {
+            if newRange.count > 4 && !newRange.hasSuffix("p") {
                 viewModel.startRangeString = String(newRange.prefix(4))
             }
             
@@ -320,7 +320,7 @@ struct AddStudyView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.endRangeString) { newRange in
-            if newRange.count > 4 {
+            if newRange.count > 4 && !newRange.hasSuffix("p") {
                 viewModel.endRangeString = String(newRange.prefix(4))
             }
             

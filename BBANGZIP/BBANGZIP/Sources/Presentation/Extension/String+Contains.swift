@@ -23,7 +23,7 @@ extension String {
     }
     
     var isValidStudyRange: Bool {
-        let regex = "^\\d{1,4}p?$"
+        let regex = "^\\d{1,5}p?$"
         return self.range(
             of: regex,
             options: .regularExpression
