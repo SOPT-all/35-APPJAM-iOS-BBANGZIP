@@ -145,7 +145,7 @@ extension BbangDefaultRouter: Router {
         case .fetchBadgeDetail:
             return [
                 "Content-Type": "application/json",
-            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3Mzc1NDI3NzEsImV4cCI6MTczODc1MjM3MSwic3ViIjoiQUNDRVNTX1RPS0VOIiwidWlkIjoxLCJ0eXBlIjoiQUNDRVNTX1RPS0VOIn0.KMxFowiQEstlMmVdvTiF0DJZpuXjrfB2Jg0fnXuk1rLqiwGMTNEHAGKsksAYNWhAd7Oq96bfwSEXVMKPWtZxXA"
+            "Authorization": "Bearer"
             ]
         default:
             return [

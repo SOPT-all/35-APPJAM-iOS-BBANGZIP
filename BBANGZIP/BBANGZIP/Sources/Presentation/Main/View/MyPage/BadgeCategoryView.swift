@@ -46,6 +46,7 @@ struct BadgeCategoryView: View {
                         }
                     }
                 }
+                .scrollIndicators(.hidden)
                 
                 if let badgeName = viewModel.selectedBadge?.badgeName {
                     BottomSheet(
