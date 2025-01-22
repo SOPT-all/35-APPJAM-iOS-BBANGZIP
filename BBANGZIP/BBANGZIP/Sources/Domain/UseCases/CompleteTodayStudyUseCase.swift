@@ -7,7 +7,7 @@
 //
 
 protocol CompleteTodayStudyUseCase: Sendable {
-    func execute(pieceID: Int) async throws -> StudyCompleteData
+    func execute(pieceID: Int) async throws -> [Badge]
 }
 
 final class DefaultCompleteTodayStudyUseCase {
@@ -19,7 +19,7 @@ final class DefaultCompleteTodayStudyUseCase {
 }
 
 extension DefaultCompleteTodayStudyUseCase: CompleteTodayStudyUseCase {
-    func execute(pieceID: Int) async throws -> StudyCompleteData {
+    func execute(pieceID: Int) async throws -> [Badge] {
         return try await repository.completeStudy(pieceID: pieceID)
     }
 }

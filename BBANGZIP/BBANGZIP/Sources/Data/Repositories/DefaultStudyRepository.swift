@@ -37,7 +37,7 @@ final class DefaultStudyRepository: StudyRepository {
         }
     }
     
-    func completeStudy(pieceID: Int) async throws -> StudyCompleteData {
+    func completeStudy(pieceID: Int) async throws -> [Badge] {
         let response = await API.session.request(
             BbangDefaultRouter.completeStudy(
                 pieceID: pieceID,
@@ -50,7 +50,7 @@ final class DefaultStudyRepository: StudyRepository {
         switch response.result {
         case .success(let resultDTO):
             dump(resultDTO)
-            return resultDTO.data.toDomain()
+            return resultDTO.data.badges.map { $0.toDomain() }
         case .failure(let error):
             throw error
         }
@@ -58,9 +58,9 @@ final class DefaultStudyRepository: StudyRepository {
     
     func revertCompleteStudy(pieceID: Int) async throws {
         let response = await API.session.request(
-            BbangDefaultRouter.completeStudy(
+            BbangDefaultRouter.revertCompleteStudy(
                 pieceID: pieceID,
-                dto: StudyCompleteRequestDTO(isFinished: true)
+                dto: StudyCompleteRequestDTO(isFinished: false)
             )
         )
             .serializingDecodable(OnlyCodeResponseDTO.self)

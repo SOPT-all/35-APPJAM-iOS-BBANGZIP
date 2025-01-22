@@ -134,7 +134,7 @@ struct PressedBottomSheetButtonStyle: ButtonStyle {
             configuration.label
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
-                        .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
+                        .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : isSelected ? Color(.labelNormal).opacity(0.08) : Color.clear)
                 )
         }
     }

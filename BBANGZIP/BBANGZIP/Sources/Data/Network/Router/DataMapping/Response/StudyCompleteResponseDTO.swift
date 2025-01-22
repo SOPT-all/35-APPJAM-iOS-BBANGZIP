@@ -12,13 +12,5 @@ struct StudyCompleteResponseDTO: Decodable {
 }
 
 struct StudyCompleteDataDTO: Decodable {
-    let todayCounts: Int
-    let completeCounts: Int
-    
-    func toDomain() -> StudyCompleteData {
-        return StudyCompleteData(
-            todayCounts: todayCounts,
-            completeCounts: completeCounts
-        )
-    }
+    let badges: [BadgeDTO]
 }

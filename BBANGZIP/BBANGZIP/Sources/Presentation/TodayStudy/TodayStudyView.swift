@@ -22,69 +22,75 @@ struct TodayStudyView: View {
     }
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    ZStack {
-                        backgroundView
-                        
-                        headerView
-                    }
-                    .padding(
-                        .bottom,
-                        48
-                    )
-                    
-                    if viewModel.todayCount + viewModel.completeCount == 0 {
-                        emptyView
-                            .padding(
-                                .bottom,
-                                16
-                            )
-                        
-                        addTodayStudyButton
-                    } else {
-                        announceTextView
-                            .padding(
-                                .bottom,
-                                16
-                            )
-                        
-                        buttonView
-                            .padding(
-                                .bottom,
-                                24
-                            )
-                        
-                        todayStudyList
+        if viewModel.isLoading {
+            ProgressView()
+                .onAppear {
+                    Task { @MainActor in
+                        await viewModel.fetchData()
                     }
                 }
-                .padding(
-                    .bottom,
-                    80
-                )
-            }
-            .ignoresSafeArea(edges: .top)
-            
-            if viewModel.isDeleteMode {
-                deleteButton
+        }
+        else {
+            ZStack {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        ZStack {
+                            backgroundView
+                            
+                            headerView
+                        }
+                        .padding(
+                            .bottom,
+                            48
+                        )
+                        
+                        if viewModel.todayCount + viewModel.completeCount == 0 {
+                            emptyView
+                                .padding(
+                                    .bottom,
+                                    16
+                                )
+                            
+                            addTodayStudyButton
+                        } else {
+                            announceTextView
+                                .padding(
+                                    .bottom,
+                                    16
+                                )
+                            
+                            buttonView
+                                .padding(
+                                    .bottom,
+                                    24
+                                )
+                            
+                            todayStudyList
+                        }
+                    }
                     .padding(
                         .bottom,
                         80
                     )
+                }
+                .ignoresSafeArea(edges: .top)
+                
+                if viewModel.isDeleteMode && viewModel.isDeleteButtonEnable {
+                    deleteButton
+                        .padding(
+                            .bottom,
+                            80
+                        )
+                }
+                
+                revertBottomSheet
+                
+                filterBottomSheet
             }
-            
-            revertBottomSheet
-            
-            filterBottomSheet
+            .toastView(toast: $viewModel.toast)
+            // TODO: Badge 여러개 -> Bottom Sheet 여러번 띄우기
+            // TODO: NavigationBarBackground 추가
         }
-        .onAppear {
-            Task { @MainActor in
-                await viewModel.fetchData()
-            }
-        }
-        .toastView(toast: $viewModel.toast)
-        // TODO: NavigationBarBackground 추가
     }
     
     private var backgroundView: some View {
@@ -164,12 +170,18 @@ struct TodayStudyView: View {
                     fontType: .label1Bold,
                     color: Color(.labelAlternative)
                 )
+                .onChange(of: viewModel.completeCount) { newValue in
+                    viewModel.reloadCompleteAnnounceText()
+                }
                 
                 CustomText(
-                    viewModel.pendingAnnounceText,
+                    viewModel.todayAnnounceText,
                     fontType: .title3Bold,
                     color: Color(.labelNormal)
                 )
+                .onChange(of: viewModel.todayCount) { newValue in
+                    viewModel.reloadTodayAnnounceText()
+                }
             }
             
             Spacer()
@@ -285,7 +297,6 @@ struct TodayStudyView: View {
             Spacer()
             
             Button {
-                print("삭제하기 누름")
                 Task {
                     await viewModel.removeTodayStudyPieces()
                 }
@@ -334,7 +345,6 @@ struct TodayStudyView: View {
                 )
                 
                 Button {
-                    //TODO: 되돌리기 API, 새로고침
                     Task {
                         await viewModel.revertCompleteStudy()
                     }
@@ -389,16 +399,33 @@ struct TodayStudyView: View {
                                 await viewModel.fetchData()
                             }
                         } label: {
-                            CustomText(
-                                filter.buttonTitle,
-                                fontType: .body1Bold,
-                                color: Color(.labelNeutral)
-                            )
+                            HStack {
+                                Spacer()
+                                
+                                CustomText(
+                                    filter.buttonTitle,
+                                    fontType: .body1Bold,
+                                    color: Color(.labelNeutral)
+                                )
+                                .padding(
+                                    .vertical,
+                                    8
+                                )
+                                
+                                Spacer()
+                            }
                         }
+                        .padding(
+                            .horizontal,
+                            20
+                        )
                         .buttonStyle(PressedBottomSheetButtonStyle(isSelected: viewModel.sortOption == filter))
-                        // TODO: PressedBottomSheetButtonStyle 만들기
                     }
                 }
+                .padding(
+                    .top,
+                    24
+                )
             }
             .onChange(of: viewModel.isFilterBottomSheetPresent) { newValue in
                 isBottomSheetShowing = newValue
@@ -484,7 +511,7 @@ struct DelayedStudyButton: View {
     
     var body: some View {
         Button {
-            //TODO: 밀린 공부 View 이동
+            // TODO: 밀린 공부 View 이동
             print("밀린 공부 버튼 Tapped")
         } label: {
             HStack(spacing: 5) {

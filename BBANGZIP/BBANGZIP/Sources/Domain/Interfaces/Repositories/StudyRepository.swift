@@ -13,7 +13,7 @@ protocol StudyRepository: Sendable {
         semester: Semester,
         sortOption: FetchTodayStudySortOption
     ) async throws -> TodayStudyContent
-    func completeStudy(pieceID: Int) async throws -> StudyCompleteData
+    func completeStudy(pieceID: Int) async throws -> [Badge]
     func revertCompleteStudy(pieceID: Int) async throws
     func removeTodayStudy(pieceIDs: [Int]) async throws
 }
