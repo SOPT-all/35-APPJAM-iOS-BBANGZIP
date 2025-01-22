@@ -37,7 +37,7 @@ final class DefaultStudyRepository: StudyRepository {
         }
     }
     
-    func completeStudy(pieceID: Int) async throws -> [Badge] {
+    func completeStudy(pieceID: Int) async throws -> [Badges] {
         let response = await API.session.request(
             BbangDefaultRouter.completeStudy(
                 pieceID: pieceID,

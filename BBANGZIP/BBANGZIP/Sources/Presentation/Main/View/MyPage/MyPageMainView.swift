@@ -24,17 +24,27 @@ struct MyPageMainView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                HeaderView(
-                    viewModel: viewModel,
-                    badgeCategoryViewModel: badgeCategoryViewModel
-                )
+            ScrollView {
+                VStack(spacing: 0) {
+                    HeaderView(
+                        viewModel: viewModel,
+                        badgeCategoryViewModel: badgeCategoryViewModel
+                    )
+                    
+                    GridView()
+                        .padding(.top, 75)
+                }
+                
+                Spacer()
             }
-            
-            Spacer()
+            .scrollIndicators(.hidden)
         }
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
     }
+    
 }
+
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
@@ -212,6 +222,72 @@ struct BadgeSection: View {
         .padding(.horizontal, 20)
     }
 }
+
+struct GridView: View {
+    let items = [
+        "프로필 설정",
+        "공지사항",
+        "개인정보 처리방침",
+        "서비스 이용약관",
+        "로그아웃",
+        "계정 탈퇴"
+    ]
+    
+    @State private var selectedItem: String? = nil
+    @State private var showLogoutSheet = false
+    @State private var showDeleteAccountSheet = false
+    
+    var body: some View {
+        LazyVStack(spacing: 0) {
+            ForEach(
+                items.indices,
+                id: \.self
+            ) { index in
+                VStack(spacing: 8) {
+                    HStack {
+                        CustomText(
+                            items[index],
+                            fontType: .body1Bold,
+                            color: Color(.labelNormal)
+                        )
+                        .padding(.leading, 8)
+                        Spacer()
+                        
+                        Image(.rightIcon)
+                            .frame(
+                                width: 20,
+                                height: 20
+                            )
+            
+                    }
+                    .frame(
+                        width: 335,
+                        height: 56
+                    )
+                    
+                    if index == 0 || index == 3 {
+                        Divider()
+                            .background(Color(.lineNormal))
+                            .padding(
+                                .top,
+                                16
+                            )
+                            .padding(
+                                .bottom,
+                                16
+                            )
+                    }
+                }
+            }
+        }
+        .padding(
+            .horizontal,
+            20
+        )
+    }
+    
+}
+
 
 #Preview {
     MyPageMainView(

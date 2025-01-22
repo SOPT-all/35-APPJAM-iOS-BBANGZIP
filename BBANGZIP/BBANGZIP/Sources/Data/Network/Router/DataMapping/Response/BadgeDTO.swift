@@ -11,8 +11,8 @@ struct BadgeDTO: Decodable {
     let badgeImage: String
     let hashTags: [String]
     
-    func toDomain() -> Badge {
-        Badge(
+    func toDomain() -> Badges {
+        Badges(
             name: badgeName,
             image: badgeImage,
             hashTags: hashTags
