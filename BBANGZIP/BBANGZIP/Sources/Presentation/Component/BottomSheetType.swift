@@ -58,7 +58,7 @@ enum BottomSheetType: Int {
                 selectedSemester: .constant("1학기")
             )
         case .divideStudy:
-            DivideStudyBottomSheet(
+            SetPieceBottomSheet(
                 isPresented: isPresented
             )
         case .completeCheck:

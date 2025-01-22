@@ -43,9 +43,9 @@ final class AddStudyViewModel: ObservableObject {
         contentState: TextFieldState = .defaultState,
         contentAnnounceState: StudyContentTextFieldAlertCase? = .defaultCorrect,
         startRangeState: TextFieldState = .defaultState,
-        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startDefaultCorrect,
+        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endDefaultCorrect
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
     ) {
         self.date = date
         self.studyContent = studyContent

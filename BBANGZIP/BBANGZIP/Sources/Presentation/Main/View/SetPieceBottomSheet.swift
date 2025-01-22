@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct DivideStudyBottomSheet: View {
+struct SetPieceBottomSheet: View {
     @Binding private var isPresented: Bool
     
     private let pieces = Array(1...6)
@@ -51,5 +51,5 @@ struct DivideStudyBottomSheet: View {
 #Preview {
     let isPresented = Binding.constant(true)
     
-    DivideStudyBottomSheet(isPresented: isPresented)
+    SetPieceBottomSheet(isPresented: isPresented)
 }

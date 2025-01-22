@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct DivideStudyView: View {
+struct SetPieceView: View {
     @State private var isBottomSheetPresented = true
     @State private var selectedBottomSheetType: BottomSheetType? = .divideStudy
     
@@ -30,6 +30,6 @@ struct DivideStudyView: View {
 }
 
 #Preview {
-    DivideStudyView()
+    SetPieceView()
 }
 
