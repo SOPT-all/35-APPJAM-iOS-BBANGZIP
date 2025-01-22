@@ -101,7 +101,7 @@ extension CustomNavigationBar {
             }
             .buttonStyle(PressedButtonStyle())
                                
-            NavigationLink(destination: Text("두 번째 화면")) {
+            NavigationLink(destination: ChangeSubjectNameView()) {
                 CustomText(
                     "과목명 수정하기",
                     fontType: .body1Bold,

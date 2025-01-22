@@ -10,7 +10,13 @@ import SwiftUI
 
 final class SubjectManageViewModel: ObservableObject {
     @Published var isShowingBottomSheet: Bool
+    @Published var isDeleteMode: Bool = false
+    @Published var isDeleteButtonEnable: Bool = false
     @Published var modelList: [SubjectCardModel]
+    
+    var selectedItemCount: Int {
+        modelList.filter { $0.state == .selected }.count
+    }
     
     init(
         isShowingBottomSheet: Bool = false,
@@ -24,21 +30,25 @@ final class SubjectManageViewModel: ObservableObject {
         isShowingBottomSheet = true
     }
     
-    func deleteSubject() {
-        let currentState: SubjectCardState = modelList.first?.state ?? SubjectCardState.cardDefault
-        
-        let newState: SubjectCardState = switch currentState {
-        case SubjectCardState.cardDefault:
-            SubjectCardState.selectable
-        case SubjectCardState.selectable:
-            SubjectCardState.cardDefault
-        default:
-            currentState
+    func makeDeleteMode() {
+        isDeleteMode.toggle()
+    }
+    
+    func makeSelectableSubject() {
+        isDeleteMode.toggle()
+        modelList = modelList.map {
+            var updatedModel = $0
+            updatedModel.state = $0.state == .cardDefault ? .selectable : .cardDefault
+            return updatedModel
         }
+    }
+    
+    func validateDeleteButton() {
+        isDeleteButtonEnable = modelList.count(where: { $0.state == .selected }) > 0
+    }
+    
+    func deleteStudy() {
         
-        for i in modelList.indices {
-            modelList[i].state = newState
-        }
     }
     
     func fetchSubjectData() {
