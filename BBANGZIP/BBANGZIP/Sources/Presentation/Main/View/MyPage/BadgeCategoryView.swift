@@ -51,7 +51,7 @@ struct BadgeCategoryView: View {
         ZStack {
             HStack {
                 CustomText(
-                    "유나짱 사장님이\n열심히 모은 배지예요",
+                    "\(viewModel.userID) 사장님이\n열심히 모은 배지예요",
                     fontType: .heading2Bold,
                     color: Color(.labelNormal)
                 )

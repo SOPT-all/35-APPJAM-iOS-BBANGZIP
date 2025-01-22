@@ -6,17 +6,11 @@
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
-// BadgeCategoryViewModel.swift
-//  BBANGZIP
-//
-//  Created by 송여경 on 1/22/25.
-//  Copyright © 2025 com.bbangzip. All rights reserved.
-//
-
 import SwiftUI
 
 class BadgeCategoryViewModel: ObservableObject {
     @Published private var badges: [Badge]
+    @Published var userID: String
     
     var groupedBadges: [String: [Badge]] {
         Dictionary(
@@ -34,8 +28,9 @@ class BadgeCategoryViewModel: ObservableObject {
         ]
     }
     
-    init(badges: [Badge]) {
+    init(badges: [Badge], userID: String) {
         self.badges = badges
+        self.userID = userID
     }
     
     func subtitle(for category: String) -> String {

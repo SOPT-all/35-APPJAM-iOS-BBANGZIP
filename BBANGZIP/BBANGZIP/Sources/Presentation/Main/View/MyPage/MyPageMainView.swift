@@ -14,7 +14,7 @@ struct MyPageMainView: View {
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        _badgeCategoryViewModel = StateObject(wrappedValue: BadgeCategoryViewModel(badges: mockBadges))
+        _badgeCategoryViewModel = StateObject(wrappedValue: BadgeCategoryViewModel(badges: mockBadges, userID: "유나짱"))
     }
     
     var body: some View {
