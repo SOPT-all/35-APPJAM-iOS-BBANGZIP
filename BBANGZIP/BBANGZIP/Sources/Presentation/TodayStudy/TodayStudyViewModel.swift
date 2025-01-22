@@ -107,6 +107,10 @@ final class TodayStudyViewModel: ObservableObject {
             badges.append(contentsOf: complteResult)
             todayCount -= 1
             completeCount += 1
+            toast = Toast(
+                "공부 완료! 오늘의 빵 굽기 성공!",
+                startFrom: 76
+            )
         } catch {
             dump(error)
             print(error)

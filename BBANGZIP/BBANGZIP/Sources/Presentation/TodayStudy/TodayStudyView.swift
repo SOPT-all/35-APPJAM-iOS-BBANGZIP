@@ -73,6 +73,10 @@ struct TodayStudyView: View {
                         80
                     )
                 }
+                .padding(
+                    .bottom,
+                    80
+                )
                 .ignoresSafeArea(edges: .top)
                 
                 if viewModel.isDeleteMode && viewModel.isDeleteButtonEnable {
@@ -349,6 +353,10 @@ struct TodayStudyView: View {
                         await viewModel.revertCompleteStudy()
                     }
                     viewModel.isRevertBottomSheetPresent = false
+                    viewModel.toast = Toast(
+                        "미완료 상태로 되돌렸어요!",
+                        startFrom: 76
+                    )
                 } label: {
                     CustomText(
                         "되돌리기",
@@ -398,6 +406,10 @@ struct TodayStudyView: View {
                             Task {
                                 await viewModel.fetchData()
                             }
+                            viewModel.toast = Toast(
+                                "\(filter.buttonTitle)으로 정렬했어요",
+                                startFrom: 76
+                            )
                         } label: {
                             HStack {
                                 Spacer()
