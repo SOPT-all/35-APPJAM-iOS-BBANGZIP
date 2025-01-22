@@ -12,14 +12,25 @@ struct DivideRangeView: View {
     @StateObject var viewModel: DivideRangeViewModel
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
+    let pieceCount: Int
     
     init(
         viewModel: DivideRangeViewModel = DivideRangeViewModel()
+        pieceCount: Int
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.pieceCount = pieceCount
     }
     
     var body: some View {
+        CustomNavigationBar(
+            showBackButton: true,
+            showMenu: false,
+            title: "학습 범위 나누기",
+            backgroundColor: Color(.clear)
+        )
+        .navigationBarHidden(true)
+        
         ScrollView {
             ZStack {
                 Color.clear
@@ -59,20 +70,20 @@ struct DivideRangeView: View {
         }
     }
     
-    private var backButton: some View {
-        HStack {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
-        }
-    }
-    
-    private var navigationTitle: some View {
-        CustomText(
-            "학습 범위 나누기",
-            fontType: .headline1Bold,
-            color: Color(.labelNeutral)
-        )
+    private func pieceView(piece: Piece) -> some View {
+        VStack(spacing: 16) {
+            HStack {
+                CustomText(
+                    "\(piece.index + 1)조각",
+                    fontType: .body1Bold,
+                    color: Color(.labelNormal)
+                )
+                
+                Spacer()
+            }
+            
+            HStack(spacing: 20) {
+                startRangeTextField(for: piece)
     }
     
     private var entireRange: some View {
@@ -122,7 +133,7 @@ struct DivideRangeView: View {
         VStack(spacing: 16) {
             HStack {
                 CustomText(
-                    "1조각",
+                    "\(pieceCount)조각",
                     fontType: .body1Bold,
                     color: Color(.labelNormal)
                 )

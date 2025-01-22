@@ -30,15 +30,25 @@ struct SetPieceBottomSheet: View {
         
         VStack {
             ForEach(pieces, id: \.self) { num in
-                CustomText(
-                    "\(num)조각",
-                    fontType: .body1Bold,
-                    color: Color(.labelNormal)
-                )
-                .padding(
-                    .vertical,
-                    8
-                )
+                NavigationLink(
+                    destination: DivideRangeView(pieceCount: num)
+                ) {
+                    HStack {
+                        Spacer()
+                        
+                        CustomText(
+                            "\(num)조각",
+                            fontType: .body1Bold,
+                            color: Color(.labelNormal)
+                        )
+                        
+                        Spacer()
+                    }
+                    .padding(.vertical, 8)
+                    
+                }
+                .padding(.horizontal, 20)
+                .buttonStyle(PressedButtonStyle())
             }
         }
         .padding(

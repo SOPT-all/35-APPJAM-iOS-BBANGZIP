@@ -22,76 +22,78 @@ struct AddStudyView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    hideKeyboard()
-                }
-            
-            VStack{
-                ZStack{
-                    subjectTitle
-                    
-                    HStack {
-                        backButton
-                            .padding(16)
-                        Spacer()
+        NavigationView {
+            ZStack {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        hideKeyboard()
                     }
-                }
-                .padding(
-                    .bottom,
-                    16
-                )
                 
-                VStack(spacing: 0) {
-                    dateTitle
-                    
-                    dateTextField
-                    
-                    studyContentTitle
-                    
-                    studyContentField
-                    
-                    studyRangeTitle
-                    
-                    HStack(spacing: 20) {
-                        startRangeTextField
+                VStack{
+                    ZStack{
+                        subjectTitle
                         
-                        endRangeTextField
+                        HStack {
+                            backButton
+                                .padding(16)
+                            Spacer()
+                        }
                     }
+                    .padding(
+                        .bottom,
+                        16
+                    )
                     
-                    divideButton
-                    
-                    tipText
-                    
-                    Spacer()
-                    
-                    registerButton
+                    VStack(spacing: 0) {
+                        dateTitle
+                        
+                        dateTextField
+                        
+                        studyContentTitle
+                        
+                        studyContentField
+                        
+                        studyRangeTitle
+                        
+                        HStack(spacing: 20) {
+                            startRangeTextField
+                            
+                            endRangeTextField
+                        }
+                        
+                        divideButton
+                        
+                        tipText
+                        
+                        Spacer()
+                        
+                        registerButton
+                    }
+                    .padding(
+                        .horizontal,
+                        20
+                    )
                 }
-                .padding(
-                    .horizontal,
-                    20
-                )
-            }
-            .ignoresSafeArea(.keyboard)
-            .bottomSheet(
-                isShowing: $viewModel.isDatePickerPresented,
-                height: 453
-            ) {
-                ExamPickerBottomSheet(
-                    isPresented: $viewModel.isDatePickerPresented,
-                    selectedYear: $viewModel.selectedYear,
-                    selectedMonth: $viewModel.selectedMonth,
-                    selectedDay: $viewModel.selectedDay,
-                    isButtonTapped: $viewModel.isButtonTapped
-                )
-            }
-            .bottomSheet(
-                isShowing: $viewModel.isDividerPresented,
-                height: 449
-            ) {
-                SetPieceBottomSheet(isPresented: $viewModel.isDividerPresented)
+                .ignoresSafeArea(.keyboard)
+                .bottomSheet(
+                    isShowing: $viewModel.isDatePickerPresented,
+                    height: 453
+                ) {
+                    ExamPickerBottomSheet(
+                        isPresented: $viewModel.isDatePickerPresented,
+                        selectedYear: $viewModel.selectedYear,
+                        selectedMonth: $viewModel.selectedMonth,
+                        selectedDay: $viewModel.selectedDay,
+                        isButtonTapped: $viewModel.isButtonTapped
+                    )
+                }
+                .bottomSheet(
+                    isShowing: $viewModel.isDividerPresented,
+                    height: 449
+                ) {
+                    SetPieceBottomSheet(isPresented: $viewModel.isDividerPresented)
+                }
             }
         }
     }
