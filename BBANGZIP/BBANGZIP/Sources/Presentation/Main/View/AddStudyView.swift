@@ -13,42 +13,12 @@ struct AddStudyView: View {
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
-    @State private var isDatePickerPresented = false
-    @State private var isDividerPresented = false
-    @State private var selectedBottomSheetType: BottomSheetType?
-    @State private var selectedYear: Int
-    @State private var selectedMonth: Int
-    @State private var selectedDay: Int
-    @State private var isButtonTapped: Bool
     
     init(viewModel: AddStudyViewModel = AddStudyViewModel(),
          isBottomSheetPresented: Bool = false,
          isButtonTapped: Bool = false
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        self.isDatePickerPresented = isBottomSheetPresented
-        self.isButtonTapped = isButtonTapped
-        
-        let calendar = Calendar.current
-        let today = Date()
-        self._selectedYear = State(
-            initialValue: calendar.component(
-                .year,
-                from: today
-            )
-        )
-        self._selectedMonth = State(
-            initialValue: calendar.component(
-                .month,
-                from: today
-            )
-        )
-        self._selectedDay = State(
-            initialValue: calendar.component(
-                .day,
-                from: today
-            )
-        )
     }
     
     var body: some View {
@@ -106,22 +76,22 @@ struct AddStudyView: View {
             }
             .ignoresSafeArea(.keyboard)
             .bottomSheet(
-                isShowing: $isDatePickerPresented,
+                isShowing: $viewModel.isDatePickerPresented,
                 height: 453
             ) {
                 ExamPickerBottomSheet(
-                    isPresented: $isDatePickerPresented,
-                    selectedYear: $selectedYear,
-                    selectedMonth: $selectedMonth,
-                    selectedDay: $selectedDay,
-                    isButtonTapped: $isButtonTapped
+                    isPresented: $viewModel.isDatePickerPresented,
+                    selectedYear: $viewModel.selectedYear,
+                    selectedMonth: $viewModel.selectedMonth,
+                    selectedDay: $viewModel.selectedDay,
+                    isButtonTapped: $viewModel.isButtonTapped
                 )
             }
             .bottomSheet(
-                isShowing: $isDividerPresented,
+                isShowing: $viewModel.isDividerPresented,
                 height: 449
             ) {
-                DivideStudyBottomSheet(isPresented: $isDividerPresented)
+                DivideStudyBottomSheet(isPresented: $viewModel.isDividerPresented)
             }
         }
     }
@@ -174,21 +144,21 @@ struct AddStudyView: View {
         .disabled(true)
         .onTapGesture {
             hideKeyboard()
-            selectedBottomSheetType = .examDate
-            isDatePickerPresented = true
+            viewModel.selectedBottomSheetType = .examDate
+            viewModel.isDatePickerPresented = true
         }
         .padding(
             .bottom,
             50
         )
-        .onChange(of: isButtonTapped) { isTapped in
+        .onChange(of: viewModel.isButtonTapped) { isTapped in
             if isTapped {
                 updateDateTextField()
             }
         }
-        .onChange(of: isDatePickerPresented) { isPresented in
+        .onChange(of: viewModel.isDatePickerPresented) { isPresented in
             if isPresented {
-                isButtonTapped = false
+                viewModel.isButtonTapped = false
             }
         }
     }
@@ -338,7 +308,7 @@ struct AddStudyView: View {
     
     private var divideButton: some View {
         Button("쪼개서 공부하기") {
-            isDividerPresented = true
+            viewModel.isDividerPresented = true
         }
         .buttonStyle(
             OutlinedMediumButton(
@@ -385,9 +355,9 @@ struct AddStudyView: View {
         let calendar = Calendar.current
         viewModel.date = calendar.date(
             from: DateComponents(
-                year: selectedYear,
-                month: selectedMonth,
-                day: selectedDay
+                year: viewModel.selectedYear,
+                month: viewModel.selectedMonth,
+                day: viewModel.selectedDay
             )
         )
     }

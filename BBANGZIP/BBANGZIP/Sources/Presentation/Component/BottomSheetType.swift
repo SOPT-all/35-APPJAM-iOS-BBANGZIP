@@ -23,42 +23,26 @@ enum BottomSheetType: Int {
     @MainActor @ViewBuilder
     func contentView(
         isPresented: Binding<Bool>,
-        // TODO: View에서 날짜 관리하려면 Binding 필요
-        selectedYear: Binding<Int>,
-        selectedMonth: Binding<Int>,
-        selectedDay: Binding<Int>,
-        isButtonTapped: Binding<Bool>
+        selectedYear: Binding<Int>? = .constant(2025),
+        selectedMonth: Binding<Int>? = .constant(1),
+        selectedDay: Binding<Int>? = .constant(1),
+        isButtonTapped: Binding<Bool> = .constant(false)
     ) -> some View {
-        // TODO: current가 왜 필요하지?
-        let currentDate = Date()
-        let currentYear = Calendar.current.component(
-            .year,
-            from: currentDate
-        )
-        let currentMonth = Calendar.current.component(
-            .month,
-            from: currentDate
-        )
-        let currentDay = Calendar.current.component(
-            .day,
-            from: currentDate
-        )
-        
         switch self {
         case .examDate:
             ExamPickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: selectedYear,
-                selectedMonth: selectedMonth,
-                selectedDay: selectedDay,
+                selectedYear: selectedYear ?? .constant(2025),
+                selectedMonth: selectedMonth ?? .constant(1),
+                selectedDay: selectedDay ?? .constant(1),
                 isButtonTapped: isButtonTapped
             )
         case .studyFinishDate:
             StudyDeadlinePickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: selectedYear,
-                selectedMonth: selectedMonth,
-                selectedDay: selectedDay
+                selectedYear: selectedYear ?? .constant(2025),
+                selectedMonth: selectedMonth ?? .constant(1),
+                selectedDay: selectedDay ?? .constant(1)
             )
         case .changeSemester:
             SemesterPickerBottomSheet(
@@ -79,3 +63,4 @@ enum BottomSheetType: Int {
         }
     }
 }
+

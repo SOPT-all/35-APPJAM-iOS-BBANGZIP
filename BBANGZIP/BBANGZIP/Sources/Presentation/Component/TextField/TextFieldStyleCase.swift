@@ -61,7 +61,7 @@ enum TextFieldStyleCase {
         switch self {
         case .date, .studyRange:
             false
-        case .nickname, .studyContent, .subject:
+        case .nickname, .studyContent, .subject, .message:
             true
         }
     }

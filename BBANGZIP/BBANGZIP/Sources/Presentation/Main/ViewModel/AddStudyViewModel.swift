@@ -27,6 +27,14 @@ final class AddStudyViewModel: ObservableObject {
     @Published var isStartRangeValid: Bool = false
     @Published var isEndRangeValid: Bool = false
     
+    @Published var isDatePickerPresented = false
+    @Published var isDividerPresented = false
+    @Published var selectedBottomSheetType: BottomSheetType?
+    @Published var selectedYear: Int
+    @Published var selectedMonth: Int
+    @Published var selectedDay: Int
+    @Published var isButtonTapped: Bool
+    
     var formattedDate: String {
         guard let date = date else { return "" }
         let formatter = DateFormatter()
@@ -46,7 +54,11 @@ final class AddStudyViewModel: ObservableObject {
         startRangeState: TextFieldState = .defaultState,
         startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert,
+        selectedYear: Int = 2025,
+        selectedMonth: Int = 1,
+        selectedDay: Int = 1,
+        isButtonTapped: Bool = false
     ) {
         self.date = date
         self.studyContent = studyContent
@@ -61,6 +73,10 @@ final class AddStudyViewModel: ObservableObject {
         self.startRangeAnnounceState = startRangeAnnounceState
         self.endRangeState = endRangeState
         self.endRangeAnnounceState = endRangeAnnounceState
+        self.selectedYear = selectedYear
+        self.selectedMonth = selectedMonth
+        self.selectedDay = selectedDay
+        self.isButtonTapped = isButtonTapped
     }
     
     func verifyStudyContent(
