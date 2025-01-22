@@ -9,18 +9,15 @@
 import SwiftUI
 
 enum StudyContentTextFieldAlertCase: TextFieldAlertable {
-    case defaultCorrect
-    case completeCorrect
-    case maxLengthWrong
+    case alert
+    case enable
     
     var alertText: String {
         switch self {
-        case .defaultCorrect:
-            "한글/영문/숫자/특수문자 조합으로 최대 20자까지 입력 가능해요"
-        case .completeCorrect:
+        case .alert:
+            "한글/영문/숫자/기호 조합으로 최대 20자까지 입력 가능해요"
+        case .enable:
             "사용 가능한 교재/PPT 이름이에요"
-        case .maxLengthWrong:
-            "교재 이름은 20글자 이내로 입력해 주세요"
         }
     }
 }

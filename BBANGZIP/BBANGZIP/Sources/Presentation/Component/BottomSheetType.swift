@@ -21,35 +21,28 @@ enum BottomSheetType: Int {
     case completeCheck
     
     @MainActor @ViewBuilder
-    func contentView(isPresented: Binding<Bool>) -> some View {
-        let currentDate = Date()
-        let currentYear = Calendar.current.component(
-            .year,
-            from: currentDate
-        )
-        let currentMonth = Calendar.current.component(
-            .month,
-            from: currentDate
-        )
-        let currentDay = Calendar.current.component(
-            .day,
-            from: currentDate
-        )
-        
+    func contentView(
+        isPresented: Binding<Bool>,
+        selectedYear: Binding<Int>? = .constant(2025),
+        selectedMonth: Binding<Int>? = .constant(1),
+        selectedDay: Binding<Int>? = .constant(1),
+        isButtonTapped: Binding<Bool> = .constant(false)
+    ) -> some View {
         switch self {
         case .examDate:
             ExamPickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: currentYear,
-                selectedMonth: currentMonth,
-                selectedDay: currentDay
+                selectedYear: selectedYear ?? .constant(2025),
+                selectedMonth: selectedMonth ?? .constant(1),
+                selectedDay: selectedDay ?? .constant(1),
+                isButtonTapped: isButtonTapped
             )
         case .studyFinishDate:
             StudyDeadlinePickerBottomSheet(
                 isPresented: isPresented,
-                selectedYear: currentYear,
-                selectedMonth: currentMonth,
-                selectedDay: currentDay
+                selectedYear: selectedYear ?? .constant(2025),
+                selectedMonth: selectedMonth ?? .constant(1),
+                selectedDay: selectedDay ?? .constant(1)
             )
         case .changeSemester:
             SemesterPickerBottomSheet(
@@ -70,3 +63,4 @@ enum BottomSheetType: Int {
         }
     }
 }
+

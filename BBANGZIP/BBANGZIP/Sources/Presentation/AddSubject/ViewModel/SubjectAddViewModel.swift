@@ -61,9 +61,6 @@ class AddSubjectViewModel: ObservableObject {
 //                        if newText.isEmpty {
 //                            state = .placeholder
 //                            alertCase = .defaultCorrect
-//                        } else {
-//                            //                            state = .complete
-//                            alertCase = .completeCorrect
 //                        }
 //                    }
 //                }

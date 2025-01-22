@@ -10,60 +10,89 @@ import SwiftUI
 
 struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
-    @State private var isDatePickerPresented = false
+    @FocusState private var isStudyContentFocused: Bool
+    @FocusState private var isStartRangeFocused: Bool
+    @FocusState private var isEndRangeFocused: Bool
     
     init(viewModel: AddStudyViewModel = AddStudyViewModel(),
-         isDatePickerPresented: Bool = false
+         isBottomSheetPresented: Bool = false,
+         isButtonTapped: Bool = false
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        self.isDatePickerPresented = isDatePickerPresented
     }
     
     var body: some View {
-        VStack{
-            ZStack{
-                subjectTitle
-                
-                HStack {
-                    backButton
-                        .padding(16)
-                    Spacer()
+        ZStack {
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hideKeyboard()
                 }
-            }
-            .padding(
-                .bottom,
-                16
-            )
             
-            VStack(spacing: 0) {
-                dateTitle
-                
-                dateTextField
-                
-                studyContentTitle
-                
-                studyContentField
-                
-                studyRangeTitle
-                
-                HStack(spacing: 20) {
-                    startRangeTextField
+            VStack{
+                ZStack{
+                    subjectTitle
                     
-                    endRangeTextField
+                    HStack {
+                        backButton
+                            .padding(16)
+                        Spacer()
+                    }
                 }
+                .padding(
+                    .bottom,
+                    16
+                )
                 
-                divideButton
-                
-                tipText
-                
-                Spacer()
-                
-                registerButton
+                VStack(spacing: 0) {
+                    dateTitle
+                    
+                    dateTextField
+                    
+                    studyContentTitle
+                    
+                    studyContentField
+                    
+                    studyRangeTitle
+                    
+                    HStack(spacing: 20) {
+                        startRangeTextField
+                        
+                        endRangeTextField
+                    }
+                    
+                    divideButton
+                    
+                    tipText
+                    
+                    Spacer()
+                    
+                    registerButton
+                }
+                .padding(
+                    .horizontal,
+                    20
+                )
             }
-            .padding(
-                .horizontal,
-                20
-            )
+            .ignoresSafeArea(.keyboard)
+            .bottomSheet(
+                isShowing: $viewModel.isDatePickerPresented,
+                height: 453
+            ) {
+                ExamPickerBottomSheet(
+                    isPresented: $viewModel.isDatePickerPresented,
+                    selectedYear: $viewModel.selectedYear,
+                    selectedMonth: $viewModel.selectedMonth,
+                    selectedDay: $viewModel.selectedDay,
+                    isButtonTapped: $viewModel.isButtonTapped
+                )
+            }
+            .bottomSheet(
+                isShowing: $viewModel.isDividerPresented,
+                height: 449
+            ) {
+                DivideStudyBottomSheet(isPresented: $viewModel.isDividerPresented)
+            }
         }
     }
     
@@ -114,13 +143,24 @@ struct AddStudyView: View {
         )
         .disabled(true)
         .onTapGesture {
-            // TODO: 바텀시트 연결
-            isDatePickerPresented = true
+            hideKeyboard()
+            viewModel.selectedBottomSheetType = .examDate
+            viewModel.isDatePickerPresented = true
         }
         .padding(
             .bottom,
             50
         )
+        .onChange(of: viewModel.isButtonTapped) { isTapped in
+            if isTapped {
+                updateDateTextField()
+            }
+        }
+        .onChange(of: viewModel.isDatePickerPresented) { isPresented in
+            if isPresented {
+                viewModel.isButtonTapped = false
+            }
+        }
     }
     
     private var studyContentTitle: some View {
@@ -144,6 +184,7 @@ struct AddStudyView: View {
             "예) 교재 이름, PPT 1과",
             text: $viewModel.studyContent
         )
+        .focused($isStudyContentFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.studyContent,
@@ -152,6 +193,22 @@ struct AddStudyView: View {
                 alertText: viewModel.contentAnnounceState
             )
         )
+        .onChange(of: viewModel.studyContent) { newContent in
+            if newContent.count > 20 {
+                viewModel.studyContent = String(newContent.prefix(20))
+            }
+            
+            viewModel.verifyStudyContent(
+                newText: newContent,
+                isStudyContentFocused: isStudyContentFocused
+            )
+        }
+        .onChange(of: isStudyContentFocused) { isStudyContentFocused in
+            viewModel.handleStudyContentFocusChange(
+                newText: viewModel.studyContent,
+                isStudyContentFocused: isStudyContentFocused
+            )
+        }
         .padding(
             .bottom,
             32
@@ -174,12 +231,12 @@ struct AddStudyView: View {
         )
     }
     
-    // TODO: 기본 키패드 아닌 숫자 키패드 뜨도록 종류 지정 필요
     private var startRangeTextField: some View {
         TextField(
             "시작 페이지",
             text: $viewModel.startRangeString
         )
+        .focused($isStartRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.startRangeString,
@@ -192,6 +249,24 @@ struct AddStudyView: View {
             .bottom,
             16
         )
+        .keyboardType(.decimalPad)
+        .onChange(of: viewModel.startRangeString) { newRange in
+            if newRange.count > 4 && !newRange.hasSuffix("p") {
+                viewModel.startRangeString = String(newRange.prefix(4))
+            }
+            
+            viewModel.verifyStartRange(
+                newText: newRange,
+                isStartRangeFocused: isStartRangeFocused
+            )
+        }
+        .onChange(of: isStartRangeFocused) { isStartRangeFocused in
+            viewModel.handleStartRangeFocusChange(
+                newText: viewModel.startRangeString,
+                isStartRangeFocused: isStartRangeFocused
+            )
+        }
+        
     }
     
     private var endRangeTextField: some View {
@@ -199,6 +274,7 @@ struct AddStudyView: View {
             "종료 페이지",
             text: $viewModel.endRangeString
         )
+        .focused($isEndRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.endRangeString,
@@ -211,18 +287,40 @@ struct AddStudyView: View {
             .bottom,
             16
         )
+        .keyboardType(.decimalPad)
+        .onChange(of: viewModel.endRangeString) { newRange in
+            if newRange.count > 4 && !newRange.hasSuffix("p") {
+                viewModel.endRangeString = String(newRange.prefix(4))
+            }
+            
+            viewModel.verifyEndRange(
+                newText: newRange,
+                isEndRangeFocused: isEndRangeFocused
+            )
+        }
+        .onChange(of: isEndRangeFocused) { isEndRangeFocused in
+            viewModel.handleEndRangeFocusChange(
+                newText: viewModel.endRangeString,
+                isEndRangeFocused: isEndRangeFocused
+            )
+        }
     }
     
     private var divideButton: some View {
         Button("쪼개서 공부하기") {
-            // TODO: 나누어 공부하기 뷰로 화면 전환
+            viewModel.isDividerPresented = true
         }
         .buttonStyle(
-            OutlinedMediumButton()
+            OutlinedMediumButton(
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+            )
         )
         .padding(
             .bottom,
             8
+        )
+        .disabled(
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
         )
     }
     
@@ -244,7 +342,22 @@ struct AddStudyView: View {
         }
         .buttonStyle(
             SolidIconButton(
-                buttonImage: Image(.plus)
+                buttonImage: Image(.plus),
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+            )
+        )
+        .disabled(
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+        )
+    }
+    
+    private func updateDateTextField() {
+        let calendar = Calendar.current
+        viewModel.date = calendar.date(
+            from: DateComponents(
+                year: viewModel.selectedYear,
+                month: viewModel.selectedMonth,
+                day: viewModel.selectedDay
             )
         )
     }

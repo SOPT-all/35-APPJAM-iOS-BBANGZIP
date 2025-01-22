@@ -11,7 +11,7 @@ import SwiftUI
 struct TextFieldTestView: View {
     @State private var endRange = ""
     @State private var endRangeState: TextFieldState = .defaultState
-    @State private var endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endDefaultCorrect
+    @State private var endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
 
     var body: some View {
         TextField(

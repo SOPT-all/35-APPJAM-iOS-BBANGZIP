@@ -10,13 +10,13 @@ import SwiftUI
 
 struct ExamPickerBottomSheet: View {
     @Binding private var isPresented: Bool
-    @State private var selectedYear: Int
-    @State private var selectedMonth: Int
-    @State private var selectedDay: Int
+    @Binding private var selectedYear: Int
+    @Binding private var selectedMonth: Int
+    @Binding private var selectedDay: Int
+    @Binding private var isButtonTapped: Bool
     
     private let years = Array(2021...2028)
     private let months = Array(1...12)
-    
     private let today: Date = Date()
     private let currentYear: Int
     private let currentMonth: Int
@@ -24,35 +24,35 @@ struct ExamPickerBottomSheet: View {
     
     init(
         isPresented: Binding<Bool>,
-        selectedYear: Int,
-        selectedMonth: Int,
-        selectedDay: Int
+        selectedYear: Binding<Int>,
+        selectedMonth: Binding<Int>,
+        selectedDay: Binding<Int>,
+        isButtonTapped: Binding<Bool>
     ) {
         self._isPresented = isPresented
-        self._selectedYear = State(initialValue: selectedYear)
-        self._selectedMonth = State(initialValue: selectedMonth)
-        self._selectedDay = State(initialValue: selectedDay)
+        self._selectedYear = selectedYear
+        self._selectedMonth = selectedMonth
+        self._selectedDay = selectedDay
+        self._isButtonTapped = isButtonTapped
+        
         let calendar = Calendar.current
         let components = calendar.dateComponents(
-            [
-                .year,
-                .month,
-                .day
-            ],
+            [.year, .month, .day],
             from: today
         )
-        self.currentYear = components.year ?? selectedYear
-        self.currentMonth = components.month ?? selectedMonth
-        self.currentDay = components.day ?? selectedDay
+        self.currentYear = components.year ?? selectedYear.wrappedValue
+        self.currentMonth = components.month ?? selectedMonth.wrappedValue
+        self.currentDay = components.day ?? selectedDay.wrappedValue
     }
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             headerView
             pickersView
+            Spacer()
             actionButton
         }
-        .padding()
+        .padding(.top, 30)
     }
     
     private var headerView: some View {
@@ -61,6 +61,7 @@ struct ExamPickerBottomSheet: View {
             fontType: .headline1Medium,
             color: Color(.labelNeutral)
         )
+        .padding(.top, 0)
     }
     
     private var pickersView: some View {
@@ -167,12 +168,14 @@ struct ExamPickerBottomSheet: View {
         Button(action: {
             withAnimation {
                 isPresented = false
+                isButtonTapped = true
             }
         }) {
             Text("시험 일자 입력하기")
         }
         .buttonStyle(SolidButton())
-        .padding(.horizontal)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 44)
     }
     
     private var validMonths: [Int] {
