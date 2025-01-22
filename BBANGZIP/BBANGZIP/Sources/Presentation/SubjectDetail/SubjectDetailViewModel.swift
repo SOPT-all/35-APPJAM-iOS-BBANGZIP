@@ -18,7 +18,7 @@ final class SubjectDetailViewModel: ObservableObject {
         self.modelList = modelList
     }
     
-    func deleteStudyPiece() {
+    func makeStudyPieceSelectable() {
         isDeleteMode.toggle()
         modelList = modelList.map(
             {
@@ -34,6 +34,10 @@ final class SubjectDetailViewModel: ObservableObject {
                 )
             }
         )
+    }
+    
+    func deleteStudyPiece() {
+        // TODO: 공부 삭제 API 연동
     }
     
     func validateDeleteButton() {
