@@ -12,6 +12,7 @@ struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
     @State private var isBottomSheetShowing: Bool
     @State private var isTodayStudyViewBottomSheetShowing: Bool
+    @State private var isCustomTabBarHidden = false
     
     init(
         isBottomSheetShowing: Bool = false,
@@ -19,13 +20,14 @@ struct CustomTabView: View {
     ) {
         self.isBottomSheetShowing = isBottomSheetShowing
         self.isTodayStudyViewBottomSheetShowing = isTodayStudyViewBottomSheetShowing
+        UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
         ZStack {
-            TabView(selection: $selected) {
-                Group {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing)
+            NavigationStack {
+                TabView(selection: $selected) {
+                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
                         .tag(Tab.subjectManage)
                     
                     TodayStudyView(
@@ -46,22 +48,32 @@ struct CustomTabView: View {
                     )
                     .tag(Tab.todo)
                     
+                    Text("오늘 할 일")
+                        .tag(Tab.todo)
+                
                     Text("이웃 목록")
                         .tag(Tab.networking)
-                    
-                    Text("마이페이지")
-                        .tag(Tab.mypage)
+                
+                    MyPageMainView(
+                        viewModel: MyPageMainViewModel(
+                            level: 2,
+                            currentScore: 40,
+                            badgeCount: 8,
+                            maxScore: 200,
+                            title: "가판대",
+                            badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
+                        )
+                    )
+                    .tag(Tab.mypage)
                 }
-                .toolbar(
-                    .hidden,
-                    for: .tabBar
-                )
             }
             
             VStack {
                 Spacer()
                 
-                if !isBottomSheetShowing && !isTodayStudyViewBottomSheetShowing {
+                if !isBottomSheetShowing &&
+                    !isTodayStudyViewBottomSheetShowing &&
+                    !isCustomTabBarHidden {
                     CustomTabBar(selected: $selected)
                 }
             }

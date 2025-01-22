@@ -57,7 +57,7 @@ struct CustomProgressBar: ProgressViewStyle {
         GeometryReader { geometry in
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(.staticWhite))
+                    .fill(Color(.fillStrong))
                     .frame(height: 8)
                 
                 if let fractionCompleted = configuration.fractionCompleted {

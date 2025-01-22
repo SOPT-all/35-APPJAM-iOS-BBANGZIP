@@ -47,7 +47,7 @@ struct StudyCard: View {
                         model.state.borderColor,
                         lineWidth: model.state.borderWidth
                   )
-                )
+            )
     }
     
     var StudyDataArea: some View {

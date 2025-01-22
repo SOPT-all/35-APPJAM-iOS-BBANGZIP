@@ -77,6 +77,9 @@ struct Balloon: View {
                         y: 4
                     )
             )
+            .padding(
+                .horizontal
+            )
             
             if balloonMode == .bottom {
                 bottomBalloonTip
@@ -116,14 +119,4 @@ struct Balloon: View {
         )
     }
 
-}
-
-#Preview {
-    Balloon(
-        text: "사장님의 과제 빵점 탈출을 응원해요!",
-        leftIcon: Image(.bubble),
-        rightIcon: Image(.bubble),
-        balloonMode: .bottom
-    )
-    .padding(.horizontal, 20)
 }

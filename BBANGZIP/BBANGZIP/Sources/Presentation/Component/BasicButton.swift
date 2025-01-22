@@ -7,12 +7,18 @@
 //
 
 import SwiftUI
-
+// TODO: 버튼 disable값 반대로 수정 필요 
 struct OutlinedMediumButton: ButtonStyle {
+    private let isEnabled: Bool
+    
+    init(_ isEnabled: Bool = true) {
+        self.isEnabled = isEnabled
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body2Bold)
-            .foregroundStyle(Color(.primaryNormal))
+            .foregroundStyle(Color(isEnabled ? .primaryNormal : .labelDisable))
             .padding(
                 .vertical,
                 9
@@ -22,7 +28,7 @@ struct OutlinedMediumButton: ButtonStyle {
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(
-                        Color(.lineStrong),
+                        Color(isEnabled ? .lineStrong : .lineAlternative),
                         lineWidth: 1
                     )
             )
@@ -30,6 +36,12 @@ struct OutlinedMediumButton: ButtonStyle {
 }
 
 struct OutlinedLargeButton: ButtonStyle {
+    private let isEnabled: Bool
+    
+    init(_ isEnabled: Bool = true) {
+        self.isEnabled = isEnabled
+    }
+    
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .applyFont(font: .body1Bold)

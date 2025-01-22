@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomTextFieldStyle: TextFieldStyle {
-    private let state: TextFieldState
+    private var state: TextFieldState
     private let style: TextFieldStyleCase
     private let alertCase: TextFieldAlertable?
     @Binding private var text: String
@@ -47,7 +47,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                     
                     configuration
                         .applyFont(font: .label1Medium)
-                        .foregroundStyle(Color(.labelAlternative))
+                        .foregroundStyle(Color(.labelNormal))
                         .padding(
                             .leading,
                             6
@@ -86,12 +86,14 @@ struct CustomTextFieldStyle: TextFieldStyle {
     
     private var rightAccessoryView: some View {
         HStack(spacing: 8) {
-            if let maxLength = style.maxLength {
-                CustomText(
-                    "\(text.count)/\(maxLength)",
-                    fontType: .caption1Medium,
-                    color: Color(.labelAlternative)
-                )
+            if style.countable {
+                if let maxLength = style.maxLength {
+                    CustomText(
+                        "\(text.count)/\(maxLength)",
+                        fontType: .caption1Medium,
+                        color: Color(.labelAlternative)
+                    )
+                }
             }
             
             if style.clearable, state.showCancelButton {

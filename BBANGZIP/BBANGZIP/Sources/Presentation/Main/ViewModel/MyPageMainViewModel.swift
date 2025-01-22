@@ -14,19 +14,26 @@ final class MyPageMainViewModel: ObservableObject {
     @Published var badgeCount: Int
     @Published var maxScore: Int
     @Published var title: String
+    @Published var badgeStatement: String
+    var levelStateCount: Int
+    //TODO: 서버와의 논의 후 image string 여부 결정 예정
     
     init(
         level: Int,
         currentScore: Int,
         badgeCount: Int,
-        maxScore: Int = 200,
-        title: String = "가판대"
+        maxScore: Int,
+        title: String,
+        badgeStatement: String,
+        levelStateCount: Int = 3
     ) {
         self.level = level
         self.currentScore = currentScore
         self.badgeCount = badgeCount
         self.maxScore = maxScore
         self.title = title
+        self.badgeStatement = badgeStatement
+        self.levelStateCount = levelStateCount
     }
     
     var progress: Double {

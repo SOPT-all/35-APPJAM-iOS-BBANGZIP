@@ -9,17 +9,20 @@ let packageSettings = PackageSettings(
     productTypes: [
         "Alamofire": .framework,
         "KakaoOpenSDK": .framework,
+        "Kingfisher": .framework
     ]
 )
 #endif
 
 let kakaoVersion = "2.23.0"
 let alamofireVersion = "5.10.2"
+let kingfisherVersion = "8.1.3"
 
 let package = Package(
     name: "BBANGZIP",
     dependencies: [
         .package(url: "https://github.com/kakao/kakao-ios-sdk", .upToNextMajor(from: Version(kakaoVersion)!)),
         .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: Version(alamofireVersion)!)),
+        .package(url: "https://github.com/onevcat/Kingfisher", .upToNextMajor(from: Version(kingfisherVersion)!))
     ]
 )

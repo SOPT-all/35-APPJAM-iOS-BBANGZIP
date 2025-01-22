@@ -61,6 +61,7 @@ let project = Project.makeModule(
         .external(name: "KakaoSDKAuth", condition: .none),
         .external(name: "KakaoSDKCommon", condition: .none),
         .external(name: "KakaoSDKUser", condition: .none),
+        .external(name: "Kingfisher", condition: .none)
     ],
     settings: settings
 )

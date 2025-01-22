@@ -40,7 +40,8 @@ enum BbangDefaultRouter {
     case revertCompleteStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
     case removeTodayStudy(dto: RemoveTodayStudyDTO)
     
-    
+    //여경
+    case fetchBadgeDetail(badgeName: String)
 }
 
 extension BbangDefaultRouter: Router {
@@ -102,6 +103,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces/\(pieceID)/mark-undone"
         case .removeTodayStudy:
             return "/api/v1/pieces/hide"
+        case .fetchBadgeDetail(let badgeName):
+            return "/api/v1/mypage/badges/\(badgeName)"
         }
     }
     
@@ -129,7 +132,8 @@ extension BbangDefaultRouter: Router {
                 .sortedDelayedTodoList,
                 .myPageStatus,
                 .aquireBadge,
-                .badgeDetail:
+                .badgeDetail,
+                .fetchBadgeDetail:
             return .get
             
         case
@@ -149,18 +153,13 @@ extension BbangDefaultRouter: Router {
     var headers: [String : String]? {
         switch self {
         case .signup(let signInRequest):
-            [
+            return [
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(signInRequest.authorization)"
             ]
-        case .fetchSortedTodoList, .completeStudy, .revertCompleteStudy, .removeTodayStudy: // TODO: 추후 삭제 (임시)
-            [
-                "Conttent-Type": "application/json",
-                "Authorization": "Bearer "
-            ]
         default:
-            [
-                "Conttent-Type": "application/json"
+            return [
+                "Content-Type": "application/json"
             ]
         }
     }
@@ -191,6 +190,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .removeTodayStudy(let dto):
             return dto.asDictionary()
+        case .fetchBadgeDetail:
+            return [:]
         default:
             return nil
         }
@@ -200,6 +201,8 @@ extension BbangDefaultRouter: Router {
         switch self {
         case .signup, .fetchSortedTodoList:
             return URLEncoding.default
+        case .fetchBadgeDetail:
+            return nil
         default:
             return JSONEncoding.default
         }

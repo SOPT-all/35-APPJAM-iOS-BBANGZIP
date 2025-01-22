@@ -1,5 +1,4 @@
-//
-//  MyPageMainView.swift
+// MyPageMainView.swift
 //  BBANGZIP
 //
 //  Created by 송여경 on 1/20/25.
@@ -10,14 +9,28 @@ import SwiftUI
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
+    @StateObject private var badgeCategoryViewModel: BadgeCategoryViewModel
+    @State private var showLevelUpView = false
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _badgeCategoryViewModel = StateObject(
+            wrappedValue: BadgeCategoryViewModel(
+                badges: mockBadges,
+                userID: "유나짱"
+            )
+        )
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            HeaderView(viewModel: viewModel)
+        NavigationStack {
+            VStack(spacing: 0) {
+                HeaderView(
+                    viewModel: viewModel,
+                    badgeCategoryViewModel: badgeCategoryViewModel
+                )
+            }
+            
             Spacer()
         }
     }
@@ -25,6 +38,7 @@ struct MyPageMainView: View {
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
+    @ObservedObject var badgeCategoryViewModel: BadgeCategoryViewModel
     
     var body: some View {
         ZStack {
@@ -33,6 +47,7 @@ struct HeaderView: View {
                 
                 Spacer()
             }
+            
             VStack {
                 VStack(spacing: 22) {
                     experienceView
@@ -45,15 +60,11 @@ struct HeaderView: View {
                         },
                         onBadgeCollectionTap: {
                             print("뱃지 도감 클릭")
-                            //TODO: 화면 전환 필요
-                        }
+                        },
+                        badgeCategoryViewModel: badgeCategoryViewModel
                     )
                 }
-                .padding(
-                    .top,
-                    330
-                )
-                
+                .padding(.top, 330)
                 Spacer()
             }
         }
@@ -61,20 +72,21 @@ struct HeaderView: View {
     }
     
     var backgroundView: some View {
-        Color(.backgroundAccent)
-            .cornerRadius(
-                32,
-                corners: [
-                    .bottomLeft,
-                    .bottomRight
-                ]
-            )
-            .frame(height: 416)
-            .onTapGesture {
-                print("레벨업 상태 화면으로 change 예정")
-                //TODO: 추후 화면 전환 예정
-            }
+        NavigationLink {
+            LevelUpView(viewModel: viewModel)
+        } label: {
+            Color(.backgroundAccent)
+                .cornerRadius(
+                    32,
+                    corners: [
+                        .bottomLeft,
+                        .bottomRight
+                    ]
+                )
+                .frame(height: 416)
+        }
     }
+    
     
     var experienceView: some View {
         VStack(
@@ -110,10 +122,7 @@ struct HeaderView: View {
             
             ProgressBar(type: .basic(progress: viewModel.progress))
         }
-        .padding(
-            .horizontal,
-            40
-        )
+        .padding(.horizontal, 40)
     }
 }
 
@@ -121,15 +130,18 @@ struct BadgeSection: View {
     private let badgeCount: Int
     private let onBadgeSettingTap: () -> Void
     private let onBadgeCollectionTap: () -> Void
+    private let badgeCategoryViewModel: BadgeCategoryViewModel
     
     init(
         badgeCount: Int,
         onBadgeSettingTap: @escaping () -> Void,
-        onBadgeCollectionTap: @escaping () -> Void
+        onBadgeCollectionTap: @escaping () -> Void,
+        badgeCategoryViewModel: BadgeCategoryViewModel
     ) {
         self.badgeCount = badgeCount
         self.onBadgeSettingTap = onBadgeSettingTap
         self.onBadgeCollectionTap = onBadgeCollectionTap
+        self.badgeCategoryViewModel = badgeCategoryViewModel
     }
     
     var body: some View {
@@ -142,10 +154,7 @@ struct BadgeSection: View {
                     Image(.badge)
                         .resizable()
                         .scaledToFit()
-                        .frame(
-                            width: 80,
-                            height: 80
-                        )
+                        .frame(width: 80, height: 80)
                 }
                 
                 CustomText(
@@ -156,7 +165,7 @@ struct BadgeSection: View {
             }
             
             VStack(spacing: 6) {
-                Button(action: onBadgeCollectionTap) {
+                NavigationLink(destination: BadgeCategoryView(viewModel: badgeCategoryViewModel)) {
                     VStack {
                         Spacer()
                         
@@ -200,10 +209,7 @@ struct BadgeSection: View {
                     y: 2
                 )
         )
-        .padding(
-            .horizontal,
-            20
-        )
+        .padding(.horizontal, 20)
     }
 }
 
@@ -211,9 +217,11 @@ struct BadgeSection: View {
     MyPageMainView(
         viewModel: MyPageMainViewModel(
             level: 1,
-            currentScore: 100,
-            badgeCount: 4,
-            maxScore: 200
+            currentScore: 40,
+            badgeCount: 8,
+            maxScore: 200,
+            title: "가판대",
+            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
         )
     )
 }
