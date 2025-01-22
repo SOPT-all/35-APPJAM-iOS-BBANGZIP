@@ -34,6 +34,8 @@ enum BbangDefaultRouter {
     case myPageStatus
     case aquireBadge
     case badgeDetail(badgeID: Float)
+    
+    case fetchBadgeDetail(badgeName: String)
 }
 
 extension BbangDefaultRouter: Router {
@@ -89,6 +91,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/mypage/badge"
         case .badgeDetail(let badgeID):
             return "/api/v1/badges/\(badgeID)"
+        case .fetchBadgeDetail(let badgeName):
+            return "/api/v1/mypage/badges/\(badgeName)"
         }
     }
     
@@ -113,7 +117,8 @@ extension BbangDefaultRouter: Router {
                 .sortedDelayedTodoList,
                 .myPageStatus,
                 .aquireBadge,
-                .badgeDetail:
+                .badgeDetail,
+                .fetchBadgeDetail:
             return .get
             
         case
@@ -137,9 +142,14 @@ extension BbangDefaultRouter: Router {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(signInRequest.authorization)"
             ]
+        case .fetchBadgeDetail:
+            return [
+                "Content-Type": "application/json",
+            "Authorization": "Bearer"
+            ]
         default:
             return [
-                "Conttent-Type": "application/json"
+                "Content-Type": "application/json",
             ]
         }
     }
@@ -162,6 +172,8 @@ extension BbangDefaultRouter: Router {
             return ["pieceID": pieceID]
         case .badgeDetail(let badgeID):
             return ["badgeID": badgeID]
+        case .fetchBadgeDetail:
+            return [:]
         default:
             return nil
         }
@@ -171,6 +183,8 @@ extension BbangDefaultRouter: Router {
         switch self {
         case .signup:
             return URLEncoding.default
+        case .fetchBadgeDetail:
+            return nil
         default:
             return JSONEncoding.default
         }

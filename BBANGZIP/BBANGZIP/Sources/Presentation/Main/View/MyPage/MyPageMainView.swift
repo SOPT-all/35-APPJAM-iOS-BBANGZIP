@@ -14,20 +14,21 @@ struct MyPageMainView: View {
     
     init(viewModel: MyPageMainViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        _badgeCategoryViewModel = StateObject(wrappedValue: BadgeCategoryViewModel(badges: mockBadges, userID: "유나짱"))
+        _badgeCategoryViewModel = StateObject(
+            wrappedValue: BadgeCategoryViewModel(
+                badges: mockBadges,
+                userID: "유나짱"
+            )
+        )
     }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                NavigationLink {
-                    LevelUpView(viewModel: viewModel)
-                } label: {
-                    HeaderView(
-                        viewModel: viewModel,
-                        badgeCategoryViewModel: badgeCategoryViewModel
-                    )
-                }
+                HeaderView(
+                    viewModel: viewModel,
+                    badgeCategoryViewModel: badgeCategoryViewModel
+                )
             }
             
             Spacer()
@@ -71,16 +72,21 @@ struct HeaderView: View {
     }
     
     var backgroundView: some View {
-        Color(.backgroundAccent)
-            .cornerRadius(
-                32,
-                corners: [
-                    .bottomLeft,
-                    .bottomRight
-                ]
-            )
-            .frame(height: 416)
+        NavigationLink {
+            LevelUpView(viewModel: viewModel)
+        } label: {
+            Color(.backgroundAccent)
+                .cornerRadius(
+                    32,
+                    corners: [
+                        .bottomLeft,
+                        .bottomRight
+                    ]
+                )
+                .frame(height: 416)
+        }
     }
+    
     
     var experienceView: some View {
         VStack(

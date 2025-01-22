@@ -1,14 +1,14 @@
 //
-//  Balloon.swift
+//  BalloonWithout.swift
 //  BBANGZIP
 //
-//  Created by 김송희 on 1/15/25.
+//  Created by 송여경 on 1/22/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
 //
 
 import SwiftUI
 
-struct Balloon: View {
+struct BalloonWithout: View {
     
     private let text: String
     private let leftIcon: String?
@@ -35,7 +35,6 @@ struct Balloon: View {
             }
             
             HStack(spacing: 6) {
-                Spacer()
                 
                 if let leftIcon = leftIcon {
                     Image(leftIcon)
@@ -63,12 +62,12 @@ struct Balloon: View {
                         )
                 }
                 
-                Spacer()
             }
             .padding(
                 .vertical,
                 8
             )
+            .padding(.horizontal)
 
             .background(
                 RoundedRectangle(cornerRadius: 20)
@@ -122,10 +121,11 @@ struct Balloon: View {
 
 #Preview {
     Balloon(
-        text: "사출을 응원해요!",
+        text: "사장님의 출을 응원해요!",
         leftIcon: "bubble",
         rightIcon: "bubble",
         balloonMode: .top
     )
     .padding(.horizontal, 20)
 }
+
