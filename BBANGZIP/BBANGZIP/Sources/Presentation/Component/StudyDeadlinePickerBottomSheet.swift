@@ -10,9 +10,9 @@ import SwiftUI
 
 struct StudyDeadlinePickerBottomSheet: View {
     @Binding private var isPresented: Bool
-    @State private var selectedYear: Int
-    @State private var selectedMonth: Int
-    @State private var selectedDay: Int
+    @Binding private var selectedYear: Int
+    @Binding private var selectedMonth: Int
+    @Binding private var selectedDay: Int
     
     private let years = Array(2021...2028)
     private let months = Array(1...12)
@@ -23,14 +23,14 @@ struct StudyDeadlinePickerBottomSheet: View {
     
     init(
         isPresented: Binding<Bool>,
-        selectedYear: Int,
-        selectedMonth: Int,
-        selectedDay: Int
+        selectedYear: Binding<Int>,
+        selectedMonth: Binding<Int>,
+        selectedDay: Binding<Int>
     ) {
         self._isPresented = isPresented
-        self._selectedYear = State(initialValue: selectedYear)
-        self._selectedMonth = State(initialValue: selectedMonth)
-        self._selectedDay = State(initialValue: selectedDay)
+        self._selectedYear = selectedYear
+        self._selectedMonth = selectedMonth
+        self._selectedDay = selectedDay
         let calendar = Calendar.current
         let components = calendar.dateComponents(
             [
@@ -40,9 +40,9 @@ struct StudyDeadlinePickerBottomSheet: View {
             ],
             from: today
         )
-        self.currentYear = components.year ?? selectedYear
-        self.currentMonth = components.month ?? selectedMonth
-        self.currentDay = components.day ?? selectedDay
+        self.currentYear = components.year ?? selectedYear.wrappedValue
+        self.currentMonth = components.month ?? selectedMonth.wrappedValue
+        self.currentDay = components.day ?? selectedDay.wrappedValue
     }
     
     var body: some View {
@@ -224,25 +224,25 @@ struct StudyDeadlinePickerBottomSheet: View {
     }
 }
 
-#Preview {
-    let isPresented = Binding.constant(true)
-    let selectedYear = Calendar.current.component(
-        .year,
-        from: Date()
-    )
-    let selectedMonth = Calendar.current.component(
-        .month,
-        from: Date()
-    )
-    let selectedDay = Calendar.current.component(
-        .day,
-        from: Date()
-    )
-    
-    return StudyDeadlinePickerBottomSheet(
-        isPresented: isPresented,
-        selectedYear: selectedYear,
-        selectedMonth: selectedMonth,
-        selectedDay: selectedDay
-    )
-}
+//#Preview {
+//    let isPresented = Binding.constant(true)
+//    let selectedYear = Calendar.current.component(
+//        .year,
+//        from: Date()
+//    )
+//    let selectedMonth = Calendar.current.component(
+//        .month,
+//        from: Date()
+//    )
+//    let selectedDay = Calendar.current.component(
+//        .day,
+//        from: Date()
+//    )
+//    
+//    return StudyDeadlinePickerBottomSheet(
+//        isPresented: isPresented,
+//        selectedYear: selectedYear,
+//        selectedMonth: selectedMonth,
+//        selectedDay: selectedDay
+//    )
+//}

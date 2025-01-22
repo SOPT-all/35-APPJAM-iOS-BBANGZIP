@@ -7,6 +7,34 @@
 //
 
 extension String {
+    var isValidNickname: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{1,10}$"
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
+            options: .regularExpression
+        ) != nil
+    }
+    
+    var isValidSubject: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{1,10}$"
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
+            options: .regularExpression
+        ) != nil
+    }
+    
+    var isMessageValid: Bool {
+        let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
+        let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s!@#$%^&*(),.?\":{}|<>]{1,25}$"
+        
+        return !trimmedText.isEmpty && trimmedText.range(
+            of: regex,
+            options: .regularExpression
+        ) != nil
+    }
+    
     var isValidStudyContent: Bool {
         let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
         let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s\\p{P}\\p{S}]{1,20}$"
@@ -27,6 +55,7 @@ extension String {
         return self.range(
             of: regex,
             options: .regularExpression
+
         ) != nil
     }
     

@@ -111,7 +111,9 @@ struct SubjectDetailView: View {
                     height: 265
                 ) {
                     if let type = selectedBottomSheetType {
-                        type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                        type.contentView(
+                            isPresented: $viewModel.isShowingBottomSheet
+                        )
                     }
                 }
                 

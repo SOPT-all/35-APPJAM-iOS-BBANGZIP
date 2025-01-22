@@ -20,14 +20,14 @@ struct MainView: View {
                     .fontWeight(.bold)
                     .padding()
                 
-                NavigationLink(destination: TestView()) {
-                    Text("Go to TestView")
-                        .font(.headline)
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.black)
-                        .cornerRadius(8)
-                }
+//                NavigationLink(destination: TestView()) {
+//                    Text("Go to TestView")
+//                        .font(.headline)
+//                        .padding()
+//                        .background(Color.blue)
+//                        .foregroundColor(.black)
+//                        .cornerRadius(8)
+//                }
                 
                 Spacer()
             }

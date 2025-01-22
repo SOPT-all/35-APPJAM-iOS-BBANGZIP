@@ -14,6 +14,7 @@ enum TextFieldStyleCase {
     case studyContent
     case studyRange
     case subject
+    case message
     
     var icon: Image? {
         switch self {
@@ -27,6 +28,8 @@ enum TextFieldStyleCase {
             Image(.checkSmall)
         case .subject:
             Image(.book)
+        case .message:
+            Image(.bubble)
         }
     }
     
@@ -35,20 +38,31 @@ enum TextFieldStyleCase {
         case .nickname:
             8
         case .date, .studyRange:
-            nil
+            4
         case .studyContent:
             20
         case .subject:
             10
+        case .message:
+            25
         }
     }
     
     var clearable: Bool {
         switch self {
-        case .nickname, .subject:
+        case .nickname, .subject, .message:
             true
         case .date, .studyContent, .studyRange:
             false
+        }
+    }
+    
+    var countable: Bool {
+        switch self {
+        case .date, .studyRange:
+            false
+        case .nickname, .studyContent, .subject, .message:
+            true
         }
     }
 }
