@@ -10,121 +10,149 @@ import SwiftUI
 
 struct BadgeDetailView: View {
     @StateObject private var viewModel: BadgeDetailViewModel
+    @Binding var isBottomSheetShowing: Bool
     
-    init(viewModel: BadgeDetailViewModel) {
+    init(viewModel: BadgeDetailViewModel, isBottomSheetShowing: Binding<Bool>) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _isBottomSheetShowing = isBottomSheetShowing
     }
     
     var body: some View {
-        VStack() {
-            badgeContentView
-            
-            achievementConditionView
-            
-            rewardView
-            
-            closeButton
+        if viewModel.badgeDetail == nil {
+            ProgressView()
+                .onAppear {
+                    Task {
+                        try await viewModel.fetchData()
+                    }
+                }
+        } else {
+            VStack() {
+                badgeContentView
+                
+                achievementConditionView
+                
+                rewardView
+                
+                closeButton
+            }
+            .frame(width: 375, height: 662)
         }
-        .frame(width: 375, height: 662)
     }
     
     var badgeContentView: some View {
-        VStack {
-            VStack(spacing: 0) {
-                Image(systemName: viewModel.badgeImage)
-                    .resizable()
-                    .frame(
-                        width: 160,
-                        height: 160
-                    )
-                    .padding(
-                        .bottom,
-                        24
-                    )
+        ZStack{
+            if let badgeDetail = viewModel.badgeDetail {
+                if badgeDetail.badgeIsLocked {
+                    Image(.locker)
+                }
                 
-                BalloonWithout(
-                    text: viewModel.badgeName,
-                    balloonMode: .top
-                ).padding(.bottom, 32)
-                    .padding(.horizontal)
-                
-                hashTagTextView
+                ZStack{
+                    VStack {
+                        VStack(spacing: 0) {
+                            Image(systemName: badgeDetail.badgeImage)
+                                .resizable()
+                                .frame(
+                                    width: 160,
+                                    height: 160
+                                )
+                                .padding(
+                                    .bottom,
+                                    24
+                                )
+                            BalloonWithout(
+                                text: badgeDetail.badgeName,
+                                balloonMode: .top
+                            ).padding(.bottom, 32)
+                                .padding(.horizontal)
+                            
+                            hashTagTextView
+                        }
+                    }
+                }
+                .blur(radius: badgeDetail.badgeIsLocked ? 6 : 0)
             }
         }
-        
     }
     
     var hashTagTextView: some View {
         VStack(alignment: .center, spacing: 4) {
-            if viewModel.hashTags.count == 2 {
-                HStack {
-                    CustomText(
-                        viewModel.hashTags[0],
-                        fontType: .body2Bold,
-                        color: Color(.labelAssistive)
-                    )
-                }
-                HStack {
-                    CustomText(
-                        viewModel.hashTags[1],
-                        fontType: .body2Bold,
-                        color: Color(.labelAssistive)
-                    )
-                }
-            } else if viewModel.hashTags.count == 3 {
-                HStack {
-                    CustomText(
-                        viewModel.hashTags[0],
-                        fontType: .body2Bold,
-                        color: Color(.labelAssistive)
-                    )
-                }
-                HStack(spacing: 8) {
-                    CustomText(
-                        viewModel.hashTags[1],
-                        fontType: .body2Bold,
-                        color: Color(.labelAssistive)
-                    )
-                    CustomText(
-                        viewModel.hashTags[2],
-                        fontType: .body2Bold,
-                        color: Color(.labelAssistive)
-                    )
+            if let badgeDetail = viewModel.badgeDetail {
+                if badgeDetail.hashTags.count == 2 {
+                    HStack {
+                        CustomText(
+                            badgeDetail.hashTags[0],
+                            fontType: .body2Bold,
+                            color: Color(.labelAssistive)
+                        )
+                    }
+                    
+                    HStack {
+                        CustomText(
+                            badgeDetail.hashTags[1],
+                            fontType: .body2Bold,
+                            color: Color(.labelAssistive)
+                        )
+                    }
+                } else if badgeDetail.hashTags.count == 3 {
+                    HStack {
+                        CustomText(
+                            badgeDetail.hashTags[0],
+                            fontType: .body2Bold,
+                            color: Color(.labelAssistive)
+                        )
+                    }
+                    HStack(spacing: 8) {
+                        CustomText(
+                            badgeDetail.hashTags[1],
+                            fontType: .body2Bold,
+                            color: Color(.labelAssistive)
+                        )
+                        CustomText(
+                            badgeDetail.hashTags[2],
+                            fontType: .body2Bold,
+                            color: Color(.labelAssistive)
+                        )
+                    }
                 }
             }
         }.padding(.horizontal)
+        
     }
     
     var achievementConditionView: some View {
         HStack {
-            VStack (alignment: .leading, spacing: 0) {
-                CustomText("달성 조건",fontType: .body1Bold, color: Color(.labelNormal))
+            if let badgeDetail = viewModel.badgeDetail {
+                VStack (alignment: .leading, spacing: 0) {
+                    CustomText("달성 조건",fontType: .body1Bold, color: Color(.labelNormal))
+                    
+                    CustomText(badgeDetail.achievementCondition, fontType: .label1Bold, color: Color(.labelAlternative))
+                }.padding(
+                    .top,
+                    32
+                )
+                .padding(
+                    .horizontal,
+                    40
+                )
                 
-                CustomText(viewModel.achievementCondition, fontType: .label1Bold, color: Color(.labelAlternative))
-            }.padding(
-                .top,
-                32
-            )
-            .padding(
-                .horizontal,
-                40
-            )
-            
-            Spacer()
+                Spacer()
+            }
         }
     }
     
     var rewardView: some View {
         HStack {
-            CustomText(
-                "리워드",
-                fontType: .body1Bold,
-                color: Color(.labelNormal)
-            )
-            
-            Spacer()
-            
-            Chip(type: .points(viewModel.reward))
+            if let badgeDetail = viewModel.badgeDetail {
+                CustomText(
+                    "리워드",
+                    fontType: .body1Bold,
+                    color: Color(.labelNormal)
+                )
+                
+                Spacer()
+                
+                Chip(type: .points(badgeDetail.reward))
+            }
         }.padding(
             .top,
             16
@@ -137,21 +165,10 @@ struct BadgeDetailView: View {
     }
     var closeButton: some View {
         Button("닫기") {
-            
+            isBottomSheetShowing = false
         }
         .buttonStyle(SolidButton())
         .padding(.horizontal,20)
         .padding(.top, 20)
     }
-}
-
-#Preview {
-    BadgeDetailView(viewModel: BadgeDetailViewModel(
-        badgeName: "빵집 오픈 준비 중",
-        badgeImage: "bread.fill",
-        hashTags: ["#일일 빵집 오픈 알바생", "#가만히 있으면 빵도 못 간다", "#사장님 여기 빵 안나와요?"],
-        achievementCondition: "최초로 '공부 할 내용'을 추가한 경우",
-        reward: 50,
-        badgeIsLocked: false )
-    )
 }

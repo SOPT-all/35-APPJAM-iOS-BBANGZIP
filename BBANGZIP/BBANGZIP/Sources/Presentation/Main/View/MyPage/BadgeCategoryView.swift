@@ -11,8 +11,6 @@ import SwiftUI
 struct BadgeCategoryView: View {
     @StateObject private var viewModel: BadgeCategoryViewModel
     @State private var selectedBadge: Badge?
-    @State private var isShowingDetail: Bool = false
-    
     init(viewModel: BadgeCategoryViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
         UIScrollView.appearance().bounces = false
@@ -28,32 +26,44 @@ struct BadgeCategoryView: View {
             )
             .navigationBarHidden(true)
             
-            ScrollView {
-                HeaderView
-                
-                ForEach(
-                    viewModel.orderedCategories,
-                    id: \.self
-                ) { category in
-                    if let badges = viewModel.groupedBadges[category] {
-                        SectionView(
-                            title: category,
-                            subtitle: viewModel.subtitle(for: category),
-                            badges: badges
-                        ) { badge in
-                            selectedBadge = badge
-                            isShowingDetail = true
+            ZStack {
+                ScrollView {
+                    HeaderView
+                    
+                    ForEach(
+                        viewModel.orderedCategories,
+                        id: \.self
+                    ) { category in
+                        if let badges = viewModel.groupedBadges[category] {
+                            SectionView(
+                                title: category,
+                                subtitle: viewModel.subtitle(for: category),
+                                badges: badges
+                            ) { badge in
+                                viewModel.selectedBadge = badge
+                                viewModel.isBottomSheetShowing = true
+                            }
                         }
                     }
                 }
                 
-                //            .sheet(isPresented: $isShowingDetail) {
-                //                if let bedge = selectedBadge {
-                //                    BadgeDetailView(badge: badge)
-                //                }
+                if let badgeName = viewModel.selectedBadge?.badgeName {
+                    BottomSheet(
+                        isShowing:
+                            $viewModel.isBottomSheetShowing,
+                        height: 659
+                    ) {
+                        BadgeDetailView(
+                            viewModel: BadgeDetailViewModel(
+                                fetchBadgeDetialUseCase: DefaultFetchDetailUseCase(repository: DefaultBadgeRepository()),
+                                badgeName: badgeName
+                            ),
+                            isBottomSheetShowing: $viewModel.isBottomSheetShowing
+                        )
+                    }
+                }
             }
         }
-        
     }
     
     private var HeaderView: some View {

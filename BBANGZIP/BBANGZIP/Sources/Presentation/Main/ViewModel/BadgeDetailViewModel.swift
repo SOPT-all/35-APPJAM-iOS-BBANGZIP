@@ -9,26 +9,21 @@
 import SwiftUI
 
 final class BadgeDetailViewModel: ObservableObject {
-    @Published var badgeName: String
-    @Published var badgeImage: String
-    @Published var hashTags: [String]
-    @Published var achievementCondition: String
-    @Published var reward: Int
-    @Published var badgeIsLocked: Bool
+    @Published var badgeDetail: BadgeDetail?
+    
+    private let targetBadgeName: String
+    private let fetchBadgeDetialUseCase: FetchBadgeDetailUseCase
     
     init(
-        badgeName: String = "",
-        badgeImage: String = "",
-        hashTags: [String] = [],
-        achievementCondition: String = "",
-        reward: Int,
-        badgeIsLocked: Bool = true
+        fetchBadgeDetialUseCase: FetchBadgeDetailUseCase,
+        badgeName: String
     ) {
-        self.badgeName = badgeName
-        self.badgeImage = badgeImage
-        self.hashTags = hashTags
-        self.achievementCondition = achievementCondition
-        self.reward = reward
-        self.badgeIsLocked = badgeIsLocked
+        self.fetchBadgeDetialUseCase = fetchBadgeDetialUseCase
+        self.targetBadgeName = badgeName
+    }
+    
+    @MainActor
+    func fetchData() async throws {
+        badgeDetail = try await fetchBadgeDetialUseCase.execute(badgeName: targetBadgeName)
     }
 }
