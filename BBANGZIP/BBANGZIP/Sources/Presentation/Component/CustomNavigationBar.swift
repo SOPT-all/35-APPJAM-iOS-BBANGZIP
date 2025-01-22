@@ -10,12 +10,17 @@ import SwiftUI
 
 struct CustomNavigationBar: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
-    let showBackButton: Bool
-    let showMenu: Bool
-    let title: String
-    let backgroundColor: Color?
+    private let showBackButton: Bool
+    private let showMenu: Bool
+    private let title: String
+    private let backgroundColor: Color?
     
-    init(showBackButton: Bool, showMenu: Bool, title: String, backgroundColor: Color) {
+    init(
+        showBackButton: Bool,
+        showMenu: Bool,
+        title: String,
+        backgroundColor: Color
+    ) {
         self.showBackButton = showBackButton
         self.showMenu = showMenu
         self.title = title
@@ -87,7 +92,7 @@ extension CustomNavigationBar {
     private var kebabButton: some View {
         // TODO: custom으로 수정 필요
         Menu {
-            NavigationLink(destination: Text("첫 번째 화면")) {
+            NavigationLink(destination: AddMotivationMessageView()) {
                 CustomText(
                     "각오 한 마디 작성하기",
                     fontType: .body1Bold,

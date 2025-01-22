@@ -12,7 +12,9 @@ struct AddMotivationMessageView: View {
     @StateObject private var viewModel: AddMotivationMessageViewModel
     @FocusState private var isMessageFocused: Bool
     
-    init(viewModel: AddMotivationMessageViewModel = AddMotivationMessageViewModel()) {
+    init(
+        viewModel: AddMotivationMessageViewModel = AddMotivationMessageViewModel()
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -105,8 +107,4 @@ struct AddMotivationMessageView: View {
             }
         }
     }
-}
-
-#Preview {
-    AddMotivationMessageView()
 }
