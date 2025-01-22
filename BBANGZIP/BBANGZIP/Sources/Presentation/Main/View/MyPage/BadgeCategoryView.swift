@@ -10,6 +10,8 @@ import SwiftUI
 
 struct BadgeCategoryView: View {
     @StateObject private var viewModel: BadgeCategoryViewModel
+    @State private var selectedBadge: Badge?
+    @State private var isShowingDetail: Bool = false
     
     init(viewModel: BadgeCategoryViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -39,12 +41,19 @@ struct BadgeCategoryView: View {
                             subtitle: viewModel.subtitle(for: category),
                             badges: badges
                         ) { badge in
-                            print("Badge tapped: \(badge.badgeName)")
+                            selectedBadge = badge
+                            isShowingDetail = true
                         }
                     }
                 }
             }
+            .sheet(isPresented: $isShowingDetail) {
+                if let bedge = selectedBadge {
+                    BadgeDetailView(badge: badge)
+                }
+            }
         }
+        
     }
     
     private var HeaderView: some View {
