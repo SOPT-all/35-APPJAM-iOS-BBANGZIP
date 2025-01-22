@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+import Kingfisher
+
 struct BadgeDetailView: View {
     @StateObject private var viewModel: BadgeDetailViewModel
     @Binding var isBottomSheetShowing: Bool
@@ -49,8 +51,9 @@ struct BadgeDetailView: View {
                 ZStack{
                     VStack {
                         VStack(spacing: 0) {
-                            Image(systemName: badgeDetail.badgeImage)
+                            KFImage(URL(string: badgeDetail.badgeImage))
                                 .resizable()
+                                .cornerRadius(48, corners: .allCorners)
                                 .frame(
                                     width: 160,
                                     height: 160
