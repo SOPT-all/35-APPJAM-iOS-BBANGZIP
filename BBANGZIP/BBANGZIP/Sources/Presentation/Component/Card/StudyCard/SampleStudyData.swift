@@ -16,6 +16,7 @@ struct SampleStudyData {
     let finishPage: Int
     let deadline: String
     let remainingDays: Int
+    let state: StudyCardState
 }
 
 extension SampleStudyData {
@@ -26,6 +27,7 @@ extension SampleStudyData {
         startPage: 11,
         finishPage: 20,
         deadline: "2025년 3월 26일",
-        remainingDays: -18
+        remainingDays: -18,
+        state: .cardDefault
     )
 }

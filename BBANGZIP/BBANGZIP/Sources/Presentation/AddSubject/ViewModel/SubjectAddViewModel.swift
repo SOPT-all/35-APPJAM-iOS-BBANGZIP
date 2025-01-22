@@ -11,13 +11,13 @@ import SwiftUI
 class AddSubjectViewModel: ObservableObject {
     @Published var subject: String
     @Published var state: TextFieldState
-    @Published var alertCase: SubjectTextFieldAlterCase?
+    @Published var alertCase: SubjectTextFieldAlertCase?
     @Published var isEnabled: Bool
     
     init(
         subject: String = "",
         state: TextFieldState = .defaultState,
-        alertCase: SubjectTextFieldAlterCase? = .defaultCorrect,
+        alertCase: SubjectTextFieldAlertCase? = .enable,
         isEnabled: Bool = false
     ) {
         self.subject = subject
@@ -26,7 +26,7 @@ class AddSubjectViewModel: ObservableObject {
         self.isEnabled = isEnabled
     }
     
-    // TODO: 텍스트필드 조건 만족시 isEnabled = true로 변경하는 로직 필요
+    //TODO: 텍스트필드 조건 만족시 isEnabled = true로 변경하는 로직 필요
     private func validateSubject(
         oldText: String,
         newText: String
@@ -71,4 +71,5 @@ class AddSubjectViewModel: ObservableObject {
     func addSubject() {
         // TODO: 과목 추가, 과목 중복 비교 로직 / 토스트 메시지 노출 로직 구현 필요
     }
+    
 }

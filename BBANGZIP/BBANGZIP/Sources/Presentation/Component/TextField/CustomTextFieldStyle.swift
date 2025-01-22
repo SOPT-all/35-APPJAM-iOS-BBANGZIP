@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CustomTextFieldStyle: TextFieldStyle {
-    private let state: TextFieldState
+    private var state: TextFieldState
     private let style: TextFieldStyleCase
     private let alertCase: TextFieldAlertable?
     @Binding private var text: String
