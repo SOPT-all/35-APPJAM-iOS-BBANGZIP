@@ -14,6 +14,7 @@ enum StudyRangeTextFieldAlertCase: TextFieldAlertable {
     case startLimitWrong
     case endLimitWrong
     case rangeFlippedWrong
+    case zero
     
     var alertText: String {
         switch self {
@@ -25,6 +26,8 @@ enum StudyRangeTextFieldAlertCase: TextFieldAlertable {
             "시작 범위 이후로 입력해 주세요"
         case .endLimitWrong:
             "종료 범위 이전으로 입력해 주세요"
+        case .zero:
+            "0페이지는 입력할 수 없어요"
         }
     }
 }

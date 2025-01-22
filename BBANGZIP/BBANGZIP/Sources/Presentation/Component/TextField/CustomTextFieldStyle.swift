@@ -47,7 +47,7 @@ struct CustomTextFieldStyle: TextFieldStyle {
                     
                     configuration
                         .applyFont(font: .label1Medium)
-                        .foregroundStyle(Color(.labelAlternative))
+                        .foregroundStyle(Color(.labelNormal))
                         .padding(
                             .leading,
                             6
