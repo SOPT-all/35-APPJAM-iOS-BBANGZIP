@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-
+// TODO: 버튼 disable값 반대로 수정 필요 
 struct OutlinedMediumButton: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

@@ -85,9 +85,27 @@ extension CustomNavigationBar {
     }
     
     private var kebabButton: some View {
-        Button(action: {
+        // TODO: custom으로 수정 필요
+        Menu {
+            NavigationLink(destination: Text("첫 번째 화면")) {
+                CustomText(
+                    "각오 한 마디 작성하기",
+                    fontType: .body1Bold,
+                    color: Color(.labelNormal)
+                )
+            }
+            .buttonStyle(PressedButtonStyle())
+                               
+            NavigationLink(destination: Text("두 번째 화면")) {
+                CustomText(
+                    "과목명 수정하기",
+                    fontType: .body1Bold,
+                    color: Color(.labelNormal)
+                )
+            }
+            .buttonStyle(PressedButtonStyle())
             
-        }) {
+        } label: {
             Image(.dotsVertical)
                 .resizable()
                 .frame(

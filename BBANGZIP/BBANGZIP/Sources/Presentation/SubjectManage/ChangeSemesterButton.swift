@@ -28,7 +28,7 @@ struct ChangeSemesterButton: View {
                     color: Color(.labelNormal)
                 )
                 
-                Image(.chevronDown)
+                Image(.chevronDownThick)
                     .renderingMode(.template)
                     .resizable()
                     .frame(

@@ -29,8 +29,9 @@ struct LevelUpView: View {
     }
 
     private var navBar: some View {
-        CustomNavBarView(
+        CustomNavigationBar(
             showBackButton: true,
+            showMenu: false,
             title: "내 제과제빵점",
             backgroundColor: Color(.backgroundAccent)
         )
@@ -39,6 +40,7 @@ struct LevelUpView: View {
     private var levelTabView: some View {
         ZStack {
             Color(.backgroundAccent)
+            
             TabView(selection: $selectedIndex) {
                 ForEach(
                     0..<viewModel.levelStateCount,
@@ -130,67 +132,5 @@ struct BbangZipView: View {
             maxWidth: .infinity,
             maxHeight: .infinity
         )
-    }
-}
-
-struct CustomNavBarView: View {
-    @SwiftUI.Environment(\ .presentationMode) var presentationMode
-    let showBackButton: Bool
-    let title: String
-    let backgroundColor: Color?
-
-    init(
-        showBackButton: Bool,
-        title: String,
-        backgroundColor: Color
-    ) {
-        self.showBackButton = showBackButton
-        self.title = title
-        self.backgroundColor = backgroundColor
-    }
-
-    var body: some View {
-        ZStack {
-            backgroundColor
-                .ignoresSafeArea(edges: .top)
-            
-            HStack {
-                if showBackButton {
-                    backButton
-                }
-                
-                Spacer()
-                
-                CustomText(
-                    title,
-                    fontType: .headline1Bold,
-                    color: Color(.labelNeutral)
-                )
-                
-                Spacer()
-                
-                ZStack {}
-                    .frame(
-                        width: 24,
-                        height: 24
-                    )
-            }
-            .padding(.horizontal)
-        }
-        .ignoresSafeArea()
-        .frame(height: 103)
-    }
-
-    private var backButton: some View {
-        Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            Image(.chevronLeftThickSmall)
-                .resizable()
-                .frame(
-                    width: 24,
-                    height: 24
-                )
-        }
     }
 }

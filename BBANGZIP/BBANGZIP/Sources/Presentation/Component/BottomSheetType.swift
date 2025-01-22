@@ -18,6 +18,7 @@ enum BottomSheetType: Int {
     case studyFinishDate
     case changeSemester
     case divideStudy
+    case completeCheck
     
     @MainActor @ViewBuilder
     func contentView(isPresented: Binding<Bool>) -> some View {
@@ -58,6 +59,10 @@ enum BottomSheetType: Int {
             )
         case .divideStudy:
             DivideStudyBottomSheet(
+                isPresented: isPresented
+            )
+        case .completeCheck:
+            CompleteCheckBottomSheet(
                 isPresented: isPresented
             )
         default:
