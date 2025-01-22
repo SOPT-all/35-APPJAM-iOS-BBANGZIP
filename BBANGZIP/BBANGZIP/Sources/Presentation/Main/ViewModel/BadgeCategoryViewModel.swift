@@ -28,7 +28,10 @@ class BadgeCategoryViewModel: ObservableObject {
         ]
     }
     
-    init(badges: [Badge], userID: String) {
+    init(
+        badges: [Badge],
+        userID: String
+    ) {
         self.badges = badges
         self.userID = userID
     }

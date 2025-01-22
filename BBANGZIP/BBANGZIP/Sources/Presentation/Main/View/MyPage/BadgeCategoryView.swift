@@ -31,7 +31,7 @@ struct BadgeCategoryView: View {
                 
                 ForEach(
                     viewModel.orderedCategories,
-                    id: \..self
+                    id: \.self
                 ) { category in
                     if let badges = viewModel.groupedBadges[category] {
                         SectionView(
