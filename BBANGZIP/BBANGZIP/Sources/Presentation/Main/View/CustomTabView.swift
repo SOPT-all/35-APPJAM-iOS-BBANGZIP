@@ -11,10 +11,15 @@ import SwiftUI
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
     @State private var isBottomSheetShowing: Bool
+    @State private var isTodayStudyViewBottomSheetShowing: Bool
     @State private var isCustomTabBarHidden = false
     
-    init(isBottomSheetShowing: Bool = false) {
+    init(
+        isBottomSheetShowing: Bool = false,
+        isTodayStudyViewBottomSheetShowing: Bool = false
+    ) {
         self.isBottomSheetShowing = isBottomSheetShowing
+        self.isTodayStudyViewBottomSheetShowing = isTodayStudyViewBottomSheetShowing
         UIScrollView.appearance().bounces = false
     }
     
@@ -24,7 +29,25 @@ struct CustomTabView: View {
                 TabView(selection: $selected) {
                     SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
                         .tag(Tab.subjectManage)
-                
+                    
+                    TodayStudyView(
+                        viewModel: TodayStudyViewModel(
+                            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                                studyRepository: DefaultStudyRepository()
+                            ),
+                            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            )
+                        ), isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                    )
+                    .tag(Tab.todo)
+                    
                     Text("오늘 할 일")
                         .tag(Tab.todo)
                 
@@ -48,7 +71,9 @@ struct CustomTabView: View {
             VStack {
                 Spacer()
                 
-                if !isBottomSheetShowing && !isCustomTabBarHidden {
+                if !isBottomSheetShowing &&
+                    !isTodayStudyViewBottomSheetShowing &&
+                    !isCustomTabBarHidden {
                     CustomTabBar(selected: $selected)
                 }
             }

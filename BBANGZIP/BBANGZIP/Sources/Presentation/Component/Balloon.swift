@@ -11,14 +11,14 @@ import SwiftUI
 struct Balloon: View {
     
     private let text: String
-    private let leftIcon: String?
-    private let rightIcon: String?
+    private let leftIcon: Image?
+    private let rightIcon: Image?
     private let balloonMode: BalloonMode
     
     init(
         text: String,
-        leftIcon: String? = nil,
-        rightIcon: String? = nil,
+        leftIcon: Image? = nil,
+        rightIcon: Image? = nil,
         balloonMode: BalloonMode = .top
     ) {
         self.text = text
@@ -29,7 +29,6 @@ struct Balloon: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            
             if balloonMode == .top {
                 topBalloonTip
             }
@@ -38,7 +37,7 @@ struct Balloon: View {
                 Spacer()
                 
                 if let leftIcon = leftIcon {
-                    Image(leftIcon)
+                    leftIcon
                         .resizable()
                         .scaledToFit()
                         .frame(
@@ -54,7 +53,7 @@ struct Balloon: View {
                 )
                 
                 if let rightIcon = rightIcon {
-                    Image(rightIcon)
+                    rightIcon
                         .resizable()
                         .scaledToFit()
                         .frame(
@@ -69,15 +68,14 @@ struct Balloon: View {
                 .vertical,
                 8
             )
-
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.staticWhite))
-            )
-            .shadow(
-                color: Color(.staticBlack).opacity(0.25),
-                radius: 4,
-                y: 4
+                    .shadow(
+                        color: Color(.staticBlack).opacity(0.25),
+                        radius: 4,
+                        y: 4
+                    )
             )
             .padding(
                 .horizontal
@@ -106,7 +104,7 @@ struct Balloon: View {
     private var bottomBalloonTip: some View {
         HStack {
             Image(.balloonTip)
-                .renderingMode(.template)
+                .renderingMode(.original)
                 .foregroundStyle(Color(.staticWhite))
                 .padding(
                     .leading,
@@ -115,17 +113,10 @@ struct Balloon: View {
             
             Spacer()
         }
-        .scaleEffect(x: 1, y: -1)
+        .scaleEffect(
+            x: 1,
+            y: -1
+        )
     }
 
-}
-
-#Preview {
-    Balloon(
-        text: "사출을 응원해요!",
-        leftIcon: "bubble",
-        rightIcon: "bubble",
-        balloonMode: .top
-    )
-    .padding(.horizontal, 20)
 }

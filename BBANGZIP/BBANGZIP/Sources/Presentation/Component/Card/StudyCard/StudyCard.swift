@@ -9,17 +9,10 @@
 import SwiftUI
 
 struct StudyCard: View {
-    private let state: StudyCardState
-    // TODO: 수정필요
-    private let studyCardData: StudyPieceModel
-    private let borderPadding: CGFloat = 2
+    private let model: StudyPiece
     
-    init(
-        state: StudyCardState,
-        studyCardData: StudyPieceModel = StudyPieceModel.mockList[0]
-    ) {
-        self.state = state
-        self.studyCardData = studyCardData
+    init(model: StudyPiece) {
+        self.model = model
     }
     
     var body: some View {
@@ -28,11 +21,10 @@ struct StudyCard: View {
             
             HStack(alignment: .top) {
                 StudyDataArea
-                    .opacity(state == .complete ? 0.4 : 1)
                 
                 Spacer()
                 
-                CheckBox(state: state)
+                CheckBox(state: model.state)
             }
             .padding(
                 .vertical,
@@ -42,18 +34,19 @@ struct StudyCard: View {
                 .horizontal,
                 16
             )
+            .opacity(model.state == .complete ? 0.4 : 1)
         }
     }
     
     var backgroundView: some View {
         RoundedRectangle(cornerRadius: 24)
-            .fill(state.backgroundColor)
+            .fill(model.state.backgroundColor)
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(
-                        state.borderColor,
-                        lineWidth: state.borderWidth
-                    )
+                        model.state.borderColor,
+                        lineWidth: model.state.borderWidth
+                  )
             )
     }
     
@@ -63,7 +56,17 @@ struct StudyCard: View {
             spacing: 2
         ) {
             CustomText(
-                studyCardData.studyContents,
+                "\(model.subjectName) / \(model.examName)",
+                fontType: .caption2Medium,
+                color: Color(.labelAssistive)
+            )
+            .padding(
+                .leading,
+                4
+            )
+            
+            CustomText(
+                model.studyContents,
                 fontType: .caption1Medium,
                 color: Color(.labelAlternative)
             )
@@ -73,7 +76,7 @@ struct StudyCard: View {
             )
             
             CustomText(
-                "\(studyCardData.startPage)p - \(studyCardData.finishPage)",
+                "\(model.startPage)p - \(model.finishPage)",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )
@@ -88,10 +91,11 @@ struct StudyCard: View {
             
             HStack(spacing: 8) {
                 Chip(
-                    type: studyCardData.remainingDays >= 0 ? .delayedDate(studyCardData.remainingDays) : .daysLeftWithText(studyCardData.remainingDays)
+                    type: model.remainingDays >= 0 ? .delayedDate(model.remainingDays) : .daysLeftWithText(model.remainingDays)
                 )
+                    
                 CustomText(
-                    "\(studyCardData.deadline) 까지",
+                    "\(model.deadline) 까지",
                     fontType: .caption1Bold,
                     color: Color(.labelAlternative)
                 )

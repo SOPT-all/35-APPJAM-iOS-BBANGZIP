@@ -23,7 +23,7 @@ struct OutlinedMediumButton: ButtonStyle {
                 .vertical,
                 9
             )
-            .frame(maxWidth: .infinity)
+//            .frame(maxWidth: .infinity)
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -131,5 +131,23 @@ struct PressedButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 24)
                     .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
             )
+    }
+}
+
+struct PressedBottomSheetButtonStyle: ButtonStyle {
+    private let isSelected: Bool
+    
+    init(isSelected: Bool = false) {
+        self.isSelected = isSelected
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : isSelected ? Color(.labelNormal).opacity(0.08) : Color.clear)
+                )
+        }
     }
 }
