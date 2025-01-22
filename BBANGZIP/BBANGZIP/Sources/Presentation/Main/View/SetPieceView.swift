@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct SetPieceView: View {
+    @StateObject var viewModel: AddStudyViewModel
     @State private var isBottomSheetPresented = true
     @State private var selectedBottomSheetType: BottomSheetType? = .divideStudy
     @State private var selectedYear: Int

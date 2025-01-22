@@ -91,7 +91,7 @@ struct AddStudyView: View {
                 isShowing: $viewModel.isDividerPresented,
                 height: 449
             ) {
-                DivideStudyBottomSheet(isPresented: $viewModel.isDividerPresented)
+                SetPieceBottomSheet(isPresented: $viewModel.isDividerPresented)
             }
         }
     }

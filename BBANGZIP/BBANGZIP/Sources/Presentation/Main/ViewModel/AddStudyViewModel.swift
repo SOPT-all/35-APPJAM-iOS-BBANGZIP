@@ -30,10 +30,10 @@ final class AddStudyViewModel: ObservableObject {
     @Published var isDatePickerPresented = false
     @Published var isDividerPresented = false
     @Published var selectedBottomSheetType: BottomSheetType?
-    @Published var selectedYear: Int
-    @Published var selectedMonth: Int
-    @Published var selectedDay: Int
-    @Published var isButtonTapped: Bool
+    @Published var selectedYear: Int = 2025
+    @Published var selectedMonth: Int = 1
+    @Published var selectedDay: Int = 1
+    @Published var isButtonTapped: Bool = false
     
     var formattedDate: String {
         guard let date = date else { return "" }
