@@ -14,6 +14,10 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var isDeleteButtonEnable: Bool = false
     @Published var isShowingBottomSheet: Bool = false
     
+    var selectedItemCount: Int {
+        modelList.filter { $0.state == .selected }.count
+    }
+    
     init(modelList: [StudyPieceModel]) {
         self.modelList = modelList
     }
@@ -37,7 +41,7 @@ final class SubjectDetailViewModel: ObservableObject {
     }
     
     func deleteStudyPiece() {
-        // TODO: 공부 삭제 API 연동
+        // TODO: 공부 삭제 API 연동 및 삭제 성공 시 토스트 메시지 노출
     }
     
     func validateDeleteButton() {

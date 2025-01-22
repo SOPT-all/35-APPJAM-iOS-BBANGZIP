@@ -36,7 +36,9 @@ struct SubjectDetailView: View {
                     ZStack {
                         VStack {
                             Color(.backgroundAccent)
-                                .frame(height: 153)
+                                .frame(
+                                    height: 153
+                                )
                                 .cornerRadius(
                                     32,
                                     corners: [
@@ -114,22 +116,31 @@ struct SubjectDetailView: View {
                 }
                 
                 if viewModel.isDeleteMode {
+                    let title = viewModel.selectedItemCount == 0 ? "삭제하기" : "\(viewModel.selectedItemCount)개 삭제하기"
+                    
                     VStack {
                         Spacer()
-                        Button("삭제하기") {
+                        Button(title) {
                             viewModel.deleteStudyPiece()
+                            viewModel.makeStudyPieceSelectable()
                         }
                         .buttonStyle(
                             SolidIconButton(
                                 buttonImage: Image(.trash),
-                                false
+                                viewModel.selectedItemCount > 0
                             )
                         )
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 8)
+                        .padding(
+                            .horizontal,
+                            20
+                        )
+                        .padding(
+                            .bottom,
+                            8
+                        )
+                        .disabled(viewModel.selectedItemCount == 0)
                     }
                 }
-
             }
         }
     }
