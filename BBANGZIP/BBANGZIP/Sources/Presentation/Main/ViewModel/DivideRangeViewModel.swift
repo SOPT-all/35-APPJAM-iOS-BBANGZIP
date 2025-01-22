@@ -9,21 +9,20 @@
 import SwiftUI
 
 final class DivideRangeViewModel: ObservableObject {
-    @Published var date: Date?
     @Published var startRange: Int = 0
     @Published var endRange: Int = 0
-    @Published var startRangeString: String
-    @Published var endRangeString: String
     
-    @Published var startRangeState: TextFieldState
-    @Published var startRangeAnnounceState: StudyRangeTextFieldAlertCase?
-    @Published var endRangeState: TextFieldState
-    @Published var endRangeAnnounceState: StudyRangeTextFieldAlertCase?
-    @Published var isStartRangeValid: Bool = false
-    @Published var isEndRangeValid: Bool = false
-    
+    @Published var date: Date?
+    @Published var startRangeStrings: [String]
+    @Published var endRangeStrings: [String]
+    @Published var startRangeStates: [TextFieldState]
+    @Published var endRangeStates: [TextFieldState]
+    @Published var startRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
+    @Published var endRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
+    @Published var isStartRangeValid: [Bool]
+    @Published var isEndRangeValid: [Bool]
     @Published var isDatePickerPresented = false
-        
+    
     var formattedDate: String {
         guard let date = date else { return "" }
         let formatter = DateFormatter()
@@ -32,188 +31,205 @@ final class DivideRangeViewModel: ObservableObject {
         return formatter.string(from: date)
     }
     
-    init(
-        date: Date? = nil,
-        startRange: Int = 0,
-        endRange: Int = 0,
-        startRangeState: TextFieldState = .defaultState,
-        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
-        endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
-    ) {
-        self.date = date
-        self.startRange = startRange
-        self.endRange = endRange
-        self.startRangeString = ""
-        self.endRangeString = ""
-        self.startRangeState = startRangeState
-        self.startRangeAnnounceState = startRangeAnnounceState
-        self.endRangeState = endRangeState
-        self.endRangeAnnounceState = endRangeAnnounceState
+    //    init(
+    //        date: Date? = nil,
+    //        startRange: Int = 0,
+    //        endRange: Int = 0,
+    //        startRangeState: TextFieldState = .defaultState,
+    //        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
+    //        endRangeState: TextFieldState = .defaultState,
+    //        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
+    //    ) {
+    //        self.date = date
+    //        self.startRange = startRange
+    //        self.endRange = endRange
+    //        self.startRangeString = ""
+    //        self.endRangeString = ""
+    //        self.startRangeState = startRangeState
+    //        self.startRangeAnnounceState = startRangeAnnounceState
+    //        self.endRangeState = endRangeState
+    //        self.endRangeAnnounceState = endRangeAnnounceState
+    //    }
+    
+    init(pieceCount: Int) {
+        self.date = nil
+        self.startRangeStrings = Array(repeating: "", count: pieceCount)
+        self.endRangeStrings = Array(repeating: "", count: pieceCount)
+        self.startRangeStates = Array(repeating: .defaultState, count: pieceCount)
+        self.endRangeStates = Array(repeating: .defaultState, count: pieceCount)
+        self.startRangeAnnounceStates = Array(repeating: .startAlert, count: pieceCount)
+        self.endRangeAnnounceStates = Array(repeating: .endAlert, count: pieceCount)
+        self.isStartRangeValid = Array(repeating: false, count: pieceCount)
+        self.isEndRangeValid = Array(repeating: false, count: pieceCount)
     }
     
+    
     func verifyStartRange(
+        for index: Int,
         newText: String,
         isStartRangeFocused: Bool
     ) {
         if isStartRangeFocused {
-            startRangeState = .typing
+            startRangeStates[index] = .typing
             
             if newText.isEmpty {
-                startRangeState = .defaultState
-                startRangeAnnounceState = .startAlert
-                isStartRangeValid = false
+                startRangeStates[index] = .defaultState
+                startRangeAnnounceStates[index] = .startAlert
+                isStartRangeValid[index] = false
             } else {
                 if newText.isValidStudyRange {
-                    startRangeState = .typing
-                    startRangeAnnounceState = .startAlert
-                    isStartRangeValid = true
+                    startRangeStates[index] = .typing
+                    startRangeAnnounceStates[index] = .startAlert
+                    isStartRangeValid[index] = true
                 } else {
-                    startRangeState = .alert
-                    startRangeAnnounceState = .startAlert
-                    isStartRangeValid = false
+                    startRangeStates[index] = .alert
+                    startRangeAnnounceStates[index] = .startAlert
+                    isStartRangeValid[index] = false
                 }
             }
         } else if newText.isEmpty {
-            startRangeState = .defaultState
-            startRangeAnnounceState = .startAlert
-            isStartRangeValid = false
+            startRangeStates[index] = .defaultState
+            startRangeAnnounceStates[index] = .startAlert
+            isStartRangeValid[index] = false
         }
     }
     
     func handleStartRangeFocusChange(
+        for index: Int,
         newText: String,
         isStartRangeFocused: Bool
     ) {
         if !isStartRangeFocused {
             if newText == "0" || newText == "00" || newText == "000" || newText == "0000" {
-                startRangeState = .alert
-                startRangeAnnounceState = .zero
-                isStartRangeValid = false
+                startRangeStates[index] = .alert
+                startRangeAnnounceStates[index] = .zero
+                isStartRangeValid[index] = false
                 return
             }
             
             let trimmedText = newText.trimmingLeadingZeros()
             if !trimmedText.hasSuffix("p") && !trimmedText.isEmpty {
-                startRangeString = trimmedText + "p"
+                startRangeStrings[index] = trimmedText + "p"
             } else {
-                startRangeString = trimmedText
+                startRangeStrings[index] = trimmedText
             }
             
             if newText.isEmpty {
-                startRangeState = .defaultState
-                isStartRangeValid = false
+                startRangeStates[index] = .defaultState
+                isStartRangeValid[index] = false
             } else if newText.isValidStudyRange {
-                startRange = Int(startRangeString.dropLast()) ?? 0
-                startRangeState = .field
-                startRangeAnnounceState = .startAlert
-                isStartRangeValid = true
+                startRange = Int(startRangeStrings[index].dropLast()) ?? 0
+                startRangeStates[index] = .field
+                startRangeAnnounceStates[index] = .startAlert
+                isStartRangeValid[index] = true
                 
                 if endRange < startRange && endRange != 0 {
-                    endRangeState = .alert
-                    endRangeAnnounceState = .rangeFlippedWrong
-                    isEndRangeValid = false
+                    endRangeStates[index] = .alert
+                    endRangeAnnounceStates[index] = .rangeFlippedWrong
+                    isEndRangeValid[index] = false
                 } else {
-                    if endRangeString.isEmpty {
-                        endRangeState = .defaultState
-                        endRangeAnnounceState = .endAlert
-                        isEndRangeValid = false
+                    if endRangeStrings[index].isEmpty {
+                        endRangeStates[index] = .defaultState
+                        endRangeAnnounceStates[index] = .endAlert
+                        isEndRangeValid[index] = false
                     } else {
-                        endRangeState = .field
-                        endRangeAnnounceState = .endAlert
-                        isEndRangeValid = true
+                        endRangeStates[index] = .field
+                        endRangeAnnounceStates[index] = .endAlert
+                        isEndRangeValid[index] = true
                     }
                 }
             } else {
-                startRangeState = .alert
-                startRangeAnnounceState = .startAlert
-                isStartRangeValid = false
+                startRangeStates[index] = .alert
+                startRangeAnnounceStates[index] = .startAlert
+                isStartRangeValid[index] = false
             }
         } else {
             if newText.hasSuffix("p") {
-                startRangeString = String(newText.dropLast())
+                startRangeStrings[index] = String(newText.dropLast())
             }
             
-            startRangeState = .placeholder
-            isStartRangeValid = false
+            startRangeStates[index] = .placeholder
+            isStartRangeValid[index] = false
         }
     }
     
     func verifyEndRange(
+        for index: Int,
         newText: String,
         isEndRangeFocused: Bool
     ) {
         if isEndRangeFocused {
-            endRangeState = .typing
+            endRangeStates[index] = .typing
             
             if newText.isEmpty {
-                endRangeState = .defaultState
-                endRangeAnnounceState = .endAlert
-                isEndRangeValid = false
+                endRangeStates[index] = .defaultState
+                endRangeAnnounceStates[index] = .endAlert
+                isEndRangeValid[index] = false
             } else {
                 if newText.isValidStudyRange {
-                    endRangeState = .typing
-                    endRangeAnnounceState = .endAlert
-                    isEndRangeValid = true
+                    endRangeStates[index] = .typing
+                    endRangeAnnounceStates[index] = .endAlert
+                    isEndRangeValid[index] = true
                 } else {
-                    endRangeState = .alert
-                    endRangeAnnounceState = .endAlert
-                    isEndRangeValid = false
+                    endRangeStates[index] = .alert
+                    endRangeAnnounceStates[index] = .endAlert
+                    isEndRangeValid[index] = false
                 }
             }
         } else if newText.isEmpty {
-            endRangeState = .defaultState
-            endRangeAnnounceState = .startAlert
-            isEndRangeValid = false
+            endRangeStates[index] = .defaultState
+            endRangeAnnounceStates[index] = .startAlert
+            isEndRangeValid[index] = false
         }
     }
     
     func handleEndRangeFocusChange(
+        for index: Int,
         newText: String,
         isEndRangeFocused: Bool
     ) {
         if !isEndRangeFocused {
             if newText == "0" || newText == "00" || newText == "000" || newText == "0000" {
-                endRangeState = .alert
-                endRangeAnnounceState = .zero
-                isEndRangeValid = false
+                endRangeStates[index] = .alert
+                endRangeAnnounceStates[index] = .zero
+                isEndRangeValid[index] = false
                 return
             }
             
             let trimmedText = newText.trimmingLeadingZeros()
             if !trimmedText.hasSuffix("p") && !trimmedText.isEmpty {
-                endRangeString = trimmedText + "p"
+                endRangeStrings[index] = trimmedText + "p"
             } else {
-                endRangeString = trimmedText
+                endRangeStrings[index] = trimmedText
             }
             
             if newText.isEmpty {
-                endRangeState = .defaultState
-                isEndRangeValid = false
+                endRangeStates[index] = .defaultState
+                isEndRangeValid[index] = false
             } else if newText.isValidStudyRange {
-                endRange = Int(endRangeString.dropLast()) ?? 0
+                endRange = Int(endRangeStrings[index].dropLast()) ?? 0
                 
                 if endRange < startRange && startRange != 0 {
-                    endRangeState = .alert
-                    endRangeAnnounceState = .rangeFlippedWrong
-                    isEndRangeValid = false
+                    endRangeStates[index] = .alert
+                    endRangeAnnounceStates[index] = .rangeFlippedWrong
+                    isEndRangeValid[index] = false
                 } else {
-                    endRangeState = .field
-                    endRangeAnnounceState = .endAlert
-                    isEndRangeValid = true
+                    endRangeStates[index] = .field
+                    endRangeAnnounceStates[index] = .endAlert
+                    isEndRangeValid[index] = true
                 }
             } else {
-                endRangeState = .alert
-                endRangeAnnounceState = .endAlert
-                isEndRangeValid = false
+                endRangeStates[index] = .alert
+                endRangeAnnounceStates[index] = .endAlert
+                isEndRangeValid[index] = false
             }
         } else {
             if newText.hasSuffix("p") {
-                endRangeString = String(newText.dropLast())
+                endRangeStrings[index] = String(newText.dropLast())
             }
             
-            endRangeState = .placeholder
-            isEndRangeValid = false
+            endRangeStates[index] = .placeholder
+            isEndRangeValid[index] = false
         }
     }
 }

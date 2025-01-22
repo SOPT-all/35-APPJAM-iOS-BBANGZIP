@@ -20,7 +20,7 @@ struct DivideRangeView: View {
     }
     
     init(
-        viewModel: DivideRangeViewModel = DivideRangeViewModel(),
+        viewModel: DivideRangeViewModel = DivideRangeViewModel(pieceCount: 6),
         pieceCount: Int
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -51,7 +51,7 @@ struct DivideRangeView: View {
                     
                     piece
                     
-                    registerButton
+//                    registerButton(for: piece)
                 }
                 .padding(.horizontal, 20)
                 .ignoresSafeArea(.keyboard)
@@ -117,29 +117,29 @@ struct DivideRangeView: View {
                     }
                     
                     HStack(spacing: 20) {
-                        startRangeTextField
+                        startRangeTextField(for: piece)
                         
-                        endRangeTextField
+                        endRangeTextField(for: piece)
                     }
                     
-                    dueDateButton
+                    deadlineButton
                 }
             }
         }
     }
     
-    private var startRangeTextField: some View {
+    private func startRangeTextField(for index: Int) -> some View {
         TextField(
             "시작 페이지",
-            text: $viewModel.startRangeString
+            text: $viewModel.startRangeStrings[index]
         )
         .focused($isStartRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
-                text: $viewModel.startRangeString,
+                text: $viewModel.startRangeStrings[index],
                 style: .studyRange,
-                state: viewModel.startRangeState,
-                alertText: viewModel.startRangeAnnounceState
+                state: viewModel.startRangeStates[index],
+                alertText: viewModel.startRangeAnnounceStates[index]
             )
         )
         .padding(
@@ -147,36 +147,38 @@ struct DivideRangeView: View {
             16
         )
         .keyboardType(.decimalPad)
-        .onChange(of: viewModel.startRangeString) { newRange in
+        .onChange(of: viewModel.startRangeStrings[index]) { newRange in
             if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.startRangeString = String(newRange.prefix(4))
+                viewModel.startRangeStrings[index] = String(newRange.prefix(4))
             }
             
             viewModel.verifyStartRange(
+                for: index,
                 newText: newRange,
                 isStartRangeFocused: isStartRangeFocused
             )
         }
         .onChange(of: isStartRangeFocused) { isStartRangeFocused in
             viewModel.handleStartRangeFocusChange(
-                newText: viewModel.startRangeString,
+                for: index,
+                newText: viewModel.startRangeStrings[index],
                 isStartRangeFocused: isStartRangeFocused
             )
         }
     }
     
-    private var endRangeTextField: some View {
+    private func endRangeTextField(for index: Int) -> some View {
         TextField(
             "종료 페이지",
-            text: $viewModel.endRangeString
+            text: $viewModel.endRangeStrings[index]
         )
         .focused($isEndRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
-                text: $viewModel.endRangeString,
+                text: $viewModel.endRangeStrings[index],
                 style: .studyRange,
-                state: viewModel.endRangeState,
-                alertText: viewModel.endRangeAnnounceState
+                state: viewModel.endRangeStates[index],
+                alertText: viewModel.endRangeAnnounceStates[index]
             )
         )
         .padding(
@@ -184,19 +186,21 @@ struct DivideRangeView: View {
             16
         )
         .keyboardType(.decimalPad)
-        .onChange(of: viewModel.endRangeString) { newRange in
+        .onChange(of: viewModel.endRangeStrings[index]) { newRange in
             if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.endRangeString = String(newRange.prefix(4))
+                viewModel.endRangeStrings[index] = String(newRange.prefix(4))
             }
             
             viewModel.verifyEndRange(
+                for: index,
                 newText: newRange,
                 isEndRangeFocused: isEndRangeFocused
             )
         }
         .onChange(of: isEndRangeFocused) { isEndRangeFocused in
             viewModel.handleEndRangeFocusChange(
-                newText: viewModel.endRangeString,
+                for: index,
+                newText: viewModel.endRangeStrings[index],
                 isEndRangeFocused: isEndRangeFocused
             )
         }
@@ -208,7 +212,7 @@ struct DivideRangeView: View {
         return formatter.string(from: selectedDate)
     }
     
-    private var dueDateButton: some View {
+    private var deadlineButton: some View {
         Button(
             action: {
                 viewModel.isDatePickerPresented = true
@@ -228,18 +232,18 @@ struct DivideRangeView: View {
         )
     }
     
-    private var registerButton: some View {
+    private func registerButton(for index: Int) -> some View {
         Button("저장하기") {
             // TODO: 화면 전환해야 할 다음 뷰로 연결
         }
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.plus),
-                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
             )
         )
         .disabled(
-            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
         )
     }
 }
