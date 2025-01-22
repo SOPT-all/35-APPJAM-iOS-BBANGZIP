@@ -61,56 +61,9 @@ struct TodayStudyView: View {
                 deleteButton
             }
             
-            BottomSheet(
-                isShowing: $viewModel.isRevertBottomSheetPresent,
-                height: 265) {
-                    VStack(spacing: 0) {
-                        CustomText(
-                            "미완료 상태로 되돌릴까요?",
-                            fontType: .headline1Bold,
-                            color: Color(.labelNeutral)
-                        )
-                        .padding(
-                            .top,
-                            15
-                        )
-                        .padding(
-                            .bottom,
-                            31
-                        )
-                        
-                        Button {
-                            //TODO: 되돌리기 API
-                            print("되돌리기 Tapped")
-                        } label: {
-                            CustomText(
-                                "되돌리기",
-                                fontType: .body1Bold,
-                                color: Color(.staticWhite)
-                            )
-                        }
-                        .buttonStyle(SolidButton(true))
-                        .padding(
-                            .bottom,
-                            8
-                        )
-                        
-                        Button {
-                            viewModel.isRevertBottomSheetPresent.toggle()
-                        } label: {
-                            CustomText(
-                                "취소",
-                                fontType: .body1Bold,
-                                color: Color(.primaryNormal)
-                            )
-                        }
-                        .buttonStyle(OutlinedLargeButton())
-                    }
-                    .padding(
-                        .horizontal,
-                        20
-                    )
-                }
+            revertBottomSheet
+            
+            filterBottomSheet
         }
         .onAppear {
             Task { @MainActor in
@@ -236,8 +189,7 @@ struct TodayStudyView: View {
                     }
                     
                     Button {
-                        //TODO: Filter Button 동작
-                        print("Filter Button Tapped")
+                        viewModel.isFilterBottomSheetPresent = true
                     } label: {
                         Image(.filter)
                             .renderingMode(.template)
@@ -269,12 +221,11 @@ struct TodayStudyView: View {
                     if piece.state == .cardDefault {
                         piece.state = .complete
                         // TODO: API 완료하기
+                        print("완료하기 API 호출 -> 결과 반영 API")
                     } else if piece.state == .complete {
                         if viewModel.isDeleteMode {
                             viewModel.toast = Toast("이미 완료한 일은 삭제할 수 없어요")
                         } else {
-                            // TODO: 되돌리기 Bottom Sheet Present
-                            print("되돌리기 Bottom Sheet Present")
                             viewModel.isRevertBottomSheetPresent.toggle()
                         }
                     } else if piece.state == .selectable {
@@ -316,6 +267,7 @@ struct TodayStudyView: View {
             
             Button {
                 print("삭제하기 Tapped")
+                //TODO: 삭제 API 호출 -> FetchData
             } label: {
                 CustomText(
                     "삭제하기",
@@ -338,6 +290,90 @@ struct TodayStudyView: View {
                 16
             )
         }
+    }
+    
+    private var revertBottomSheet: some View {
+        BottomSheet(
+            isShowing: $viewModel.isRevertBottomSheetPresent,
+            height: 265
+        ) {
+            VStack(spacing: 0) {
+                CustomText(
+                    "미완료 상태로 되돌릴까요?",
+                    fontType: .headline1Bold,
+                    color: Color(.labelNeutral)
+                )
+                .padding(
+                    .top,
+                    15
+                )
+                .padding(
+                    .bottom,
+                    31
+                )
+                
+                Button {
+                    //TODO: 되돌리기 API, 새로고침
+                    print("되돌리기 Tapped -> API 호출하기 -> 바탕으로 새로고침")
+                    viewModel.isRevertBottomSheetPresent = false
+                } label: {
+                    CustomText(
+                        "되돌리기",
+                        fontType: .body1Bold,
+                        color: Color(.staticWhite)
+                    )
+                }
+                .buttonStyle(SolidButton(true))
+                .padding(
+                    .bottom,
+                    8
+                )
+                
+                Button {
+                    viewModel.isRevertBottomSheetPresent.toggle()
+                } label: {
+                    CustomText(
+                        "취소",
+                        fontType: .body1Bold,
+                        color: Color(.primaryNormal)
+                    )
+                }
+                .buttonStyle(OutlinedLargeButton())
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    
+    private var filterBottomSheet: some View {
+        BottomSheet(
+            isShowing: $viewModel.isFilterBottomSheetPresent,
+            height: 225) {
+                VStack(spacing: 8) {
+                    ForEach(
+                        FetchTodayStudySortOption.allCases,
+                        id: \.self
+                    ) { filter in
+                        Button {
+                            viewModel.sortOption = filter
+                            viewModel.isFilterBottomSheetPresent = false
+                            Task {
+                                await viewModel.fetchData()
+                            }
+                        } label: {
+                            CustomText(
+                                filter.buttonTitle,
+                                fontType: .body1Bold,
+                                color: Color(.labelNeutral)
+                            )
+                        }
+                        .buttonStyle(PressedBottomSheetButtonStyle(isSelected: viewModel.sortOption == filter))
+                        // TODO: PressedBottomSheetButtonStyle 만들기
+                    }
+                }
+            }
     }
 }
 
@@ -420,7 +456,8 @@ struct DelayedStudyButton: View {
     
     var body: some View {
         Button {
-            print("Aa")
+            //TODO: 밀린 공부 View 이동
+            print("밀린 공부 버튼 Tapped")
         } label: {
             HStack(spacing: 5) {
                 CustomText(

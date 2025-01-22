@@ -121,3 +121,21 @@ struct PressedButtonStyle: ButtonStyle {
             )
     }
 }
+
+struct PressedBottomSheetButtonStyle: ButtonStyle {
+    private let isSelected: Bool
+    
+    init(isSelected: Bool = false) {
+        self.isSelected = isSelected
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        HStack {
+            configuration.label
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .fill(configuration.isPressed ? Color(.labelNormal).opacity(0.12) : Color.clear)
+                )
+        }
+    }
+}

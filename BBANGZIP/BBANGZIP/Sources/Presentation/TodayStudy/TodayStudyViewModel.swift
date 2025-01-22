@@ -14,6 +14,8 @@ final class TodayStudyViewModel: ObservableObject {
     @Published var isDeleteButtonEnable: Bool = false
     @Published var toast: Toast?
     @Published var isRevertBottomSheetPresent: Bool = false
+    @Published var isFilterBottomSheetPresent: Bool = false
+    @Published var sortOption: FetchTodayStudySortOption = .recent
     
     @Published var todayCount: Int = 0
     @Published var completeCount: Int = 0
@@ -33,7 +35,7 @@ final class TodayStudyViewModel: ObservableObject {
 //                area: .todo,
 //                year: 2025, // TODO: 스프린트에서 변경 예정
 //                semester: .first, // TODO: 스프린트에서 변경 예정
-//                sortOption: .recent
+//                sortOption: sortOption
 //            )
 //            todayCount = todayStudyContent.todayCount
 //            completeCount = todayStudyContent.completeCount
@@ -42,6 +44,7 @@ final class TodayStudyViewModel: ObservableObject {
 //            completeAnnounceText = todayStudyContent.completeAnnounceText
 //            pendingAnnounceText = todayStudyContent.pendingAnnounceText
             
+            // TODO: 다 삭제
             todayCount = 1
             completeCount = 1
             pendingCount = 1
