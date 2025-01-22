@@ -11,9 +11,11 @@ import SwiftUI
 struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
     @FocusState private var isStudyContentFocused: Bool
+    @FocusState private var isStartRangeFocused: Bool
+    @FocusState private var isEndRangeContentFocused: Bool
     @State private var isDatePickerPresented = false
     @State private var isDividerPresented = false
-    @State private var selectedBottomSheetType: BottomSheetType? = .examDate
+    @State private var selectedBottomSheetType: BottomSheetType?
     @State private var selectedYear: Int
     @State private var selectedMonth: Int
     @State private var selectedDay: Int
@@ -50,78 +52,76 @@ struct AddStudyView: View {
     }
     
     var body: some View {
-        VStack{
-            ZStack{
-                subjectTitle
-                
-                HStack {
-                    backButton
-                        .padding(16)
-                    Spacer()
+        ZStack {
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hideKeyboard()
                 }
-            }
-            .padding(
-                .bottom,
-                16
-            )
             
-            VStack(spacing: 0) {
-                dateTitle
-                
-                dateTextField
-                
-                studyContentTitle
-                
-                studyContentField
-                
-                studyRangeTitle
-                
-                HStack(spacing: 20) {
-                    startRangeTextField
+            VStack{
+                ZStack{
+                    subjectTitle
                     
-                    endRangeTextField
+                    HStack {
+                        backButton
+                            .padding(16)
+                        Spacer()
+                    }
                 }
+                .padding(
+                    .bottom,
+                    16
+                )
                 
-                divideButton
-                
-                tipText
-                
-                Spacer()
-                
-                registerButton
+                VStack(spacing: 0) {
+                    dateTitle
+                    
+                    dateTextField
+                    
+                    studyContentTitle
+                    
+                    studyContentField
+                    
+                    studyRangeTitle
+                    
+                    HStack(spacing: 20) {
+                        startRangeTextField
+                        
+                        endRangeTextField
+                    }
+                    
+                    divideButton
+                    
+                    tipText
+                    
+                    Spacer()
+                    
+                    registerButton
+                }
+                .padding(
+                    .horizontal,
+                    20
+                )
             }
-            .padding(
-                .horizontal,
-                20
-            )
-        }
-        .ignoresSafeArea(.keyboard)
-        .bottomSheet(
-            isShowing: $isDatePickerPresented,
-            height: 453
-        ) {
-            ExamPickerBottomSheet(
-                isPresented: $isDatePickerPresented,
-                selectedYear: $selectedYear,
-                selectedMonth: $selectedMonth,
-                selectedDay: $selectedDay,
-                isButtonTapped: $isButtonTapped
-            )
-        }
-        .bottomSheet(isShowing: $isDividerPresented, height: 449) {
-            DivideStudyBottomSheet(isPresented: $isDividerPresented)
-        }
-        .onTapGesture {
-            hideKeyboard()
-        }
-        .onChange(of: isButtonTapped) { isTapped in
-            if isTapped {
-                updateDateTextField()
+            .ignoresSafeArea(.keyboard)
+            .bottomSheet(
+                isShowing: $isDatePickerPresented,
+                height: 453
+            ) {
+                ExamPickerBottomSheet(
+                    isPresented: $isDatePickerPresented,
+                    selectedYear: $selectedYear,
+                    selectedMonth: $selectedMonth,
+                    selectedDay: $selectedDay,
+                    isButtonTapped: $isButtonTapped
+                )
             }
-        }
-        .onChange(of: isDatePickerPresented) { isPresented in
-            if isPresented {
-                isButtonTapped = false
+            .bottomSheet(
+                isShowing: $isDividerPresented,
+                height: 449
+            ) {
+                DivideStudyBottomSheet(isPresented: $isDividerPresented)
             }
         }
     }
@@ -180,6 +180,16 @@ struct AddStudyView: View {
             .bottom,
             50
         )
+        .onChange(of: isButtonTapped) { isTapped in
+            if isTapped {
+                updateDateTextField()
+            }
+        }
+        .onChange(of: isDatePickerPresented) { isPresented in
+            if isPresented {
+                isButtonTapped = false
+            }
+        }
     }
     
     private var studyContentTitle: some View {
@@ -256,6 +266,7 @@ struct AddStudyView: View {
             "시작 페이지",
             text: $viewModel.startRangeString
         )
+        .focused($isStartRangeFocused)
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.startRangeString,
@@ -268,6 +279,24 @@ struct AddStudyView: View {
             .bottom,
             16
         )
+        .keyboardType(.decimalPad)
+        .onChange(of: viewModel.startRangeString) { newRange in
+            if newRange.count > 4 {
+                viewModel.startRangeString = String(newRange.prefix(4))
+            }
+            
+            viewModel.verifyStartRange(
+                newText: newRange,
+                isStartRangeFocused: isStartRangeFocused
+            )
+        }
+        .onChange(of: isStartRangeFocused) { isStartRangeFocused in
+            viewModel.handleStartRangeFocusChange(
+                newText: viewModel.startRangeString,
+                isStartRangeFocused: isStartRangeFocused
+            )
+        }
+        
     }
     
     private var endRangeTextField: some View {
@@ -291,7 +320,7 @@ struct AddStudyView: View {
     
     private var divideButton: some View {
         Button("쪼개서 공부하기") {
-            // TODO: 나누어 공부하기 뷰로 화면 전환
+            isDividerPresented = true
         }
         .buttonStyle(
             OutlinedMediumButton()

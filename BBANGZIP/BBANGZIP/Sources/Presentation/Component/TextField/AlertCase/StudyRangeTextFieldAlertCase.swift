@@ -9,22 +9,22 @@
 import SwiftUI
 
 enum StudyRangeTextFieldAlertCase: TextFieldAlertable {
-    case startDefaultCorrect
-    case endDefaultCorrect
+    case startAlert
+    case endAlert
     case startLimitWrong
     case endLimitWrong
     case rangeFlippedWrong
     
     var alertText: String {
         switch self {
-        case .startDefaultCorrect:
+        case .startAlert:
             "부터"
-        case .endDefaultCorrect:
+        case .endAlert:
             "까지"
         case .startLimitWrong, .rangeFlippedWrong:
-            "시작범위 이후로 입력해주세요"
+            "시작 범위 이후로 입력해 주세요"
         case .endLimitWrong:
-            "종료범위 이전으로 입력해주세요"
+            "종료 범위 이전으로 입력해 주세요"
         }
     }
 }

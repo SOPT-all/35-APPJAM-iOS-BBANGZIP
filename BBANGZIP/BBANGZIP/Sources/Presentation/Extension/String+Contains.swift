@@ -7,20 +7,6 @@
 //
 
 extension String {
-    var containsEmoji: Bool {
-        self.unicodeScalars.contains(where: { $0.properties.isEmojiPresentation })
-    }
-    var containsSymbol: Bool {
-        self.range(
-            of: "\\p{Symbol}",
-            options: .regularExpression
-        ) != nil ||
-        self.range(
-            of: "\\p{Punctuation}",
-            options: .regularExpression
-        ) != nil
-    }
-    
     var isValidStudyContent: Bool {
         let trimmedText = self.trimmingCharacters(in: .whitespacesAndNewlines)
         let regex = "^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s\\p{P}\\p{S}]{1,20}$"
@@ -28,5 +14,18 @@ extension String {
             of: regex,
             options: .regularExpression
         ) != nil
+    }
+    
+    var isValidStudyRange: Bool {
+        let regex = "^\\d{1,4}p?$"
+        return self.range(
+            of: regex,
+            options: .regularExpression
+        ) != nil
+    }
+    
+    func trimmingLeadingZeros() -> String {
+        guard let intValue = Int(self) else { return self }
+        return String(intValue)
     }
 }

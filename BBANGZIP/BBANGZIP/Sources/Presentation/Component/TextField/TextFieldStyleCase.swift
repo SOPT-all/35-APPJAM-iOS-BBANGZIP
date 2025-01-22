@@ -35,7 +35,7 @@ enum TextFieldStyleCase {
         case .nickname:
             8
         case .date, .studyRange:
-            nil
+            4
         case .studyContent:
             20
         case .subject:
@@ -49,6 +49,15 @@ enum TextFieldStyleCase {
             true
         case .date, .studyContent, .studyRange:
             false
+        }
+    }
+    
+    var countable: Bool {
+        switch self {
+        case .date, .studyRange:
+            false
+        case .nickname, .studyContent, .subject:
+            true
         }
     }
 }

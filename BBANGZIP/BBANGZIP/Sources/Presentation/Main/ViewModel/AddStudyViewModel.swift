@@ -24,6 +24,7 @@ final class AddStudyViewModel: ObservableObject {
     @Published var endRangeAnnounceState: StudyRangeTextFieldAlertCase?
     @Published var isStudyContentFocused: Bool = false
     @Published var isStudyContentValid: Bool = false
+    @Published var isStartRangeValid: Bool = false
     
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -42,9 +43,9 @@ final class AddStudyViewModel: ObservableObject {
         contentState: TextFieldState = .defaultState,
         contentAnnounceState: StudyContentTextFieldAlertCase? = .alert,
         startRangeState: TextFieldState = .defaultState,
-        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startDefaultCorrect,
+        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endDefaultCorrect
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
     ) {
         self.date = date
         self.studyContent = studyContent
@@ -96,25 +97,88 @@ final class AddStudyViewModel: ObservableObject {
     }
     
     func handleStudyContentFocusChange(
-            newText: String,
-            isStudyContentFocused: Bool
-        ) {
-            if !isStudyContentFocused {
-                if newText.isEmpty {
-                    contentState = .defaultState
-                    isStudyContentValid = false
-                } else if newText.isValidStudyContent {
-                    contentState = .field
-                    contentAnnounceState = .enable
-                    isStudyContentValid = true
-                } else {
-                    contentState = .alert
-                    contentAnnounceState = .alert
-                    isStudyContentValid = false
-                }
+        newText: String,
+        isStudyContentFocused: Bool
+    ) {
+        if !isStudyContentFocused {
+            if newText.isEmpty {
+                contentState = .defaultState
+                isStudyContentValid = false
+            } else if newText.isValidStudyContent {
+                contentState = .field
+                contentAnnounceState = .enable
+                isStudyContentValid = true
             } else {
-                contentState = .placeholder
+                contentState = .alert
+                contentAnnounceState = .alert
                 isStudyContentValid = false
             }
+        } else {
+            contentState = .placeholder
+            isStudyContentValid = false
         }
+    }
+    
+    func verifyStartRange(
+        newText: String,
+        isStartRangeFocused: Bool
+    ) {
+        if isStartRangeFocused {
+            startRangeState = .typing
+            
+            if newText.isEmpty {
+                startRangeState = .defaultState
+                startRangeAnnounceState = .startAlert
+                isStartRangeValid = false
+            } else {
+                if newText.isValidStudyRange {
+                    startRangeState = .typing
+                    startRangeAnnounceState = .startAlert
+                    isStartRangeValid = true
+                } else {
+                    startRangeState = .alert
+                    startRangeAnnounceState = .startAlert
+                    isStartRangeValid = false
+                }
+            }
+        } else if newText.isEmpty {
+            startRangeState = .defaultState
+            startRangeAnnounceState = .startAlert
+            isStartRangeValid = false
+        }
+    }
+    
+    func handleStartRangeFocusChange(
+        newText: String,
+        isStartRangeFocused: Bool
+    ) {
+        if !isStartRangeFocused {
+            let trimmedText = newText.trimmingLeadingZeros()
+            if !trimmedText.hasSuffix("p") {
+                startRangeString = trimmedText + "p"
+            } else {
+                startRangeString = trimmedText
+            }
+            
+            if newText.isEmpty {
+                startRangeState = .defaultState
+                isStartRangeValid = false
+            } else if newText.isValidStudyRange {
+                startRangeState = .field
+                startRangeAnnounceState = .startAlert
+                isStartRangeValid = true
+            } else {
+                startRangeState = .alert
+                startRangeAnnounceState = .startAlert
+                isStartRangeValid = false
+            }
+        } else {
+            if newText.hasSuffix("p") {
+                startRangeString = String(newText.dropLast())
+            }
+            
+            startRangeState = .placeholder
+            isStartRangeValid = false
+        }
+    }
 }
