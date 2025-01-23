@@ -192,7 +192,7 @@ struct SubjectManageView: View {
                     viewModel.validateDeleteButton()
                 } label: {
                     if model.state == .cardDefault {
-                        NavigationLink(destination: SubjectDetailView(viewModel: SubjectDetailViewModel(modelList: StudyPieceModel.mockList), isBottomSheetShowing: $isBottomSheetShowing)
+                        NavigationLink(destination: SubjectDetailView(viewModel: SubjectDetailViewModel(filterExamUseCase: DefaultFilterExamUseCase(examRepository: DefaultExamRepository())), isBottomSheetShowing: $isBottomSheetShowing)
                         .onAppear { isCustomTabBarHidden = true }
                         ) {
                             SubjectCard(

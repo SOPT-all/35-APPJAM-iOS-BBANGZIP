@@ -9,8 +9,11 @@
 import SwiftUI
 
 final class SubjectDetailViewModel: ObservableObject {
-    @Published var modelList: [StudyPieceModel]
+    private let filterExamUseCase: FilterExamUseCase
+    
+    @Published var modelList: [FilterExamList] = []
     @Published var isDeleteMode: Bool = false
+    @Published var isLoading: Bool = true
     @Published var isDeleteButtonEnable: Bool = false
     @Published var isShowingBottomSheet: Bool = false
     
@@ -18,15 +21,17 @@ final class SubjectDetailViewModel: ObservableObject {
         modelList.filter { $0.state == .selected }.count
     }
     
-    init(modelList: [StudyPieceModel]) {
-        self.modelList = modelList
+    init(
+        filterExamUseCase: FilterExamUseCase
+    ) {
+        self.filterExamUseCase = filterExamUseCase
     }
     
     func makeStudyPieceSelectable() {
         isDeleteMode.toggle()
         modelList = modelList.map(
             {
-                StudyPieceModel(
+                FilterExamList(
                     pieceID: $0.pieceID,
                     studyContents: $0.studyContents,
                     startPage: $0.startPage,
@@ -38,6 +43,22 @@ final class SubjectDetailViewModel: ObservableObject {
                 )
             }
         )
+    }
+    
+    @MainActor
+    func fetchData() async {
+        do {
+            let examContent = try await filterExamUseCase.execute(
+                subjectId: 1, // TODO: 스프린트 변경 예정
+                examName: "mid" // TODO: 스프린트 변경 예정
+            )
+            modelList = examContent.studyList
+            
+            isLoading = false
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func deleteStudyPiece() {

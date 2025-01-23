@@ -23,113 +23,122 @@ struct SubjectDetailView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavigationBar(
-                showBackButton: true,
-                showMenu: true,
-                title: "경제통계학",
-                backgroundColor: Color(.backgroundAccent)
-            )
-            
-            ZStack {
-                ScrollView {
-                    ZStack {
-                        VStack {
-                            Color(.backgroundAccent)
-                                .frame(
-                                    height: 153
-                                )
-                                .cornerRadius(
-                                    32,
-                                    corners: [
-                                        .bottomLeft,
-                                        .bottomRight
+        if viewModel.isLoading {
+            ProgressView()
+                .onAppear {
+                    Task { @MainActor in
+                        await viewModel.fetchData()
+                    }
+                }
+        } else {
+            VStack(spacing: 0) {
+                CustomNavigationBar(
+                    showBackButton: true,
+                    showMenu: true,
+                    title: "경제통계학",
+                    backgroundColor: Color(.backgroundAccent)
+                )
+                
+                ZStack {
+                    ScrollView {
+                        ZStack {
+                            VStack {
+                                Color(.backgroundAccent)
+                                    .frame(
+                                        height: 153
+                                    )
+                                    .cornerRadius(
+                                        32,
+                                        corners: [
+                                            .bottomLeft,
+                                            .bottomRight
+                                        ]
+                                    )
+                                    .ignoresSafeArea(
+                                        .all,
+                                        edges: .top
+                                    )
+                                
+                                Spacer()
+                            }
+                            
+                            
+                            VStack(spacing: 16) {
+                                backgroundView
+                                    .padding(
+                                        .top,
+                                        25
+                                    )
+                                
+                                MenuTab(
+                                    tabNames: [
+                                        "중간고사",
+                                        "기말고사"
                                     ]
                                 )
-                                .ignoresSafeArea(
-                                    .all,
-                                    edges: .top
-                                )
-                            
-                            Spacer()
-                        }
-                        
-                        
-                        VStack(spacing: 16) {
-                            backgroundView
                                 .padding(
                                     .top,
-                                    25
+                                    28
                                 )
-                            
-                            MenuTab(
-                                tabNames: [
-                                    "중간고사",
-                                    "기말고사"
-                                ]
-                            )
-                            .padding(
-                                .top,
-                                28
-                            )
-                            .padding(
-                                .horizontal,
-                                20
-                            )
-                            
-                            HStack(spacing: 8) {
-                                Chip(type: .daysLeftWithText(-24))
+                                .padding(
+                                    .horizontal,
+                                    20
+                                )
                                 
-                                CustomText(
-                                    "2025년 5월 13일",
-                                    fontType: .label1Bold,
-                                    color: Color(.labelAlternative)
-                                )
-                            }
-                            
-                            studyListHeaderView
-                                .padding(
-                                    .top,
-                                    32
-                                )
-                                .padding(
-                                    .horizontal,
-                                    20
-                                )
-                            
-                            studyPieceList
-                                .padding(
-                                    .horizontal,
-                                    20
-                                )
-                                .padding(
-                                    .bottom,
-                                    16
-                                )
-                            
-                            if viewModel.isDeleteMode {
-                                Spacer()
-                                    .frame(height: 56)
+                                HStack(spacing: 8) {
+                                    Chip(type: .daysLeftWithText(-24))
+                                    
+                                    CustomText(
+                                        "2025년 5월 13일",
+                                        fontType: .label1Bold,
+                                        color: Color(.labelAlternative)
+                                    )
+                                }
+                                
+                                studyListHeaderView
+                                    .padding(
+                                        .top,
+                                        32
+                                    )
+                                    .padding(
+                                        .horizontal,
+                                        20
+                                    )
+                                
+                                studyPieceList
+                                    .padding(
+                                        .horizontal,
+                                        20
+                                    )
+                                    .padding(
+                                        .bottom,
+                                        16
+                                    )
+                                
+                                if viewModel.isDeleteMode {
+                                    Spacer()
+                                        .frame(height: 56)
+                                }
                             }
                         }
+                        .navigationBarHidden(true)
                     }
-                    .navigationBarHidden(true)
-                }
-                .scrollIndicators(.hidden)
-                .bottomSheet(
-                    isShowing: $viewModel.isShowingBottomSheet,
-                    height: 265
-                ) {
-                    if let type = selectedBottomSheetType {
-                        type.contentView(
-                            isPresented: $viewModel.isShowingBottomSheet
-                        )
+                    .scrollIndicators(.hidden)
+                    .bottomSheet(
+                        isShowing: $viewModel.isShowingBottomSheet,
+                        height: 265
+                    ) {
+                        if let type = selectedBottomSheetType {
+                            type.contentView(
+                                isPresented: $viewModel.isShowingBottomSheet
+                            )
+                        }
                     }
-                }
-                
-                
-                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
-                    deleteButton
+                    
+                    
+                    if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                        deleteButton
+                    }
                 }
             }
         }

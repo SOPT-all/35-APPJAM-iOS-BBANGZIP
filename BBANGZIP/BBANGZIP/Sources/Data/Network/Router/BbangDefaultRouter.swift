@@ -43,14 +43,14 @@ enum BbangDefaultRouter {
     case fetchBadgeDetail(badgeName: String)
     
     //유빈
-    case subjectFiltering(dto: FetchSubjectRequestDTO)
+    case examFiltering(subjectId: Int, examName: String)
     case fetchSubject(dto: FetchSubjectRequestDTO)
     
 }
 
 extension BbangDefaultRouter: Router {
     var baseURL: String {
-        "https://bbangzip.store"
+        Environment.baseURL // 수정 필요
     }
     
     var path: String {
@@ -65,8 +65,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/user/auth/withdraw"
         case .onBoarding:
             return "/api/v1/user/auth/signup"
-        case .subjectFiltering:
-            return "/api/v1/subjects/filter?year=2025&semester=1학기"
+        case .examFiltering(let subjectId, let examName):
+            return "/api/v1/exams/\(subjectId)/\(examName)"
         case .testSelect(let subjectID):
             return "/api/v1/exam/\(subjectID)"
         case .addSubject:
@@ -131,7 +131,7 @@ extension BbangDefaultRouter: Router {
             return .post
             
         case
-                .subjectFiltering,
+                .examFiltering,
                 .testSelect,
                 .motivationMessage,
                 .fetchSortedTodoList,
@@ -199,8 +199,11 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .fetchBadgeDetail:
             return [:]
-        case .subjectFiltering(let dto):
-            return dto.asDictionary()
+        case .examFiltering(let subjectId, let examName):
+            return [
+                "subjectId": subjectId,
+                "examName": examName
+            ]
         case .fetchSubject(let dto):
             return dto.asDictionary()
         default:

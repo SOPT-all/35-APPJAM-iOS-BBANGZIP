@@ -11,12 +11,12 @@ import SwiftUI
 struct StudyPieceCard: View {
     private let state: StudyPieceCardState
     // TODO: 수정필요
-    private let StudyPieceCardData: StudyPieceModel
+    private let StudyPieceCardData: FilterExamList
     private let borderPadding: CGFloat = 2
     
     init(
         state: StudyPieceCardState,
-        StudyPieceCardData: StudyPieceModel = StudyPieceModel.mockList[0]
+        StudyPieceCardData: FilterExamList
     ) {
         self.state = state
         self.StudyPieceCardData = StudyPieceCardData
