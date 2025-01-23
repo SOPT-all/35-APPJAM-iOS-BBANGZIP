@@ -10,20 +10,16 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @State private var viewModel = KakaoLoginViewModel(
-            useCase: DefaultKakaoLoginUseCase(
-                repository: DefaultUserRepository()
-            )
-        )
-        
-        init() {
-            
-        }
+    @StateObject private var viewModel: KakaoLoginViewModel
+    
+    init(viewModel: KakaoLoginViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack (spacing: 0) {
             title
-                        
+            
             onBoardingSectionView
                                     
             loginSection
@@ -101,12 +97,8 @@ struct LoginView: View {
             .padding(.top, 117)
     }
     
-    
-    
-
-    
 }
 
-#Preview {
-    LoginView()
-}
+//#Preview {
+//    LoginView()
+//}

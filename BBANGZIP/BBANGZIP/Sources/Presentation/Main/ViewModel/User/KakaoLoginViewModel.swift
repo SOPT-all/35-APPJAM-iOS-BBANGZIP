@@ -10,14 +10,20 @@ import SwiftUI
 
 final class KakaoLoginViewModel: ObservableObject {
     private let useCase: KakaoLoginUseCase
+    @Published var isOnboardingComplete: Bool = false
     
     init(useCase: KakaoLoginUseCase) {
         self.useCase = useCase
     }
     
     func kakaoLogin() {
-        useCase.execute { isSuccess in
-            print("isSuccess: \(isSuccess)")
+        useCase.execute { [weak self] isSuccess in
+            switch isSuccess {
+            case .success(let data):
+                self?.isOnboardingComplete = data.isOnboardingComplete
+            case .failure(let failure):
+                dump(failure)
+            }
         }
     }
 }

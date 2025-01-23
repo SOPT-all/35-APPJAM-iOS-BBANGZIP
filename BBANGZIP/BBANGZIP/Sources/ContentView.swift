@@ -1,23 +1,32 @@
 import SwiftUI
 
 public struct ContentView: View {
-    @State private var showMainView = false
+    @StateObject private var kakaoLoginViewModel = KakaoLoginViewModel(
+        useCase: DefaultKakaoLoginUseCase(repository: DefaultUserRepository())
+    )
+    @State private var isLoading = true
     
     public var body: some View {
         ZStack {
-            if showMainView {
-                LoginView()
-            } else {
+            if isLoading {
                 SplashView()
-                    .onAppear {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            withAnimation {
-                                showMainView = true
-                            }
-                        }
-                    }
+            } else {
+                if kakaoLoginViewModel.isOnboardingComplete {
+                    CustomTabView()
+                } else {
+                    OnboardingView()
+                }
             }
         }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation {
+                    isLoading = false
+                }
+                kakaoLoginViewModel.kakaoLogin()
+            }
+        }
+        .environmentObject(kakaoLoginViewModel)
     }
 }
 
@@ -26,3 +35,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+

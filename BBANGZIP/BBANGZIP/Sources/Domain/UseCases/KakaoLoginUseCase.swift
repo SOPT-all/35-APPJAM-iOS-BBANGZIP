@@ -9,7 +9,7 @@
 import Foundation
 
 protocol KakaoLoginUseCase {
-    func execute(completion: @escaping (Result<String, Error>) -> Void)
+    func execute(completion: @escaping (Result<SignInData, Error>) -> Void)
 }
 
 struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
@@ -20,7 +20,7 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
         self.repository = repository
     }
     
-    func execute(completion: @escaping (Result<String, Error>) -> Void) {
+    func execute(completion: @escaping (Result<SignInData, Error>) -> Void) {
         repository.kakaoLogin { result in
             switch result {
             case .success(let success):
@@ -33,4 +33,5 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
             }
         }
     }
+
 }
