@@ -27,7 +27,15 @@ struct CustomTabView: View {
         ZStack {
             NavigationStack {
                 TabView(selection: $selected) {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
+                    SubjectManageView(
+                        viewModel: SubjectManageViewModel(
+                            fetchSubjectUseCase: DefaultFetchSubjectUseCase(
+                                subjectRepository: DefaultSubjectRepository()
+                            )
+                        ),
+                        isBottomSheetShowing: $isBottomSheetShowing,
+                        isCustomTabBarHidden: $isCustomTabBarHidden
+                    )
                         .tag(Tab.subjectManage)
                     
                     TodayStudyView(

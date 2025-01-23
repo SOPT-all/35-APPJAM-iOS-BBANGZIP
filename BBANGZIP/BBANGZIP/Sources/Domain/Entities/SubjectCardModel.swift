@@ -15,7 +15,7 @@ struct SubjectCardModel: Sendable, Hashable {
 
 struct SubjectStudyModel: Sendable, Hashable {
     let examName: String
-    let examDday: Int
+    let examDDay: Int
     let pendingCount: Int
     let inProgressCount: Int
 }
@@ -28,7 +28,7 @@ extension SubjectCardModel {
             subjectName: "경제통계학",
             studyList: [SubjectStudyModel(
                 examName: "중간고사",
-                examDday: 14,
+                examDDay: 14,
                 pendingCount: 2,
                 inProgressCount: 1
             )]
@@ -39,7 +39,7 @@ extension SubjectCardModel {
             subjectName: "컴퓨터프로그래밍1",
             studyList: [SubjectStudyModel(
                 examName: "중간고사",
-                examDday: 20,
+                examDDay: 20,
                 pendingCount: 1,
                 inProgressCount: 4
             )]
@@ -50,7 +50,7 @@ extension SubjectCardModel {
             subjectName: "한국사와문학",
             studyList: [SubjectStudyModel(
                 examName: "기말고사",
-                examDday: 3,
+                examDDay: 3,
                 pendingCount: 0,
                 inProgressCount: 0
             )]

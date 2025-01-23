@@ -9,16 +9,16 @@
 import SwiftUI
 
 struct ChangeSemesterButton: View {
-    @ObservedObject var viewModel: SubjectManageViewModel
-    
-    // TODO: API 연동 후 dataCount 변경 필요
-    init(viewModel: SubjectManageViewModel = SubjectManageViewModel(modelList: [])) {
-        self.viewModel = viewModel
-    }
+//    @ObservedObject var viewModel: SubjectManageViewModel
+//    
+//    // TODO: API 연동 후 dataCount 변경 필요
+//    init(viewModel: SubjectManageViewModel = SubjectManageViewModel) {
+//        self.viewModel = viewModel
+//    }
     
     var body: some View {
         Button {
-            viewModel.showChangeSemesterSheet()
+//            viewModel.showChangeSemesterSheet()
         } label: {
             HStack(spacing: 4) {
                 CustomText(

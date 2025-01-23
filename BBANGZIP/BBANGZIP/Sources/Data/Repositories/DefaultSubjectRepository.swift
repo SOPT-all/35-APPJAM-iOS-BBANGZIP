@@ -14,7 +14,7 @@ final class DefaultSubjectRepository: SubjectRepository {
         semester: Semester
     ) async throws -> SubjectContent {
         let response = await API.session.request(
-            BbangDefaultRouter.subjectFiltering(
+            BbangDefaultRouter.fetchSubject(
                 dto: FetchSubjectRequestDTO(
                     year: year,
                     semester: semester

@@ -30,6 +30,12 @@ struct SubjectListDTO: Decodable {
     let subjectName: String
     let studyList: [StudyListDTO]
     
+    enum CodingKeys: String, CodingKey {
+        case subjectId = "subjectId"
+        case subjectName
+        case studyList
+    }
+    
     func toDomain() -> SubjectCardModel {
         SubjectCardModel(
             state: .cardDefault,
@@ -42,14 +48,14 @@ struct SubjectListDTO: Decodable {
 
 struct StudyListDTO: Decodable {
     let examName: String
-    let examDday: Int
+    let examDDay: Int
     let pendingCount: Int
     let remainingCount: Int
     
     func toDomain() -> SubjectStudyModel {
         SubjectStudyModel(
             examName: examName,
-            examDday: examDday,
+            examDDay: examDDay,
             pendingCount: pendingCount,
             inProgressCount: remainingCount
         )

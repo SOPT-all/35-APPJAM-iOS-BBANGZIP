@@ -44,7 +44,7 @@ struct SubjectCard: View {
                         color: Color(.labelNeutral)
                     )
                     
-                    Chip(type: .daysLeftBlack(subjectCardData.studyList[0].examDday))
+                    Chip(type: .daysLeftBlack(subjectCardData.studyList[0].examDDay))
                     
                     Spacer()
                     

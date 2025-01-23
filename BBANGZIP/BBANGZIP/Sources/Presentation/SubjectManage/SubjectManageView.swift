@@ -48,7 +48,7 @@ struct SubjectManageView: View {
                 ScrollView {
                     VStack {
                         HStack {
-                            ChangeSemesterButton(viewModel: viewModel)
+                            ChangeSemesterButton()
                                 .padding(
                                     .leading,
                                     24

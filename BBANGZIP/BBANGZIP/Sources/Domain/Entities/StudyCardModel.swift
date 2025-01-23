@@ -8,7 +8,7 @@
 
 struct StudyCardModel: Hashable {
     let motivationMessage: String
-    let examDday: Int
+    let examDDay: Int
     let examDate: String
     let studyList: [StudyPieceModel]
 }
@@ -37,7 +37,7 @@ extension StudyCardModel {
     static let mockList: [Self] = [
         .init(
             motivationMessage: "열심히 공부합시다!",
-            examDday: 24,
+            examDDay: 24,
             examDate: "2025-05-10",
             studyList: [
                 StudyPieceModel(
