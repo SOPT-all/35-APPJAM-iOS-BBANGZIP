@@ -23,46 +23,60 @@ struct DivideRangeView: View {
         endPage: Int,
         totalDays: Int
     ) {
-            _viewModel = StateObject(
-                wrappedValue: DivideRangeViewModel(
-                    pieceCount: pieceCount,
-                    startPage: startPage,
-                    endPage: endPage,
-                    totalDays: totalDays
-                )
+        _viewModel = StateObject(
+            wrappedValue: DivideRangeViewModel(
+                pieceCount: pieceCount,
+                startPage: startPage,
+                endPage: endPage,
+                totalDays: totalDays
             )
-        }
+        )
+    }
     
     var body: some View {
-        CustomNavigationBar(
-            showBackButton: true,
-            showMenu: false,
-            title: "학습 범위 나누기",
-            backgroundColor: Color(.clear)
-        )
-        .navigationBarHidden(true)
-        
-        ScrollView {
-            ZStack {
-                Color.clear
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        hideKeyboard()
+        VStack(spacing: 0) {
+            CustomNavigationBar(
+                showBackButton: true,
+                showMenu: false,
+                title: "학습 범위 나누기",
+                backgroundColor: Color(.clear)
+            )
+            .navigationBarHidden(true)
+            
+            ScrollView {
+                ZStack {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            hideKeyboard()
+                        }
+                    
+                    VStack(spacing: 32) {
+                        entireRange
+                        
+                        Divider()
+                        
+                        piece
+                        
+                        //                    registerButton(for: piece)
                     }
-                
-                VStack(spacing: 32) {
-                    entireRange
-                    
-                    Divider()
-                    
-                    piece
-                    
-//                    registerButton(for: piece)
+                    .padding(.top, 10)
+                    .padding(.horizontal, 20)
+                    .ignoresSafeArea(.keyboard)
                 }
-                .padding(.top, 16)
-                .padding(.horizontal, 20)
-                .ignoresSafeArea(.keyboard)
             }
+        }
+        .bottomSheet(
+            isShowing: $viewModel.isDatePickerPresented,
+            height: 453
+        ) {
+            StudyDeadlinePickerBottomSheet(
+                isPresented: $viewModel.isDatePickerPresented,
+                selectedYear: $viewModel.selectedYear,
+                selectedMonth: $viewModel.selectedMonth,
+                selectedDay: $viewModel.selectedDay,
+                isButtonTapped: $viewModel.isButtonTapped
+            )
         }
     }
     
@@ -213,12 +227,6 @@ struct DivideRangeView: View {
         }
     }
     
-//    private var dateFormatted: String {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "yyyy년 M월 d일 까지"
-//        return formatter.string(from: selectedDate)
-//    }
-    
     private func deadlineButton(for dateRange: String) -> some View {
         Button(
             action: {
@@ -230,27 +238,26 @@ struct DivideRangeView: View {
                 Text(dateRange)
             }
         }
-        .buttonStyle(
-            OutlinedMediumButton()
-        )
+        .buttonStyle(OutlinedMediumButton())
         .padding(
             .bottom,
             8
         )
+        .buttonStyle(PressedButtonStyle())
     }
     
-//    private func registerButton(for index: Int) -> some View {
-//        Button("저장하기") {
-//            // TODO: 화면 전환해야 할 다음 뷰로 연결
-//        }
-//        .buttonStyle(
-//            SolidIconButton(
-//                buttonImage: Image(.plus),
-//                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
-//            )
-//        )
-//        .disabled(
-//            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
-//        )
-//    }
+    //    private func registerButton(for index: Int) -> some View {
+    //        Button("저장하기") {
+    //            // TODO: 화면 전환해야 할 다음 뷰로 연결
+    //        }
+    //        .buttonStyle(
+    //            SolidIconButton(
+    //                buttonImage: Image(.plus),
+    //                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
+    //            )
+    //        )
+    //        .disabled(
+    //            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
+    //        )
+    //    }
 }

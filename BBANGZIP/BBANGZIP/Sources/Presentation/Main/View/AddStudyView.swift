@@ -340,6 +340,7 @@ struct AddStudyView: View {
         .disabled(
             !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
         )
+        .buttonStyle(PressedButtonStyle())
     }
     
     private var tipText: some View {

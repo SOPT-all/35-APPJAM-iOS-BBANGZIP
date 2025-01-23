@@ -24,6 +24,11 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var deadlineDates: [String]
     @Published var pieces: [Int]
     
+    @Published var selectedYear: Int = 2025
+    @Published var selectedMonth: Int = 1
+    @Published var selectedDay: Int = 1
+    @Published var isButtonTapped: Bool = false
+    
     init(
         pieceCount: Int,
         startPage: Int,
@@ -41,6 +46,10 @@ final class DivideRangeViewModel: ObservableObject {
         self.isEndRangeValid = Array(repeating: false, count: pieceCount)
         self.pieces = Array(1...pieceCount)
         self.deadlineDates = Array(repeating: "", count: pieceCount)
+        self.selectedYear = selectedYear
+        self.selectedMonth = selectedMonth
+        self.selectedDay = selectedDay
+        self.isButtonTapped = isButtonTapped
         
         setupRanges(
             startPage: startPage,

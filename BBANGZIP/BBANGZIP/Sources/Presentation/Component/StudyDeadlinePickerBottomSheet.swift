@@ -13,6 +13,7 @@ struct StudyDeadlinePickerBottomSheet: View {
     @Binding private var selectedYear: Int
     @Binding private var selectedMonth: Int
     @Binding private var selectedDay: Int
+    @Binding private var isButtonTapped: Bool
     
     private let years = Array(2021...2028)
     private let months = Array(1...12)
@@ -25,7 +26,8 @@ struct StudyDeadlinePickerBottomSheet: View {
         isPresented: Binding<Bool>,
         selectedYear: Binding<Int>,
         selectedMonth: Binding<Int>,
-        selectedDay: Binding<Int>
+        selectedDay: Binding<Int>,
+        isButtonTapped: Binding<Bool>
     ) {
         self._isPresented = isPresented
         self._selectedYear = selectedYear
@@ -43,14 +45,17 @@ struct StudyDeadlinePickerBottomSheet: View {
         self.currentYear = components.year ?? selectedYear.wrappedValue
         self.currentMonth = components.month ?? selectedMonth.wrappedValue
         self.currentDay = components.day ?? selectedDay.wrappedValue
+        self._isButtonTapped = isButtonTapped
     }
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 0) {
             headerView
             pickersView
+            Spacer()
             actionButton
         }
+        .padding(.top, 30)
     }
     
     private var headerView: some View {
@@ -59,6 +64,7 @@ struct StudyDeadlinePickerBottomSheet: View {
             fontType: .headline1Medium,
             color: Color(.labelNeutral)
         )
+        .padding(.top, 0)
     }
     
     private var pickersView: some View {
@@ -67,7 +73,10 @@ struct StudyDeadlinePickerBottomSheet: View {
             monthPicker
             dayPicker
         }
-        .padding()
+        .padding(
+            .horizontal,
+            20
+        )
     }
     
     private var yearPicker: some View {
@@ -93,9 +102,7 @@ struct StudyDeadlinePickerBottomSheet: View {
             -25
         )
         .clipped()
-        .onChange(
-            of: selectedYear
-        ) { _ in
+        .onChange(of: selectedYear) { _ in
             updateSelectedDay()
         }
     }
@@ -143,9 +150,7 @@ struct StudyDeadlinePickerBottomSheet: View {
                 calculateDaysInMonth(
                     year: selectedYear,
                     month: selectedMonth
-                ).filter {
-                    isValidDay($0)
-                },
+                ).filter { isValidDay($0) },
                 id: \.self
             ) { day in
                 CustomText(
@@ -173,7 +178,8 @@ struct StudyDeadlinePickerBottomSheet: View {
             Text("공부 기한 입력하기")
         }
         .buttonStyle(SolidButton())
-        .padding(.horizontal)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 44)
     }
     
     private var validMonths: [Int] {
@@ -199,7 +205,7 @@ struct StudyDeadlinePickerBottomSheet: View {
             selectedDay = days.last ?? 1
         }
     }
-    
+
     private func calculateDaysInMonth(
         year: Int,
         month: Int
@@ -223,26 +229,3 @@ struct StudyDeadlinePickerBottomSheet: View {
         return []
     }
 }
-
-//#Preview {
-//    let isPresented = Binding.constant(true)
-//    let selectedYear = Calendar.current.component(
-//        .year,
-//        from: Date()
-//    )
-//    let selectedMonth = Calendar.current.component(
-//        .month,
-//        from: Date()
-//    )
-//    let selectedDay = Calendar.current.component(
-//        .day,
-//        from: Date()
-//    )
-//    
-//    return StudyDeadlinePickerBottomSheet(
-//        isPresented: isPresented,
-//        selectedYear: selectedYear,
-//        selectedMonth: selectedMonth,
-//        selectedDay: selectedDay
-//    )
-//}

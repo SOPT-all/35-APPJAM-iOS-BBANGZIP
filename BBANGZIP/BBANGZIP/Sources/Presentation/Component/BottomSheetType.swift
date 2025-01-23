@@ -42,7 +42,8 @@ enum BottomSheetType: Int {
                 isPresented: isPresented,
                 selectedYear: selectedYear ?? .constant(2025),
                 selectedMonth: selectedMonth ?? .constant(1),
-                selectedDay: selectedDay ?? .constant(1)
+                selectedDay: selectedDay ?? .constant(1),
+                isButtonTapped: isButtonTapped
             )
         case .changeSemester:
             SemesterPickerBottomSheet(
