@@ -79,7 +79,8 @@ struct DivideRangeView: View {
                     selectedMonth: $viewModel.selectedMonths[index],
                     selectedDay: $viewModel.selectedDays[index],
                     selectedDeadline: $viewModel.deadlineDates[index],
-                    isButtonTapped: $viewModel.isButtonTapped[index]
+                    isButtonTapped: $viewModel.isButtonTapped[index],
+                    fixedExamDate: viewModel.fixedExamDate
                 )
             }
         }

@@ -26,7 +26,8 @@ enum BottomSheetType: Int {
         selectedYear: Binding<Int>? = .constant(2025),
         selectedMonth: Binding<Int>? = .constant(1),
         selectedDay: Binding<Int>? = .constant(1),
-        isButtonTapped: Binding<Bool> = .constant(false)
+        isButtonTapped: Binding<Bool> = .constant(false),
+        fixedExamDate: Date = Date()
     ) -> some View {
         switch self {
         case .examDate:
@@ -44,7 +45,8 @@ enum BottomSheetType: Int {
                 selectedMonth: selectedMonth ?? .constant(1),
                 selectedDay: selectedDay ?? .constant(1),
                 selectedDeadline: .constant(""),
-                isButtonTapped: isButtonTapped
+                isButtonTapped: isButtonTapped,
+                fixedExamDate: fixedExamDate
             )
         case .changeSemester:
             SemesterPickerBottomSheet(

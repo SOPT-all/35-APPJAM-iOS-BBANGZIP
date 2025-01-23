@@ -30,6 +30,7 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var isButtonTapped: [Bool]
     @Published var fixedStartPage: Int
     @Published var fixedEndPage: Int
+    @Published var fixedExamDate: Date = Date()
     
     init(
         pieceCount: Int,
@@ -55,7 +56,7 @@ final class DivideRangeViewModel: ObservableObject {
         
         self.fixedStartPage = startPage
         self.fixedEndPage = endPage
-        
+
         setupRanges(
             startPage: startPage,
             endPage: endPage,
@@ -113,11 +114,15 @@ final class DivideRangeViewModel: ObservableObject {
         formatter.dateFormat = "yyyy년 M월 d일"
         
         for i in 0..<pieceCount {
-            var currentEndDate = Calendar.current.date(
+            let currentEndDate = Calendar.current.date(
                 byAdding: .day,
                 value: daysPerPiece - 1 + (i == pieceCount - 1 ? remainder : 0),
                 to: currentStartDate
             ) ?? Date()
+            
+            if i == pieceCount - 1 {
+                fixedExamDate = currentEndDate
+            }
             
             let endDateString = formatter.string(from: currentEndDate)
             
@@ -283,8 +288,6 @@ final class DivideRangeViewModel: ObservableObject {
                 endRange = Int(endRangeStrings[index].dropLast()) ?? 0
                 
                 if endRange > fixedEndPage {
-                    print("end limit wrong \(fixedEndPage)")
-                    print("end limit wrong \(endRange)")
                     endRangeStates[index] = .alert
                     endRangeAnnounceStates[index] = .endLimitWrong
                     isEndRangeValid[index] = false
@@ -298,7 +301,6 @@ final class DivideRangeViewModel: ObservableObject {
                     endRangeAnnounceStates[index] = .endAlert
                     isEndRangeValid[index] = true
                 }
-                
             } else {
                 endRangeStates[index] = .alert
                 endRangeAnnounceStates[index] = .endAlert
