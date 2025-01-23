@@ -25,6 +25,7 @@ struct SubjectDetailView: View {
     var body: some View {
         if viewModel.isLoading {
             ProgressView()
+                .navigationBarHidden(true)
                 .onAppear {
                     Task { @MainActor in
                         await viewModel.fetchData()
@@ -75,7 +76,11 @@ struct SubjectDetailView: View {
                                         "중간고사",
                                         "기말고사"
                                     ]
-                                )
+                                ) { selectedTab in
+                                    Task {
+                                        await viewModel.updateExam(selectedTab)
+                                    }
+                                }
                                 .padding(
                                     .top,
                                     28
@@ -147,9 +152,9 @@ struct SubjectDetailView: View {
     var backgroundView: some View {
         HStack {
             CustomText(
-                "사장님의 각오 한 마디를 작성해 보세요",
+                viewModel.motivationMessage.isEmpty ? "사장님의 각오 한 마디를 작성해 보세요" : viewModel.motivationMessage,
                 fontType: .heading2Bold,
-                color: Color(.labelAssistive)
+                color: viewModel.motivationMessage.isEmpty ? Color(.labelAssistive) : Color(.labelNeutral)
             )
             .lineLimit(2)
             .padding(
@@ -160,6 +165,7 @@ struct SubjectDetailView: View {
                 .trailing,
                 151
             )
+            .frame(height: 56)
             
             Spacer()
         }
@@ -234,7 +240,7 @@ struct SubjectDetailView: View {
         VStack(spacing: 16) {
             ForEach(
                 $viewModel.modelList,
-                id: \.pieceID
+                id: \.pieceId
             ) { $model in
                 Button {
                     if model.state == .cardDefault {

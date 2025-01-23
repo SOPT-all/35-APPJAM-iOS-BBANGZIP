@@ -14,7 +14,7 @@ struct FilterExamContent {
 }
 
 struct FilterExamList {
-    let pieceID: Int
+    let pieceId: Int
     let studyContents: String
     let startPage: Int
     let finishPage: Int

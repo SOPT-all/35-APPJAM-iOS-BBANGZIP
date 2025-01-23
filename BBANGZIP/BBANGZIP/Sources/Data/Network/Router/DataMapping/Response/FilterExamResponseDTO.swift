@@ -28,7 +28,7 @@ struct FilterExamDTO: Decodable {
 }
 
 struct ExamListDTO: Decodable {
-    let pieceID: Int
+    let pieceId: Int
     let studyContents: String
     let startPage: Int
     let finishPage: Int
@@ -36,15 +36,19 @@ struct ExamListDTO: Decodable {
     let remainingDays: Int
     let isFinished: Bool
     
-//    enum CodingKeys: String, CodingKey {
-//        case subjectId = "subjectId"
-//        case subjectName
-//        case studyList
-//    }
-//    
+    enum CodingKeys: String, CodingKey {
+        case pieceId = "pieceId"
+        case studyContents
+        case startPage
+        case finishPage
+        case deadline
+        case remainingDays
+        case isFinished
+    }
+    
     func toDomain() -> FilterExamList {
         FilterExamList(
-            pieceID: pieceID,
+            pieceId: pieceId,
             studyContents: studyContents,
             startPage: startPage,
             finishPage: finishPage,
