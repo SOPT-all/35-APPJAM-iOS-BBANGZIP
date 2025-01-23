@@ -34,9 +34,9 @@ final class AddStudyViewModel: ObservableObject {
     @Published var isDatePickerPresented = false
     @Published var isDividerPresented = false
     @Published var selectedBottomSheetType: BottomSheetType?
-    @Published var selectedYear: Int = 2025
-    @Published var selectedMonth: Int = 1
-    @Published var selectedDay: Int = 1
+    @Published var selectedYear: Int
+    @Published var selectedMonth: Int
+    @Published var selectedDay: Int
     @Published var isButtonTapped: Bool = false
     @Published var daysUntilExam: Int = 0
     
@@ -74,9 +74,12 @@ final class AddStudyViewModel: ObservableObject {
         self.startRangeAnnounceState = startRangeAnnounceState
         self.endRangeState = endRangeState
         self.endRangeAnnounceState = endRangeAnnounceState
-        self.selectedYear = selectedYear
-        self.selectedMonth = selectedMonth
-        self.selectedDay = selectedDay
+        
+        let currentDate = Date()
+        let calendar = Calendar.current
+        self.selectedYear = calendar.component(.year, from: currentDate)
+        self.selectedMonth = calendar.component(.month, from: currentDate)
+        self.selectedDay = calendar.component(.day, from: currentDate)
         self.isButtonTapped = isButtonTapped
         
         calculateDaysUntilExam()
