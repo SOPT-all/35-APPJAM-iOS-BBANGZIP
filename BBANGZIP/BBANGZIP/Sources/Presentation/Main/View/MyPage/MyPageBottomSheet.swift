@@ -20,7 +20,8 @@ struct MyPageBottomSheet: View {
                 title,
                 fontType: .headline1Bold,
                 color: Color(.labelNeutral)
-            )
+            ).frame(height: 56)
+            
             VStack (spacing: 8) {
                 Button(primaryButtonTitle){
                     print("primaryButtonAction")

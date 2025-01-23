@@ -11,9 +11,14 @@ struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
     @StateObject private var badgeCategoryViewModel: BadgeCategoryViewModel
     @State private var showLevelUpView = false
+    @Binding var isCustomTabBarHidden: Bool
     
-    init(viewModel: MyPageMainViewModel) {
+    init(
+        viewModel: MyPageMainViewModel,
+        isCustomTabBarHidden: Binding<Bool>
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _isCustomTabBarHidden = isCustomTabBarHidden
         _badgeCategoryViewModel = StateObject(
             wrappedValue: BadgeCategoryViewModel(
                 badges: mockBadges,
@@ -23,22 +28,21 @@ struct MyPageMainView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    HeaderView(
-                        viewModel: viewModel,
-                        badgeCategoryViewModel: badgeCategoryViewModel
-                    )
-                    
-                    GridView()
-                        .padding(.top, 75)
-                }
+        ScrollView {
+            VStack(spacing: 0) {
+                HeaderView(
+                    viewModel: viewModel,
+                    badgeCategoryViewModel: badgeCategoryViewModel
+                )
                 
-                Spacer()
+                GridView(isCustomTabBarHidden: $isCustomTabBarHidden)
+                    .padding(.top, 75)
             }
-            .scrollIndicators(.hidden)
+            
+            Spacer()
         }
+        .scrollIndicators(.hidden)
+        
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
     }
@@ -236,6 +240,11 @@ struct GridView: View {
     @State private var selectedItem: String? = nil
     @State private var showLogoutSheet = false
     @State private var showDeleteAccountSheet = false
+    @Binding var isCustomTabBarHidden: Bool
+    
+    init(isCustomTabBarHidden: Binding<Bool>) {
+        _isCustomTabBarHidden = isCustomTabBarHidden
+    }
     
     var body: some View {
         ZStack {
@@ -285,6 +294,9 @@ struct GridView: View {
                         isBottonSheetShowing: $showLogoutSheet
                     )
                 }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
             }
             
             if showDeleteAccountSheet {
@@ -303,6 +315,9 @@ struct GridView: View {
                         isBottonSheetShowing: $showDeleteAccountSheet
                     )
                 }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
             }
         }
     }
@@ -320,15 +335,16 @@ struct GridView: View {
     }
 }
 
-#Preview {
-    MyPageMainView(
-        viewModel: MyPageMainViewModel(
-            level: 1,
-            currentScore: 40,
-            badgeCount: 8,
-            maxScore: 200,
-            title: "가판대",
-            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
-        )
-    )
-}
+//#Preview {
+//    MyPageMainView(
+//        viewModel: MyPageMainViewModel(
+//            level: 1,
+//            currentScore: 40,
+//            badgeCount: 8,
+//            maxScore: 200,
+//            title: "가판대",
+//            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
+//        )
+//        , is
+//    )
+//}
