@@ -17,4 +17,12 @@ struct SignInDataDTO: Decodable {
     let accessToken: String
     let refreschToken: String
     let isOnboardingComplete: Bool
+    
+    func toDomain() -> SignInData {
+        SignInData(
+            accessToken: accessToken,
+            refreschToken: refreschToken,
+            isOnboardingComplete: isOnboardingComplete
+        )
+    }
 }

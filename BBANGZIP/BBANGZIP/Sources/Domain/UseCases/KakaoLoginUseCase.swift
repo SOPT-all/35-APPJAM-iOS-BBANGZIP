@@ -21,8 +21,16 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
     }
     
     func execute(completion: @escaping (Result<String, Error>) -> Void) {
-        repository.kakaoLogin { isSucess in
-            completion(isSucess)
+        repository.kakaoLogin { result in
+            switch result {
+            case .success(let success):
+                Task {
+                    let data = try await repository.signIn(accessToken: success)
+                    print(data.accessToken)
+                }
+            case .failure(let failure):
+                completion(.failure(failure))
+            }
         }
     }
     

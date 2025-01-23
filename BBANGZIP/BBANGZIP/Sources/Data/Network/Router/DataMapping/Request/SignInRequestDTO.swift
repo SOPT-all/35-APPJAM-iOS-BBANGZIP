@@ -1,5 +1,5 @@
 //
-//  signInRequestDTO.swift
+//  SignInRequestDTO.swift
 //  BBANGZIP
 //
 //  Created by 송여경 on 1/15/25.
@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct signInRequestDTO: Encodable {
+struct SignInRequestDTO: Encodable {
     let accessToken: String
 }

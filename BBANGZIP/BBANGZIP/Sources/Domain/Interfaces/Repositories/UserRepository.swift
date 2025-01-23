@@ -8,4 +8,5 @@
 
 protocol UserRepository: Sendable {
     func kakaoLogin(completion: @escaping (Result<String, Error>) -> Void)
+    func signIn(accessToken: String) async throws -> SignInData
 }

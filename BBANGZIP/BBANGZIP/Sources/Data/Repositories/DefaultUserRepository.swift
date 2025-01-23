@@ -14,32 +14,44 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 
 final class DefaultUserRepository: UserRepository {
-    private let session: Session
-    
-    init(session: Session = .default) {
-        self.session = session
+    init() {
+        KakaoSDK.initSDK(appKey: Secrets.kakao)
     }
     
     func kakaoLogin(completion: @escaping (Result<String, Error>) -> Void) {
         if UserApi.isKakaoTalkLoginAvailable() {
-          UserApi.shared.loginWithKakaoTalk { oauthToken, error in
-            guard let authToken = oauthToken else { return }
-            if let error = error {
-              completion(.failure(error))
-            } else {
-              completion(.success(authToken.accessToken))
+            UserApi.shared.loginWithKakaoTalk { oauthToken, error in
+                guard let authToken = oauthToken else { return }
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(authToken.accessToken))
+                    
+                }
             }
-          }
         } else {
-          UserApi.shared.loginWithKakaoAccount { oauthToken, error in
-            guard let authToken = oauthToken else { return }
-            if let error = error {
-              completion(.failure(error))
-            } else {
-              completion(.success(authToken.accessToken))
+            UserApi.shared.loginWithKakaoAccount { oauthToken, error in
+                guard let authToken = oauthToken else { return }
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(authToken.accessToken))
+                }
             }
-          }
         }
     }
     
+    func signIn(accessToken: String) async throws -> SignInData {
+        let response = await API.session
+            .request(BbangDefaultRouter.signIn(dto: SignInRequestDTO(accessToken: accessToken)))
+            .serializingDecodable(SignInResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let dto):
+            return dto.data.toDomain()
+        case .failure(let error):
+            throw error
+        }
+    }
 }

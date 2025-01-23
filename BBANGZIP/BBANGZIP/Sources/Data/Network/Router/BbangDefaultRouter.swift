@@ -11,7 +11,6 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case signup(dto: signInRequestDTO)
     case getRefreshToken
     case logout
     case withDraw
@@ -42,6 +41,7 @@ enum BbangDefaultRouter {
     
     //여경
     case fetchBadgeDetail(badgeName: String)
+    case signIn(dto: SignInRequestDTO)
 }
 
 extension BbangDefaultRouter: Router {
@@ -51,7 +51,7 @@ extension BbangDefaultRouter: Router {
     
     var path: String {
         switch self {
-        case .signup:
+        case .signIn:
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -111,7 +111,7 @@ extension BbangDefaultRouter: Router {
     var method: HTTPMethod {
         switch self {
         case
-                .signup,
+                .signIn,
                 .getRefreshToken,
                 .onBoarding,
                 .addSubject,
@@ -152,10 +152,9 @@ extension BbangDefaultRouter: Router {
     
     var headers: [String : String]? {
         switch self {
-        case .signup(let signInRequest):
+        case .signIn(let signInRequest):
             return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(signInRequest.accessToken)"
+                "Content-Type": "application/json"
             ]
         default:
             return [
@@ -166,7 +165,7 @@ extension BbangDefaultRouter: Router {
     
     var parameters: [String : any Sendable]? {
         switch self {
-        case .signup(let dto):
+        case .signIn(let dto):
             return dto.asDictionary()
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
@@ -199,7 +198,7 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup, .fetchSortedTodoList:
+        case .signIn, .fetchSortedTodoList:
             return URLEncoding.default
         case .fetchBadgeDetail:
             return nil
