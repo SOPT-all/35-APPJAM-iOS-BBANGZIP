@@ -23,7 +23,7 @@ final class TodayStudyViewModel: ObservableObject {
     @Published var isRevertBottomSheetPresent: Bool = false
     @Published var isFilterBottomSheetPresent: Bool = false
     @Published var sortOption: FetchTodayStudySortOption = .recent
-    @Published var badges: [Badge] = []
+    @Published var badges: [StudyCompleteBadge] = []
     
     @Published var todayCount: Int = 0
     @Published var completeCount: Int = 0
