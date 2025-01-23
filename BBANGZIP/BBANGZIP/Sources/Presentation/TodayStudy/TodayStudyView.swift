@@ -302,8 +302,14 @@ struct TodayStudyView: View {
     }
     
     private var addTodayStudyButton: some View {
-        Button {
-            print("오늘 할 공부 추가하기 Tapped")
+        NavigationLink {
+            AddTodayStudyView(
+                viewModel: AddTodayStudyViewModel(
+                    fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
+                        repository: DefaultStudyRepository()
+                    )
+                )
+            )
         } label: {
             CustomText(
                 "오늘 할 공부 추가하기",

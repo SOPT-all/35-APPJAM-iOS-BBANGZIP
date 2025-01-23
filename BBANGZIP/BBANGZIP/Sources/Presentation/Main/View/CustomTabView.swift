@@ -10,26 +10,21 @@ import SwiftUI
 
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
-    @State private var isBottomSheetShowing: Bool
-    @State private var isTodayStudyViewBottomSheetShowing: Bool
+    @State private var isBottomSheetShowing: Bool = false
+    @State private var isTodayStudyViewBottomSheetShowing: Bool = false
     @State private var isCustomTabBarHidden = false
     
-    init(
-        isBottomSheetShowing: Bool = false,
-        isTodayStudyViewBottomSheetShowing: Bool = false
-    ) {
-        self.isBottomSheetShowing = isBottomSheetShowing
-        self.isTodayStudyViewBottomSheetShowing = isTodayStudyViewBottomSheetShowing
+    init() {
         UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
-        ZStack {
-            NavigationStack {
-                TabView(selection: $selected) {
+        NavigationStack {
+            Group {
+                switch selected {
+                case .subjectManage:
                     SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
-                        .tag(Tab.subjectManage)
-                    
+                case .todo:
                     TodayStudyView(
                         viewModel: TodayStudyViewModel(
                             fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
@@ -44,16 +39,12 @@ struct CustomTabView: View {
                             removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
                                 repository: DefaultStudyRepository()
                             )
-                        ), isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                        ),
+                        isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
                     )
-                    .tag(Tab.todo)
-                    
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                
+                case .networking:
                     Text("이웃 목록")
-                        .tag(Tab.networking)
-                
+                case .mypage:
                     MyPageMainView(
                         viewModel: MyPageMainViewModel(
                             level: 2,
@@ -64,13 +55,9 @@ struct CustomTabView: View {
                             badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
                         )
                     )
-                    .tag(Tab.mypage)
                 }
             }
-            
-            VStack {
-                Spacer()
-                
+            .overlay(alignment: .bottom) {
                 if !isBottomSheetShowing &&
                     !isTodayStudyViewBottomSheetShowing &&
                     !isCustomTabBarHidden {
@@ -79,8 +66,4 @@ struct CustomTabView: View {
             }
         }
     }
-}
-
-#Preview {
-    CustomTabView()
 }
