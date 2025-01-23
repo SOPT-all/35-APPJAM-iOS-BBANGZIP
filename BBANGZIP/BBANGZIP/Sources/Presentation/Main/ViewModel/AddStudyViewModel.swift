@@ -9,7 +9,11 @@
 import SwiftUI
 
 final class AddStudyViewModel: ObservableObject {
-    @Published var date: Date?
+    @Published var date: Date? {
+        didSet {
+            calculateDaysUntilExam()
+        }
+    }
     @Published var studyContent: String
     @Published var startRange: Int = 0
     @Published var endRange: Int = 0
@@ -34,6 +38,7 @@ final class AddStudyViewModel: ObservableObject {
     @Published var selectedMonth: Int = 1
     @Published var selectedDay: Int = 1
     @Published var isButtonTapped: Bool = false
+    @Published var daysUntilExam: Int = 0
     
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -73,6 +78,20 @@ final class AddStudyViewModel: ObservableObject {
         self.selectedMonth = selectedMonth
         self.selectedDay = selectedDay
         self.isButtonTapped = isButtonTapped
+        
+        calculateDaysUntilExam()
+    }
+    
+    private func calculateDaysUntilExam() {
+        guard let examDate = date else {
+            daysUntilExam = 0
+            return
+        }
+        let calendar = Calendar.current
+        let currentDate = Date()
+        
+        let components = calendar.dateComponents([.day], from: currentDate, to: examDate)
+        daysUntilExam = max(components.day ?? 0, 0)
     }
     
     func verifyStudyContent(

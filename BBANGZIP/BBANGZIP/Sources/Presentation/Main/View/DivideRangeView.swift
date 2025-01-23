@@ -15,23 +15,23 @@ enum FocusField: Hashable {
 
 struct DivideRangeView: View {
     @StateObject var viewModel: DivideRangeViewModel
-//    @FocusState private var isStartRangeFocused: Bool
-//    @FocusState private var isEndRangeFocused: Bool
     @FocusState private var focusedField: FocusField?
-    @State private var selectedDate: Date = Date()
-    let pieceCount: Int
-    
-    private var pieces: [Int] {
-        Array(1...pieceCount)
-    }
     
     init(
-        viewModel: DivideRangeViewModel = DivideRangeViewModel(pieceCount: 6),
-        pieceCount: Int
+        pieceCount: Int,
+        startPage: Int,
+        endPage: Int,
+        totalDays: Int
     ) {
-        _viewModel = StateObject(wrappedValue: viewModel)
-        self.pieceCount = pieceCount
-    }
+            _viewModel = StateObject(
+                wrappedValue: DivideRangeViewModel(
+                    pieceCount: pieceCount,
+                    startPage: startPage,
+                    endPage: endPage,
+                    totalDays: totalDays
+                )
+            )
+        }
     
     var body: some View {
         CustomNavigationBar(
@@ -59,6 +59,7 @@ struct DivideRangeView: View {
                     
 //                    registerButton(for: piece)
                 }
+                .padding(.top, 16)
                 .padding(.horizontal, 20)
                 .ignoresSafeArea(.keyboard)
             }
@@ -79,7 +80,7 @@ struct DivideRangeView: View {
             .padding(.horizontal, 20)
             
             HStack(spacing: 4) {
-                Chip(type: .page(40))
+                Chip(type: .page(viewModel.startRange))
                 
                 CustomText(
                     "부터",
@@ -88,7 +89,7 @@ struct DivideRangeView: View {
                 )
                 .padding(.trailing, 4)
                 
-                Chip(type: .page(110))
+                Chip(type: .page(viewModel.endRange))
                 
                 CustomText(
                     "까지",
@@ -110,7 +111,7 @@ struct DivideRangeView: View {
     
     private var piece: some View {
         VStack(spacing: 16) {
-            ForEach(pieces, id: \.self) { piece in
+            ForEach(viewModel.pieces, id: \.self) { piece in
                 VStack(spacing: 16) {
                     HStack {
                         CustomText(
@@ -123,12 +124,12 @@ struct DivideRangeView: View {
                     }
                     
                     HStack(spacing: 20) {
-                        startRangeTextField(for: piece)
+                        startRangeTextField(for: piece - 1)
                         
-                        endRangeTextField(for: piece)
+                        endRangeTextField(for: piece - 1)
                     }
                     
-                    deadlineButton
+                    deadlineButton(for: viewModel.deadlineDates[piece - 1])
                 }
             }
         }
@@ -212,13 +213,13 @@ struct DivideRangeView: View {
         }
     }
     
-    private var dateFormatted: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy년 M월 d일 까지"
-        return formatter.string(from: selectedDate)
-    }
+//    private var dateFormatted: String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy년 M월 d일 까지"
+//        return formatter.string(from: selectedDate)
+//    }
     
-    private var deadlineButton: some View {
+    private func deadlineButton(for dateRange: String) -> some View {
         Button(
             action: {
                 viewModel.isDatePickerPresented = true
@@ -226,7 +227,7 @@ struct DivideRangeView: View {
         ) {
             HStack {
                 Image(.calenderSmall)
-                Text(dateFormatted)
+                Text(dateRange)
             }
         }
         .buttonStyle(
@@ -252,9 +253,4 @@ struct DivideRangeView: View {
 //            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
 //        )
 //    }
-}
-
-
-#Preview {
-    DivideRangeView(pieceCount: 10)
 }

@@ -11,8 +11,6 @@ import SwiftUI
 final class DivideRangeViewModel: ObservableObject {
     @Published var startRange: Int = 0
     @Published var endRange: Int = 0
-    
-    @Published var date: Date?
     @Published var startRangeStrings: [String]
     @Published var endRangeStrings: [String]
     @Published var startRangeStates: [TextFieldState]
@@ -22,36 +20,16 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var isStartRangeValid: [Bool]
     @Published var isEndRangeValid: [Bool]
     @Published var isDatePickerPresented = false
+    @Published var date: Date?
+    @Published var deadlineDates: [String]
+    @Published var pieces: [Int]
     
-    var formattedDate: String {
-        guard let date = date else { return "" }
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월 d일"
-        return formatter.string(from: date)
-    }
-    
-    //    init(
-    //        date: Date? = nil,
-    //        startRange: Int = 0,
-    //        endRange: Int = 0,
-    //        startRangeState: TextFieldState = .defaultState,
-    //        startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
-    //        endRangeState: TextFieldState = .defaultState,
-    //        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
-    //    ) {
-    //        self.date = date
-    //        self.startRange = startRange
-    //        self.endRange = endRange
-    //        self.startRangeString = ""
-    //        self.endRangeString = ""
-    //        self.startRangeState = startRangeState
-    //        self.startRangeAnnounceState = startRangeAnnounceState
-    //        self.endRangeState = endRangeState
-    //        self.endRangeAnnounceState = endRangeAnnounceState
-    //    }
-    
-    init(pieceCount: Int) {
+    init(
+        pieceCount: Int,
+        startPage: Int,
+        endPage: Int,
+        totalDays: Int
+    ) {
         self.date = nil
         self.startRangeStrings = Array(repeating: "", count: pieceCount)
         self.endRangeStrings = Array(repeating: "", count: pieceCount)
@@ -61,8 +39,82 @@ final class DivideRangeViewModel: ObservableObject {
         self.endRangeAnnounceStates = Array(repeating: .endAlert, count: pieceCount)
         self.isStartRangeValid = Array(repeating: false, count: pieceCount)
         self.isEndRangeValid = Array(repeating: false, count: pieceCount)
+        self.pieces = Array(1...pieceCount)
+        self.deadlineDates = Array(repeating: "", count: pieceCount)
+        
+        setupRanges(
+            startPage: startPage,
+            endPage: endPage,
+            pieceCount: pieceCount
+        )
+        setupDates(
+            startDate: Date(),
+            totalDays: totalDays,
+            pieceCount: pieceCount
+        )
     }
     
+    func setupRanges(
+        startPage: Int,
+        endPage: Int,
+        pieceCount: Int
+    ) {
+        let totalPages = endPage - startPage + 1
+        let pagesPerPiece = totalPages / pieceCount
+        var currentStart = startPage
+        
+        for i in 0..<pieceCount {
+            var currentEnd = currentStart + pagesPerPiece
+            
+            if i == pieceCount - 1 {
+                currentEnd = endPage
+                self.endRange = currentEnd
+            } else if i == 0 {
+                self.startRange = currentStart
+            }
+            
+            startRangeStrings[i] = "\(currentStart)p"
+            endRangeStrings[i] = "\(currentEnd)p"
+            
+            currentStart = currentEnd
+        }
+    }
+    
+    private func setupDates(
+        startDate: Date,
+        totalDays: Int,
+        pieceCount: Int
+    ) {
+        let actualStartDate = Calendar.current.date(
+            byAdding: .day,
+            value: 2,
+            to: startDate
+        ) ?? Date()
+        let daysPerPiece = totalDays / pieceCount
+        var currentStartDate = actualStartDate
+        let remainder = totalDays % pieceCount
+        
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "yyyy년 M월 d일"
+        
+        for i in 0..<pieceCount {
+            var currentEndDate = Calendar.current.date(
+                byAdding: .day,
+                value: daysPerPiece - 1 + (i == pieceCount - 1 ? remainder : 0),
+                to: currentStartDate
+            ) ?? Date()
+            
+            let endDateString = formatter.string(from: currentEndDate)
+            
+            deadlineDates[i] = "\(endDateString) 까지"
+            currentStartDate = Calendar.current.date(
+                byAdding: .day,
+                value: 1,
+                to: currentEndDate
+            ) ?? Date()
+        }
+    }
     
     func verifyStartRange(
         for index: Int,

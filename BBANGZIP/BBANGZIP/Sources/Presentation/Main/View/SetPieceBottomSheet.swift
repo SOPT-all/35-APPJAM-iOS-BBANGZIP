@@ -10,11 +10,22 @@ import SwiftUI
 
 struct SetPieceBottomSheet: View {
     @Binding private var isPresented: Bool
+    @State private var startPage: Int
+    @State private var endPage: Int
+    @State private var totalDays: Int
     
     private let pieces = Array(1...6)
     
-    init(isPresented: Binding<Bool>) {
+    init(
+        isPresented: Binding<Bool>,
+        startPage: Int,
+        endPage: Int,
+        totalDays: Int
+    ) {
         self._isPresented = isPresented
+        self.startPage = startPage
+        self.endPage = endPage
+        self.totalDays = totalDays
     }
     
     var body: some View {
@@ -31,7 +42,12 @@ struct SetPieceBottomSheet: View {
         VStack {
             ForEach(pieces, id: \.self) { num in
                 NavigationLink(
-                    destination: DivideRangeView(pieceCount: num)
+                    destination: DivideRangeView(
+                        pieceCount: num,
+                        startPage: startPage,
+                        endPage: endPage,
+                        totalDays: totalDays
+                    )
                 ) {
                     HStack {
                         Spacer()
@@ -56,10 +72,4 @@ struct SetPieceBottomSheet: View {
             24
         )
     }
-}
-
-#Preview {
-    let isPresented = Binding.constant(true)
-    
-    SetPieceBottomSheet(isPresented: isPresented)
 }

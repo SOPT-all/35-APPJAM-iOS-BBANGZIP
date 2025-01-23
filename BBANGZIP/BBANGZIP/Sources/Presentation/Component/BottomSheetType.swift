@@ -52,7 +52,10 @@ enum BottomSheetType: Int {
             )
         case .divideStudy:
             SetPieceBottomSheet(
-                isPresented: isPresented
+                isPresented: isPresented,
+                startPage: 0,
+                endPage: 0,
+                totalDays: 0
             )
         case .completeCheck:
             CompleteCheckBottomSheet(

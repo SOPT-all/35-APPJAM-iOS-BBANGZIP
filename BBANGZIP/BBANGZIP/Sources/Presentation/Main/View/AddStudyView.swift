@@ -92,7 +92,22 @@ struct AddStudyView: View {
                     isShowing: $viewModel.isDividerPresented,
                     height: 449
                 ) {
-                    SetPieceBottomSheet(isPresented: $viewModel.isDividerPresented)
+                    SetPieceBottomSheet(
+                        isPresented: $viewModel.isDividerPresented,
+                        startPage: Int(
+                            viewModel.startRangeString.replacingOccurrences(
+                                of: "p",
+                                with: ""
+                            )
+                        ) ?? 0,
+                        endPage: Int(
+                            viewModel.endRangeString.replacingOccurrences(
+                                of: "p",
+                                with: ""
+                            )
+                        ) ?? 0,
+                        totalDays: viewModel.daysUntilExam
+                    )
                 }
             }
         }
@@ -310,6 +325,7 @@ struct AddStudyView: View {
     
     private var divideButton: some View {
         Button("쪼개서 공부하기") {
+            hideKeyboard()
             viewModel.isDividerPresented = true
         }
         .buttonStyle(
