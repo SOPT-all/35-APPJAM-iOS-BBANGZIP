@@ -16,4 +16,9 @@ protocol StudyRepository: Sendable {
     func completeStudy(pieceID: Int) async throws -> [StudyCompleteBadge]
     func revertCompleteStudy(pieceID: Int) async throws
     func removeTodayStudy(pieceIDs: [Int]) async throws
+    func fetchAddTodayStudy(
+        year: Int,
+        semester: Semester,
+        sortOption: FetchTodayStudySortOption
+    ) async throws -> AddTodayStudyData
 }

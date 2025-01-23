@@ -36,6 +36,7 @@ enum BbangDefaultRouter {
     case completeStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
     case revertCompleteStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
     case removeTodayStudy(dto: RemoveTodayStudyDTO)
+    case fetchAddTodayStudy(dto: FetchAddTodayStudyRequestDTO)
     
     //여경
     case fetchBadgeDetail(badgeName: String)
@@ -109,6 +110,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces/hide"
         case .fetchBadgeDetail(let badgeName):
             return "/api/v1/mypage/badges/\(badgeName)"
+        case .fetchAddTodayStudy:
+            return "/api/v1/pieces/todo"
         case .fetchSubject:
             return "/api/v1/subjects/filter"
         }
@@ -140,6 +143,7 @@ extension BbangDefaultRouter: Router {
                 .aquireBadge,
                 .badgeDetail,
                 .fetchBadgeDetail,
+                .fetchAddTodayStudy:
                 .fetchSubject:
             return .get
             
@@ -166,7 +170,8 @@ extension BbangDefaultRouter: Router {
             ]
         default:
             return [
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": "Bearer "
             ]
         }
     }
@@ -199,6 +204,7 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .fetchBadgeDetail:
             return [:]
+        case .fetchAddTodayStudy(let dto):
         case .examFiltering(_, _):
             return nil
         case .fetchSubject(let dto):
@@ -214,7 +220,7 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup, .fetchSortedTodoList, .fetchSubject:
+        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
         case .fetchBadgeDetail, .examFiltering:
             return nil

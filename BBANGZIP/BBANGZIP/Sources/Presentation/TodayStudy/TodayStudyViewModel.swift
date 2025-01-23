@@ -60,6 +60,15 @@ final class TodayStudyViewModel: ObservableObject {
             reloadCompleteAnnounceText()
             reloadTodayAnnounceText()
             
+//                dump(error)
+//                print(error)
+//                todayCount = 0
+//                completeCount = 0
+//                pendingCount = 0
+//                todoPiecesList = []
+//                completeAnnounceText = "사장님 퇴근 준비 완료"
+//                todayAnnounceText = "오늘의 공부를 모두 끝냈어요!"
+            
             isLoading = false
         } catch {
             dump(error)

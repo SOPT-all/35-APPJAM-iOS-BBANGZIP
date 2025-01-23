@@ -7,7 +7,7 @@
 //
 
 struct BadgeDetailResponseDTO: Decodable {
-    let code: String
+    let code: ResponseCodeDTO
     let data: BadgeDetailDTO
 }
 
