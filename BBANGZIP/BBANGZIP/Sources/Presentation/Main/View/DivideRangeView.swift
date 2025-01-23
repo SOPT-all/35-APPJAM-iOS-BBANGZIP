@@ -181,10 +181,10 @@ struct DivideRangeView: View {
             viewModel.verifyStartRange(
                 for: index,
                 newText: newRange,
-                isStartRangeFocused: focusedField == .startRange(index)
+                isStartRangeFocused: startFocusedField == .startRange(index)
             )
         }
-        .onChange(of: endFocusedField) { newFocus in
+        .onChange(of: startFocusedField) { newFocus in
             viewModel.handleStartRangeFocusChange(
                 for: index,
                 newText: viewModel.startRangeStrings[index],
@@ -220,10 +220,10 @@ struct DivideRangeView: View {
             viewModel.verifyEndRange(
                 for: index,
                 newText: newRange,
-                isEndRangeFocused: focusedField == .endRange(index)
+                isEndRangeFocused: endFocusedField == .endRange(index)
             )
         }
-        .onChange(of: focusedField) { newFocus in
+        .onChange(of: endFocusedField) { newFocus in
             viewModel.handleEndRangeFocusChange(
                 for: index,
                 newText: viewModel.endRangeStrings[index],
