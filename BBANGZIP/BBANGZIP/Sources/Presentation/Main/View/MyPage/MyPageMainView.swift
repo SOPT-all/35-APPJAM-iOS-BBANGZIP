@@ -342,7 +342,7 @@ struct GridView: View {
 //            currentScore: 40,
 //            badgeCount: 8,
 //            maxScore: 200,
-//            title: "가판대",
+//            titleView: "가판대",
 //            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
 //        )
 //        , is

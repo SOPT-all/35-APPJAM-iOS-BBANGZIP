@@ -9,29 +9,31 @@
 import Foundation
 
 protocol KakaoLoginUseCase {
-    func execute(completion: @escaping (Result<SignInData, Error>) -> Void)
+    func execute(completion: @escaping @Sendable (Result<SignInData, Error>) -> Void)
 }
 
 struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
-    
     private let repository: UserRepository
-    
+
     init(repository: UserRepository) {
         self.repository = repository
     }
-    
-    func execute(completion: @escaping (Result<SignInData, Error>) -> Void) {
+
+    func execute(completion: @escaping @Sendable (Result<SignInData, Error>) -> Void) {
         repository.kakaoLogin { result in
             switch result {
             case .success(let success):
-                print(success)
                 Task {
-                    _ = try await repository.signIn(accessToken: success)
+                    do {
+                        let signInData = try await repository.signIn(accessToken: success)
+                        completion(.success(signInData))
+                    } catch {
+                        completion(.failure(error))
+                    }
                 }
             case .failure(let failure):
                 completion(.failure(failure))
             }
         }
     }
-
 }

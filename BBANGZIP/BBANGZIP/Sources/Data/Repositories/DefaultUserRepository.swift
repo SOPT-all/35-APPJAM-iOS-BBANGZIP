@@ -46,7 +46,7 @@ final class DefaultUserRepository: UserRepository {
             .responseString { result in
                 print("##1##")
                 dump(result)
-            }
+            } 
             .serializingDecodable(SignInResponseDTO.self)
             .response
         

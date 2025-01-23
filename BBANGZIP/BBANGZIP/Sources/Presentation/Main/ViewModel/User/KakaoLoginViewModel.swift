@@ -7,22 +7,30 @@
 //
 
 import SwiftUI
-
+@MainActor
 final class KakaoLoginViewModel: ObservableObject {
-    private let useCase: KakaoLoginUseCase
+    private let useCase: DefaultKakaoLoginUseCase
     @Published var isOnboardingComplete: Bool = false
+    @Published var isLogin: Bool = false
+    @Published var isLoading = true
     
-    init(useCase: KakaoLoginUseCase) {
+    init(useCase: DefaultKakaoLoginUseCase) {
         self.useCase = useCase
     }
     
     func kakaoLogin() {
-        useCase.execute { [weak self] isSuccess in
-            switch isSuccess {
-            case .success(let data):
-                self?.isOnboardingComplete = data.isOnboardingComplete
-            case .failure(let failure):
-                dump(failure)
+        isLoading = true
+        useCase.execute { [weak self] result in
+            Task { @MainActor in
+                switch result {
+                case .success(let data):
+                    self?.isOnboardingComplete = data.isOnboardingComplete
+                    self?.isLogin = true
+                case .failure(let failure):
+                    print("Kakao login failed: \(failure)")
+                    self?.isLogin = false
+                }
+                self?.isLoading = false
             }
         }
     }

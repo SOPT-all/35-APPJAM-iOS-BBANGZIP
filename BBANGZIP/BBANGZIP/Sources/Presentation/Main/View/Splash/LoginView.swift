@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct LoginView: View {
-    
     @StateObject private var viewModel: KakaoLoginViewModel
     
     init(viewModel: KakaoLoginViewModel) {
@@ -17,19 +16,25 @@ struct LoginView: View {
     }
     
     var body: some View {
-        VStack (spacing: 0) {
-            title
-            
-            onBoardingSectionView
-                                    
-            loginSection
-            
-            Spacer()
-            
+        if !viewModel.isLogin {
+            VStack (spacing: 0) {
+                titleView
+                
+                onBoardingSectionView
+                                        
+                loginSection
+                
+                Spacer()
+            }
+        } else if viewModel.isLogin && viewModel.isOnboardingComplete {
+            CustomTabView()
+        } else if viewModel.isLogin {
+            OnboardingView()
         }
+        
     }
     
-    var title: some View {
+    var titleView: some View {
         VStack {
             HStack {
                 CustomText(
@@ -60,7 +65,7 @@ struct LoginView: View {
     }
     
     private var loginSection: some View {
-        VStack (spacing: 0){
+        VStack (spacing: 0) {
             Image(.loginBalloon)
                 .padding(.bottom, 5)
             
@@ -91,10 +96,17 @@ struct LoginView: View {
                 .foregroundColor(.black)
                 .cornerRadius(24)
             }
-            .padding(.horizontal,20)
+            .padding(
+                .horizontal,
+                20
+            )
             
-        }.frame(width:.infinity,height:80)
-            .padding(.top, 117)
+        }
+        .frame(height: 80)
+        .padding(
+            .top,
+            117
+        )
     }
     
 }
