@@ -10,10 +10,15 @@ import SwiftUI
 struct MenuTab: View {
     private let tabNames: [String]
     @State private var selectedTab: String
+    var onTabChanged: ((String) -> Void)?
     
-    init(tabNames: [String]) {
+    init(
+        tabNames: [String],
+        onTabChanged: ((String) -> Void)? = nil
+    ) {
         self.tabNames = tabNames
         _selectedTab = State(initialValue: tabNames.first ?? "")
+        self.onTabChanged = onTabChanged
     }
     
     var body: some View {
@@ -26,6 +31,7 @@ struct MenuTab: View {
                 ForEach(tabNames, id: \.self) { tabName in
                     Button(action: {
                         selectedTab = tabName
+                        onTabChanged?(tabName)
                     }) {
                         VStack(spacing: 8) {
                             CustomText(

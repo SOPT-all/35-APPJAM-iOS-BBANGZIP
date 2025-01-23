@@ -16,13 +16,10 @@ enum BbangDefaultRouter {
     case logout
     case withDraw
     case onBoarding
-    case subjectFiltering
     case testSelect(subjectID: Int)
-    case addSubject
     case motivationMessage(subjectID: Int, options: String)
     case addStudyScope
     case deleteStudyScope
-    case deleteSubject
     case studyCompleteCheck(pieceID: Float)
     case notCompletedCheck(pieceID: Float)
     case sortedDelayedTodoList
@@ -43,11 +40,18 @@ enum BbangDefaultRouter {
     
     //여경
     case fetchBadgeDetail(badgeName: String)
+    
+    //유빈
+    case examFiltering(subjectId: Int, examName: String)
+    case fetchSubject(dto: FetchSubjectRequestDTO)
+    case addSubject(dto: AddSubjectRequestDTO)
+    case deleteSubject(dto: DeleteSubjectRequestDTO)
+    
 }
 
 extension BbangDefaultRouter: Router {
     var baseURL: String {
-        Environment.baseURL
+        Environment.baseURL // 수정 필요
     }
     
     var path: String {
@@ -62,8 +66,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/user/auth/withdraw"
         case .onBoarding:
             return "/api/v1/user/auth/signup"
-        case .subjectFiltering:
-            return "/api/v1/subjects/filter"
+        case .examFiltering(let subjectId, let examName):
+            return "/api/v1/exams/\(subjectId)/\(examName)"
         case .testSelect(let subjectID):
             return "/api/v1/exam/\(subjectID)"
         case .addSubject:
@@ -75,7 +79,7 @@ extension BbangDefaultRouter: Router {
         case .deleteStudyScope:
             return "/api/v1/studies/pieces"
         case .deleteSubject:
-            return "/api/v1/subject/delete"
+            return "/api/v1/subjects"
         case .studyCompleteCheck(let pieceID):
             return "/api/v1/pieces/\(pieceID)/mark-done"
         case .notCompletedCheck(let pieceID):
@@ -108,6 +112,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/mypage/badges/\(badgeName)"
         case .fetchAddTodayStudy:
             return "/api/v1/pieces/todo"
+        case .fetchSubject:
+            return "/api/v1/subjects/filter"
         }
     }
     
@@ -128,7 +134,7 @@ extension BbangDefaultRouter: Router {
             return .post
             
         case
-                .subjectFiltering,
+                .examFiltering,
                 .testSelect,
                 .motivationMessage,
                 .fetchSortedTodoList,
@@ -138,6 +144,7 @@ extension BbangDefaultRouter: Router {
                 .badgeDetail,
                 .fetchBadgeDetail,
                 .fetchAddTodayStudy:
+                .fetchSubject:
             return .get
             
         case
@@ -198,6 +205,13 @@ extension BbangDefaultRouter: Router {
         case .fetchBadgeDetail:
             return [:]
         case .fetchAddTodayStudy(let dto):
+        case .examFiltering(_, _):
+            return nil
+        case .fetchSubject(let dto):
+            return dto.asDictionary()
+        case .addSubject(let dto):
+            return dto.asDictionary()
+        case .deleteSubject(let dto):
             return dto.asDictionary()
         default:
             return nil
@@ -206,9 +220,9 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy:
+        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
-        case .fetchBadgeDetail:
+        case .fetchBadgeDetail, .examFiltering:
             return nil
         default:
             return JSONEncoding.default
