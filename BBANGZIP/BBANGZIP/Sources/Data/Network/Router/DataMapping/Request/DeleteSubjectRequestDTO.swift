@@ -9,5 +9,5 @@
 struct DeleteSubjectRequestDTO: Encodable {
     let year: Int
     let semester: Semester
-    let pieceIds: [Int]
+    let subjectIds: [Int]
 }

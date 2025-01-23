@@ -94,7 +94,7 @@ class AddSubjectViewModel: ObservableObject {
     func addSubject(subjectName: String) async {
         // TODO: 과목 추가, 과목 중복 비교 로직 / 토스트 메시지 노출 로직 구현 필요
         do {
-            let complteResult: () = try await addSubjectUseCase.execute(
+            let completeResult: () = try await addSubjectUseCase.execute(
                 year: 2025,
                 semester: .first,
                 subjectName: subjectName
@@ -104,7 +104,11 @@ class AddSubjectViewModel: ObservableObject {
                 "과목 추가 완료! 공부를 시작해 볼까요?",
                 startFrom: 16
             )
+            
+            await parentViewModel.fetchData()
+            
             self.shouldDismiss = true
+            
         } catch {
             toast = Toast(
                 "이미 등록된 과목이에요",

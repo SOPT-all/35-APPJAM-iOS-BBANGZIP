@@ -35,94 +35,104 @@ struct SubjectManageView: View {
     ]
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack {
-                    HStack {
-                        ChangeSemesterButton()
-                            .padding(
-                                .leading,
-                                24
-                            )
-                        
-                        Spacer()
-                    }
-                    .padding(
-                        .top,
-                        63
-                    )
-                    .padding(
-                        .bottom,
-                        169
-                    )
-                    .background(
-                        ZStack {
-                            Color(.backgroundAccent)
-                                .cornerRadius(
-                                    32,
-                                    corners: [
-                                        .bottomLeft,
-                                        .bottomRight
-                                    ]
-                                )
-                            
-                            Image(.graphicStudyManage)
-                                .padding(.top, 47)
-                        }
-                    )
-                    
-                    
-                    VStack(spacing: 32) {
-                        subjectSection
-                        
-                        subjectCardScrollSection
-                            .padding(.bottom, 16)
-                    }
-                    .padding(
-                        .top,
-                        48
-                    )
-                    .padding(
-                        .horizontal,
-                        20
-                    )
-                    
-                    if viewModel.isDeleteMode {
-                        Spacer()
-                            .frame(height: 56)
-                    }
-                }
-                .bottomSheet(
-                    isShowing: $viewModel.isShowingBottomSheet,
-                    height: 453
-                ) {
-                    if let type = selectedBottomSheetType {
-                        type.contentView(isPresented: $viewModel.isShowingBottomSheet)
-                    }
-                }
-                .onChange(of: viewModel.isShowingBottomSheet) { newValue in
-                    isBottomSheetShowing = newValue
-                }
+        if viewModel.isLoading {
+            ProgressView()
+                .navigationBarHidden(true)
                 .onAppear {
-                    viewModel.isDeleteMode = false
-                    isCustomTabBarHidden = false
                     Task { @MainActor in
                         await viewModel.fetchData()
                     }
                 }
-            }
-            .edgesIgnoringSafeArea(.top)
-            .scrollIndicators(.hidden)
-            
-            VStack {
-                Spacer()
-                
-                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
-                    deleteButton
-                        .padding(.bottom, 16)
+        } else {
+            ZStack {
+                ScrollView {
+                    VStack {
+                        HStack {
+                            ChangeSemesterButton()
+                                .padding(
+                                    .leading,
+                                    24
+                                )
+                            
+                            Spacer()
+                        }
+                        .padding(
+                            .top,
+                            63
+                        )
+                        .padding(
+                            .bottom,
+                            169
+                        )
+                        .background(
+                            ZStack {
+                                Color(.backgroundAccent)
+                                    .cornerRadius(
+                                        32,
+                                        corners: [
+                                            .bottomLeft,
+                                            .bottomRight
+                                        ]
+                                    )
+                                
+                                Image(.graphicStudyManage)
+                                    .padding(.top, 47)
+                            }
+                        )
+                        
+                        
+                        VStack(spacing: 32) {
+                            subjectSection
+                            
+                            subjectCardScrollSection
+                                .padding(.bottom, 16)
+                        }
+                        .padding(
+                            .top,
+                            48
+                        )
+                        .padding(
+                            .horizontal,
+                            20
+                        )
+                        
+                        if viewModel.isDeleteMode {
+                            Spacer()
+                                .frame(height: 56)
+                        }
+                    }
+                    .bottomSheet(
+                        isShowing: $viewModel.isShowingBottomSheet,
+                        height: 453
+                    ) {
+                        if let type = selectedBottomSheetType {
+                            type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                        }
+                    }
+                    .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+                        isBottomSheetShowing = newValue
+                    }
+                    .onAppear {
+                        viewModel.isDeleteMode = false
+                        isCustomTabBarHidden = false
+                        Task { @MainActor in
+                            await viewModel.fetchData()
+                        }
+                    }
                 }
+                .edgesIgnoringSafeArea(.top)
+                .scrollIndicators(.hidden)
+                
+                VStack {
+                    Spacer()
+                    
+                    if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                        deleteButton
+                            .padding(.bottom, 16)
+                    }
+                }
+                .toastView(toast: $viewModel.toast)
             }
-            .toastView(toast: $viewModel.toast)
         }
     }
     
@@ -188,7 +198,17 @@ struct SubjectManageView: View {
             ) {
                 $model in
                 Button {
-                    model.state = model.state == .cardDefault ? .cardDefault : model.state == .selectable ? .selected : .selectable
+                    if viewModel.isDeleteMode {
+                        if model.state == .selectable {
+                            model.state = .selected
+                            viewModel.toggleSelection(subjectId: model.subjectId)  // ID 추가
+                        } else if model.state == .selected {
+                            model.state = .selectable
+                            viewModel.toggleSelection(subjectId: model.subjectId)  // ID 제거
+                        }
+                    } else {
+                        model.state = .cardDefault
+                    }
                     viewModel.validateDeleteButton()
                 } label: {
                     if model.state == .cardDefault {
@@ -201,8 +221,7 @@ struct SubjectManageView: View {
                                 ),
                                 isBottomSheetShowing: $isBottomSheetShowing
                             )
-                            .onAppear { isCustomTabBarHidden = true
-                            }
+                            .onAppear { isCustomTabBarHidden = true }
                         ) {
                             SubjectCard(
                                 state: model.state,
@@ -254,8 +273,9 @@ struct SubjectManageView: View {
             Spacer()
             
             Button(title) {
-                viewModel.deleteStudy()
-                viewModel.makeSelectableSubject()
+                Task {
+                    await viewModel.deleteSubject() 
+                }
             }
             .buttonStyle(
                 SolidIconButton(

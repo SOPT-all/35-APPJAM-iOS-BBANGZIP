@@ -58,4 +58,30 @@ final class DefaultSubjectRepository: SubjectRepository {
             throw error
         }
     }
+    
+    func deleteSubject(
+        year: Int,
+        semester: Semester,
+        subjectIds: [Int]
+    ) async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.deleteSubject(
+                dto: DeleteSubjectRequestDTO(
+                    year: year,
+                    semester: semester,
+                    subjectIds: subjectIds
+                )
+            )
+        )
+        .serializingDecodable(DeleteSubjectResponseDTO.self)
+        .response
+        
+        switch response.result {
+        case .success(let resultDTO):
+            dump(resultDTO)
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
 }

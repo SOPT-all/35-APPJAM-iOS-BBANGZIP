@@ -18,9 +18,9 @@ protocol SubjectRepository: Sendable {
         subjectName: String
     ) async throws
     
-//    func deleteSubject(
-//        year: Int,
-//        semester: Semester,
-//        pieceIds: [Int]
-//    ) async throws
+    func deleteSubject(
+        year: Int,
+        semester: Semester,
+        subjectIds: [Int]
+    ) async throws
 }
