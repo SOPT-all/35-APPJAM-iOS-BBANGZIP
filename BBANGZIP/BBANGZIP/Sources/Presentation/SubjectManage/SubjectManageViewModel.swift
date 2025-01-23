@@ -9,21 +9,77 @@
 import SwiftUI
 
 final class SubjectManageViewModel: ObservableObject {
-    @Published var isShowingBottomSheet: Bool
+    private let fetchSubjectUseCase: FetchSubjectUseCase
+    private let deleteSubjectUseCase: DeleteSubjectUseCase
+    
+    @Published var selectedSubjectIds: Set<Int> = []
+    @Published var isShowingBottomSheet: Bool = false
+    @Published var isLoading: Bool = true
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
-    @Published var modelList: [SubjectCardModel]
+    @Published var toast: Toast?
     
-    var selectedItemCount: Int {
-        modelList.filter { $0.state == .selected }.count
-    }
+    @Published var modelList: [SubjectCardModel] = []
     
     init(
-        isShowingBottomSheet: Bool = false,
-        modelList: [SubjectCardModel]
+        fetchSubjectUseCase: FetchSubjectUseCase,
+        deleteSubjectUseCase: DeleteSubjectUseCase
     ) {
-        self.isShowingBottomSheet = isShowingBottomSheet
-        self.modelList = modelList
+        self.fetchSubjectUseCase = fetchSubjectUseCase
+        self.deleteSubjectUseCase = deleteSubjectUseCase
+    }
+    
+    var selectedItemCount: Int {
+        return selectedSubjectIds.count
+    }
+    
+    func toggleSelection(subjectId: Int) {
+        if selectedSubjectIds.contains(subjectId) {
+            selectedSubjectIds.remove(subjectId)
+        } else {
+            selectedSubjectIds.insert(subjectId)
+        }
+    }
+    
+    @MainActor
+    func fetchData() async {
+        do {
+            let subjectContent = try await fetchSubjectUseCase.execute(
+                year: 2025, // TODO: 스프린트 변경 예정
+                semester: .first // TODO: 스프린트 변경 예정
+            )
+            modelList = subjectContent.SubjectList
+            isLoading = false
+        } catch {
+            dump(error)
+            print(error)
+        }
+    }
+    
+    @MainActor
+    func deleteSubject() async {
+        
+        do {
+            let _: () = try await deleteSubjectUseCase.execute(
+                year: 2025,
+                semester: .first,
+                subjectIds: Array(selectedSubjectIds)
+            )
+            
+            await fetchData()
+            
+            selectedSubjectIds.removeAll()
+            
+            isDeleteMode = false
+            
+            toast = Toast(
+                "과목 삭제 완료",
+                startFrom: 20
+            )
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func showChangeSemesterSheet() {
@@ -36,6 +92,7 @@ final class SubjectManageViewModel: ObservableObject {
     
     func makeSelectableSubject() {
         isDeleteMode.toggle()
+        selectedSubjectIds.removeAll()
         modelList = modelList.map {
             var updatedModel = $0
             updatedModel.state = $0.state == .cardDefault ? .selectable : .cardDefault
@@ -44,11 +101,7 @@ final class SubjectManageViewModel: ObservableObject {
     }
     
     func validateDeleteButton() {
-        isDeleteButtonEnable = modelList.count(where: { $0.state == .selected }) > 0
-    }
-    
-    func deleteStudy() {
-        
+        isDeleteButtonEnable = !selectedSubjectIds.isEmpty
     }
     
     func fetchSubjectData() {

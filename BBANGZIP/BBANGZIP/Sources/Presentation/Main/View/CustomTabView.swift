@@ -27,7 +27,16 @@ struct CustomTabView: View {
         ZStack {
             NavigationStack {
                 TabView(selection: $selected) {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
+                    SubjectManageView(
+                        viewModel: SubjectManageViewModel(
+                            fetchSubjectUseCase: DefaultFetchSubjectUseCase(
+                                subjectRepository: DefaultSubjectRepository()
+                            ),
+                            deleteSubjectUseCase: DefaultDeleteSubjectUseCase(repository: DefaultSubjectRepository())
+                        ),
+                        isBottomSheetShowing: $isBottomSheetShowing,
+                        isCustomTabBarHidden: $isCustomTabBarHidden
+                    )
                         .tag(Tab.subjectManage)
                     
                     TodayStudyView(
@@ -48,9 +57,6 @@ struct CustomTabView: View {
                     )
                     .tag(Tab.todo)
                     
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                
                     Text("이웃 목록")
                         .tag(Tab.networking)
                 
