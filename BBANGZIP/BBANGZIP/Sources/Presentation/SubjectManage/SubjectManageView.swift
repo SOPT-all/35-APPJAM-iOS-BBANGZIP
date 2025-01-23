@@ -58,22 +58,28 @@ struct SubjectManageView: View {
                         }
                         .padding(
                             .top,
-                            55
+                            63
                         )
                         .padding(
                             .bottom,
                             169
                         )
                         .background(
-                            Color(.backgroundAccent)
-                                .cornerRadius(
-                                    32,
-                                    corners: [
-                                        .bottomLeft,
-                                        .bottomRight
-                                    ]
-                                )
+                            ZStack {
+                                Color(.backgroundAccent)
+                                    .cornerRadius(
+                                        32,
+                                        corners: [
+                                            .bottomLeft,
+                                            .bottomRight
+                                        ]
+                                    )
+                                
+                                Image(.graphicStudyManage)
+                                    .padding(.top, 47)
+                            }
                         )
+                        
                         
                         VStack(spacing: 32) {
                             subjectSection
@@ -196,9 +202,10 @@ struct SubjectManageView: View {
                             destination: SubjectDetailView(
                                 viewModel: SubjectDetailViewModel(
                                     filterExamUseCase: DefaultFilterExamUseCase(examRepository: DefaultExamRepository()),
+                                    subjectName: model.subjectName,
                                     subjectId: model.subjectId
                                 ),
-                                    isBottomSheetShowing: $isBottomSheetShowing
+                                isBottomSheetShowing: $isBottomSheetShowing
                             )
                             .onAppear { isCustomTabBarHidden = true
                             }

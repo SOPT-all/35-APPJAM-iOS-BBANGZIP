@@ -36,7 +36,6 @@ final class SubjectManageViewModel: ObservableObject {
                 semester: .first // TODO: 스프린트 변경 예정
             )
             modelList = subjectContent.SubjectList
-            
             isLoading = false
         } catch {
             dump(error)

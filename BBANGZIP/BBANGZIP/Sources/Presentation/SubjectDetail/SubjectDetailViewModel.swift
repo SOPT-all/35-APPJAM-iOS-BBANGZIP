@@ -11,6 +11,7 @@ import SwiftUI
 final class SubjectDetailViewModel: ObservableObject {
     private let filterExamUseCase: FilterExamUseCase
     
+    let subjectName: String
     private let subjectId: Int
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
@@ -26,9 +27,11 @@ final class SubjectDetailViewModel: ObservableObject {
     
     init(
         filterExamUseCase: FilterExamUseCase,
+        subjectName: String = "",
         subjectId: Int
     ) {
         self.filterExamUseCase = filterExamUseCase
+        self.subjectName = subjectName
         self.subjectId = subjectId
     }
     

@@ -36,7 +36,7 @@ struct SubjectDetailView: View {
                 CustomNavigationBar(
                     showBackButton: true,
                     showMenu: true,
-                    title: "경제통계학",
+                    title: viewModel.subjectName,
                     backgroundColor: Color(.backgroundAccent)
                 )
                 
