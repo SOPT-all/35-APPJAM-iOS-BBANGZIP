@@ -17,7 +17,11 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var endRangeStates: [TextFieldState]
     @Published var startRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
     @Published var endRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
-    @Published var isStartRangeValid: [Bool]
+    @Published var isStartRangeValid: [Bool] {
+        didSet {
+            print("isStartRangeValid updated: \(isStartRangeValid)")
+        }
+    }
     @Published var isEndRangeValid: [Bool]
     @Published var isDatePickerPresented = false
     @Published var date: Date?
@@ -32,6 +36,10 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var fixedEndPage: Int
     @Published var fixedExamDate: Date = Date()
     
+    var allRangesValid: Bool {
+        !isStartRangeValid.contains(false) && !isEndRangeValid.contains(false)
+    }
+        
     init(
         pieceCount: Int,
         startPage: Int,
@@ -151,7 +159,7 @@ final class DivideRangeViewModel: ObservableObject {
                 if newText.isValidStudyRange {
                     startRangeStates[index] = .typing
                     startRangeAnnounceStates[index] = .startAlert
-                    isStartRangeValid[index] = true
+                    isStartRangeValid[index] = false
                 } else {
                     startRangeStates[index] = .alert
                     startRangeAnnounceStates[index] = .startAlert
@@ -247,7 +255,7 @@ final class DivideRangeViewModel: ObservableObject {
                 if newText.isValidStudyRange {
                     endRangeStates[index] = .typing
                     endRangeAnnounceStates[index] = .endAlert
-                    isEndRangeValid[index] = true
+                    isEndRangeValid[index] = false
                 } else {
                     endRangeStates[index] = .alert
                     endRangeAnnounceStates[index] = .endAlert

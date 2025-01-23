@@ -59,15 +59,18 @@ struct DivideRangeView: View {
                         Divider()
                         
                         piece
-                        
-                        //                    registerButton(for: piece)
                     }
                     .padding(.top, 10)
                     .padding(.horizontal, 20)
                     .ignoresSafeArea(.keyboard)
                 }
+                .padding(.bottom, 20)
             }
-        }
+            .scrollIndicators(.never)
+            
+            registerButton
+                .padding(.horizontal, 20)
+            }
         .bottomSheet(
             isShowing: $viewModel.isDatePickerPresented,
             height: 453
@@ -175,8 +178,8 @@ struct DivideRangeView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.startRangeStrings[index]) { newRange in
-            if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.startRangeStrings[index] = String(newRange.prefix(4))
+            if newRange.count > 3 && !newRange.hasSuffix("p") {
+                viewModel.startRangeStrings[index] = String(newRange.prefix(3))
             }
             
             viewModel.verifyStartRange(
@@ -214,8 +217,8 @@ struct DivideRangeView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.endRangeStrings[index]) { newRange in
-            if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.endRangeStrings[index] = String(newRange.prefix(4))
+            if newRange.count > 3 && !newRange.hasSuffix("p") {
+                viewModel.endRangeStrings[index] = String(newRange.prefix(3))
             }
             
             viewModel.verifyEndRange(
@@ -255,24 +258,21 @@ struct DivideRangeView: View {
         )
         .buttonStyle(PressedButtonStyle())
         .onChange(of: viewModel.isDatePickerPresented) { isPresented in
-            if !isPresented {
-                viewModel.deadlineDates[index] = "\(viewModel.selectedYears[index])년 \(viewModel.selectedMonths[index])월 \(viewModel.selectedDays[index])일"
+            if !isPresented, viewModel.isButtonTapped[index] {
+                viewModel.deadlineDates[index] = "\(viewModel.selectedYears[index])년 \(viewModel.selectedMonths[index])월 \(viewModel.selectedDays[index])일 까지"
             }
         }
     }
     
-    //    private func registerButton(for index: Int) -> some View {
-    //        Button("저장하기") {
-    //            // TODO: 화면 전환해야 할 다음 뷰로 연결
-    //        }
-    //        .buttonStyle(
-    //            SolidIconButton(
-    //                buttonImage: Image(.plus),
-    //                !isStartRangeFocused && !isEndRangeFocused && viewModel.isEndRangeValid[index] && viewModel.isStartRangeValid[index]
-    //            )
-    //        )
-    //        .disabled(
-    //            isStartRangeFocused && isEndRangeFocused && !viewModel.isEndRangeValid[index] && !viewModel.isStartRangeValid[index]
-    //        )
-    //    }
+    private var registerButton: some View {
+        Button("저장하기") {
+            // TODO: 화면 전환해야 할 다음 뷰로 연결
+        }
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.plus),
+                !viewModel.allRangesValid)
+        )
+        .disabled(viewModel.allRangesValid)
+    }
 }

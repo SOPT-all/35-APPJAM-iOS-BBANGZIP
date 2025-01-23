@@ -68,7 +68,7 @@ struct StudyDeadlinePickerBottomSheet: View {
     
     private var headerView: some View {
         CustomText(
-            "언제까지 공부할까요? \(fixedExamDate)",
+            "언제까지 공부할까요?",
             fontType: .headline1Medium,
             color: Color(.labelNeutral)
         )
@@ -180,6 +180,7 @@ struct StudyDeadlinePickerBottomSheet: View {
     private var actionButton: some View {
         Button(action: {
             selectedDeadline = "\(selectedYear)년 \(selectedMonth)월 \(selectedDay)일"
+            isButtonTapped = true
             withAnimation { isPresented = false }
         }) {
             Text("공부 기한 입력하기")
@@ -218,6 +219,7 @@ struct StudyDeadlinePickerBottomSheet: View {
         } else if selectedYear == fixedExamYear {
             return months.filter { $0 <= fixedExamMonth }
         }
+        
         return months
     }
 
