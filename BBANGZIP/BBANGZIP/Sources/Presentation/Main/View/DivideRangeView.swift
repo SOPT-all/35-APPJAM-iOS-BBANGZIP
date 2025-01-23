@@ -13,11 +13,40 @@ enum FocusField: Hashable {
     case endRange(Int)
 }
 
+struct StudyRange: Encodable {
+    let subjectID: Int = 1 // temporary
+    let examName: String = "" // temporary
+    let studyContents, examDate: String
+    let pieceList: [PieceList]
+    
+    enum CodingKeys: String, CodingKey {
+        case subjectID = "subjectId"
+        case examName, studyContents, examDate, pieceList
+    }
+}
+
+struct PieceList: Encodable {
+    let startPage, finishPage: Int
+    let deadline: String // "YYYY-MM-DD"
+    
+    enum CodingKeys: String, CodingKey {
+        case finishPage = "endPage"
+        case startPage, deadline
+    }
+}
+
 struct DivideRangeView: View {
+    @SwiftUI.Environment(\.dismiss) var dismiss
     @StateObject var viewModel: DivideRangeViewModel
     @FocusState private var startFocusedField: FocusField?
     @FocusState private var endFocusedField: FocusField?
     @State private var selectedPieceIndex: Int? = nil
+    
+    @State private var studyRange: StudyRange = StudyRange(
+        studyContents: "",
+        examDate: "",
+        pieceList: []
+    )
     
     init(
         pieceCount: Int,
@@ -70,7 +99,7 @@ struct DivideRangeView: View {
             
             registerButton
                 .padding(.horizontal, 20)
-            }
+        }
         .bottomSheet(
             isShowing: $viewModel.isDatePickerPresented,
             height: 453
@@ -264,9 +293,64 @@ struct DivideRangeView: View {
         }
     }
     
+    private func printStudyRange() {
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try encoder.encode(studyRange)
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("studyRange:\n\(jsonString)")
+            }
+        } catch {
+            print("studyRange 인코딩 실패: \(error)")
+        }
+    }
+    
+    private func saveStudyRange() {
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR") // 한국어 로케일 설정
+        
+        let outputDateFormatter = DateFormatter()
+        outputDateFormatter.dateFormat = "yyyy-MM-dd"
+
+        let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> PieceList? in
+            
+            guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
+                  let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
+                return nil
+            }
+            
+            let originalDeadline = viewModel.deadlineDates[index]
+            
+            let formattedDeadline: String
+            if let date = inputDateFormatter.date(from: originalDeadline) {
+                formattedDeadline = outputDateFormatter.string(from: date)
+            } else {
+                formattedDeadline = ""
+            }
+            
+            return PieceList(
+                startPage: startPage,
+                finishPage: endPage,
+                deadline: formattedDeadline
+            )
+        }
+
+        let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
+        studyRange = StudyRange(
+            studyContents: "",
+            examDate: formattedExamDate,
+            pieceList: updatedPieceList
+        )
+    }
+
+    
     private var registerButton: some View {
         Button("저장하기") {
-            // TODO: 화면 전환해야 할 다음 뷰로 연결
+            saveStudyRange()
+            printStudyRange()
+            dismiss()
         }
         .buttonStyle(
             SolidIconButton(

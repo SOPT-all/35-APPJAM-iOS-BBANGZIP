@@ -17,11 +17,7 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var endRangeStates: [TextFieldState]
     @Published var startRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
     @Published var endRangeAnnounceStates: [StudyRangeTextFieldAlertCase?]
-    @Published var isStartRangeValid: [Bool] {
-        didSet {
-            print("isStartRangeValid updated: \(isStartRangeValid)")
-        }
-    }
+    @Published var isStartRangeValid: [Bool]
     @Published var isEndRangeValid: [Bool]
     @Published var isDatePickerPresented = false
     @Published var date: Date?

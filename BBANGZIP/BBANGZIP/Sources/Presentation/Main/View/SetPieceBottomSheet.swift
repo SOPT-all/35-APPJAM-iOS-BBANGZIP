@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SetPieceBottomSheet: View {
     @Binding private var isPresented: Bool
+    
     @State private var startPage: Int
     @State private var endPage: Int
     @State private var totalDays: Int

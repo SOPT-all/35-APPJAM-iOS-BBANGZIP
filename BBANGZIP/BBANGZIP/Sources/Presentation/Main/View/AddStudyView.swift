@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
+    @State private var isRangeLocked: Bool = false
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
@@ -330,7 +331,7 @@ struct AddStudyView: View {
         }
         .buttonStyle(
             OutlinedMediumButton(
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
             )
         )
         .padding(
@@ -338,7 +339,7 @@ struct AddStudyView: View {
             8
         )
         .disabled(
-            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
         .buttonStyle(PressedButtonStyle())
     }
@@ -362,11 +363,11 @@ struct AddStudyView: View {
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.plus),
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
             )
         )
         .disabled(
-            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
     }
     

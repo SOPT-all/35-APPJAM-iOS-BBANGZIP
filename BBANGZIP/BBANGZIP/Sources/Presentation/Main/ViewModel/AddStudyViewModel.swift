@@ -26,11 +26,10 @@ final class AddStudyViewModel: ObservableObject {
     @Published var startRangeAnnounceState: StudyRangeTextFieldAlertCase?
     @Published var endRangeState: TextFieldState
     @Published var endRangeAnnounceState: StudyRangeTextFieldAlertCase?
-    @Published var isStudyContentFocused: Bool = false
     @Published var isStudyContentValid: Bool = false
     @Published var isStartRangeValid: Bool = false
     @Published var isEndRangeValid: Bool = false
-    
+
     @Published var isDatePickerPresented = false
     @Published var isDividerPresented = false
     @Published var selectedBottomSheetType: BottomSheetType?
@@ -39,7 +38,7 @@ final class AddStudyViewModel: ObservableObject {
     @Published var selectedDay: Int
     @Published var isButtonTapped: Bool = false
     @Published var daysUntilExam: Int = 0
-    
+        
     var formattedDate: String {
         guard let date = date else { return "" }
         let formatter = DateFormatter()
@@ -49,6 +48,7 @@ final class AddStudyViewModel: ObservableObject {
     }
     
     init(
+        pieceCount: Int = 1,
         date: Date? = nil,
         studyContent: String = "",
         startRange: Int = 0,
