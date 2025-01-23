@@ -12,5 +12,5 @@ struct StudyCompleteResponseDTO: Decodable {
 }
 
 struct StudyCompleteDataDTO: Decodable {
-    let badges: [BadgeDTO]
+    let badges: [StudyCompleteBadgeDTO]
 }
