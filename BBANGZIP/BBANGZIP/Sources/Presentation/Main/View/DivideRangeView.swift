@@ -15,7 +15,9 @@ enum FocusField: Hashable {
 
 struct DivideRangeView: View {
     @StateObject var viewModel: DivideRangeViewModel
-    @FocusState private var focusedField: FocusField?
+    @FocusState private var startFocusedField: FocusField?
+    @FocusState private var endFocusedField: FocusField?
+    @State private var selectedPieceIndex: Int? = nil
     
     init(
         pieceCount: Int,
@@ -70,13 +72,16 @@ struct DivideRangeView: View {
             isShowing: $viewModel.isDatePickerPresented,
             height: 453
         ) {
-            StudyDeadlinePickerBottomSheet(
-                isPresented: $viewModel.isDatePickerPresented,
-                selectedYear: $viewModel.selectedYear,
-                selectedMonth: $viewModel.selectedMonth,
-                selectedDay: $viewModel.selectedDay,
-                isButtonTapped: $viewModel.isButtonTapped
-            )
+            if let index = selectedPieceIndex {
+                StudyDeadlinePickerBottomSheet(
+                    isPresented: $viewModel.isDatePickerPresented,
+                    selectedYear: $viewModel.selectedYears[index],
+                    selectedMonth: $viewModel.selectedMonths[index],
+                    selectedDay: $viewModel.selectedDays[index],
+                    selectedDeadline: $viewModel.deadlineDates[index],
+                    isButtonTapped: $viewModel.isButtonTapped[index]
+                )
+            }
         }
     }
     
@@ -94,7 +99,7 @@ struct DivideRangeView: View {
             .padding(.horizontal, 20)
             
             HStack(spacing: 4) {
-                Chip(type: .page(viewModel.startRange))
+                Chip(type: .page(viewModel.fixedStartPage))
                 
                 CustomText(
                     "부터",
@@ -103,7 +108,7 @@ struct DivideRangeView: View {
                 )
                 .padding(.trailing, 4)
                 
-                Chip(type: .page(viewModel.endRange))
+                Chip(type: .page(viewModel.fixedEndPage))
                 
                 CustomText(
                     "까지",
@@ -143,7 +148,7 @@ struct DivideRangeView: View {
                         endRangeTextField(for: piece - 1)
                     }
                     
-                    deadlineButton(for: viewModel.deadlineDates[piece - 1])
+                    deadlineButton(for: viewModel.deadlineDates[piece - 1], index: piece - 1)
                 }
             }
         }
@@ -154,7 +159,7 @@ struct DivideRangeView: View {
             "시작 페이지",
             text: $viewModel.startRangeStrings[index]
         )
-        .focused($focusedField, equals: .startRange(index))
+        .focused($startFocusedField, equals: .startRange(index))
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.startRangeStrings[index],
@@ -179,7 +184,7 @@ struct DivideRangeView: View {
                 isStartRangeFocused: focusedField == .startRange(index)
             )
         }
-        .onChange(of: focusedField) { newFocus in
+        .onChange(of: endFocusedField) { newFocus in
             viewModel.handleStartRangeFocusChange(
                 for: index,
                 newText: viewModel.startRangeStrings[index],
@@ -193,7 +198,7 @@ struct DivideRangeView: View {
             "종료 페이지",
             text: $viewModel.endRangeStrings[index]
         )
-        .focused($focusedField, equals: .endRange(index))
+        .focused($endFocusedField, equals: .endRange(index))
         .textFieldStyle(
             CustomTextFieldStyle(
                 text: $viewModel.endRangeStrings[index],
@@ -227,9 +232,13 @@ struct DivideRangeView: View {
         }
     }
     
-    private func deadlineButton(for dateRange: String) -> some View {
+    private func deadlineButton(
+        for dateRange: String,
+        index: Int
+    ) -> some View {
         Button(
             action: {
+                selectedPieceIndex = index
                 viewModel.isDatePickerPresented = true
             }
         ) {
@@ -244,6 +253,11 @@ struct DivideRangeView: View {
             8
         )
         .buttonStyle(PressedButtonStyle())
+        .onChange(of: viewModel.isDatePickerPresented) { isPresented in
+            if !isPresented {
+                viewModel.deadlineDates[index] = "\(viewModel.selectedYears[index])년 \(viewModel.selectedMonths[index])월 \(viewModel.selectedDays[index])일"
+            }
+        }
     }
     
     //    private func registerButton(for index: Int) -> some View {

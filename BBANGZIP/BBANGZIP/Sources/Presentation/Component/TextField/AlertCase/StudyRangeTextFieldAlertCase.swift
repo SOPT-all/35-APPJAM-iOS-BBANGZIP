@@ -23,9 +23,9 @@ enum StudyRangeTextFieldAlertCase: TextFieldAlertable {
         case .endAlert:
             "까지"
         case .startLimitWrong, .rangeFlippedWrong:
-            "시작 범위 이후로 입력해 주세요"
+            "시작 범위 이후로 입력해주세요"
         case .endLimitWrong:
-            "종료 범위 이전으로 입력해 주세요"
+            "종료 범위 이전으로 입력해주세요"
         case .zero:
             "0p는 입력할 수 없어요"
         }

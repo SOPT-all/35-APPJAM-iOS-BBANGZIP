@@ -24,10 +24,12 @@ final class DivideRangeViewModel: ObservableObject {
     @Published var deadlineDates: [String]
     @Published var pieces: [Int]
     
-    @Published var selectedYear: Int = 2025
-    @Published var selectedMonth: Int = 1
-    @Published var selectedDay: Int = 1
-    @Published var isButtonTapped: Bool = false
+    @Published var selectedYears: [Int]
+    @Published var selectedMonths: [Int]
+    @Published var selectedDays: [Int]
+    @Published var isButtonTapped: [Bool]
+    @Published var fixedStartPage: Int
+    @Published var fixedEndPage: Int
     
     init(
         pieceCount: Int,
@@ -46,10 +48,13 @@ final class DivideRangeViewModel: ObservableObject {
         self.isEndRangeValid = Array(repeating: false, count: pieceCount)
         self.pieces = Array(1...pieceCount)
         self.deadlineDates = Array(repeating: "", count: pieceCount)
-        self.selectedYear = selectedYear
-        self.selectedMonth = selectedMonth
-        self.selectedDay = selectedDay
-        self.isButtonTapped = isButtonTapped
+        self.selectedYears = Array(repeating: 2025, count: pieceCount)
+        self.selectedMonths = Array(repeating: 1, count: pieceCount)
+        self.selectedDays = Array(repeating: 1, count: pieceCount)
+        self.isButtonTapped = Array(repeating: false, count: pieceCount)
+        
+        self.fixedStartPage = startPage
+        self.fixedEndPage = endPage
         
         setupRanges(
             startPage: startPage,
@@ -180,9 +185,16 @@ final class DivideRangeViewModel: ObservableObject {
                 isStartRangeValid[index] = false
             } else if newText.isValidStudyRange {
                 startRange = Int(startRangeStrings[index].dropLast()) ?? 0
-                startRangeStates[index] = .field
-                startRangeAnnounceStates[index] = .startAlert
-                isStartRangeValid[index] = true
+                
+                if startRange >= fixedStartPage {
+                    startRangeStates[index] = .field
+                    startRangeAnnounceStates[index] = .startAlert
+                    isStartRangeValid[index] = true
+                } else {
+                    startRangeStates[index] = .alert
+                    startRangeAnnounceStates[index] = .startLimitWrong
+                    isStartRangeValid[index] = false
+                }
                 
                 if endRange < startRange && endRange != 0 {
                     endRangeStates[index] = .alert
@@ -270,7 +282,14 @@ final class DivideRangeViewModel: ObservableObject {
             } else if newText.isValidStudyRange {
                 endRange = Int(endRangeStrings[index].dropLast()) ?? 0
                 
-                if endRange < startRange && startRange != 0 {
+                if endRange > fixedEndPage {
+                    print("end limit wrong \(fixedEndPage)")
+                    print("end limit wrong \(endRange)")
+                    endRangeStates[index] = .alert
+                    endRangeAnnounceStates[index] = .endLimitWrong
+                    isEndRangeValid[index] = false
+                    return
+                } else if endRange < startRange && startRange != 0 {
                     endRangeStates[index] = .alert
                     endRangeAnnounceStates[index] = .rangeFlippedWrong
                     isEndRangeValid[index] = false
@@ -279,6 +298,7 @@ final class DivideRangeViewModel: ObservableObject {
                     endRangeAnnounceStates[index] = .endAlert
                     isEndRangeValid[index] = true
                 }
+                
             } else {
                 endRangeStates[index] = .alert
                 endRangeAnnounceStates[index] = .endAlert

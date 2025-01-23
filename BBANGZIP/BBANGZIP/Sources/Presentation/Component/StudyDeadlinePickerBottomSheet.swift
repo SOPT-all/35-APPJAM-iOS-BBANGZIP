@@ -13,6 +13,7 @@ struct StudyDeadlinePickerBottomSheet: View {
     @Binding private var selectedYear: Int
     @Binding private var selectedMonth: Int
     @Binding private var selectedDay: Int
+    @Binding private var selectedDeadline: String
     @Binding private var isButtonTapped: Bool
     
     private let years = Array(2021...2028)
@@ -21,18 +22,21 @@ struct StudyDeadlinePickerBottomSheet: View {
     private let currentYear: Int
     private let currentMonth: Int
     private let currentDay: Int
+    private let deadlineDate: String
     
     init(
         isPresented: Binding<Bool>,
         selectedYear: Binding<Int>,
         selectedMonth: Binding<Int>,
         selectedDay: Binding<Int>,
+        selectedDeadline: Binding<String>,
         isButtonTapped: Binding<Bool>
     ) {
         self._isPresented = isPresented
         self._selectedYear = selectedYear
         self._selectedMonth = selectedMonth
         self._selectedDay = selectedDay
+        self._selectedDeadline = selectedDeadline
         let calendar = Calendar.current
         let components = calendar.dateComponents(
             [
@@ -45,6 +49,7 @@ struct StudyDeadlinePickerBottomSheet: View {
         self.currentYear = components.year ?? selectedYear.wrappedValue
         self.currentMonth = components.month ?? selectedMonth.wrappedValue
         self.currentDay = components.day ?? selectedDay.wrappedValue
+        self.deadlineDate = "\(currentYear)년 \(currentMonth)월 \(currentDay)일"
         self._isButtonTapped = isButtonTapped
     }
     
@@ -171,9 +176,8 @@ struct StudyDeadlinePickerBottomSheet: View {
     
     private var actionButton: some View {
         Button(action: {
-            withAnimation {
-                isPresented = false
-            }
+            selectedDeadline = "\(selectedYear)년 \(selectedMonth)월 \(selectedDay)일"
+            withAnimation { isPresented = false }
         }) {
             Text("공부 기한 입력하기")
         }
@@ -204,8 +208,10 @@ struct StudyDeadlinePickerBottomSheet: View {
         if !days.contains(selectedDay) {
             selectedDay = days.last ?? 1
         }
+        selectedDeadline = deadlineDate
+        print("bottom sheet: \(selectedDeadline)")
     }
-
+    
     private func calculateDaysInMonth(
         year: Int,
         month: Int

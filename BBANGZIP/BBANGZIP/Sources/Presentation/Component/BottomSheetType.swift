@@ -43,6 +43,7 @@ enum BottomSheetType: Int {
                 selectedYear: selectedYear ?? .constant(2025),
                 selectedMonth: selectedMonth ?? .constant(1),
                 selectedDay: selectedDay ?? .constant(1),
+                selectedDeadline: .constant(""),
                 isButtonTapped: isButtonTapped
             )
         case .changeSemester:
