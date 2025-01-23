@@ -11,53 +11,81 @@ import SwiftUI
 struct AddSubjectView: View {
     @StateObject private var viewModel: AddSubjectViewModel
     @FocusState private var isSubjectFocused: Bool
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(
-        viewModel: AddSubjectViewModel = AddSubjectViewModel()
+        viewModel: AddSubjectViewModel
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
-        VStack (spacing: 16) {
-            HStack {
-                CustomText(
-                    "과목명",
-                    fontType: .body1Bold,
-                    color: Color(.labelNormal)
+        ZStack {
+            Color(.clear)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    hideKeyboard()
+                }
+            
+            VStack (spacing: 16) {
+                CustomNavigationBar(
+                    showBackButton: true,
+                    showMenu: false,
+                    title: "과목 추가하기",
+                    backgroundColor: Color(.backgroundNormal)
                 )
                 
-                Spacer()
-            }
-            
-            //            subjectTextField
-            
-            Spacer()
-            
-            Button("추가하기") {
-                viewModel.addSubject()
-                print("dd")
-            }
-            .buttonStyle(
-                SolidIconButton(
-                    buttonImage: Image(.plus),
-                    viewModel.isEnabled
+                HStack {
+                    CustomText(
+                        "과목명",
+                        fontType: .body1Bold,
+                        color: Color(.labelNormal)
+                    )
+                    
+                    Spacer()
+                }
+                .padding(
+                    .horizontal,
+                    20
                 )
-            )
-            .disabled(!viewModel.isEnabled)
+                
+                subjectTextField
+                    .padding(
+                        .horizontal,
+                        20
+                    )
+                
+                Spacer()
+                
+                Button("추가하기") {
+                    Task {
+                        await viewModel.addSubject(subjectName: viewModel.subject)
+                    }
+                }
+                .buttonStyle(
+                    SolidIconButton(
+                        buttonImage: Image(.plus),
+                        viewModel.isEnabled
+                    )
+                )
+                .disabled(!viewModel.isEnabled)
+                .padding(
+                    .bottom,
+                    8
+                )
+                .padding(
+                    .horizontal,
+                    20
+                )
+            }
         }
-        .padding(
-            .horizontal,
-            20
-        )
-        .padding(
-            .top,
-            16
-        )
-        .padding(
-            .bottom,
-            8
-        )
+        .navigationBarHidden(true)
+        .onChange(of: viewModel.shouldDismiss) {
+            shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
     }
     
     private var subjectTextField: some View {
@@ -91,8 +119,4 @@ struct AddSubjectView: View {
             )
         }
     }
-}
-
-#Preview {
-    AddSubjectView()
 }

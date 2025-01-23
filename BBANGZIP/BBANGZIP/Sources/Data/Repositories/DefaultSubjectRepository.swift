@@ -32,4 +32,30 @@ final class DefaultSubjectRepository: SubjectRepository {
             throw error
         }
     }
+    
+    func addSubject(
+        year: Int,
+        semester: Semester,
+        subjectName: String
+    ) async throws  {
+        let response = await API.session.request(
+            BbangDefaultRouter.addSubject(
+                dto: AddSubjectRequestDTO(
+                    year: year,
+                    semester: semester,
+                    subjectName: subjectName
+                )
+            )
+        )
+        .serializingDecodable(AddSubjectResponseDTO.self)
+        .response
+        
+        switch response.result {
+        case .success(let resultDTO):
+            dump(resultDTO)
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
 }

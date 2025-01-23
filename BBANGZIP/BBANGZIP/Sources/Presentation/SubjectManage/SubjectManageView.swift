@@ -15,7 +15,6 @@ struct SubjectManageView: View {
     @Binding var isCustomTabBarHidden: Bool
     
     init(
-        // TODO: dataCount API 연동 후 수정 필요
         viewModel: SubjectManageViewModel,
         selectedBottomSheetType: BottomSheetType? = .changeSemester,
         isBottomSheetShowing: Binding<Bool>,
@@ -36,97 +35,99 @@ struct SubjectManageView: View {
     ]
     
     var body: some View {
-        if viewModel.isLoading {
-            ProgressView()
+//        if viewModel.isLoading {
+//            ProgressView()
+//                .onAppear {
+//                    Task { @MainActor in
+//                        await viewModel.fetchData()
+//                    }
+//                }
+//        } else {
+        ZStack {
+            ScrollView {
+                VStack {
+                    HStack {
+                        ChangeSemesterButton()
+                            .padding(
+                                .leading,
+                                24
+                            )
+                        
+                        Spacer()
+                    }
+                    .padding(
+                        .top,
+                        63
+                    )
+                    .padding(
+                        .bottom,
+                        169
+                    )
+                    .background(
+                        ZStack {
+                            Color(.backgroundAccent)
+                                .cornerRadius(
+                                    32,
+                                    corners: [
+                                        .bottomLeft,
+                                        .bottomRight
+                                    ]
+                                )
+                            
+                            Image(.graphicStudyManage)
+                                .padding(.top, 47)
+                        }
+                    )
+                    
+                    
+                    VStack(spacing: 32) {
+                        subjectSection
+                        
+                        subjectCardScrollSection
+                            .padding(.bottom, 16)
+                    }
+                    .padding(
+                        .top,
+                        48
+                    )
+                    .padding(
+                        .horizontal,
+                        20
+                    )
+                    
+                    if viewModel.isDeleteMode {
+                        Spacer()
+                            .frame(height: 56)
+                    }
+                }
+                .bottomSheet(
+                    isShowing: $viewModel.isShowingBottomSheet,
+                    height: 453
+                ) {
+                    if let type = selectedBottomSheetType {
+                        type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                    }
+                }
+                .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+                    isBottomSheetShowing = newValue
+                }
                 .onAppear {
+                    viewModel.isDeleteMode = false
+                    isCustomTabBarHidden = false
                     Task { @MainActor in
                         await viewModel.fetchData()
                     }
                 }
-        } else {
-            ZStack {
-                ScrollView {
-                    VStack {
-                        HStack {
-                            ChangeSemesterButton()
-                                .padding(
-                                    .leading,
-                                    24
-                                )
-                            
-                            Spacer()
-                        }
-                        .padding(
-                            .top,
-                            63
-                        )
-                        .padding(
-                            .bottom,
-                            169
-                        )
-                        .background(
-                            ZStack {
-                                Color(.backgroundAccent)
-                                    .cornerRadius(
-                                        32,
-                                        corners: [
-                                            .bottomLeft,
-                                            .bottomRight
-                                        ]
-                                    )
-                                
-                                Image(.graphicStudyManage)
-                                    .padding(.top, 47)
-                            }
-                        )
-                        
-                        
-                        VStack(spacing: 32) {
-                            subjectSection
-                            
-                            subjectCardScrollSection
-                                .padding(.bottom, 16)
-                        }
-                        .padding(
-                            .top,
-                            48
-                        )
-                        .padding(
-                            .horizontal,
-                            20
-                        )
-                        
-                        if viewModel.isDeleteMode {
-                            Spacer()
-                                .frame(height: 56)
-                        }
-                    }
-                    .bottomSheet(
-                        isShowing: $viewModel.isShowingBottomSheet,
-                        height: 453
-                    ) {
-                        if let type = selectedBottomSheetType {
-                            type.contentView(isPresented: $viewModel.isShowingBottomSheet)
-                        }
-                    }
-                    .onChange(of: viewModel.isShowingBottomSheet) { newValue in
-                        isBottomSheetShowing = newValue
-                    }
-                    .onAppear {
-                        viewModel.isDeleteMode = false
-                        isCustomTabBarHidden = false
-                    }
-                }
-                .edgesIgnoringSafeArea(.top)
-                .scrollIndicators(.hidden)
+            }
+            .edgesIgnoringSafeArea(.top)
+            .scrollIndicators(.hidden)
+            
+            VStack {
+                Spacer()
                 
-                VStack {
-                    Spacer()
-                    
-                    if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
-                        deleteButton
-                            .padding(.bottom, 16)
-                    }
+                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                    deleteButton
+                        .padding(.bottom, 16)
                 }
             }
         }
@@ -228,9 +229,19 @@ struct SubjectManageView: View {
             }
             
             if !viewModel.isDeleteMode {
-                Button {
-                    // TODO: 추가 페이지 이동
-                } label: {
+                NavigationLink(
+                    destination: AddSubjectView(
+                        viewModel: AddSubjectViewModel(
+                            addSubjectUseCase: DefaultAddSubjectUseCase(
+                                repository: DefaultSubjectRepository()
+                            )
+                        )
+                    )
+                        .onAppear {
+                            isCustomTabBarHidden = true
+                        }
+                )
+                {
                     SubjectAddCard()
                 }
                 .buttonStyle(PressedButtonStyle())

@@ -68,7 +68,7 @@ final class SubjectDetailViewModel: ObservableObject {
     func fetchData() async {
         do {
             let examContent = try await filterExamUseCase.execute(
-                subjectId: subjectId, // TODO: 스프린트 변경 예정
+                subjectId: subjectId,
                 examName: convertExamNameToAPI(currentExam)
             )
             modelList = examContent.studyList
