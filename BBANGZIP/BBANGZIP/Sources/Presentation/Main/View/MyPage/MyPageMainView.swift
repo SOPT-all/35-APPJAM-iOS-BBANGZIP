@@ -238,56 +238,87 @@ struct GridView: View {
     @State private var showDeleteAccountSheet = false
     
     var body: some View {
-        LazyVStack(spacing: 0) {
-            ForEach(
-                items.indices,
-                id: \.self
-            ) { index in
-                VStack(spacing: 8) {
-                    HStack {
-                        CustomText(
-                            items[index],
-                            fontType: .body1Bold,
-                            color: Color(.labelNormal)
-                        )
-                        .padding(.leading, 8)
-                        Spacer()
-                        
-                        Image(.rightIcon)
-                            .frame(
-                                width: 20,
-                                height: 20
+        ZStack {
+            LazyVStack(spacing: 0) {
+                ForEach(items.indices, id: \.self) { index in
+                    Button(action: {
+                        handleItemTap(index: index)
+                    }) {
+                        HStack {
+                            CustomText(
+                                items[index],
+                                fontType: .body1Bold,
+                                color: Color(.labelNormal)
                             )
-            
+                            .padding(.leading, 8)
+                            Spacer()
+                            Image(.rightIcon)
+                                .frame(width: 20, height: 20)
+                        }
+                        .frame(width: 335, height: 56)
+                        .background(Color.clear)
                     }
-                    .frame(
-                        width: 335,
-                        height: 56
-                    )
+                    .buttonStyle(PlainButtonStyle())
                     
                     if index == 0 || index == 3 {
                         Divider()
                             .background(Color(.lineNormal))
-                            .padding(
-                                .top,
-                                16
-                            )
-                            .padding(
-                                .bottom,
-                                16
-                            )
+                            .padding(.vertical, 16)
                     }
                 }
             }
+            .padding(.horizontal, 20)
+            
+            if showLogoutSheet {
+                BottomSheet(
+                    isShowing: $showLogoutSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "로그아웃 하시겠어요?",
+                        primaryButtonTitle: "로그아웃 하기",
+                        primaryButtonAction: {
+                            print("로그아웃 실행")
+                            // TODO: 로그아웃 기능 추가
+                            showLogoutSheet = false
+                        },
+                        isBottonSheetShowing: $showLogoutSheet
+                    )
+                }
+            }
+            
+            if showDeleteAccountSheet {
+                BottomSheet(
+                    isShowing: $showDeleteAccountSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "정말 계정을 삭제하시겠습니까?",
+                        primaryButtonTitle: "계정 삭제",
+                        primaryButtonAction: {
+                            print("계정 탈퇴 실행")
+                            // TODO: 계정 탈퇴 기능 추가
+                            showDeleteAccountSheet = false
+                        },
+                        isBottonSheetShowing: $showDeleteAccountSheet
+                    )
+                }
+            }
         }
-        .padding(
-            .horizontal,
-            20
-        )
     }
     
+    private func handleItemTap(index: Int) {
+        switch items[index] {
+        case "로그아웃":
+            showLogoutSheet = true
+        case "계정 탈퇴":
+            showDeleteAccountSheet = true
+        default:
+            print("\(items[index]) 선택됨")
+            // TODO: 다른 항목 처리 추가
+        }
+    }
 }
-
 
 #Preview {
     MyPageMainView(
