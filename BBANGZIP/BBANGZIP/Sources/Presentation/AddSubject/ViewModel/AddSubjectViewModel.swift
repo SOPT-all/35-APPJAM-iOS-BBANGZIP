@@ -10,7 +10,7 @@ import SwiftUI
 
 class AddSubjectViewModel: ObservableObject {
     private let addSubjectUseCase: AddSubjectUseCase
-    
+    private let parentViewModel: SubjectManageViewModel
     @Published var shouldDismiss: Bool = false
     @Published var subject: String
     @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
@@ -22,12 +22,14 @@ class AddSubjectViewModel: ObservableObject {
     
     init(
         addSubjectUseCase: AddSubjectUseCase,
+        parentViewModel: SubjectManageViewModel,
         subject: String = "",
         subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
         subjectState: TextFieldState = .defaultState,
         isEnabled: Bool = false
     ) {
         self.addSubjectUseCase = addSubjectUseCase
+        self.parentViewModel = parentViewModel
         self.subject = subject
         self.subjectAnnounceState = subjectAnnounceState
         self.subjectState = subjectState
@@ -98,8 +100,16 @@ class AddSubjectViewModel: ObservableObject {
                 subjectName: subjectName
             )
             
+            parentViewModel.toast = Toast(
+                "과목 추가 완료! 공부를 시작해 볼까요?",
+                startFrom: 16
+            )
             self.shouldDismiss = true
         } catch {
+            toast = Toast(
+                "이미 등록된 과목이에요",
+                startFrom: 76
+            )
             dump(error)
             print(error)
         }

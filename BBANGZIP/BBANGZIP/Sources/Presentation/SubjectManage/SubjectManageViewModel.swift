@@ -15,6 +15,7 @@ final class SubjectManageViewModel: ObservableObject {
     @Published var isLoading: Bool = true
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
+    @Published var toast: Toast?
     
     @Published var modelList: [SubjectCardModel] = []
     

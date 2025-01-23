@@ -86,6 +86,7 @@ struct AddSubjectView: View {
                 dismiss()
             }
         }
+        .toastView(toast: $viewModel.toast)
     }
     
     private var subjectTextField: some View {

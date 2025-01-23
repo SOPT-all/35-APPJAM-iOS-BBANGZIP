@@ -35,14 +35,6 @@ struct SubjectManageView: View {
     ]
     
     var body: some View {
-//        if viewModel.isLoading {
-//            ProgressView()
-//                .onAppear {
-//                    Task { @MainActor in
-//                        await viewModel.fetchData()
-//                    }
-//                }
-//        } else {
         ZStack {
             ScrollView {
                 VStack {
@@ -130,6 +122,7 @@ struct SubjectManageView: View {
                         .padding(.bottom, 16)
                 }
             }
+            .toastView(toast: $viewModel.toast)
         }
     }
     
@@ -234,7 +227,8 @@ struct SubjectManageView: View {
                         viewModel: AddSubjectViewModel(
                             addSubjectUseCase: DefaultAddSubjectUseCase(
                                 repository: DefaultSubjectRepository()
-                            )
+                            ),
+                            parentViewModel: viewModel
                         )
                     )
                         .onAppear {
