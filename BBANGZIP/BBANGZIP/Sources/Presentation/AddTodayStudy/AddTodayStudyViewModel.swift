@@ -10,12 +10,12 @@ import SwiftUI
 
 final class AddTodayStudyViewModel: ObservableObject {
     @Published var isLoading: Bool = true
-    
-    @Published var studyArea: TodayStudyArea = .pending
     @Published var sortOption: FetchTodayStudySortOption = .recent
     @Published var studyCount: Int = 0
     @Published var selectedCount: Int = 0
     @Published var list: [StudyPiece] = []
+    @Published var isFilterBottomSheetPresent: Bool = false
+    var toast: Toast?
     
     private let fetchAddTodayStudyUseCase: FetchAddTodayStudyUseCase
     
@@ -33,6 +33,7 @@ final class AddTodayStudyViewModel: ObservableObject {
             )
             studyCount = result.count
             list = result.list
+            selectedCount = 0
             isLoading = false
         } catch {
             isLoading = false

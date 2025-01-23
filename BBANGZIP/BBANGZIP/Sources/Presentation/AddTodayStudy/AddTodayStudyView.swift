@@ -15,7 +15,6 @@ struct AddTodayStudyView: View {
     
     init(viewModel: AddTodayStudyViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
-//        UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
@@ -25,50 +24,131 @@ struct AddTodayStudyView: View {
                     await viewModel.fetchData()
                 }
         } else {
-            ScrollView {
-                VStack(
-                    alignment: .leading,
-                    spacing: 0
-                ) {
-                    CustomText(
-                        "시작이 빵이다!",
-                        fontType: .body1Bold,
-                        color: Color(.labelAlternative)
-                    )
-                    .padding(
-                        .bottom,
-                        8
-                    )
-                    
-                    CustomText(
-                        "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
-                        fontType: .title3Bold,
-                        color: Color(.labelNormal)
-                    )
-                    .padding(
-                        .bottom,
-                        32
-                    )
-                    
-                    menuBar
+            ZStack {
+                ScrollView {
+                    VStack(
+                        alignment: .leading,
+                        spacing: 0
+                    ) {
+                        CustomText(
+                            "시작이 빵이다!",
+                            fontType: .body1Bold,
+                            color: Color(.labelAlternative)
+                        )
                         .padding(
                             .bottom,
-                            26
+                            8
                         )
-                    
-                    listView
-                    
-                    Spacer()
+                        
+                        CustomText(
+                            "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
+                            fontType: .title3Bold,
+                            color: Color(.labelNormal)
+                        )
+                        .padding(
+                            .bottom,
+                            32
+                        )
+                        
+                        menuBar
+                            .padding(
+                                .bottom,
+                                26
+                            )
+                        
+                        listView
+                        
+                        Spacer()
+                    }
+                    .padding(
+                        .top,
+                        32
+                    )
+                    .padding(
+                        .horizontal,
+                        20
+                    )
                 }
-                .padding(
-                    .top,
-                    32
-                )
-                .padding(
-                    .horizontal,
-                    20
-                )
+                
+                VStack {
+                    Spacer()
+                    
+                    if viewModel.selectedCount > 0 {
+                        Button {
+                            print("aa")
+                            // TODO: API 연결 -> 결과 오면 dismiss
+                        } label: {
+                            CustomText(
+                                "오늘 할 공부 추가하기",
+                                fontType: .body1Bold,
+                                color: Color(.staticWhite)
+                            )
+                        }
+                        .buttonStyle(
+                            SolidIconButton(
+                                buttonImage: Image(.plus)
+                            )
+                        )
+                        .padding(
+                            .horizontal,
+                            20
+                        )
+                        .padding(
+                            .bottom,
+                            15
+                        )
+                    }
+                }
+
             }
+            .bottomSheet(
+                isShowing: $viewModel.isFilterBottomSheetPresent,
+                height: 225,
+                content: {
+                    VStack(spacing: 8) {
+                        ForEach(
+                            FetchTodayStudySortOption.allCases,
+                            id: \.self
+                        ) { filter in
+                            Button {
+                                viewModel.sortOption = filter
+                                viewModel.isFilterBottomSheetPresent = false
+                                Task {
+                                    await viewModel.fetchData()
+                                }
+                                viewModel.toast = Toast(
+                                    "\(filter.buttonTitle)으로 정렬했어요",
+                                    startFrom: 76
+                                )
+                                //TODO: Toast
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    
+                                    CustomText(
+                                        filter.buttonTitle,
+                                        fontType: .body1Bold,
+                                        color: Color(.labelNeutral)
+                                    )
+                                    .frame(height: 40)
+                                    
+                                    Spacer()
+                                }
+                            }
+                            .padding(
+                                .horizontal,
+                                20
+                            )
+                            .buttonStyle(PressedBottomSheetButtonStyle(isSelected: viewModel.sortOption == filter))
+                        }
+                    }
+                    .padding(
+                        .top,
+                        24
+                    )
+                }
+            )
+            .toastView(toast: $viewModel.toast)
             .navigationBarBackButtonHidden()
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -101,7 +181,7 @@ struct AddTodayStudyView: View {
             Spacer()
             
             Button {
-                print("Filter button Tapped")
+                viewModel.isFilterBottomSheetPresent = true
             } label: {
                 Image(.filter)
                     .renderingMode(.template)
