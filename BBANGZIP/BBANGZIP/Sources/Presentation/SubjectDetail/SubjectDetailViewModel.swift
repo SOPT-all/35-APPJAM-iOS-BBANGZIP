@@ -12,7 +12,7 @@ final class SubjectDetailViewModel: ObservableObject {
     private let filterExamUseCase: FilterExamUseCase
     
     let subjectName: String
-    private let subjectId: Int
+    let subjectId: Int
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
     @Published var modelList: [FilterExamList] = []
@@ -20,6 +20,7 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var isLoading: Bool = true
     @Published var isDeleteButtonEnable: Bool = false
     @Published var isShowingBottomSheet: Bool = false
+    @Published var toast: Toast?
     
     var selectedItemCount: Int {
         modelList.filter { $0.state == .selected }.count
