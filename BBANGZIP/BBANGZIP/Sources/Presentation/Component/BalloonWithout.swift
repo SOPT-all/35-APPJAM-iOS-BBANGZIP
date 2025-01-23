@@ -118,14 +118,3 @@ struct BalloonWithout: View {
     }
 
 }
-
-//#Preview {
-//    Balloon(
-//        text: "사장님의 출을 응원해요!",
-//        leftIcon: "bubble",
-//        rightIcon: "bubble",
-//        balloonMode: .top
-//    )
-//    .padding(.horizontal, 20)
-//}
-

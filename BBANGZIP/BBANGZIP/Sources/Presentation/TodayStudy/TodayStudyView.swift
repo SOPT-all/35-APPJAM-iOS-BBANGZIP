@@ -129,7 +129,7 @@ struct TodayStudyView: View {
                 
                 HStack {
                     if viewModel.pendingCount > 0 {
-                        DelayedStudyButton(count: viewModel.pendingCount)
+                        delayedStudyButton
                     } else {
                         CustomText(
                             "사장님의 밀린 공부는 빵 개!",
@@ -164,6 +164,28 @@ struct TodayStudyView: View {
                 20
             )
         }
+    }
+    
+    private var delayedStudyButton: some View {
+        Button {
+            // TODO: 밀린 공부 View 이동
+            print("밀린 공부 버튼 Tapped")
+        } label: {
+            HStack(spacing: 5) {
+                CustomText(
+                    "밀린 공부 \(viewModel.pendingCount)개 하러 가기",
+                    fontType: .body2Bold,
+                    color: Color(.primaryNormal)
+                )
+                
+                Image(.chevronRightThickSmall)
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+        .buttonStyle(OutlinedMediumButton())
     }
     
     private var announceTextView: some View {
@@ -511,35 +533,5 @@ struct TodayStudyDateView: View {
         default:
             "error"
         }
-    }
-}
-
-struct DelayedStudyButton: View {
-    private let count: Int
-    
-    init(count: Int) {
-        self.count = count
-    }
-    
-    var body: some View {
-        Button {
-            // TODO: 밀린 공부 View 이동
-            print("밀린 공부 버튼 Tapped")
-        } label: {
-            HStack(spacing: 5) {
-                CustomText(
-                    "밀린 공부 \(count)개 하러 가기",
-                    fontType: .body2Bold,
-                    color: Color(.primaryNormal)
-                )
-                
-                Image(.chevronRightThickSmall)
-            }
-            .padding(
-                .horizontal,
-                20
-            )
-        }
-        .buttonStyle(OutlinedMediumButton())
     }
 }
