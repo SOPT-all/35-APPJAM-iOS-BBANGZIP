@@ -60,7 +60,7 @@ final class SubjectManageViewModel: ObservableObject {
     func deleteSubject() async {
         
         do {
-            let deleteContent: () = try await deleteSubjectUseCase.execute(
+            let _: () = try await deleteSubjectUseCase.execute(
                 year: 2025,
                 semester: .first,
                 subjectIds: Array(selectedSubjectIds)
