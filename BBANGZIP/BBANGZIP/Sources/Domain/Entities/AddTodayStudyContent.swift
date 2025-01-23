@@ -8,15 +8,5 @@
 
 struct AddTodayStudyData {
     let count: Int
-    let list: [AddTodayStudyContent]
-}
-
-struct AddTodayStudyContent {
-    let pieceID: Int
-    let subjectName: String
-    let examName: String
-    let studyContents: String
-    let startPage, finishPage: Int
-    let deadline: String
-    let remainingDays: Int
+    let list: [StudyPiece]
 }

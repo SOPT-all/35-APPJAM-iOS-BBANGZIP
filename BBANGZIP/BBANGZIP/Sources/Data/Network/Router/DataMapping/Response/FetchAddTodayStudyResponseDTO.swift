@@ -43,16 +43,18 @@ struct AddTodayStudyContentDTO: Decodable {
         case remainingDays
     }
     
-    func toDomain() -> AddTodayStudyContent {
-        return AddTodayStudyContent(
-            pieceID: pieceID,
+    func toDomain() -> StudyPiece {
+        return StudyPiece(
+            id: pieceID,
             subjectName: subjectName,
             examName: examName,
             studyContents: studyContents,
             startPage: startPage,
             finishPage: finishPage,
             deadline: deadline,
-            remainingDays: remainingDays
+            remainingDays: remainingDays,
+            isFinished: false,
+            state: .selectable
         )
     }
 }

@@ -14,7 +14,8 @@ final class AddTodayStudyViewModel: ObservableObject {
     @Published var studyArea: TodayStudyArea = .pending
     @Published var sortOption: FetchTodayStudySortOption = .recent
     @Published var studyCount: Int = 0
-    @Published var list: [AddTodayStudyContent] = []
+    @Published var selectedCount: Int = 0
+    @Published var list: [StudyPiece] = []
     
     private let fetchAddTodayStudyUseCase: FetchAddTodayStudyUseCase
     
