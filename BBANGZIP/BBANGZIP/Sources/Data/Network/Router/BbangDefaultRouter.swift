@@ -51,7 +51,7 @@ extension BbangDefaultRouter: Router {
     
     var path: String {
         switch self {
-        case .signup(let signInRequest):
+        case .signup:
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -155,7 +155,7 @@ extension BbangDefaultRouter: Router {
         case .signup(let signInRequest):
             return [
                 "Content-Type": "application/json",
-                "Authorization": "Bearer \(signInRequest.authorization)"
+                "Authorization": "Bearer \(signInRequest.accessToken)"
             ]
         default:
             return [

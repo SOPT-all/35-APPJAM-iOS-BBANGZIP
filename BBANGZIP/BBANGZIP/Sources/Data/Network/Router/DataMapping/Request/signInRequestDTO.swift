@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct signInRequestDTO: Codable {
-    public let authorization: String
+struct signInRequestDTO: Encodable {
+    let accessToken: String
 }
