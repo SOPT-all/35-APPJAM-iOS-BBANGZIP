@@ -190,7 +190,6 @@ struct SubjectManageView: View {
         }
     }
     
-    
     var subjectCardScrollSection: some View {
         LazyVGrid(
             columns: columns,
@@ -312,6 +311,9 @@ struct SubjectManageView: View {
                         parentViewModel: viewModel
                     )
                 )
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
             ){
                 CustomText(
                     "과목 추가하기",

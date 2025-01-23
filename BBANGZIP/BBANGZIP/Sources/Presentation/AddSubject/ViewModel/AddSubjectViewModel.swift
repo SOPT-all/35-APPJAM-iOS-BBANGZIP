@@ -102,7 +102,7 @@ class AddSubjectViewModel: ObservableObject {
             
             parentViewModel.toast = Toast(
                 "과목 추가 완료! 공부를 시작해 볼까요?",
-                startFrom: 16
+                startFrom: 20
             )
             
             await parentViewModel.fetchData()
@@ -114,6 +114,7 @@ class AddSubjectViewModel: ObservableObject {
                 "이미 등록된 과목이에요",
                 startFrom: 76
             )
+            
             dump(error)
             print(error)
         }

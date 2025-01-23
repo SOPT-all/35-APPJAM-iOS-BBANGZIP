@@ -74,7 +74,7 @@ final class SubjectManageViewModel: ObservableObject {
             
             toast = Toast(
                 "과목 삭제 완료",
-                startFrom: 16
+                startFrom: 20
             )
         } catch {
             dump(error)
