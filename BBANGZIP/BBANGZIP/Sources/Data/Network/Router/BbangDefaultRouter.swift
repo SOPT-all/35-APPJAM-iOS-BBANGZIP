@@ -44,12 +44,13 @@ enum BbangDefaultRouter {
     
     //유빈
     case subjectFiltering(dto: FetchSubjectRequestDTO)
+    case fetchSubject(dto: FetchSubjectRequestDTO)
     
 }
 
 extension BbangDefaultRouter: Router {
     var baseURL: String {
-        Environment.baseURL
+        "https://bbangzip.store"
     }
     
     var path: String {
@@ -108,6 +109,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces/hide"
         case .fetchBadgeDetail(let badgeName):
             return "/api/v1/mypage/badges/\(badgeName)"
+        case .fetchSubject:
+            return "/api/v1/subjects/filter"
         }
     }
     
@@ -136,7 +139,8 @@ extension BbangDefaultRouter: Router {
                 .myPageStatus,
                 .aquireBadge,
                 .badgeDetail,
-                .fetchBadgeDetail:
+                .fetchBadgeDetail,
+                .fetchSubject:
             return .get
             
         case
@@ -197,6 +201,8 @@ extension BbangDefaultRouter: Router {
             return [:]
         case .subjectFiltering(let dto):
             return dto.asDictionary()
+        case .fetchSubject(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }
@@ -204,7 +210,7 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup, .fetchSortedTodoList:
+        case .signup, .fetchSortedTodoList, .fetchSubject:
             return URLEncoding.default
         case .fetchBadgeDetail:
             return nil
