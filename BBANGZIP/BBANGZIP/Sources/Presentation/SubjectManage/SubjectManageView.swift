@@ -299,7 +299,7 @@ struct SubjectManageView: View {
     
     var emptyView: some View {
         VStack(spacing: 16) {
-            Image(.graphicEmptyStudy)
+            Image(.graphicEmptySubject)
                 .frame(
                     width: 320,
                     height: 296
@@ -314,7 +314,7 @@ struct SubjectManageView: View {
                 )
             ){
                 CustomText(
-                    "공부할 과목 추가하기",
+                    "과목 추가하기",
                     fontType: .body1Bold,
                     color: Color(.staticWhite)
                 )

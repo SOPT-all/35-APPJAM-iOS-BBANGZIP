@@ -17,11 +17,9 @@ enum BbangDefaultRouter {
     case withDraw
     case onBoarding
     case testSelect(subjectID: Int)
-    case addSubject
     case motivationMessage(subjectID: Int, options: String)
     case addStudyScope
     case deleteStudyScope
-    case deleteSubject
     case studyCompleteCheck(pieceID: Float)
     case notCompletedCheck(pieceID: Float)
     case sortedDelayedTodoList
@@ -45,6 +43,8 @@ enum BbangDefaultRouter {
     //유빈
     case examFiltering(subjectId: Int, examName: String)
     case fetchSubject(dto: FetchSubjectRequestDTO)
+    case addSubject(dto: AddSubjectRequestDTO)
+    case deleteSubject(dto: DeleteSubjectRequestDTO)
     
 }
 
@@ -78,7 +78,7 @@ extension BbangDefaultRouter: Router {
         case .deleteStudyScope:
             return "/api/v1/studies/pieces"
         case .deleteSubject:
-            return "/api/v1/subject/delete"
+            return "/api/v1/subjects"
         case .studyCompleteCheck(let pieceID):
             return "/api/v1/pieces/\(pieceID)/mark-done"
         case .notCompletedCheck(let pieceID):
@@ -199,12 +199,13 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .fetchBadgeDetail:
             return [:]
-        case .examFiltering(let subjectId, let examName):
-            return [
-                "subjectId": subjectId,
-                "examName": examName
-            ]
+        case .examFiltering(_, _):
+            return nil
         case .fetchSubject(let dto):
+            return dto.asDictionary()
+        case .addSubject(let dto):
+            return dto.asDictionary()
+        case .deleteSubject(let dto):
             return dto.asDictionary()
         default:
             return nil
@@ -215,7 +216,7 @@ extension BbangDefaultRouter: Router {
         switch self {
         case .signup, .fetchSortedTodoList, .fetchSubject:
             return URLEncoding.default
-        case .fetchBadgeDetail:
+        case .fetchBadgeDetail, .examFiltering:
             return nil
         default:
             return JSONEncoding.default
