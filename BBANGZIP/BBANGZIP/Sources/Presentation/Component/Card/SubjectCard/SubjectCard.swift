@@ -91,7 +91,7 @@ struct SubjectCard: View {
                 spacing: 4
             ) {
                 CustomText(
-                    subjectCardData.subjectName ,
+                    subjectCardData.subjectName,
                     fontType: .body1Bold,
                     color: Color(.labelNormal)
                 )

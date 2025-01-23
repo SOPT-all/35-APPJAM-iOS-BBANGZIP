@@ -90,35 +90,40 @@ struct SubjectDetailView: View {
                                     20
                                 )
                                 
-                                HStack(spacing: 8) {
-                                    Chip(type: .daysLeftWithText(-24))
+                                // 시작점
+                                if viewModel.modelList.isEmpty {
+                                    emptyView
+                                } else {
+                                    HStack(spacing: 8) {
+                                        Chip(type: .daysLeftWithText(-24))
+                                        
+                                        CustomText(
+                                            "2025년 5월 13일",
+                                            fontType: .label1Bold,
+                                            color: Color(.labelAlternative)
+                                        )
+                                    }
                                     
-                                    CustomText(
-                                        "2025년 5월 13일",
-                                        fontType: .label1Bold,
-                                        color: Color(.labelAlternative)
-                                    )
+                                    studyListHeaderView
+                                        .padding(
+                                            .top,
+                                            32
+                                        )
+                                        .padding(
+                                            .horizontal,
+                                            20
+                                        )
+                                    
+                                    studyPieceList
+                                        .padding(
+                                            .horizontal,
+                                            20
+                                        )
+                                        .padding(
+                                            .bottom,
+                                            16
+                                        )
                                 }
-                                
-                                studyListHeaderView
-                                    .padding(
-                                        .top,
-                                        32
-                                    )
-                                    .padding(
-                                        .horizontal,
-                                        20
-                                    )
-                                
-                                studyPieceList
-                                    .padding(
-                                        .horizontal,
-                                        20
-                                    )
-                                    .padding(
-                                        .bottom,
-                                        16
-                                    )
                                 
                                 if viewModel.isDeleteMode {
                                     Spacer()
@@ -301,6 +306,33 @@ struct SubjectDetailView: View {
             .padding(
                 .bottom,
                 8
+            )
+        }
+    }
+    
+    var emptyView: some View {
+        VStack(spacing: 16) {
+            Image(.graphicEmptyStudy)
+                .frame(
+                    width: 320,
+                    height: 296
+                )
+            
+            NavigationLink (destination: AddStudyView()){
+                CustomText(
+                    "공부할 내용 추가하기",
+                    fontType: .body1Bold,
+                    color: Color(.staticWhite)
+                )
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.plus)
+                )
+            )
+            .padding(
+                .horizontal,
+                20
             )
         }
     }

@@ -80,21 +80,25 @@ struct SubjectManageView: View {
                             }
                         )
                         
-                        
-                        VStack(spacing: 32) {
-                            subjectSection
-                            
-                            subjectCardScrollSection
-                                .padding(.bottom, 16)
+                        // 시작
+                        if viewModel.modelList.isEmpty {
+                            emptyView
+                        } else {
+                            VStack(spacing: 32) {
+                                subjectSection
+                                
+                                subjectCardScrollSection
+                                    .padding(.bottom, 16)
+                            }
+                            .padding(
+                                .top,
+                                48
+                            )
+                            .padding(
+                                .horizontal,
+                                20
+                            )
                         }
-                        .padding(
-                            .top,
-                            48
-                        )
-                        .padding(
-                            .horizontal,
-                            20
-                        )
                         
                         if viewModel.isDeleteMode {
                             Spacer()
@@ -201,10 +205,10 @@ struct SubjectManageView: View {
                     if viewModel.isDeleteMode {
                         if model.state == .selectable {
                             model.state = .selected
-                            viewModel.toggleSelection(subjectId: model.subjectId)  // ID 추가
+                            viewModel.toggleSelection(subjectId: model.subjectId) 
                         } else if model.state == .selected {
                             model.state = .selectable
-                            viewModel.toggleSelection(subjectId: model.subjectId)  // ID 제거
+                            viewModel.toggleSelection(subjectId: model.subjectId)
                         }
                     } else {
                         model.state = .cardDefault
@@ -289,6 +293,40 @@ struct SubjectManageView: View {
             .padding(
                 .bottom,
                 8
+            )
+        }
+    }
+    
+    var emptyView: some View {
+        VStack(spacing: 16) {
+            Image(.graphicEmptyStudy)
+                .frame(
+                    width: 320,
+                    height: 296
+                )
+            
+            NavigationLink (
+                destination: AddSubjectView(
+                    viewModel: AddSubjectViewModel(
+                        addSubjectUseCase: DefaultAddSubjectUseCase(repository: DefaultSubjectRepository()),
+                        parentViewModel: viewModel
+                    )
+                )
+            ){
+                CustomText(
+                    "공부할 과목 추가하기",
+                    fontType: .body1Bold,
+                    color: Color(.staticWhite)
+                )
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.plus)
+                )
+            )
+            .padding(
+                .horizontal,
+                20
             )
         }
     }
