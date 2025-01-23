@@ -16,7 +16,6 @@ enum BbangDefaultRouter {
     case logout
     case withDraw
     case onBoarding
-    case subjectFiltering
     case testSelect(subjectID: Int)
     case addSubject
     case motivationMessage(subjectID: Int, options: String)
@@ -42,6 +41,10 @@ enum BbangDefaultRouter {
     
     //여경
     case fetchBadgeDetail(badgeName: String)
+    
+    //유빈
+    case subjectFiltering(dto: FetchSubjectRequestDTO)
+    
 }
 
 extension BbangDefaultRouter: Router {
@@ -62,7 +65,7 @@ extension BbangDefaultRouter: Router {
         case .onBoarding:
             return "/api/v1/user/auth/signup"
         case .subjectFiltering:
-            return "/api/v1/subjects/filter"
+            return "/api/v1/subjects/filter?year=2025&semester=1학기"
         case .testSelect(let subjectID):
             return "/api/v1/exam/\(subjectID)"
         case .addSubject:
@@ -192,6 +195,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .fetchBadgeDetail:
             return [:]
+        case .subjectFiltering(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }

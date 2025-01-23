@@ -9,21 +9,39 @@
 import SwiftUI
 
 final class SubjectManageViewModel: ObservableObject {
-    @Published var isShowingBottomSheet: Bool
+    private let fetchSubjectUseCase: FetchSubjectUseCase
+    
+    @Published var isShowingBottomSheet: Bool = false
+    @Published var isLoading: Bool = true
     @Published var isDeleteMode: Bool = false
     @Published var isDeleteButtonEnable: Bool = false
-    @Published var modelList: [SubjectCardModel]
+    
+    @Published var modelList: [SubjectCardModel] = []
     
     var selectedItemCount: Int {
         modelList.filter { $0.state == .selected }.count
     }
     
     init(
-        isShowingBottomSheet: Bool = false,
-        modelList: [SubjectCardModel]
+        fetchSubjectUseCase: FetchSubjectUseCase
     ) {
-        self.isShowingBottomSheet = isShowingBottomSheet
-        self.modelList = modelList
+        self.fetchSubjectUseCase = fetchSubjectUseCase
+    }
+    
+    @MainActor
+    func fetchData() async {
+        do {
+            let subjectContent = try await fetchSubjectUseCase.execute(
+                year: 2025, // TODO: 스프린트 변경 예정
+                semester: .first // TODO: 스프린트 변경 예정
+            )
+            modelList = subjectContent.SubjectList
+            
+            isLoading = false
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func showChangeSemesterSheet() {

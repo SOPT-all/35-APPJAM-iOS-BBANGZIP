@@ -16,7 +16,7 @@ struct SubjectManageView: View {
     
     init(
         // TODO: dataCount API 연동 후 수정 필요
-        viewModel: SubjectManageViewModel = SubjectManageViewModel(modelList: []),
+        viewModel: SubjectManageViewModel,
         selectedBottomSheetType: BottomSheetType? = .changeSemester,
         isBottomSheetShowing: Binding<Bool>,
         isCustomTabBarHidden: Binding<Bool>
@@ -36,83 +36,91 @@ struct SubjectManageView: View {
     ]
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack {
-                    HStack {
-                        ChangeSemesterButton(viewModel: viewModel)
-                            .padding(
-                                .leading,
-                                24
-                            )
-                        
-                        Spacer()
+        if viewModel.isLoading {
+            ProgressView()
+                .onAppear {
+                    Task { @MainActor in
+                        await viewModel.fetchData()
                     }
-                    .padding(
-                        .top,
-                        55
-                    )
-                    .padding(
-                        .bottom,
-                        169
-                    )
-                    .background(
-                        Color(.backgroundAccent)
-                            .cornerRadius(
-                                32,
-                                corners: [
-                                    .bottomLeft,
-                                    .bottomRight
-                                ]
-                            )
-                    )
-                    
-                    VStack(spacing: 32) {
-                        subjectSection
+                }
+        } else {
+            ZStack {
+                ScrollView {
+                    VStack {
+                        HStack {
+                            ChangeSemesterButton(viewModel: viewModel)
+                                .padding(
+                                    .leading,
+                                    24
+                                )
+                            
+                            Spacer()
+                        }
+                        .padding(
+                            .top,
+                            55
+                        )
+                        .padding(
+                            .bottom,
+                            169
+                        )
+                        .background(
+                            Color(.backgroundAccent)
+                                .cornerRadius(
+                                    32,
+                                    corners: [
+                                        .bottomLeft,
+                                        .bottomRight
+                                    ]
+                                )
+                        )
                         
-                        subjectCardScrollSection
+                        VStack(spacing: 32) {
+                            subjectSection
+                            
+                            subjectCardScrollSection
+                                .padding(.bottom, 16)
+                        }
+                        .padding(
+                            .top,
+                            48
+                        )
+                        .padding(
+                            .horizontal,
+                            20
+                        )
+                        
+                        if viewModel.isDeleteMode {
+                            Spacer()
+                                .frame(height: 56)
+                        }
+                    }
+                    .bottomSheet(
+                        isShowing: $viewModel.isShowingBottomSheet,
+                        height: 453
+                    ) {
+                        if let type = selectedBottomSheetType {
+                            type.contentView(isPresented: $viewModel.isShowingBottomSheet)
+                        }
+                    }
+                    .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+                        isBottomSheetShowing = newValue
+                    }
+                    .onAppear {
+                        viewModel.isDeleteMode = false
+                        isCustomTabBarHidden = false
+                    }
+                }
+                .edgesIgnoringSafeArea(.top)
+                .scrollIndicators(.hidden)
+                
+                VStack {
+                    Spacer()
+                    
+                    if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                        deleteButton
                             .padding(.bottom, 16)
                     }
-                    .padding(
-                        .top,
-                        48
-                    )
-                    .padding(
-                        .horizontal,
-                        20
-                    )
-                    
-                    if viewModel.isDeleteMode {
-                        Spacer()
-                            .frame(height: 56)
-                    }
-                }
-                .bottomSheet(
-                    isShowing: $viewModel.isShowingBottomSheet,
-                    height: 453
-                ) {
-                    if let type = selectedBottomSheetType {
-                        type.contentView(isPresented: $viewModel.isShowingBottomSheet)
-                    }
-                }
-                .onChange(of: viewModel.isShowingBottomSheet) { newValue in
-                    isBottomSheetShowing = newValue
-                }
-                .onAppear {
-                    viewModel.fetchSubjectData()
-                    viewModel.isDeleteMode = false
-                    isCustomTabBarHidden = false
-                }
-            }
-            .edgesIgnoringSafeArea(.top)
-            .scrollIndicators(.hidden)
-            
-            VStack {
-                Spacer()
-                
-                if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
-                    deleteButton
-                        .padding(.bottom, 16)
                 }
             }
         }
