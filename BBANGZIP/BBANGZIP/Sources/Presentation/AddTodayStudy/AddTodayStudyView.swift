@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct AddTodayStudyView: View {
-    
     @StateObject private var viewModel: AddTodayStudyViewModel
     @SwiftUI.Environment(\.dismiss) private var dismiss
     
@@ -30,25 +29,11 @@ struct AddTodayStudyView: View {
                         alignment: .leading,
                         spacing: 0
                     ) {
-                        CustomText(
-                            "시작이 빵이다!",
-                            fontType: .body1Bold,
-                            color: Color(.labelAlternative)
-                        )
-                        .padding(
-                            .bottom,
-                            8
-                        )
-                        
-                        CustomText(
-                            "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
-                            fontType: .title3Bold,
-                            color: Color(.labelNormal)
-                        )
-                        .padding(
-                            .bottom,
-                            32
-                        )
+                        titleContentView
+                            .padding(
+                                .bottom,
+                                32
+                            )
                         
                         menuBar
                             .padding(
@@ -74,21 +59,7 @@ struct AddTodayStudyView: View {
                     Spacer()
                     
                     if viewModel.selectedCount > 0 {
-                        Button {
-                            print("aa")
-                            // TODO: API 연결 -> 결과 오면 dismiss
-                        } label: {
-                            CustomText(
-                                "오늘 할 공부 추가하기",
-                                fontType: .body1Bold,
-                                color: Color(.staticWhite)
-                            )
-                        }
-                        .buttonStyle(
-                            SolidIconButton(
-                                buttonImage: Image(.plus)
-                            )
-                        )
+                        addStudyButton
                         .padding(
                             .horizontal,
                             20
@@ -164,6 +135,25 @@ struct AddTodayStudyView: View {
         }
     }
     
+    private var titleContentView: some View {
+        VStack(
+            alignment: .leading,
+            spacing: 8
+        ) {
+            CustomText(
+                "시작이 빵이다!",
+                fontType: .body1Bold,
+                color: Color(.labelAlternative)
+            )
+            
+            CustomText(
+                "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
+                fontType: .title3Bold,
+                color: Color(.labelNormal)
+            )
+        }
+    }
+    
     private var menuBar: some View {
         HStack(spacing: 0) {
             CustomText(
@@ -214,6 +204,24 @@ struct AddTodayStudyView: View {
         .padding(
             .bottom,
             87
+        )
+    }
+    
+    private var addStudyButton: some View {
+        Button {
+            print("API 연결 -> 결과 오면 dismiss")
+            // TODO: API 연결 -> 결과 오면 dismiss
+        } label: {
+            CustomText(
+                "오늘 할 공부 추가하기",
+                fontType: .body1Bold,
+                color: Color(.staticWhite)
+            )
+        }
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.plus)
+            )
         )
     }
 }
