@@ -24,14 +24,13 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
         repository.kakaoLogin { result in
             switch result {
             case .success(let success):
+                print(success)
                 Task {
-                    let data = try await repository.signIn(accessToken: success)
-                    print(data.accessToken)
+                    _ = try await repository.signIn(accessToken: success)
                 }
             case .failure(let failure):
                 completion(.failure(failure))
             }
         }
     }
-    
 }

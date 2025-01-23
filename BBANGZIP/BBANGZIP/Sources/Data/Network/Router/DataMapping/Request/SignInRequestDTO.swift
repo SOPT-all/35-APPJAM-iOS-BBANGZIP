@@ -9,5 +9,5 @@
 import Foundation
 
 struct SignInRequestDTO: Encodable {
-    let accessToken: String
+    let code: String
 }

@@ -8,6 +8,6 @@
 
 struct SignInData {
     let accessToken: String
-    let refreschToken: String
+    let refreshToken: String
     let isOnboardingComplete: Bool
 }

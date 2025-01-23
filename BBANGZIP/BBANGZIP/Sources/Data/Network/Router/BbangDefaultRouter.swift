@@ -152,10 +152,6 @@ extension BbangDefaultRouter: Router {
     
     var headers: [String : String]? {
         switch self {
-        case .signIn(let signInRequest):
-            return [
-                "Content-Type": "application/json"
-            ]
         default:
             return [
                 "Content-Type": "application/json"
@@ -166,7 +162,8 @@ extension BbangDefaultRouter: Router {
     var parameters: [String : any Sendable]? {
         switch self {
         case .signIn(let dto):
-            return dto.asDictionary()
+//            return dto.asDictionary()
+            return ["code": dto.code]
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
         case .motivationMessage(
@@ -199,7 +196,7 @@ extension BbangDefaultRouter: Router {
     var encoding: ParameterEncoding? {
         switch self {
         case .signIn, .fetchSortedTodoList:
-            return URLEncoding.default
+            return URLEncoding.queryString
         case .fetchBadgeDetail:
             return nil
         default:

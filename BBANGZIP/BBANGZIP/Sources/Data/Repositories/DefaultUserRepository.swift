@@ -20,13 +20,12 @@ final class DefaultUserRepository: UserRepository {
     
     func kakaoLogin(completion: @escaping (Result<String, Error>) -> Void) {
         if UserApi.isKakaoTalkLoginAvailable() {
-            UserApi.shared.loginWithKakaoTalk { oauthToken, error in
+            UserApi.shared.loginWithKakaoTalk() { oauthToken, error in
                 guard let authToken = oauthToken else { return }
                 if let error = error {
                     completion(.failure(error))
                 } else {
                     completion(.success(authToken.accessToken))
-                    
                 }
             }
         } else {
@@ -43,7 +42,11 @@ final class DefaultUserRepository: UserRepository {
     
     func signIn(accessToken: String) async throws -> SignInData {
         let response = await API.session
-            .request(BbangDefaultRouter.signIn(dto: SignInRequestDTO(accessToken: accessToken)))
+            .request(BbangDefaultRouter.signIn(dto: SignInRequestDTO(code: accessToken)))
+            .responseString { result in
+                print("##1##")
+                dump(result)
+            }
             .serializingDecodable(SignInResponseDTO.self)
             .response
         

@@ -15,13 +15,13 @@ struct SignInResponseDTO: Decodable {
 
 struct SignInDataDTO: Decodable {
     let accessToken: String
-    let refreschToken: String
+    let refreshToken: String
     let isOnboardingComplete: Bool
     
     func toDomain() -> SignInData {
         SignInData(
             accessToken: accessToken,
-            refreschToken: refreschToken,
+            refreshToken: refreshToken,
             isOnboardingComplete: isOnboardingComplete
         )
     }
