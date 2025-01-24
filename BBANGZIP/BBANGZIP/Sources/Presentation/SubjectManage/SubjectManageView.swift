@@ -80,7 +80,6 @@ struct SubjectManageView: View {
                             }
                         )
                         
-                        // 시작
                         if viewModel.modelList.isEmpty {
                             emptyView
                         } else {
@@ -88,7 +87,6 @@ struct SubjectManageView: View {
                                 subjectSection
                                 
                                 subjectCardScrollSection
-                                    .padding(.bottom, 16)
                             }
                             .padding(
                                 .top,
@@ -126,16 +124,15 @@ struct SubjectManageView: View {
                 }
                 .edgesIgnoringSafeArea(.top)
                 .scrollIndicators(.hidden)
+                .toastView(toast: $viewModel.toast)
                 
                 VStack {
                     Spacer()
                     
                     if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
                         deleteButton
-                            .padding(.bottom, 16)
                     }
                 }
-                .toastView(toast: $viewModel.toast)
             }
         }
     }
@@ -219,12 +216,16 @@ struct SubjectManageView: View {
                             destination: SubjectDetailView(
                                 viewModel: SubjectDetailViewModel(
                                     filterExamUseCase: DefaultFilterExamUseCase(examRepository: DefaultExamRepository()),
+                                    deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
+                                        repository: DefaultExamRepository()
+                                    ),
                                     subjectName: model.subjectName,
                                     subjectId: model.subjectId
                                 ),
                                 isBottomSheetShowing: $isBottomSheetShowing
                             )
-                            .onAppear { isCustomTabBarHidden = true }
+                            .onAppear { isCustomTabBarHidden = true
+                            }
                         ) {
                             SubjectCard(
                                 state: model.state,
@@ -265,7 +266,7 @@ struct SubjectManageView: View {
         }
         .padding(
             .bottom,
-            20
+            76
         )
     }
     
@@ -291,7 +292,7 @@ struct SubjectManageView: View {
             )
             .padding(
                 .bottom,
-                8
+                68
             )
         }
     }
