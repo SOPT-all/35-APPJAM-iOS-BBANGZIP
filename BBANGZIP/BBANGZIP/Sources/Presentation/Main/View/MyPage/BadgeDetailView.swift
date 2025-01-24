@@ -43,17 +43,14 @@ struct BadgeDetailView: View {
     
     var badgeContentView: some View {
         ZStack{
+            
             if let badgeDetail = viewModel.badgeDetail {
-                if badgeDetail.badgeIsLocked {
-                    Image(.locker)
-                }
-                
                 ZStack{
                     VStack {
                         VStack(spacing: 0) {
                             KFImage(URL(string: badgeDetail.badgeImage))
                                 .resizable()
-                                .cornerRadius(48, corners: .allCorners)
+                                .cornerRadius(48)
                                 .frame(
                                     width: 160,
                                     height: 160
@@ -62,6 +59,7 @@ struct BadgeDetailView: View {
                                     .bottom,
                                     24
                                 )
+                            
                             BalloonWithout(
                                 text: badgeDetail.badgeName,
                                 balloonMode: .top
@@ -70,9 +68,13 @@ struct BadgeDetailView: View {
                             
                             hashTagTextView
                         }
+                        .blur(radius: badgeDetail.badgeIsLocked ? 10 : 0)
                     }
                 }
-                .blur(radius: badgeDetail.badgeIsLocked ? 6 : 0)
+                
+                if badgeDetail.badgeIsLocked {
+                    Image(.locker)
+                }
             }
         }
     }
