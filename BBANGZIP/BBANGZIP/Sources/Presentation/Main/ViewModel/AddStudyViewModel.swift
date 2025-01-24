@@ -9,7 +9,11 @@
 import SwiftUI
 
 final class AddStudyViewModel: ObservableObject {
-    @Published var date: Date?
+    @Published var date: Date? {
+        didSet {
+            calculateDaysUntilExam()
+        }
+    }
     @Published var studyContent: String
     @Published var startRange: Int = 0
     @Published var endRange: Int = 0
@@ -22,19 +26,19 @@ final class AddStudyViewModel: ObservableObject {
     @Published var startRangeAnnounceState: StudyRangeTextFieldAlertCase?
     @Published var endRangeState: TextFieldState
     @Published var endRangeAnnounceState: StudyRangeTextFieldAlertCase?
-    @Published var isStudyContentFocused: Bool = false
     @Published var isStudyContentValid: Bool = false
     @Published var isStartRangeValid: Bool = false
     @Published var isEndRangeValid: Bool = false
-    
+
     @Published var isDatePickerPresented = false
     @Published var isDividerPresented = false
     @Published var selectedBottomSheetType: BottomSheetType?
     @Published var selectedYear: Int
     @Published var selectedMonth: Int
     @Published var selectedDay: Int
-    @Published var isButtonTapped: Bool
-    
+    @Published var isButtonTapped: Bool = false
+    @Published var daysUntilExam: Int = 0
+        
     var formattedDate: String {
         guard let date = date else { return "" }
         let formatter = DateFormatter()
@@ -44,6 +48,7 @@ final class AddStudyViewModel: ObservableObject {
     }
     
     init(
+        pieceCount: Int = 1,
         date: Date? = nil,
         studyContent: String = "",
         startRange: Int = 0,
@@ -54,11 +59,7 @@ final class AddStudyViewModel: ObservableObject {
         startRangeState: TextFieldState = .defaultState,
         startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert,
-        selectedYear: Int = 2025,
-        selectedMonth: Int = 1,
-        selectedDay: Int = 1,
-        isButtonTapped: Bool = false
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
     ) {
         self.date = date
         self.studyContent = studyContent
@@ -73,10 +74,27 @@ final class AddStudyViewModel: ObservableObject {
         self.startRangeAnnounceState = startRangeAnnounceState
         self.endRangeState = endRangeState
         self.endRangeAnnounceState = endRangeAnnounceState
-        self.selectedYear = selectedYear
-        self.selectedMonth = selectedMonth
-        self.selectedDay = selectedDay
+        
+        let currentDate = Date()
+        let calendar = Calendar.current
+        self.selectedYear = calendar.component(.year, from: currentDate)
+        self.selectedMonth = calendar.component(.month, from: currentDate)
+        self.selectedDay = calendar.component(.day, from: currentDate)
         self.isButtonTapped = isButtonTapped
+        
+        calculateDaysUntilExam()
+    }
+    
+    private func calculateDaysUntilExam() {
+        guard let examDate = date else {
+            daysUntilExam = 0
+            return
+        }
+        let calendar = Calendar.current
+        let currentDate = Date()
+        
+        let components = calendar.dateComponents([.day], from: currentDate, to: examDate)
+        daysUntilExam = max(components.day ?? 0, 0)
     }
     
     func verifyStudyContent(

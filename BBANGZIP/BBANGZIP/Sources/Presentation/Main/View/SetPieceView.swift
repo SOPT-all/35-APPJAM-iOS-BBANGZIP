@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-struct DivideStudyView: View {
-    // TODO: 임시 뷰모델 수정 필요
+struct SetPieceView: View {
     @StateObject var viewModel: AddStudyViewModel
     @State private var isBottomSheetPresented = true
     @State private var selectedBottomSheetType: BottomSheetType? = .divideStudy
@@ -73,6 +72,6 @@ struct DivideStudyView: View {
 }
 
 #Preview {
-    DivideStudyView()
+    SetPieceView()
 }
 

@@ -15,6 +15,7 @@ enum ChipType {
     case delayedDate(Int)
     case points(Int)
     case level(Int)
+    case page(Int)
     
     var text: String {
         switch self {
@@ -30,6 +31,8 @@ enum ChipType {
             "\(points)P"
         case .level(let level):
             "Lv \(level)"
+        case .page(let page):
+            "\(page)p"
         }
     }
     
@@ -43,6 +46,8 @@ enum ChipType {
             Color(.statusDestructive)
         case .points:
             Color(.statusCautionary)
+        case .page:
+            Color(.statusPositive)
         }
     }
 }
