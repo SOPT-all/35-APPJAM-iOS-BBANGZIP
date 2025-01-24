@@ -16,14 +16,16 @@ struct LoginView: View {
     }
     
     var body: some View {
-        VStack (spacing: 0) {
-            titleView
-            
+        ZStack {
             onBoardingSectionView
             
-            loginSection
-            
-            Spacer()
+            VStack(spacing: 0) {
+                titleView
+                
+                Spacer()
+                
+                loginSection
+            }
         }
     }
     
@@ -41,20 +43,36 @@ struct LoginView: View {
             }
             .padding(.leading, 22)
             .background(Color(.backgroundAccent))
-        }.padding(.top, 50)
-        .frame(
-            height: 196
+        }
+        .padding(
+            .top,
+            50
         )
+        .frame(height: 196)
         .background(Color(.backgroundAccent))
     }
     
     private var onBoardingSectionView: some View {
             TabView {
-                
+                Image(.previewDivide)
+                    .padding(
+                        .bottom,
+                        100
+                    )
+                Image(.previewIcon)
+                    .padding(
+                        .bottom,
+                        100
+                    )
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
         .frame(height: 336)
-            .background(Color(.backgroundAccent))
+            .background(
+                Color(.backgroundAccent)
+                    .clipShape(Circle())
+                    .frame(width: 656, height: 643)
+                    .padding(.bottom, 300)
+            )
     }
     
     private var loginSection: some View {
@@ -97,8 +115,8 @@ struct LoginView: View {
         }
         .frame(height: 80)
         .padding(
-            .top,
-            117
+            .bottom,
+            44
         )
     }
     
