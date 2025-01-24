@@ -20,6 +20,9 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var selectedPieceIds: Set<Int> = []
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
+    @Published var examDday: Int = 0
+    @Published var examChipType: ChipType = .daysLeftBlack(0)
+    @Published var examDate: String = ""
     @Published var modelList: [FilterExamList] = []
     @Published var isDeleteMode: Bool = false
     @Published var isLoading: Bool = true
@@ -92,6 +95,9 @@ final class SubjectDetailViewModel: ObservableObject {
             )
             modelList = examContent.studyList
             motivationMessage = examContent.motivationMessage
+            examDday = examContent.examDday
+            examChipType = examDday > 0 ? .delayedDate(examDday) : .daysLeftWithText(examDday)
+            examDate = examContent.examDate
             isLoading = false
         } catch {
             dump(error)

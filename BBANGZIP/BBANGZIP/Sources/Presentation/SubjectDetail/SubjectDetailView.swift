@@ -91,10 +91,10 @@ struct SubjectDetailView: View {
                                         emptyView
                                     } else {
                                         HStack(spacing: 8) {
-                                            Chip(type: .daysLeftWithText(-24))
+                                            Chip(type: viewModel.examChipType)
                                             
                                             CustomText(
-                                                "2025년 5월 13일",
+                                                viewModel.examDate.toKoreanDateFormat(),
                                                 fontType: .label1Bold,
                                                 color: Color(.labelAlternative)
                                             )
