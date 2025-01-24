@@ -96,6 +96,10 @@ struct TodayStudyView: View {
                                 color: Color(.labelNeutral)
                             )
                             .padding(
+                                .top,
+                                48
+                            )
+                            .padding(
                                 .bottom,
                                 32
                             )
@@ -146,7 +150,8 @@ struct TodayStudyView: View {
                                     }
                                 }
                             }
-                            .tabViewStyle(.page(indexDisplayMode: viewModel.badges.count > 1 ? .always : .never))
+                            .tabViewStyle(PageTabViewStyle())
+                            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                             
                             Button {
                                 viewModel.badges.removeAll()

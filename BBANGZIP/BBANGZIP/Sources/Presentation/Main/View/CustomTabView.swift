@@ -16,6 +16,8 @@ struct CustomTabView: View {
     
     init() {
         UIScrollView.appearance().bounces = false
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(resource: .materialDimmer)
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor(resource: .materialDimmer).withAlphaComponent(0.16)
     }
     
     var body: some View {
