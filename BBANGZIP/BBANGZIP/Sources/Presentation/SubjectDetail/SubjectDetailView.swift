@@ -23,7 +23,7 @@ struct SubjectDetailView: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
             if viewModel.isLoading {
                 ProgressView()
                     .navigationBarHidden(true)
@@ -87,7 +87,6 @@ struct SubjectDetailView: View {
                                         20
                                     )
                                     
-                                    // 시작점
                                     if viewModel.modelList.isEmpty {
                                         emptyView
                                     } else {
@@ -146,7 +145,6 @@ struct SubjectDetailView: View {
                             deleteButton
                         }
                     }
-                    .toastView(toast: $viewModel.toast)
                 }
             }
         }
@@ -155,6 +153,7 @@ struct SubjectDetailView: View {
                 await viewModel.fetchData()
             }
         }
+        .toastView(toast: $viewModel.toast)
     }
     
     var backgroundView: some View {

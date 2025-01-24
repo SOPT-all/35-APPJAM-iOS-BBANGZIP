@@ -58,6 +58,7 @@ struct ChangeSubjectNameView: View {
                     Task {
                         await viewModel.changeSubjectName()
                     }
+                    dismiss()
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
                 .disabled(!viewModel.isButtonEnabled)
@@ -70,12 +71,6 @@ struct ChangeSubjectNameView: View {
             .ignoresSafeArea(edges: .bottom)
         }
         .navigationBarHidden(true)
-        .onChange(of: viewModel.shouldDismiss) {
-            shouldDismiss in
-            if shouldDismiss {
-                dismiss()
-            }
-        }
     }
 
     var inputSection: some View {
