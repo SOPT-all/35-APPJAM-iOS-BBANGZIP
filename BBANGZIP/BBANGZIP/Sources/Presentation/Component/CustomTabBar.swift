@@ -29,12 +29,12 @@ struct CustomTabBar: View {
                 selected: $selected
             )
             
-            Spacer()
-            
-            CustomTabButton(
-                tab: .networking,
-                selected: $selected
-            )
+//            Spacer()
+//            
+//            CustomTabButton(
+//                tab: .networking,
+//                selected: $selected
+//            )
             
             Spacer()
             

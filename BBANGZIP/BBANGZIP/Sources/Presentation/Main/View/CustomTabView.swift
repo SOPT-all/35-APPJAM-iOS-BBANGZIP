@@ -53,8 +53,6 @@ struct CustomTabView: View {
                         ),
                         isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
                     )
-                case .networking:
-                    Text("이웃 목록")
                 case .mypage:
                     MyPageMainView(
                         viewModel: MyPageMainViewModel(

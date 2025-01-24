@@ -11,7 +11,7 @@ import SwiftUI
 enum Tab {
     case subjectManage
     case todo
-    case networking
+    /*case networking*/
     case mypage
     
     var inActiveImage: Image {
@@ -20,8 +20,8 @@ enum Tab {
             Image(.subjectManage)
         case .todo:
             Image(.todo)
-        case .networking:
-            Image(.networking)
+//        case .networking:
+//            Image(.networking)
         case .mypage:
             Image(.myPage)
         }
@@ -33,8 +33,8 @@ enum Tab {
             Image(.activeSubjectManage)
         case .todo:
             Image(.activeTodo)
-        case .networking:
-            Image(.activeNetworking)
+//        case .networking:
+//            Image(.activeNetworking)
         case .mypage:
             Image(.activeMyPage)
         }
@@ -46,8 +46,8 @@ enum Tab {
             "과목 관리"
         case .todo:
             "오늘 할 일"
-        case .networking:
-            "이웃 목록"
+//        case .networking:
+//            "이웃 목록"
         case .mypage: 
             "마이페이지"
         }

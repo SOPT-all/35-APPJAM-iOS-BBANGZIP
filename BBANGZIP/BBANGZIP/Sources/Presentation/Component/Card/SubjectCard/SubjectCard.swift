@@ -13,7 +13,7 @@ struct SubjectCard: View {
     // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
     private let subjectCardData: SubjectCardModel
     private let borderPadding: CGFloat = 2
-    
+
     init(
         state: CardState,
         subjectCardData: SubjectCardModel
@@ -76,11 +76,12 @@ struct SubjectCard: View {
     
     var cardContent: some View {
         Group {
-            if subjectCardData.studyList.isEmpty {
-                emptyStateView
-            } else {
-                normalStateView
-            }
+//            if subjectCardData.studyList.isEmpty {
+//                emptyStateView
+//            } else {
+//                normalStateView
+//            }
+            emptyStateView
         }
     }
 
