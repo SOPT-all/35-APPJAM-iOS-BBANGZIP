@@ -61,6 +61,7 @@ struct AddSubjectView: View {
                     Task {
                         await viewModel.addSubject(subjectName: viewModel.subject)
                     }
+                    dismiss()
                 }
                 .buttonStyle(
                     SolidIconButton(
@@ -80,11 +81,6 @@ struct AddSubjectView: View {
             }
         }
         .navigationBarHidden(true)
-        .onAppear {
-            if viewModel.shouldDismiss {
-                dismiss()
-            }
-        }
     }
     
     private var subjectTextField: some View {

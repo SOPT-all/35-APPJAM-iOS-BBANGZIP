@@ -103,6 +103,9 @@ extension CustomNavigationBar {
                             filterExamUseCase: DefaultFilterExamUseCase(
                                 examRepository: DefaultExamRepository()
                             ),
+                            deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
+                                repository: DefaultExamRepository()
+                            ),
                             subjectId: viewModel.subjectId
                         )
                     )
@@ -125,9 +128,13 @@ extension CustomNavigationBar {
                                 filterExamUseCase: DefaultFilterExamUseCase(
                                     examRepository: DefaultExamRepository()
                                 ),
+                                deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
+                                    repository: DefaultExamRepository()
+                                ),
                                 subjectId: viewModel.subjectId
                         )
-                    ), subjectName: viewModel.subjectName
+                    ),
+                    subjectName: viewModel.subjectName
                 )
             ) {
                 CustomText(

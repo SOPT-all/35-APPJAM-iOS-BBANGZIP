@@ -8,4 +8,6 @@
 
 protocol ExamRepository: Sendable {
     func fetchFilterExam(subjectId: Int, examName: String) async throws -> FilterExamContent
+    
+    func deleteStudyPiece(pieceIds: [Int]) async throws
 }

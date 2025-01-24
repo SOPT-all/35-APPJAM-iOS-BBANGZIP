@@ -10,9 +10,11 @@ import SwiftUI
 
 final class SubjectDetailViewModel: ObservableObject {
     private let filterExamUseCase: FilterExamUseCase
+    private let deleteStudyPieceUseCase: DeleteStudyPieceUseCase
     
     let subjectName: String
     let subjectId: Int
+    @Published var selectedPieceIds: Set<Int> = []
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
     @Published var modelList: [FilterExamList] = []
@@ -23,17 +25,27 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var toast: Toast?
     
     var selectedItemCount: Int {
-        modelList.filter { $0.state == .selected }.count
+        return selectedPieceIds.count
     }
     
     init(
         filterExamUseCase: FilterExamUseCase,
+        deleteStudyPieceUseCase: DeleteStudyPieceUseCase,
         subjectName: String = "",
         subjectId: Int
     ) {
         self.filterExamUseCase = filterExamUseCase
+        self.deleteStudyPieceUseCase = deleteStudyPieceUseCase
         self.subjectName = subjectName
         self.subjectId = subjectId
+    }
+    
+    func toggleSelection(pieceId: Int) {
+        if selectedPieceIds.contains(pieceId) {
+            selectedPieceIds.remove(pieceId)
+        } else {
+            selectedPieceIds.insert(pieceId)
+        }
     }
     
     func convertExamNameToAPI(_ examName: String) -> String {
@@ -49,20 +61,19 @@ final class SubjectDetailViewModel: ObservableObject {
     
     func makeStudyPieceSelectable() {
         isDeleteMode.toggle()
-        modelList = modelList.map(
-            {
-                FilterExamList(
-                    pieceId: $0.pieceId,
-                    studyContents: $0.studyContents,
-                    startPage: $0.startPage,
-                    finishPage: $0.finishPage,
-                    deadline: $0.deadline,
-                    remainingDays: $0.remainingDays,
-                    isFinished: $0.isFinished,
-                    state: $0.state == .complete ? .complete : ($0.state == .cardDefault ? .selectable : .cardDefault)
-                )
-            }
-        )
+        selectedPieceIds.removeAll()
+        modelList = modelList.map {
+            FilterExamList(
+                pieceId: $0.pieceId,
+                studyContents: $0.studyContents,
+                startPage: $0.startPage,
+                finishPage: $0.finishPage,
+                deadline: $0.deadline,
+                remainingDays: $0.remainingDays,
+                isFinished: $0.isFinished,
+                state: $0.state == .complete ? .complete : ($0.state == .cardDefault ? .selectable : .cardDefault)
+            )
+        }
     }
     
     @MainActor
@@ -88,12 +99,33 @@ final class SubjectDetailViewModel: ObservableObject {
         await fetchData()
     }
     
-    func deleteStudyPiece() {
-        // TODO: 공부 삭제 API 연동 및 삭제 성공 시 토스트 메시지 노출
+    @MainActor
+    func deleteStudyPiece() async {
+        do {
+            let _: () = try await deleteStudyPieceUseCase.execute(
+                pieceIds: Array(selectedPieceIds)
+            )
+            
+            // 삭제 후 데이터 새로고침
+            await fetchData()
+            
+            // 상태 초기화
+            selectedPieceIds.removeAll()
+            isDeleteMode = false
+            
+            // 토스트 메시지 표시
+            toast = Toast(
+                "공부 삭제 완료",
+                startFrom: 20
+            )
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func validateDeleteButton() {
-        isDeleteButtonEnable = modelList.count(where: { $0.state == .selected }) > 0
+        isDeleteButtonEnable = !selectedPieceIds.isEmpty
     }
     
     func completeStudyPiece() {

@@ -251,20 +251,25 @@ struct SubjectDetailView: View {
                 id: \.pieceId
             ) { $model in
                 Button {
-                    if model.state == .cardDefault {
-                        model.state = .complete
-                        viewModel.completeStudyPiece()
-                    } else if model.state == .complete {
-                        if viewModel.isDeleteMode {
-                            // TODO: Toast Present
-                            print("Toast Present")
-                        } else {
-                            viewModel.checkCompleteOrNot()
+                    if viewModel.isDeleteMode {
+                        if model.state == .selectable {
+                            model.state = .selected
+                            viewModel.toggleSelection(pieceId: model.pieceId)  // ID 추가
+                        } else if model.state == .selected {
+                            model.state = .selectable
+                            viewModel.toggleSelection(pieceId: model.pieceId)  // ID 제거
                         }
-                    } else if model.state == .selectable {
-                        model.state = .selected
                     } else {
-                        model.state = .selectable
+                        if model.state == .cardDefault {
+                            model.state = .complete
+                            viewModel.completeStudyPiece()
+                        } else if model.state == .complete {
+                            if viewModel.isDeleteMode {
+                                print("Toast Present")
+                            } else {
+                                viewModel.checkCompleteOrNot()
+                            }
+                        }
                     }
                     viewModel.validateDeleteButton()
                 } label: {
@@ -294,8 +299,9 @@ struct SubjectDetailView: View {
             Spacer()
             
             Button(title) {
-                viewModel.deleteStudyPiece()
-                viewModel.makeStudyPieceSelectable()
+                Task {
+                    await viewModel.deleteStudyPiece()
+                }
             }
             .buttonStyle(
                 SolidIconButton(

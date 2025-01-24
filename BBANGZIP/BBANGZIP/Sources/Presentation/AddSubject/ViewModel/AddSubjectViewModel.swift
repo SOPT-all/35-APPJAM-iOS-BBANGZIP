@@ -11,7 +11,6 @@ import SwiftUI
 class AddSubjectViewModel: ObservableObject {
     private let addSubjectUseCase: AddSubjectUseCase
     private let parentViewModel: SubjectManageViewModel
-    @Published var shouldDismiss: Bool = false
     @Published var subject: String
     @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
     @Published var subjectState: TextFieldState
@@ -100,14 +99,12 @@ class AddSubjectViewModel: ObservableObject {
                 subjectName: subjectName
             )
             
-            parentViewModel.toast = Toast(
-                "과목 추가 완료! 공부를 시작해 볼까요?",
-                startFrom: 20
-            )
-            
             await parentViewModel.fetchData()
             
-            self.shouldDismiss = true
+            parentViewModel.toast = Toast(
+                "과목 추가 완료! 공부를 시작해 볼까요?",
+                startFrom: 76
+            )
             
         } catch {
             toast = Toast(
