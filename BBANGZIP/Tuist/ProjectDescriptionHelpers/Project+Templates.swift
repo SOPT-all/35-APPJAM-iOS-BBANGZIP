@@ -7,7 +7,7 @@
 import ProjectDescription
 
 extension Project {
-  private static let organizationName = "com.bbangzip."
+  private static let organizationName = ""
   private static let deploymentTarget = "16.0"
 
   public static func makeModule(

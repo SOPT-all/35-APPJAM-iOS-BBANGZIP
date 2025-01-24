@@ -7,7 +7,7 @@ public struct ContainerView: View {
         )
     )
     @State private var isSplashComplete: Bool = false
-    @State private var isOnboardingComplete: Bool = false
+    @State private var isOnboardingComplete: Bool = true
     
     public var body: some View {
         ZStack {

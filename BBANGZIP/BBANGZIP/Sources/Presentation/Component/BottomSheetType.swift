@@ -26,7 +26,8 @@ enum BottomSheetType: Int {
         selectedYear: Binding<Int>? = .constant(2025),
         selectedMonth: Binding<Int>? = .constant(1),
         selectedDay: Binding<Int>? = .constant(1),
-        isButtonTapped: Binding<Bool> = .constant(false)
+        isButtonTapped: Binding<Bool> = .constant(false),
+        fixedExamDate: Date = Date()
     ) -> some View {
         switch self {
         case .examDate:
@@ -42,7 +43,10 @@ enum BottomSheetType: Int {
                 isPresented: isPresented,
                 selectedYear: selectedYear ?? .constant(2025),
                 selectedMonth: selectedMonth ?? .constant(1),
-                selectedDay: selectedDay ?? .constant(1)
+                selectedDay: selectedDay ?? .constant(1),
+                selectedDeadline: .constant(""),
+                isButtonTapped: isButtonTapped,
+                fixedExamDate: fixedExamDate
             )
         case .changeSemester:
             SemesterPickerBottomSheet(
@@ -51,8 +55,11 @@ enum BottomSheetType: Int {
                 selectedSemester: .constant("1학기")
             )
         case .divideStudy:
-            DivideStudyBottomSheet(
-                isPresented: isPresented
+            SetPieceBottomSheet(
+                isPresented: isPresented,
+                startPage: 0,
+                endPage: 0,
+                totalDays: 0
             )
         case .completeCheck:
             CompleteCheckBottomSheet(

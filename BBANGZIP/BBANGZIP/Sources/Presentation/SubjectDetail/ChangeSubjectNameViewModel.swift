@@ -18,7 +18,6 @@ final class ChangeSubjectNameViewModel: ObservableObject {
     @Published var isSubjectFocused: Bool = false
     @Published var isSubjectValid: Bool = false
     @Published var isButtonEnabled: Bool = false
-    @Published var shouldDismiss: Bool = false
     @Published var toast: Toast?
     
     init(
@@ -110,8 +109,6 @@ final class ChangeSubjectNameViewModel: ObservableObject {
                 "과목명 수정 완료!",
                 startFrom: 20
             )
-                    
-            self.shouldDismiss = true
             
         } catch {
             dump(error)

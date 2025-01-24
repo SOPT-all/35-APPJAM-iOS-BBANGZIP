@@ -57,6 +57,7 @@ struct ChangeSubjectNameView: View {
                 Button("등록하기") {
                     Task {
                         await viewModel.changeSubjectName()
+                        dismiss()
                     }
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
@@ -70,12 +71,6 @@ struct ChangeSubjectNameView: View {
             .ignoresSafeArea(edges: .bottom)
         }
         .navigationBarHidden(true)
-        .onChange(of: viewModel.shouldDismiss) {
-            shouldDismiss in
-            if shouldDismiss {
-                dismiss()
-            }
-        }
     }
 
     var inputSection: some View {

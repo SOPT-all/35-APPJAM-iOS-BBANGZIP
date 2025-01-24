@@ -23,7 +23,7 @@ final class DefaultStudyRepository: StudyRepository {
                     semester: semester,
                     sortOption: sortOption
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(TodayStudyResponseDTO.self)
             .response
@@ -42,7 +42,7 @@ final class DefaultStudyRepository: StudyRepository {
             BbangDefaultRouter.completeStudy(
                 pieceID: pieceID,
                 dto: StudyCompleteRequestDTO(isFinished: true)
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(StudyCompleteResponseDTO.self)
             .response
@@ -61,7 +61,7 @@ final class DefaultStudyRepository: StudyRepository {
             BbangDefaultRouter.revertCompleteStudy(
                 pieceID: pieceID,
                 dto: StudyCompleteRequestDTO(isFinished: false)
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(OnlyCodeResponseDTO.self)
             .response
@@ -81,7 +81,7 @@ final class DefaultStudyRepository: StudyRepository {
                 dto: RemoveTodayStudyDTO(
                     pieceIds: pieceIDs
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(OnlyCodeResponseDTO.self)
             .response
@@ -107,7 +107,7 @@ final class DefaultStudyRepository: StudyRepository {
                     semester: semester,
                     sortOption: sortOption
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(FetchAddTodayStudyResponseDTO.self)
             .response
@@ -127,7 +127,7 @@ final class DefaultStudyRepository: StudyRepository {
                 dto: AddTodayStudyRequestDTO(
                     pieceIds: pieceIds
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(OnlyCodeResponseDTO.self)
             .response

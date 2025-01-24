@@ -19,7 +19,7 @@ final class DefaultSubjectRepository: SubjectRepository {
                     year: year,
                     semester: semester
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(FetchSubjectResponseDTO.self)
             .response
@@ -45,7 +45,7 @@ final class DefaultSubjectRepository: SubjectRepository {
                     semester: semester,
                     subjectName: subjectName
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
         .serializingDecodable(AddSubjectResponseDTO.self)
         .response
@@ -71,7 +71,7 @@ final class DefaultSubjectRepository: SubjectRepository {
                     semester: semester,
                     subjectIds: subjectIds
                 )
-            )
+            ), interceptor: CustomInterceptor()
         )
         .serializingDecodable(DeleteSubjectResponseDTO.self)
         .response

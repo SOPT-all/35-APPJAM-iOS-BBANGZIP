@@ -1,11 +1,3 @@
-//
-//  SubjectCard.swift
-//  BBANGZIP
-//
-//  Created by 조성민 on 1/17/25.
-//  Copyright © 2025 com.bbangzip. All rights reserved.
-//
-
 import SwiftUI
 
 struct SubjectCard: View {
@@ -26,7 +18,51 @@ struct SubjectCard: View {
         ZStack {
             backgroundView
             
-            cardContent
+            HStack(alignment: .center) {
+                VStack(
+                    alignment: .leading,
+                    spacing: 4
+                ) {
+                    CustomText(
+                        subjectCardData.subjectName,
+                        fontType: .body1Bold,
+                        color: Color(.labelNormal)
+                    )
+                    .lineLimit(1)
+                    
+                    CustomText(
+                        subjectCardData.studyList[0].examName,
+                        fontType: .label2Bold,
+                        color: Color(.labelNeutral)
+                    )
+                    
+                    Chip(type: .daysLeftBlack(subjectCardData.studyList[0].examDDay))
+                    
+                    Spacer()
+                    
+                    delayedStudyView
+                    
+                    inProgressStudyView
+                }
+                .padding(
+                    .vertical,
+                    16
+                )
+                .padding(
+                    .leading,
+                    16
+                )
+                
+                Spacer()
+                
+                Image(.chevronRightThickSmall)
+                    .renderingMode(.template)
+                    .foregroundStyle(Color(.labelAssistive))
+                    .padding(
+                        .trailing,
+                        6
+                    )
+            }
         }
         .frame(height: 190)
         .padding(borderPadding)
@@ -85,7 +121,7 @@ struct SubjectCard: View {
     }
 
     var emptyStateView: some View {
-        HStack {
+        HStack(alignment: .center) {
             VStack(
                 alignment: .leading,
                 spacing: 4
@@ -96,12 +132,6 @@ struct SubjectCard: View {
                     color: Color(.labelNormal)
                 )
                 .lineLimit(1)
-                
-                CustomText(
-                    "공부를 추가해주세요",
-                    fontType: .label2Bold,
-                    color: Color(.labelNeutral)
-                )
                 
                 Spacer()
             }
@@ -114,11 +144,11 @@ struct SubjectCard: View {
                 16
             )
             
+            Spacer()
+            
             Image(.chevronRightThickSmall)
                 .renderingMode(.template)
-                .resizable()
                 .foregroundStyle(Color(.labelAssistive))
-                .frame(width: 16, height: 16)
                 .padding(
                     .trailing,
                     6
@@ -166,9 +196,7 @@ struct SubjectCard: View {
             
             Image(.chevronRightThickSmall)
                 .renderingMode(.template)
-                .resizable()
                 .foregroundStyle(Color(.labelAssistive))
-                .frame(width: 16, height: 16)
                 .padding(
                     .trailing,
                     6

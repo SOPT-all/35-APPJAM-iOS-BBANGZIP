@@ -23,7 +23,7 @@ struct SubjectDetailView: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
             if viewModel.isLoading {
                 ProgressView()
                     .navigationBarHidden(true)
@@ -87,15 +87,14 @@ struct SubjectDetailView: View {
                                         20
                                     )
                                     
-                                    // 시작점
                                     if viewModel.modelList.isEmpty {
                                         emptyView
                                     } else {
                                         HStack(spacing: 8) {
-                                            Chip(type: .daysLeftWithText(-24))
+                                            Chip(type: viewModel.examChipType)
                                             
                                             CustomText(
-                                                "2025년 5월 13일",
+                                                viewModel.examDate.toKoreanDateFormat(),
                                                 fontType: .label1Bold,
                                                 color: Color(.labelAlternative)
                                             )
@@ -131,23 +130,15 @@ struct SubjectDetailView: View {
                             .navigationBarHidden(true)
                         }
                         .scrollIndicators(.hidden)
-                        .bottomSheet(
-                            isShowing: $viewModel.isShowingBottomSheet,
-                            height: 265
-                        ) {
-                            if let type = selectedBottomSheetType {
-                                type.contentView(
-                                    isPresented: $viewModel.isShowingBottomSheet
-                                )
-                            }
-                        }
                         
                         if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
                             deleteButton
                         }
                     }
-                    .toastView(toast: $viewModel.toast)
                 }
+            }
+            if viewModel.isShowingBottomSheet {
+                revertBottomSheet
             }
         }
         .onAppear {
@@ -155,6 +146,7 @@ struct SubjectDetailView: View {
                 await viewModel.fetchData()
             }
         }
+        .toastView(toast: $viewModel.toast)
     }
     
     var backgroundView: some View {
@@ -251,20 +243,28 @@ struct SubjectDetailView: View {
                 id: \.pieceId
             ) { $model in
                 Button {
-                    if model.state == .cardDefault {
-                        model.state = .complete
-                        viewModel.completeStudyPiece()
-                    } else if model.state == .complete {
-                        if viewModel.isDeleteMode {
-                            // TODO: Toast Present
-                            print("Toast Present")
-                        } else {
-                            viewModel.checkCompleteOrNot()
+                    if viewModel.isDeleteMode {
+                        if model.state == .selectable {
+                            model.state = .selected
+                            viewModel.toggleSelection(pieceId: model.pieceId)
+                        } else if model.state == .selected {
+                            model.state = .selectable
+                            viewModel.toggleSelection(pieceId: model.pieceId)  
                         }
-                    } else if model.state == .selectable {
-                        model.state = .selected
                     } else {
-                        model.state = .selectable
+                        if model.state == .cardDefault {
+                            model.state = .complete
+                            Task {
+                                await viewModel.completeStudy(pieceID: model.pieceId)
+                            }
+                        } else if model.state == .complete {
+                            if viewModel.isDeleteMode {
+                                print("Toast Present")
+                            } else {
+                                viewModel.revertTargetPieceID = model.pieceId
+                                viewModel.isShowingBottomSheet = true
+                            }
+                        }
                     }
                     viewModel.validateDeleteButton()
                 } label: {
@@ -294,8 +294,9 @@ struct SubjectDetailView: View {
             Spacer()
             
             Button(title) {
-                viewModel.deleteStudyPiece()
-                viewModel.makeStudyPieceSelectable()
+                Task {
+                    await viewModel.deleteStudyPiece()
+                }
             }
             .buttonStyle(
                 SolidIconButton(
@@ -337,6 +338,69 @@ struct SubjectDetailView: View {
                 .horizontal,
                 20
             )
+        }
+    }
+    
+    private var revertBottomSheet: some View {
+        BottomSheet(
+            isShowing: $viewModel.isShowingBottomSheet,
+            height: 265
+        ) {
+            VStack(spacing: 0) {
+                CustomText(
+                    "미완료 상태로 되돌릴까요?",
+                    fontType: .headline1Bold,
+                    color: Color(.labelNeutral)
+                )
+                .padding(
+                    .top,
+                    15
+                )
+                .padding(
+                    .bottom,
+                    31
+                )
+                
+                Button {
+                    Task {
+                        await viewModel.revertStudyPiece()
+                    }
+                    viewModel.isShowingBottomSheet = false
+                    viewModel.toast = Toast(
+                        "미완료 상태로 되돌렸어요!",
+                        startFrom: 20
+                    )
+                } label: {
+                    CustomText(
+                        "되돌리기",
+                        fontType: .body1Bold,
+                        color: Color(.staticWhite)
+                    )
+                }
+                .buttonStyle(SolidButton(true))
+                .padding(
+                    .bottom,
+                    8
+                )
+                
+                Button {
+                    viewModel.isShowingBottomSheet = false
+                } label: {
+                    CustomText(
+                        "취소",
+                        fontType: .body1Bold,
+                        color: Color(.primaryNormal)
+                    )
+                }
+                .buttonStyle(OutlinedLargeButton())
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+        .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+            isBottomSheetShowing =   newValue
         }
     }
 }

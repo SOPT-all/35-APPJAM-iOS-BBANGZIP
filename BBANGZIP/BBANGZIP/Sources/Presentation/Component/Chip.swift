@@ -42,6 +42,7 @@ struct Chip: View {
         Chip(type: .delayedDate(6))
         Chip(type: .points(50))
         Chip(type: .level(1))
+        Chip(type: .page(40))
     }
     .padding()
 }

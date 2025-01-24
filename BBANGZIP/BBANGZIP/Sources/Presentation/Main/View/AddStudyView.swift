@@ -10,6 +10,7 @@ import SwiftUI
 
 struct AddStudyView: View {
     @StateObject var viewModel: AddStudyViewModel
+    @State private var isRangeLocked: Bool = false
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
@@ -22,76 +23,93 @@ struct AddStudyView: View {
     }
     
     var body: some View {
-        ZStack {
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    hideKeyboard()
-                }
-            
-            VStack{
-                ZStack{
-                    subjectTitle
-                    
-                    HStack {
-                        backButton
-                            .padding(16)
-                        Spacer()
+        NavigationView {
+            ZStack {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        hideKeyboard()
                     }
-                }
-                .padding(
-                    .bottom,
-                    16
-                )
                 
-                VStack(spacing: 0) {
-                    dateTitle
-                    
-                    dateTextField
-                    
-                    studyContentTitle
-                    
-                    studyContentField
-                    
-                    studyRangeTitle
-                    
-                    HStack(spacing: 20) {
-                        startRangeTextField
+                VStack{
+                    ZStack{
+                        subjectTitle
                         
-                        endRangeTextField
+                        HStack {
+                            backButton
+                                .padding(16)
+                            Spacer()
+                        }
                     }
+                    .padding(
+                        .bottom,
+                        16
+                    )
                     
-                    divideButton
-                    
-                    tipText
-                    
-                    Spacer()
-                    
-                    registerButton
+                    VStack(spacing: 0) {
+                        dateTitle
+                        
+                        dateTextField
+                        
+                        studyContentTitle
+                        
+                        studyContentField
+                        
+                        studyRangeTitle
+                        
+                        HStack(spacing: 20) {
+                            startRangeTextField
+                            
+                            endRangeTextField
+                        }
+                        
+                        divideButton
+                        
+                        tipText
+                        
+                        Spacer()
+                        
+                        registerButton
+                    }
+                    .padding(
+                        .horizontal,
+                        20
+                    )
                 }
-                .padding(
-                    .horizontal,
-                    20
-                )
-            }
-            .ignoresSafeArea(.keyboard)
-            .bottomSheet(
-                isShowing: $viewModel.isDatePickerPresented,
-                height: 453
-            ) {
-                ExamPickerBottomSheet(
-                    isPresented: $viewModel.isDatePickerPresented,
-                    selectedYear: $viewModel.selectedYear,
-                    selectedMonth: $viewModel.selectedMonth,
-                    selectedDay: $viewModel.selectedDay,
-                    isButtonTapped: $viewModel.isButtonTapped
-                )
-            }
-            .bottomSheet(
-                isShowing: $viewModel.isDividerPresented,
-                height: 449
-            ) {
-                DivideStudyBottomSheet(isPresented: $viewModel.isDividerPresented)
+                .ignoresSafeArea(.keyboard)
+                .bottomSheet(
+                    isShowing: $viewModel.isDatePickerPresented,
+                    height: 453
+                ) {
+                    ExamPickerBottomSheet(
+                        isPresented: $viewModel.isDatePickerPresented,
+                        selectedYear: $viewModel.selectedYear,
+                        selectedMonth: $viewModel.selectedMonth,
+                        selectedDay: $viewModel.selectedDay,
+                        isButtonTapped: $viewModel.isButtonTapped
+                    )
+                }
+                .bottomSheet(
+                    isShowing: $viewModel.isDividerPresented,
+                    height: 449
+                ) {
+                    SetPieceBottomSheet(
+                        isPresented: $viewModel.isDividerPresented,
+                        startPage: Int(
+                            viewModel.startRangeString.replacingOccurrences(
+                                of: "p",
+                                with: ""
+                            )
+                        ) ?? 0,
+                        endPage: Int(
+                            viewModel.endRangeString.replacingOccurrences(
+                                of: "p",
+                                with: ""
+                            )
+                        ) ?? 0,
+                        totalDays: viewModel.daysUntilExam
+                    )
+                }
             }
         }
     }
@@ -251,8 +269,8 @@ struct AddStudyView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.startRangeString) { newRange in
-            if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.startRangeString = String(newRange.prefix(4))
+            if newRange.count > 3 && !newRange.hasSuffix("p") {
+                viewModel.startRangeString = String(newRange.prefix(3))
             }
             
             viewModel.verifyStartRange(
@@ -289,8 +307,8 @@ struct AddStudyView: View {
         )
         .keyboardType(.decimalPad)
         .onChange(of: viewModel.endRangeString) { newRange in
-            if newRange.count > 4 && !newRange.hasSuffix("p") {
-                viewModel.endRangeString = String(newRange.prefix(4))
+            if newRange.count > 3 && !newRange.hasSuffix("p") {
+                viewModel.endRangeString = String(newRange.prefix(3))
             }
             
             viewModel.verifyEndRange(
@@ -308,11 +326,12 @@ struct AddStudyView: View {
     
     private var divideButton: some View {
         Button("쪼개서 공부하기") {
+            hideKeyboard()
             viewModel.isDividerPresented = true
         }
         .buttonStyle(
             OutlinedMediumButton(
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
             )
         )
         .padding(
@@ -320,8 +339,9 @@ struct AddStudyView: View {
             8
         )
         .disabled(
-            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
+        .buttonStyle(PressedButtonStyle())
     }
     
     private var tipText: some View {
@@ -343,11 +363,11 @@ struct AddStudyView: View {
         .buttonStyle(
             SolidIconButton(
                 buttonImage: Image(.plus),
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid
+                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
             )
         )
         .disabled(
-            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid
+            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
     }
     
