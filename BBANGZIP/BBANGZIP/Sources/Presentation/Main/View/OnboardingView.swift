@@ -52,7 +52,7 @@ final class NewOnboardingViewModel: ObservableObject {
     @Published var nickname: String = ""
     @Published var year: Int = 2025
     @Published var semester: Semester = .first
-    @Published var subjectName: String = ""
+    @Published var subject: String = ""
     
     // 단계
     @Published var stage: NewOnboardingStage = .start
@@ -79,7 +79,7 @@ final class NewOnboardingViewModel: ObservableObject {
                 nickname: nickname,
                 year: year,
                 semester: semester.rawValue,
-                subjectName: subjectName
+                subjectName: subject
             )
             isOnboardingComplete = true
         } catch {
@@ -139,11 +139,11 @@ final class NewOnboardingViewModel: ObservableObject {
         case .field:
             nicknameTextFieldState = isNicknameFocused ? .typing : .field
         }
-        setAlertCase()
+        setNicknameAlertCase()
     }
     
-    // state를 기준으로 alert 업데이트
-    func setAlertCase() {
+    // state를 기준으로 nickname alert 업데이트
+    func setNicknameAlertCase() {
         switch nicknameTextFieldState {
         case .defaultState, .placeholder, .alert:
             nicknameTextFieldAlertCase = .alert
@@ -170,8 +170,55 @@ final class NewOnboardingViewModel: ObservableObject {
             nicknameTextFieldState = .alert
         }
         
-        setAlertCase()
+        setNicknameAlertCase()
         validateNextButton()
+    }
+    
+    // subject 변경시 호출
+    func handleSubject(
+        oldSubject: String,
+        newSubject: String
+    ) {
+        if newSubject.count > 10 {
+            subject = String(oldSubject.prefix(10))
+        }
+        if subject.isEmpty {
+            subjectTextFieldState = .placeholder
+        } else if subject.isValidSubject {
+            subjectTextFieldState = .typing
+        } else {
+            subjectTextFieldState = .alert
+        }
+        
+        setSubjectAlertCase()
+        validateNextButton()
+    }
+    
+    // state를 기준으로 subject alert 업데이트
+    func setSubjectAlertCase() {
+        switch subjectTextFieldState {
+        case .defaultState, .placeholder, .alert:
+            subjectTextFieldAlertCase = .alert
+        default:
+            subjectTextFieldAlertCase = .enable
+        }
+    }
+    
+    // focus가 들어왔을 때 기존의 state 기준으로 state와 alert 변경
+    func setSubjectState(isSubjectFocused: Bool) {
+        switch subjectTextFieldState {
+        case .defaultState:
+            subjectTextFieldState = isSubjectFocused ? .placeholder : .defaultState
+        case .placeholder:
+            subjectTextFieldState = isSubjectFocused ? .placeholder : .defaultState
+        case .typing:
+            subjectTextFieldState = isSubjectFocused ? .typing : .field
+        case .alert:
+            break
+        case .field:
+            subjectTextFieldState = isSubjectFocused ? .typing : .field
+        }
+        setSubjectAlertCase()
     }
     
     func handleSubject() {
@@ -196,7 +243,11 @@ final class NewOnboardingViewModel: ObservableObject {
                 isNextButtonDisabled = true
             }
         case .subject:
-            break
+            if subjectTextFieldAlertCase == .alert {
+                isNextButtonDisabled = true
+            } else {
+                isNextButtonDisabled = false
+            }
         case .end:
             isNextButtonDisabled = false
         }
@@ -236,7 +287,7 @@ struct NewOnboardingView: View {
             case .subject:
                 backButton
                 progressBar
-                Text("A")
+                subjectInputView
             case .end:
                 backButton
                 Text("A")
@@ -248,11 +299,9 @@ struct NewOnboardingView: View {
             isOnboardingComplete = newValue
         }
         .onTapGesture {
-//            viewModel.focusOff()
+            //            viewModel.focusOff()
         }
     }
-    
-    
     
     private var firstView: some View {
         ZStack {
@@ -325,7 +374,7 @@ struct NewOnboardingView: View {
         }
         .padding(16)
     }
-
+    
     private var progressBar: some View {
         ProgressBar(
             type: .withCircle(
@@ -494,6 +543,81 @@ struct NewOnboardingView: View {
         .padding(.trailing, -5)
         .clipped()
     }
+    
+    private var subjectInputView: some View {
+        VStack(spacing: 0) {
+            subjectHeaderDescription
+            subjectMainDescription
+            subjectTextField
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+    }
+    private var subjectHeaderDescription: some View {
+        HStack(spacing: 0) {
+            CustomText(
+                "\(viewModel.year)년 \(viewModel.semester.rawValue)에 재학 중이시네요!",
+                fontType: .body2Bold,
+                color: Color(.labelAlternative)
+            )
+            Spacer()
+        }
+        .padding(.bottom, 8)
+    }
+    private var subjectMainDescription: some View {
+        HStack(spacing: 0) {
+            CustomText(
+                "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            Spacer()
+        }
+        .padding(.bottom, 33)
+    }
+    
+    private var subjectTextField: some View {
+        TextField(
+            "예) 거시경제학",
+            text: $viewModel.subject
+        )
+        .focused($isSubjectFocused)
+        .textFieldStyle(
+            CustomTextFieldStyle(
+                text: $viewModel.subject,
+                style: .subject,
+                state: viewModel.subjectTextFieldState,
+                alertText: viewModel.subjectTextFieldAlertCase
+            )
+        )
+        .onChange(of: isSubjectFocused) { newValue in
+            viewModel.setSubjectState(isSubjectFocused: newValue)
+        }
+        .onChange(of: viewModel.subject) { [subject = viewModel.subject] newSubject in
+            viewModel.handleSubject(
+                oldSubject: subject,
+                newSubject: newSubject
+            )
+        }
+        
+//        .onChange(of: viewModel.subject) { newSubject in
+//            if newSubject.count > 10 {
+//                viewModel.subject = String(newSubject.prefix(10))
+//            }
+//            
+//            viewModel.verifySubject(
+//                newText: newSubject,
+//                isSubjectFocused: isSubjectFocused
+//            )
+//        }
+//        .onChange(of: isSubjectFocused) { isFocused in
+//            viewModel.handleSubjectFocusChange(
+//                newText: viewModel.subject,
+//                isSubjectFocused: isSubjectFocused
+//            )
+//        }
+    }
+    
 }
 
 
@@ -785,14 +909,12 @@ struct OnboardingView: View {
     
     private var subjectInputView: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                subjectHeaderDescription
-                subjectMainDescription
-                subjectTextField
-                Spacer()
-            }
-            .padding(.horizontal, 20)
+            subjectHeaderDescription
+            subjectMainDescription
+            subjectTextField
+            Spacer()
         }
+        .padding(.horizontal, 20)
     }
     
     private var subjectHeaderDescription: some View {
@@ -808,17 +930,15 @@ struct OnboardingView: View {
     }
     
     private var subjectMainDescription: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                CustomText(
-                    "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
-                    fontType: .title2Bold,
-                    color: Color(.labelNormal)
-                )
-                Spacer()
-            }
-            .padding(.bottom, 33)
+        HStack(spacing: 0) {
+            CustomText(
+                "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            Spacer()
         }
+        .padding(.bottom, 33)
     }
     
     private var subjectTextField: some View {
