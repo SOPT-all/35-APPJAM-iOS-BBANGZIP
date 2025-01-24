@@ -57,10 +57,16 @@ struct AddSubjectView: View {
                 
                 Spacer()
                 
+            }
+            
+            VStack {
+                Spacer()
+                
                 Button("추가하기") {
                     Task {
                         await viewModel.addSubject(subjectName: viewModel.subject)
                     }
+                    dismiss()
                 }
                 .buttonStyle(
                     SolidIconButton(
@@ -78,13 +84,9 @@ struct AddSubjectView: View {
                     20
                 )
             }
+            .ignoresSafeArea(.keyboard)
         }
         .navigationBarHidden(true)
-        .onAppear {
-            if viewModel.shouldDismiss {
-                dismiss()
-            }
-        }
     }
     
     private var subjectTextField: some View {

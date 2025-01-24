@@ -103,6 +103,15 @@ extension CustomNavigationBar {
                             filterExamUseCase: DefaultFilterExamUseCase(
                                 examRepository: DefaultExamRepository()
                             ),
+                            deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
+                                repository: DefaultExamRepository()
+                            ),
+                            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
                             subjectId: viewModel.subjectId
                         )
                     )
@@ -122,12 +131,22 @@ extension CustomNavigationBar {
                         changeNameUseCase: DefaultChangeNameUseCase(
                             repository: DefaultMessageRepository()),
                         parentViewModel: SubjectDetailViewModel(
-                                filterExamUseCase: DefaultFilterExamUseCase(
-                                    examRepository: DefaultExamRepository()
-                                ),
-                                subjectId: viewModel.subjectId
+                            filterExamUseCase: DefaultFilterExamUseCase(
+                                examRepository: DefaultExamRepository()
+                            ),
+                            deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
+                                repository: DefaultExamRepository()
+                            ),
+                            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            subjectId: viewModel.subjectId
                         )
-                    ), subjectName: viewModel.subjectName
+                    ),
+                    subjectName: viewModel.subjectName
                 )
             ) {
                 CustomText(

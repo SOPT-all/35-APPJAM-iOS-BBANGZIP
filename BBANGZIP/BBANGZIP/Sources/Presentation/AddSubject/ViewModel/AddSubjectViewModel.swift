@@ -11,7 +11,6 @@ import SwiftUI
 class AddSubjectViewModel: ObservableObject {
     private let addSubjectUseCase: AddSubjectUseCase
     private let parentViewModel: SubjectManageViewModel
-    @Published var shouldDismiss: Bool = false
     @Published var subject: String
     @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
     @Published var subjectState: TextFieldState
@@ -94,20 +93,18 @@ class AddSubjectViewModel: ObservableObject {
     func addSubject(subjectName: String) async {
         // TODO: 과목 추가, 과목 중복 비교 로직 / 토스트 메시지 노출 로직 구현 필요
         do {
-            let completeResult: () = try await addSubjectUseCase.execute(
+            let _: () = try await addSubjectUseCase.execute(
                 year: 2025,
                 semester: .first,
                 subjectName: subjectName
             )
             
-            parentViewModel.toast = Toast(
-                "과목 추가 완료! 공부를 시작해 볼까요?",
-                startFrom: 20
-            )
-            
             await parentViewModel.fetchData()
             
-            self.shouldDismiss = true
+            parentViewModel.toast = Toast(
+                "과목 추가 완료! 공부를 시작해 볼까요?",
+                startFrom: 76
+            )
             
         } catch {
             toast = Toast(

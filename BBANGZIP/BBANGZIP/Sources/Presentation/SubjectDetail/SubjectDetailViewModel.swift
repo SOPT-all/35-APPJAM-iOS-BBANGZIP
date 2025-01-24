@@ -10,11 +10,19 @@ import SwiftUI
 
 final class SubjectDetailViewModel: ObservableObject {
     private let filterExamUseCase: FilterExamUseCase
-    
-    let subjectName: String
+    private let deleteStudyPieceUseCase: DeleteStudyPieceUseCase
+    private let completeTodayStudyUseCase: CompleteTodayStudyUseCase
+    private let revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
+
     let subjectId: Int
+    @Published var revertTargetPieceID: Int? = nil
+    @Published var selectedPieceIds: Set<Int> = []
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
+    @Published var examDday: Int = 0
+    @Published var examChipType: ChipType = .daysLeftBlack(0)
+    @Published var examDate: String = ""
+    @Published var subjectName: String = ""
     @Published var modelList: [FilterExamList] = []
     @Published var isDeleteMode: Bool = false
     @Published var isLoading: Bool = true
@@ -23,17 +31,29 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var toast: Toast?
     
     var selectedItemCount: Int {
-        modelList.filter { $0.state == .selected }.count
+        return selectedPieceIds.count
     }
     
     init(
         filterExamUseCase: FilterExamUseCase,
-        subjectName: String = "",
+        deleteStudyPieceUseCase: DeleteStudyPieceUseCase,
+        completeTodayStudyUseCase: CompleteTodayStudyUseCase,
+        revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase,
         subjectId: Int
     ) {
         self.filterExamUseCase = filterExamUseCase
-        self.subjectName = subjectName
+        self.deleteStudyPieceUseCase = deleteStudyPieceUseCase
+        self.completeTodayStudyUseCase = completeTodayStudyUseCase
+        self.revertCompleteTodayStudyUseCase = revertCompleteTodayStudyUseCase
         self.subjectId = subjectId
+    }
+    
+    func toggleSelection(pieceId: Int) {
+        if selectedPieceIds.contains(pieceId) {
+            selectedPieceIds.remove(pieceId)
+        } else {
+            selectedPieceIds.insert(pieceId)
+        }
     }
     
     func convertExamNameToAPI(_ examName: String) -> String {
@@ -49,20 +69,19 @@ final class SubjectDetailViewModel: ObservableObject {
     
     func makeStudyPieceSelectable() {
         isDeleteMode.toggle()
-        modelList = modelList.map(
-            {
-                FilterExamList(
-                    pieceId: $0.pieceId,
-                    studyContents: $0.studyContents,
-                    startPage: $0.startPage,
-                    finishPage: $0.finishPage,
-                    deadline: $0.deadline,
-                    remainingDays: $0.remainingDays,
-                    isFinished: $0.isFinished,
-                    state: $0.state == .complete ? .complete : ($0.state == .cardDefault ? .selectable : .cardDefault)
-                )
-            }
-        )
+        selectedPieceIds.removeAll()
+        modelList = modelList.map {
+            FilterExamList(
+                pieceId: $0.pieceId,
+                studyContents: $0.studyContents,
+                startPage: $0.startPage,
+                finishPage: $0.finishPage,
+                deadline: $0.deadline,
+                remainingDays: $0.remainingDays,
+                isFinished: $0.isFinished,
+                state: $0.state == .complete ? .complete : ($0.state == .cardDefault ? .selectable : .cardDefault)
+            )
+        }
     }
     
     @MainActor
@@ -74,6 +93,10 @@ final class SubjectDetailViewModel: ObservableObject {
             )
             modelList = examContent.studyList
             motivationMessage = examContent.motivationMessage
+            examDday = examContent.examDday
+            examChipType = examDday > 0 ? .delayedDate(examDday) : .daysLeftWithText(examDday)
+            examDate = examContent.examDate
+            subjectName = examContent.subjectName
             isLoading = false
         } catch {
             dump(error)
@@ -88,20 +111,78 @@ final class SubjectDetailViewModel: ObservableObject {
         await fetchData()
     }
     
-    func deleteStudyPiece() {
-        // TODO: 공부 삭제 API 연동 및 삭제 성공 시 토스트 메시지 노출
+    @MainActor
+    func deleteStudyPiece() async {
+        do {
+            let _: () = try await deleteStudyPieceUseCase.execute(
+                pieceIds: Array(selectedPieceIds)
+            )
+            
+            // 삭제 후 데이터 새로고침
+            await fetchData()
+            
+            // 상태 초기화
+            selectedPieceIds.removeAll()
+            isDeleteMode = false
+            
+            // 토스트 메시지 표시
+            toast = Toast(
+                "공부 삭제 완료",
+                startFrom: 20
+            )
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func validateDeleteButton() {
-        isDeleteButtonEnable = modelList.count(where: { $0.state == .selected }) > 0
+        isDeleteButtonEnable = !selectedPieceIds.isEmpty
     }
     
-    func completeStudyPiece() {
-        // TODO: 공부 조각 완료하기 API 연동 필요
+    @MainActor
+    func completeStudy(pieceID: Int) async {
+        do {
+            _ = try await completeTodayStudyUseCase.execute(pieceID: pieceID)
+            
+            toast = Toast(
+                "공부 완료!",
+                startFrom: 20
+            )
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
-    func notCompleteStudyPiece() {
-        // TODO: 공부 조각 미완료 체크하기 API 연동 필요
+    @MainActor
+    func revertStudyPiece() async {
+        guard let revertTargetPieceID = revertTargetPieceID else {
+            print("revertTargetPieceID Wrong")
+            return
+        }
+        do {
+            try await revertCompleteTodayStudyUseCase.execute(pieceID: revertTargetPieceID)
+            guard let revertedPieceIndex = modelList.firstIndex(where: {$0.pieceId == revertTargetPieceID}) else {
+                print("서버에서는 revert 됐는데 list에서 못 찾는 경우")
+                return
+            }
+            
+            modelList[revertedPieceIndex] = FilterExamList(
+                pieceId: modelList[revertedPieceIndex].pieceId,
+                studyContents: modelList[revertedPieceIndex].studyContents,
+                startPage: modelList[revertedPieceIndex].startPage,
+                finishPage: modelList[revertedPieceIndex].finishPage,
+                deadline: modelList[revertedPieceIndex].deadline,
+                remainingDays: modelList[revertedPieceIndex].remainingDays,
+                isFinished: modelList[revertedPieceIndex].isFinished,
+                state: .cardDefault
+            )
+        
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func checkCompleteOrNot() {
