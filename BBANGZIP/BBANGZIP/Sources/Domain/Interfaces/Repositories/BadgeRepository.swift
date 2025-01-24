@@ -8,4 +8,6 @@
 
 protocol BadgeRepository: Sendable {
     func fetchBadgeDetail(badgeName: String) async throws -> BadgeDetail
+    
+    func getBadgeList() async throws -> BadgeDictionaryModel
 }

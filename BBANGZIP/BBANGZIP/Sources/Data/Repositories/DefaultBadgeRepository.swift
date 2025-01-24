@@ -21,4 +21,21 @@ final class DefaultBadgeRepository: BadgeRepository {
             throw error
         }
     }
+    
+    func getBadgeList() async throws -> BadgeDictionaryModel {
+        let response = await API.session.request(
+            BbangDefaultRouter.getBadgeList,
+            interceptor: CustomInterceptor()
+        )
+            .serializingDecodable(GetBadgeListResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let responseDTO):
+            return responseDTO.data.toDomain()
+        case .failure(let error):
+            throw error
+        }
+    }
+    
 }
