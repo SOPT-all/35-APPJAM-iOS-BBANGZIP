@@ -41,6 +41,8 @@ struct DivideRangeView: View {
     @FocusState private var startFocusedField: FocusField?
     @FocusState private var endFocusedField: FocusField?
     @State private var selectedPieceIndex: Int? = nil
+    @Binding var examDate: String
+    @Binding var pieceList: [AddStudyPieceDTO]
     
     @State private var studyRange: StudyRange = StudyRange(
         studyContents: "",
@@ -49,11 +51,15 @@ struct DivideRangeView: View {
     )
     
     init(
-        pieceCount: Int,
-        startPage: Int,
-        endPage: Int,
-        totalDays: Int
-    ) {
+            pieceCount: Int,
+            startPage: Int,
+            endPage: Int,
+            totalDays: Int,
+            examDate: Binding<String>,
+            pieceList: Binding<[AddStudyPieceDTO]>
+    ){
+        _examDate = examDate
+        _pieceList = pieceList
         _viewModel = StateObject(
             wrappedValue: DivideRangeViewModel(
                 pieceCount: pieceCount,
@@ -306,46 +312,6 @@ struct DivideRangeView: View {
         }
     }
     
-    private func saveStudyRange() {
-        let inputDateFormatter = DateFormatter()
-        inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
-        inputDateFormatter.locale = Locale(identifier: "ko_KR") // 한국어 로케일 설정
-        
-        let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "yyyy-MM-dd"
-
-        let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> PieceList? in
-            
-            guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
-                  let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
-                return nil
-            }
-            
-            let originalDeadline = viewModel.deadlineDates[index]
-            
-            let formattedDeadline: String
-            if let date = inputDateFormatter.date(from: originalDeadline) {
-                formattedDeadline = outputDateFormatter.string(from: date)
-            } else {
-                formattedDeadline = ""
-            }
-            
-            return PieceList(
-                startPage: startPage,
-                finishPage: endPage,
-                deadline: formattedDeadline
-            )
-        }
-
-        let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
-        studyRange = StudyRange(
-            studyContents: "",
-            examDate: formattedExamDate,
-            pieceList: updatedPieceList
-        )
-    }
-
-    
     private var registerButton: some View {
         Button("저장하기") {
             saveStudyRange()
@@ -358,5 +324,39 @@ struct DivideRangeView: View {
                 !viewModel.allRangesValid)
         )
         .disabled(viewModel.allRangesValid)
+    }
+    
+    private func saveStudyRange() {
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR")
+        
+        let outputDateFormatter = DateFormatter()
+        outputDateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> AddStudyPieceDTO? in
+            guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
+                  let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
+                return nil
+            }
+            
+            let originalDeadline = viewModel.deadlineDates[index]
+            let formattedDeadline: String
+            if let date = inputDateFormatter.date(from: originalDeadline) {
+                formattedDeadline = outputDateFormatter.string(from: date)
+            } else {
+                formattedDeadline = ""
+            }
+            
+            return AddStudyPieceDTO(
+                startPage: startPage,
+                finishPage: endPage,
+                deadline: formattedDeadline
+            )
+        }
+        
+        let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
+        examDate = formattedExamDate
+        pieceList = updatedPieceList
     }
 }

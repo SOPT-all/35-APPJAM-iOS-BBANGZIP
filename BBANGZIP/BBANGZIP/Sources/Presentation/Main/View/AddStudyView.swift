@@ -15,7 +15,7 @@ struct AddStudyView: View {
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
     
-    init(viewModel: AddStudyViewModel = AddStudyViewModel(),
+    init(viewModel: AddStudyViewModel = AddStudyViewModel(addStudyPieceUseCase: DefaultAddStudyPieceUseCase(repository: DefaultStudyPieceRepository())),
          isBottomSheetPresented: Bool = false,
          isButtonTapped: Bool = false
     ) {
@@ -325,23 +325,34 @@ struct AddStudyView: View {
     }
     
     private var divideButton: some View {
-        Button("쪼개서 공부하기") {
-            hideKeyboard()
-            viewModel.isDividerPresented = true
-        }
-        .buttonStyle(
-            OutlinedMediumButton(
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
+        NavigationLink(
+            destination: DivideRangeView(
+                pieceCount: 6, // TODO: 수정
+                startPage: viewModel.startRange,
+                endPage: viewModel.endRange,
+                totalDays: viewModel.daysUntilExam,
+                examDate: $viewModel.dividedExamDate,  // 바인딩 전달
+                pieceList: $viewModel.dividedPieceList  // 바인딩 전달
             )
-        )
-        .padding(
-            .bottom,
-            8
-        )
-        .disabled(
-            !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
-        )
-        .buttonStyle(PressedButtonStyle())
+        ) {
+            Button("쪼개서 공부하기") {
+                hideKeyboard()
+                viewModel.isDividerPresented = true
+            }
+            .buttonStyle(
+                OutlinedMediumButton(
+                    viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
+                )
+            )
+            .padding(
+                .bottom,
+                8
+            )
+            .disabled(
+                !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
+            )
+            .buttonStyle(PressedButtonStyle())
+        }
     }
     
     private var tipText: some View {
@@ -358,7 +369,9 @@ struct AddStudyView: View {
     
     private var registerButton: some View {
         Button("공부 내용 등록하기") {
-            // TODO: 화면 전환해야 할 다음 뷰로 연결
+            Task {
+                await viewModel.addStudyPiece()
+            }
         }
         .buttonStyle(
             SolidIconButton(

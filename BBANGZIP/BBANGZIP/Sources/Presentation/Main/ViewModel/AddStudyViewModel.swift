@@ -9,6 +9,7 @@
 import SwiftUI
 
 final class AddStudyViewModel: ObservableObject {
+    private let addStudyPieceUseCase: AddStudyPieceUseCase
     @Published var date: Date? {
         didSet {
             calculateDaysUntilExam()
@@ -38,6 +39,8 @@ final class AddStudyViewModel: ObservableObject {
     @Published var selectedDay: Int
     @Published var isButtonTapped: Bool = false
     @Published var daysUntilExam: Int = 0
+    @Published var dividedExamDate: String = ""
+    @Published var dividedPieceList: [AddStudyPieceDTO] = []
         
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -48,6 +51,7 @@ final class AddStudyViewModel: ObservableObject {
     }
     
     init(
+        addStudyPieceUseCase: AddStudyPieceUseCase,
         pieceCount: Int = 1,
         date: Date? = nil,
         studyContent: String = "",
@@ -61,6 +65,7 @@ final class AddStudyViewModel: ObservableObject {
         endRangeState: TextFieldState = .defaultState,
         endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
     ) {
+        self.addStudyPieceUseCase = addStudyPieceUseCase
         self.date = date
         self.studyContent = studyContent
         self.startRange = startRange
@@ -83,6 +88,22 @@ final class AddStudyViewModel: ObservableObject {
         self.isButtonTapped = isButtonTapped
         
         calculateDaysUntilExam()
+    }
+    
+    @MainActor
+    func addStudyPiece() async {
+        do {
+            try await addStudyPieceUseCase.execute(
+                subjectId: 74,
+                examName: "내가",
+                studyContents: studyContent,
+                examDate: dividedExamDate,
+                pieceList: dividedPieceList
+            )
+            // ... 성공 처리
+        } catch {
+            // ... 에러 처리
+        }
     }
     
     private func calculateDaysUntilExam() {
