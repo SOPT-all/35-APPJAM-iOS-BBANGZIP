@@ -7,7 +7,7 @@
 //
 
 import Alamofire
-
+ 
 final class DefaultBadgeRepository: BadgeRepository {
     func fetchBadgeDetail(badgeName: String) async throws -> BadgeDetail {
         let response = await API.session.request(BbangDefaultRouter.fetchBadgeDetail(badgeName: badgeName), interceptor: CustomInterceptor())

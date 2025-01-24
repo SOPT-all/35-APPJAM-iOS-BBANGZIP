@@ -1,12 +1,13 @@
 import SwiftUI
 
-public struct ContentView: View {
+public struct ContainerView: View {
     @StateObject private var viewModel = KakaoLoginViewModel(
         useCase: DefaultKakaoLoginUseCase(
             repository: DefaultUserRepository()
         )
     )
     @State private var isSplashComplete: Bool = false
+    @State private var isOnboardingComplete: Bool = false
     
     public var body: some View {
         ZStack {
@@ -20,10 +21,10 @@ public struct ContentView: View {
                     }
             } else {
                 if viewModel.isLogin {
-                    if viewModel.isOnboardingComplete {
+                    if isOnboardingComplete {
                         CustomTabView()
                     } else {
-                        OnboardingView()
+                        OnboardingView(isOnboardingComplete: $isOnboardingComplete)
                     }
                 } else {
                     LoginView(viewModel: viewModel)

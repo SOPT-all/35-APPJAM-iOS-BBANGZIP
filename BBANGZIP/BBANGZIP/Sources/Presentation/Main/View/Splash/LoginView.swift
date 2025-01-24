@@ -16,22 +16,15 @@ struct LoginView: View {
     }
     
     var body: some View {
-        if !viewModel.isLogin {
-            VStack (spacing: 0) {
-                titleView
-                
-                onBoardingSectionView
-                                        
-                loginSection
-                
-                Spacer()
-            }
-        } else if viewModel.isLogin && viewModel.isOnboardingComplete {
-            CustomTabView()
-        } else if viewModel.isLogin {
-            OnboardingView()
+        VStack (spacing: 0) {
+            titleView
+            
+            onBoardingSectionView
+            
+            loginSection
+            
+            Spacer()
         }
-        
     }
     
     var titleView: some View {
