@@ -18,7 +18,7 @@ struct StudyRange: Encodable {
     let examName: String = "" // temporary
     let studyContents, examDate: String
     let pieceList: [PieceList]
-    
+
     enum CodingKeys: String, CodingKey {
         case subjectID = "subjectId"
         case examName, studyContents, examDate, pieceList
@@ -28,7 +28,7 @@ struct StudyRange: Encodable {
 struct PieceList: Encodable {
     let startPage, finishPage: Int
     let deadline: String // "YYYY-MM-DD"
-    
+
     enum CodingKeys: String, CodingKey {
         case finishPage = "endPage"
         case startPage, deadline
@@ -41,25 +41,20 @@ struct DivideRangeView: View {
     @FocusState private var startFocusedField: FocusField?
     @FocusState private var endFocusedField: FocusField?
     @State private var selectedPieceIndex: Int? = nil
-    @Binding var examDate: String
-    @Binding var pieceList: [AddStudyPieceDTO]
-    
-    @State private var studyRange: StudyRange = StudyRange(
-        studyContents: "",
-        examDate: "",
-        pieceList: []
-    )
-    
+
+    @State private var studyRange: StudyRange =
+        StudyRange(
+            studyContents: "",
+            examDate: "",
+            pieceList: []
+        )
+
     init(
-            pieceCount: Int,
-            startPage: Int,
-            endPage: Int,
-            totalDays: Int,
-            examDate: Binding<String>,
-            pieceList: Binding<[AddStudyPieceDTO]>
-    ){
-        _examDate = examDate
-        _pieceList = pieceList
+        pieceCount: Int,
+        startPage: Int,
+        endPage: Int,
+        totalDays: Int
+    ) {
         _viewModel = StateObject(
             wrappedValue: DivideRangeViewModel(
                 pieceCount: pieceCount,
@@ -69,7 +64,7 @@ struct DivideRangeView: View {
             )
         )
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             CustomNavigationBar(
@@ -79,7 +74,7 @@ struct DivideRangeView: View {
                 backgroundColor: Color(.clear)
             )
             .navigationBarHidden(true)
-            
+
             ScrollView {
                 ZStack {
                     Color.clear
@@ -87,12 +82,12 @@ struct DivideRangeView: View {
                         .onTapGesture {
                             hideKeyboard()
                         }
-                    
+
                     VStack(spacing: 32) {
                         entireRange
-                        
+
                         Divider()
-                        
+
                         piece
                     }
                     .padding(.top, 10)
@@ -102,7 +97,7 @@ struct DivideRangeView: View {
                 .padding(.bottom, 20)
             }
             .scrollIndicators(.never)
-            
+
             registerButton
                 .padding(.horizontal, 20)
         }
@@ -123,7 +118,7 @@ struct DivideRangeView: View {
             }
         }
     }
-    
+
     private var entireRange: some View {
         VStack {
             HStack {
@@ -132,29 +127,29 @@ struct DivideRangeView: View {
                     fontType: .headline2Bold,
                     color: Color(.labelNormal)
                 )
-                
+
                 Spacer()
             }
             .padding(.horizontal, 20)
-            
+
             HStack(spacing: 4) {
                 Chip(type: .page(viewModel.fixedStartPage))
-                
+
                 CustomText(
                     "부터",
                     fontType: .label1Bold,
                     color: Color(.labelAlternative)
                 )
                 .padding(.trailing, 4)
-                
+
                 Chip(type: .page(viewModel.fixedEndPage))
-                
+
                 CustomText(
                     "까지",
                     fontType: .label1Bold,
                     color: Color(.labelAlternative)
                 )
-                
+
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -166,7 +161,7 @@ struct DivideRangeView: View {
                 .customShadow(.emphasize)
         )
     }
-    
+
     private var piece: some View {
         VStack(spacing: 16) {
             ForEach(viewModel.pieces, id: \.self) { piece in
@@ -177,22 +172,22 @@ struct DivideRangeView: View {
                             fontType: .body1Bold,
                             color: Color(.labelNormal)
                         )
-                        
+
                         Spacer()
                     }
-                    
+
                     HStack(spacing: 20) {
                         startRangeTextField(for: piece - 1)
-                        
+
                         endRangeTextField(for: piece - 1)
                     }
-                    
+
                     deadlineButton(for: viewModel.deadlineDates[piece - 1], index: piece - 1)
                 }
             }
         }
     }
-    
+
     private func startRangeTextField(for index: Int) -> some View {
         TextField(
             "시작 페이지",
@@ -216,7 +211,7 @@ struct DivideRangeView: View {
             if newRange.count > 3 && !newRange.hasSuffix("p") {
                 viewModel.startRangeStrings[index] = String(newRange.prefix(3))
             }
-            
+
             viewModel.verifyStartRange(
                 for: index,
                 newText: newRange,
@@ -231,7 +226,7 @@ struct DivideRangeView: View {
             )
         }
     }
-    
+
     private func endRangeTextField(for index: Int) -> some View {
         TextField(
             "종료 페이지",
@@ -255,7 +250,7 @@ struct DivideRangeView: View {
             if newRange.count > 3 && !newRange.hasSuffix("p") {
                 viewModel.endRangeStrings[index] = String(newRange.prefix(3))
             }
-            
+
             viewModel.verifyEndRange(
                 for: index,
                 newText: newRange,
@@ -270,7 +265,7 @@ struct DivideRangeView: View {
             )
         }
     }
-    
+
     private func deadlineButton(
         for dateRange: String,
         index: Int
@@ -298,7 +293,7 @@ struct DivideRangeView: View {
             }
         }
     }
-    
+
     private func printStudyRange() {
         do {
             let encoder = JSONEncoder()
@@ -311,7 +306,47 @@ struct DivideRangeView: View {
             print("studyRange 인코딩 실패: \(error)")
         }
     }
-    
+
+    private func saveStudyRange() {
+        let inputDateFormatter = DateFormatter()
+        inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
+        inputDateFormatter.locale = Locale(identifier: "ko_KR") // 한국어 로케일 설정
+
+        let outputDateFormatter = DateFormatter()
+        outputDateFormatter.dateFormat = "yyyy-MM-dd" // 이게 찐 날짜값
+
+        let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> PieceList? in
+
+            guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
+                  let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
+                return nil
+            }
+
+            let originalDeadline = viewModel.deadlineDates[index]
+
+            let formattedDeadline: String
+            if let date = inputDateFormatter.date(from: originalDeadline) {
+                formattedDeadline = outputDateFormatter.string(from: date)
+            } else {
+                formattedDeadline = ""
+            }
+
+            return PieceList(
+                startPage: startPage,
+                finishPage: endPage,
+                deadline: formattedDeadline
+            )
+        }
+
+        let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
+        studyRange = StudyRange(
+            studyContents: "",
+            examDate: formattedExamDate,
+            pieceList: updatedPieceList
+        )
+    }
+
+
     private var registerButton: some View {
         Button("저장하기") {
             saveStudyRange()
@@ -324,39 +359,5 @@ struct DivideRangeView: View {
                 !viewModel.allRangesValid)
         )
         .disabled(viewModel.allRangesValid)
-    }
-    
-    private func saveStudyRange() {
-        let inputDateFormatter = DateFormatter()
-        inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
-        inputDateFormatter.locale = Locale(identifier: "ko_KR")
-        
-        let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> AddStudyPieceDTO? in
-            guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
-                  let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
-                return nil
-            }
-            
-            let originalDeadline = viewModel.deadlineDates[index]
-            let formattedDeadline: String
-            if let date = inputDateFormatter.date(from: originalDeadline) {
-                formattedDeadline = outputDateFormatter.string(from: date)
-            } else {
-                formattedDeadline = ""
-            }
-            
-            return AddStudyPieceDTO(
-                startPage: startPage,
-                finishPage: endPage,
-                deadline: formattedDeadline
-            )
-        }
-        
-        let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
-        examDate = formattedExamDate
-        pieceList = updatedPieceList
     }
 }

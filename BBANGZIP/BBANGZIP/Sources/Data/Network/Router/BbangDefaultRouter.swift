@@ -32,6 +32,7 @@ enum BbangDefaultRouter {
     case deleteSubject(dto: DeleteSubjectRequestDTO)
     case changeName(subjectID: Int, options: String, dto: ChangeNameRequestDTO)
     case deleteStudyPiece(dto: DeleteStudyPieceRequestDTO)
+    case addStudyPiece(dto: AddStudyPieceRequestDTO)
     
 }
 
@@ -74,6 +75,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/subjects/filter"
         case .addTodayStudy:
             return "/api/v1/pieces/assign-to-today"
+        case .addStudyPiece:
+            return "/api/v1/studies"
         }
     }
     
@@ -85,7 +88,8 @@ extension BbangDefaultRouter: Router {
                 .completeStudy,
                 .revertCompleteStudy,
                 .removeTodayStudy,
-                .addTodayStudy:
+                .addTodayStudy,
+                .addStudyPiece:
             return .post
             
         case
@@ -153,6 +157,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .onboardingCheck(let dto):
             return dto.asDictionary()
+        case .addStudyPiece(let dto):
+            return dto.asDictionary()
         }
     }
     
@@ -178,7 +184,8 @@ extension BbangDefaultRouter: Router {
                 .addSubject,
                 .deleteSubject,
                 .changeName,
-                .deleteStudyPiece:
+                .deleteStudyPiece,
+                .addStudyPiece:
             return JSONEncoding.default
         }
     }

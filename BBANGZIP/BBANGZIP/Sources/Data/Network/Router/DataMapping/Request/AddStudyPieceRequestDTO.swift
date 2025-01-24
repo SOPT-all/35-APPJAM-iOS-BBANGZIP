@@ -9,7 +9,7 @@
 struct AddStudyPieceRequestDTO: Encodable {
     let subjectId: Int
     let examName: String
-    let studyContent: String
+    let studyContents: String
     let examDate: String
     let pieceList: [AddStudyPieceDTO]
 }

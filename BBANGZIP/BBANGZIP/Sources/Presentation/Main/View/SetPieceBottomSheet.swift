@@ -14,8 +14,6 @@ struct SetPieceBottomSheet: View {
     @State private var startPage: Int
     @State private var endPage: Int
     @State private var totalDays: Int
-    @Binding private var examDate: String
-    @Binding private var pieceList: [AddStudyPieceDTO]
     
     private let pieces = Array(1...6)
     
@@ -23,16 +21,12 @@ struct SetPieceBottomSheet: View {
         isPresented: Binding<Bool>,
         startPage: Int,
         endPage: Int,
-        totalDays: Int,
-        examDate: Binding<String>,
-        pieceList: Binding<[AddStudyPieceDTO]>
+        totalDays: Int
     ) {
         self._isPresented = isPresented
         self.startPage = startPage
         self.endPage = endPage
         self.totalDays = totalDays
-        self._examDate = examDate
-        self._pieceList = pieceList
     }
     
     var body: some View {
@@ -53,9 +47,7 @@ struct SetPieceBottomSheet: View {
                         pieceCount: num,
                         startPage: startPage,
                         endPage: endPage,
-                        totalDays: totalDays,
-                        examDate: $examDate,
-                        pieceList: $pieceList
+                        totalDays: totalDays
                         
                     )
                 ) {

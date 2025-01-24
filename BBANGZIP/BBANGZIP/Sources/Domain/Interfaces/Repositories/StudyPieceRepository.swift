@@ -13,5 +13,5 @@ protocol StudyPieceRepository: Sendable {
         studyContents: String,
         examDate: String,
         pieceList: [AddStudyPieceDTO]
-    ) async throws
+    ) async throws -> [AddStudyPieceBadge]
 }

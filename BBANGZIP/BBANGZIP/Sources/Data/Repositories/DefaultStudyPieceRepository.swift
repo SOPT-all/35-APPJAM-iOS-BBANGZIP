@@ -16,13 +16,13 @@ final class DefaultStudyPieceRepository: StudyPieceRepository {
         studyContents: String,
         examDate: String,
         pieceList: [AddStudyPieceDTO]
-    ) async throws  {
+    ) async throws -> [AddStudyPieceBadge] {
         let response = await API.session.request(
             BbangDefaultRouter.addStudyPiece(
                 dto: AddStudyPieceRequestDTO(
                     subjectId: subjectId,
                     examName: examName,
-                    studyContent: studyContents,
+                    studyContents: studyContents,
                     examDate: examDate,
                     pieceList: pieceList
                 )
@@ -34,7 +34,7 @@ final class DefaultStudyPieceRepository: StudyPieceRepository {
         switch response.result {
         case .success(let resultDTO):
             dump(resultDTO)
-            return
+            return resultDTO.data.toDomain()
         case .failure(let error):
             throw error
         }
