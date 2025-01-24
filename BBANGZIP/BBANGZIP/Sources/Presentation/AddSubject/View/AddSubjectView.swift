@@ -80,13 +80,11 @@ struct AddSubjectView: View {
             }
         }
         .navigationBarHidden(true)
-        .onChange(of: viewModel.shouldDismiss) {
-            shouldDismiss in
-            if shouldDismiss {
+        .onAppear {
+            if viewModel.shouldDismiss {
                 dismiss()
             }
         }
-        .toastView(toast: $viewModel.toast)
     }
     
     private var subjectTextField: some View {

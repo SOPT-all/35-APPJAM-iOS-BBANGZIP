@@ -9,20 +9,29 @@
 import SwiftUI
 
 final class AddMotivationMessageViewModel: ObservableObject {
+    private let changeNameUseCase: ChangeNameUseCase
+    private let parentViewModel: SubjectDetailViewModel
+    
     @Published var message: String
     @Published var messageAnnounceState: MessageTextFieldAlertCase?
     @Published var messageState: TextFieldState
     @Published var isMessageFocused: Bool = false
     @Published var isMessageValid: Bool = false
     @Published var isButtonEnabled: Bool = false
+    @Published var shouldDismiss: Bool = false
+    @Published var toast: Toast?
     
     init(
+        changeNameUseCase: ChangeNameUseCase,
+        parentViewModel: SubjectDetailViewModel,
         message: String = "",
         messageAnnounceState: MessageTextFieldAlertCase? = .alert,
         messageState: TextFieldState = .defaultState,
         isMessageFocused: Bool = false,
         isMessageValid: Bool = false
     ) {
+        self.changeNameUseCase = changeNameUseCase
+        self.parentViewModel = parentViewModel
         self.message = message
         self.messageAnnounceState = messageAnnounceState
         self.messageState = messageState
@@ -75,7 +84,27 @@ final class AddMotivationMessageViewModel: ObservableObject {
         isButtonEnabled = messageAnnounceState == .enable
     }
     
-    func changeMotivationMessage() {
-        // TODO: 동기부여 메시지 작성 및 수정 API 연동 필요
+    @MainActor
+    func changeMotivationMessage() async {
+        do {
+            let _: () = try await changeNameUseCase.execute(
+                subjectId: parentViewModel.subjectId,
+                options: "motivationMessage",
+                value: message
+            )
+            
+            await parentViewModel.fetchData()
+                    
+            parentViewModel.toast = Toast(
+                "각오 한 마디 작성 완료!",
+                startFrom: 20
+            )
+                    
+            self.shouldDismiss = true
+            
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
 }

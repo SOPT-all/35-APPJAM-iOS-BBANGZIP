@@ -14,6 +14,7 @@ struct CustomNavigationBar: View {
     private let showMenu: Bool
     private let title: String
     private let backgroundColor: Color?
+    @EnvironmentObject private var viewModel: SubjectDetailViewModel
     
     init(
         showBackButton: Bool,
@@ -92,7 +93,21 @@ extension CustomNavigationBar {
     private var kebabButton: some View {
         // TODO: custom으로 수정 필요
         Menu {
-            NavigationLink(destination: AddMotivationMessageView()) {
+            NavigationLink(
+                destination: AddMotivationMessageView(
+                    viewModel: AddMotivationMessageViewModel(
+                        changeNameUseCase: DefaultChangeNameUseCase(
+                            repository: DefaultMessageRepository()
+                        ),
+                        parentViewModel: SubjectDetailViewModel(
+                            filterExamUseCase: DefaultFilterExamUseCase(
+                                examRepository: DefaultExamRepository()
+                            ),
+                            subjectId: viewModel.subjectId
+                        )
+                    )
+                )
+            ) {
                 CustomText(
                     "각오 한 마디 작성하기",
                     fontType: .body1Bold,
@@ -101,7 +116,20 @@ extension CustomNavigationBar {
             }
             .buttonStyle(PressedButtonStyle())
                                
-            NavigationLink(destination: ChangeSubjectNameView()) {
+            NavigationLink(
+                destination: ChangeSubjectNameView(
+                    viewModel: ChangeSubjectNameViewModel(
+                        changeNameUseCase: DefaultChangeNameUseCase(
+                            repository: DefaultMessageRepository()),
+                        parentViewModel: SubjectDetailViewModel(
+                                filterExamUseCase: DefaultFilterExamUseCase(
+                                    examRepository: DefaultExamRepository()
+                                ),
+                                subjectId: viewModel.subjectId
+                        )
+                    ), subjectName: viewModel.subjectName
+                )
+            ) {
                 CustomText(
                     "과목명 수정하기",
                     fontType: .body1Bold,

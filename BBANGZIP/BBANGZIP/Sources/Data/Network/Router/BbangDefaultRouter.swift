@@ -16,7 +16,6 @@ enum BbangDefaultRouter {
     case withDraw
     case onBoarding
     case testSelect(subjectID: Int)
-    case motivationMessage(subjectID: Int, options: String)
     case addStudyScope
     case deleteStudyScope
     case studyCompleteCheck(pieceID: Float)
@@ -47,6 +46,7 @@ enum BbangDefaultRouter {
     case fetchSubject(dto: FetchSubjectRequestDTO)
     case addSubject(dto: AddSubjectRequestDTO)
     case deleteSubject(dto: DeleteSubjectRequestDTO)
+    case changeName(subjectID: Int, options: String, dto: ChangeNameRequestDTO)
     
 }
 
@@ -73,8 +73,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/exam/\(subjectID)"
         case .addSubject:
             return "/api/v1/subjects"
-        case .motivationMessage(let subjectID, let options):
-            return "/api/v1/subjects/\(subjectID)/\(options)"
+        case .changeName(let subjectId, let options, _):
+            return "/api/v1/subjects/\(subjectId)/\(options)"
         case .addStudyScope:
             return "/api/v1/studies"
         case .deleteStudyScope:
@@ -137,7 +137,6 @@ extension BbangDefaultRouter: Router {
         case
                 .examFiltering,
                 .testSelect,
-                .motivationMessage,
                 .fetchSortedTodoList,
                 .sortedDelayedTodoList,
                 .myPageStatus,
@@ -159,6 +158,9 @@ extension BbangDefaultRouter: Router {
         case .studyCompleteCheck,
                 .notCompletedCheck:
             return .patch
+            
+        case .changeName:
+            return .put
         }
     }
     
@@ -176,14 +178,8 @@ extension BbangDefaultRouter: Router {
             return ["code": dto.code]
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
-        case .motivationMessage(
-            let subjectID,
-            let options
-        ):
-            return [
-                "subjectID": subjectID,
-                "options": options
-            ]
+        case .changeName(_, _, let dto):
+            return dto.asDictionary()
         case .studyCompleteCheck(let pieceID), .notCompletedCheck(let pieceID):
             return ["pieceID": pieceID]
         case .badgeDetail(let badgeID):
