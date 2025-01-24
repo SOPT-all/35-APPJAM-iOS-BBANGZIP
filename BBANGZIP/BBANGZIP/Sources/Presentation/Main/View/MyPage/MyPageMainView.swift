@@ -76,6 +76,7 @@ struct HeaderView: View {
             }
         }
         .edgesIgnoringSafeArea(.top)
+        
     }
     
     var backgroundView: some View {
@@ -93,7 +94,6 @@ struct HeaderView: View {
                 .frame(height: 416)
         }
     }
-    
     
     var experienceView: some View {
         VStack(
@@ -270,6 +270,31 @@ struct GridView: View {
                 }
             }
             .padding(.horizontal, 20)
+            .padding(.bottom, 80)
+            
+            
+            if showDeleteAccountSheet {
+                BottomSheet(isShowing: $showDeleteAccountSheet, height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "정말 탈퇴하시겠어요?",
+                        primaryButtonTitle: "탈퇴하기",
+                        primaryButtonAction: {
+                            print("탈퇴 실행 ")
+                            //TODO: 여기서 탈퇴 추가
+                            showDeleteAccountSheet = false
+                        },
+                        isBottonSheetShowing: $showDeleteAccountSheet
+                    )
+                }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+                .onAppear {
+                    isCustomTabBarHidden = false
+                }
+            }
+            
             
             if showLogoutSheet {
                 BottomSheet(
@@ -290,26 +315,8 @@ struct GridView: View {
                 .onAppear {
                     isCustomTabBarHidden = true
                 }
-            }
-            
-            if showDeleteAccountSheet {
-                BottomSheet(
-                    isShowing: $showDeleteAccountSheet,
-                    height: 265
-                ) {
-                    MyPageBottomSheet(
-                        title: "정말 계정을 삭제하시겠습니까?",
-                        primaryButtonTitle: "계정 삭제",
-                        primaryButtonAction: {
-                            print("계정 탈퇴 실행")
-                            // TODO: 계정 탈퇴 기능 추가
-                            showDeleteAccountSheet = false
-                        },
-                        isBottonSheetShowing: $showDeleteAccountSheet
-                    )
-                }
-                .onAppear {
-                    isCustomTabBarHidden = true
+                .onDisappear {
+                    isCustomTabBarHidden = false
                 }
             }
         }
