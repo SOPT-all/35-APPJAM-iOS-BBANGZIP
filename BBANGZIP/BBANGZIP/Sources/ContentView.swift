@@ -1,17 +1,35 @@
 import SwiftUI
 
-public struct ContentView: View {
-    public init() {}
-
+public struct ContainerView: View {
+    @StateObject private var viewModel = KakaoLoginViewModel(
+        useCase: DefaultKakaoLoginUseCase(
+            repository: DefaultUserRepository()
+        )
+    )
+    @State private var isSplashComplete: Bool = false
+    @State private var isOnboardingComplete: Bool = false
+    
     public var body: some View {
-        Text("Hello, World!")
-            .padding()
-    }
-}
-
-
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+        ZStack {
+            if !isSplashComplete {
+                SplashView()
+                    .onAppear {
+                        Task {
+                            try await Task.sleep(nanoseconds: 2_000_000_000)
+                            isSplashComplete = true
+                        }
+                    }
+            } else {
+                if viewModel.isLogin {
+                    if isOnboardingComplete {
+                        CustomTabView()
+                    } else {
+                        OnboardingView(isOnboardingComplete: $isOnboardingComplete)
+                    }
+                } else {
+                    LoginView(viewModel: viewModel)
+                }
+            }
+        }
     }
 }

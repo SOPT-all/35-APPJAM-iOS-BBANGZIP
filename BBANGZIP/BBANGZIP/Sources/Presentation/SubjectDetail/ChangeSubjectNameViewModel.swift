@@ -9,14 +9,21 @@
 import SwiftUI
 
 final class ChangeSubjectNameViewModel: ObservableObject {
+    private let changeNameUseCase: ChangeNameUseCase
+    private let parentViewModel: SubjectDetailViewModel
+    
     @Published var subject: String
     @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
     @Published var subjectState: TextFieldState
     @Published var isSubjectFocused: Bool = false
     @Published var isSubjectValid: Bool = false
     @Published var isButtonEnabled: Bool = false
+    @Published var shouldDismiss: Bool = false
+    @Published var toast: Toast?
     
     init(
+        changeNameUseCase: ChangeNameUseCase,
+        parentViewModel: SubjectDetailViewModel,
         subject: String = "",
         subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
         subjectState: TextFieldState = .defaultState,
@@ -24,6 +31,8 @@ final class ChangeSubjectNameViewModel: ObservableObject {
         isSubjectValid: Bool = false,
         isButtonEnabled: Bool = false
     ) {
+        self.changeNameUseCase = changeNameUseCase
+        self.parentViewModel = parentViewModel
         self.subject = subject
         self.subjectAnnounceState = subjectAnnounceState
         self.subjectState = subjectState
@@ -86,7 +95,27 @@ final class ChangeSubjectNameViewModel: ObservableObject {
         isButtonEnabled = subjectAnnounceState == .enable
     }
     
-    func changeSubjectName() {
-        // TODO: 과목명 변경 API 연동 필요
+    @MainActor
+    func changeSubjectName() async {
+        do {
+            let _: () = try await changeNameUseCase.execute(
+                subjectId: parentViewModel.subjectId,
+                options: "subjectName",
+                value: subject
+            )
+            
+            await parentViewModel.fetchData()
+                    
+            parentViewModel.toast = Toast(
+                "과목명 수정 완료!",
+                startFrom: 20
+            )
+                    
+            self.shouldDismiss = true
+            
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
 }

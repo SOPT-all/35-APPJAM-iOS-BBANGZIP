@@ -114,7 +114,6 @@ class AddSubjectViewModel: ObservableObject {
                 "이미 등록된 과목이에요",
                 startFrom: 76
             )
-            
             dump(error)
             print(error)
         }

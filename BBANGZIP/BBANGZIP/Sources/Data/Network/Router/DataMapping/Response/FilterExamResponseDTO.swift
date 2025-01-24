@@ -12,14 +12,14 @@ struct FilterExamResponseDTO: Decodable {
 }
 
 struct FilterExamDTO: Decodable {
-    let motivationMessage: String
+    let motivationMessage: String?
     let examDday: Int
     let examDate: String
     let studyList: [ExamListDTO]
     
     func toDomain() -> FilterExamContent {
         FilterExamContent(
-            motivationMessage: motivationMessage,
+            motivationMessage: motivationMessage ?? "",
             examDday: examDday,
             examDate: examDate,
             studyList: studyList.map { $0.toDomain() }

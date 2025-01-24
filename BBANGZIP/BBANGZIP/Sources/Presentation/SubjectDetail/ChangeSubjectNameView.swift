@@ -12,11 +12,14 @@ struct ChangeSubjectNameView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: ChangeSubjectNameViewModel
     @FocusState private var isSubjectFocused: Bool
+    private let subjectName: String
 
     init(
-        viewModel: ChangeSubjectNameViewModel = ChangeSubjectNameViewModel()
+        viewModel: ChangeSubjectNameViewModel,
+        subjectName: String
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.subjectName = subjectName
     }
 
     var body: some View {
@@ -52,9 +55,9 @@ struct ChangeSubjectNameView: View {
                 Spacer()
 
                 Button("등록하기") {
-                    print("click")
-                    viewModel.changeSubjectName()
-                    dismiss()
+                    Task {
+                        await viewModel.changeSubjectName()
+                    }
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
                 .disabled(!viewModel.isButtonEnabled)
@@ -67,6 +70,12 @@ struct ChangeSubjectNameView: View {
             .ignoresSafeArea(edges: .bottom)
         }
         .navigationBarHidden(true)
+        .onChange(of: viewModel.shouldDismiss) {
+            shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
     }
 
     var inputSection: some View {
@@ -81,7 +90,7 @@ struct ChangeSubjectNameView: View {
             }
 
             TextField(
-                "기존 과목명",
+                subjectName,
                 text: $viewModel.subject
             )
             .focused($isSubjectFocused)

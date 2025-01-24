@@ -126,9 +126,17 @@ struct BadgeDetailView: View {
         HStack {
             if let badgeDetail = viewModel.badgeDetail {
                 VStack (alignment: .leading, spacing: 0) {
-                    CustomText("달성 조건",fontType: .body1Bold, color: Color(.labelNormal))
+                    CustomText(
+                        "달성 조건",
+                        fontType: .body1Bold,
+                        color: Color(.labelNormal)
+                    )
                     
-                    CustomText(badgeDetail.achievementCondition, fontType: .label1Bold, color: Color(.labelAlternative))
+                    CustomText(
+                        badgeDetail.achievementCondition,
+                        fontType: .label1Bold,
+                        color: Color(.labelAlternative)
+                    )
                 }.padding(
                     .top,
                     32

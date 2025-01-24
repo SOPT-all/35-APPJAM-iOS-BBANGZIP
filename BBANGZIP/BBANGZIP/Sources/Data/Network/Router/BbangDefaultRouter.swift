@@ -11,13 +11,10 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case signup(dto: signInRequestDTO)
     case getRefreshToken
     case logout
     case withDraw
-    case onBoarding
     case testSelect(subjectID: Int)
-    case motivationMessage(subjectID: Int, options: String)
     case addStudyScope
     case deleteStudyScope
     case studyCompleteCheck(pieceID: Float)
@@ -41,23 +38,26 @@ enum BbangDefaultRouter {
     
     //여경
     case fetchBadgeDetail(badgeName: String)
+    case signIn(dto: SignInRequestDTO)
+    case onboardingCheck(dto: OnboardingRequestDTO)
     
     //유빈
     case examFiltering(subjectId: Int, examName: String)
     case fetchSubject(dto: FetchSubjectRequestDTO)
     case addSubject(dto: AddSubjectRequestDTO)
     case deleteSubject(dto: DeleteSubjectRequestDTO)
+    case changeName(subjectID: Int, options: String, dto: ChangeNameRequestDTO)
     
 }
 
 extension BbangDefaultRouter: Router {
     var baseURL: String {
-        Environment.baseURL // 수정 필요
+        Environment.baseURL
     }
     
     var path: String {
         switch self {
-        case .signup(let signInRequest):
+        case .signIn:
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -65,7 +65,7 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/user/auth/re-issue"
         case .withDraw:
             return "/api/v1/user/auth/withdraw"
-        case .onBoarding:
+        case .onboardingCheck:
             return "/api/v1/user/auth/signup"
         case .examFiltering(let subjectId, let examName):
             return "/api/v1/exams/\(subjectId)/\(examName)"
@@ -73,8 +73,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/exam/\(subjectID)"
         case .addSubject:
             return "/api/v1/subjects"
-        case .motivationMessage(let subjectID, let options):
-            return "/api/v1/subjects/\(subjectID)/\(options)"
+        case .changeName(let subjectId, let options, _):
+            return "/api/v1/subjects/\(subjectId)/\(options)"
         case .addStudyScope:
             return "/api/v1/studies"
         case .deleteStudyScope:
@@ -123,9 +123,8 @@ extension BbangDefaultRouter: Router {
     var method: HTTPMethod {
         switch self {
         case
-                .signup,
+                .signIn,
                 .getRefreshToken,
-                .onBoarding,
                 .addSubject,
                 .addStudyScope,
                 .addTodoList,
@@ -140,7 +139,6 @@ extension BbangDefaultRouter: Router {
         case
                 .examFiltering,
                 .testSelect,
-                .motivationMessage,
                 .fetchSortedTodoList,
                 .sortedDelayedTodoList,
                 .myPageStatus,
@@ -160,40 +158,30 @@ extension BbangDefaultRouter: Router {
             return .delete
             
         case .studyCompleteCheck,
-                .notCompletedCheck:
+                .notCompletedCheck,
+                .onboardingCheck:
             return .patch
+            
+        case .changeName:
+            return .put
         }
     }
     
     var headers: [String : String]? {
         switch self {
-        case .signup(let signInRequest):
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(signInRequest.authorization)"
-            ]
         default:
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer"
-            ]
+            return [:]
         }
     }
     
     var parameters: [String : any Sendable]? {
         switch self {
-        case .signup(let dto):
-            return dto.asDictionary()
+        case .signIn(let dto):
+            return ["code": dto.code]
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
-        case .motivationMessage(
-            let subjectID,
-            let options
-        ):
-            return [
-                "subjectID": subjectID,
-                "options": options
-            ]
+        case .changeName(_, _, let dto):
+            return dto.asDictionary()
         case .studyCompleteCheck(let pieceID), .notCompletedCheck(let pieceID):
             return ["pieceID": pieceID]
         case .badgeDetail(let badgeID):
@@ -220,6 +208,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .addTodayStudy(let dto):
             return dto.asDictionary()
+        case .onboardingCheck(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }
@@ -227,8 +217,12 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
+        case .signIn, .fetchSortedTodoList:
+            return URLEncoding.queryString
+            
+        case .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
+            
         case .fetchBadgeDetail, .examFiltering:
             return nil
         default:
