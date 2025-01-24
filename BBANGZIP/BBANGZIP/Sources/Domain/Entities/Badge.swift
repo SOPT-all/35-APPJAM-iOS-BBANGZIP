@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StudyCompleteBadge: Identifiable {
+struct StudyCompleteBadge: Identifiable, Equatable {
     let id = UUID()
     let name: String
     let image: String

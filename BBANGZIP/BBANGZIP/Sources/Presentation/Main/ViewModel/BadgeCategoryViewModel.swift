@@ -13,7 +13,7 @@ struct Badge {
     let badgeName: String
     let badgeIsLocked: Bool
     let badgeImage: String
-    let hashTags: [String]?
+    let hashTags: [String]
     let achievementCondition: String?
     let reward: Int?
 }
@@ -70,7 +70,7 @@ let mockBadges = [
         badgeName: "빵 대량 생산",
         badgeIsLocked: true,
         badgeImage: "square.and.arrow.up",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -92,7 +92,7 @@ let mockBadges = [
         badgeName: "빵 마스터",
         badgeIsLocked: true,
         badgeImage: "star",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -101,7 +101,7 @@ let mockBadges = [
         badgeName: "특급 제빵사",
         badgeIsLocked: false,
         badgeImage: "crown",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -110,7 +110,7 @@ let mockBadges = [
         badgeName: "첫 미로 클리어",
         badgeIsLocked: true,
         badgeImage: "tortoise",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -119,7 +119,7 @@ let mockBadges = [
         badgeName: "두 번째 미로 클리어",
         badgeIsLocked: false,
         badgeImage: "hare",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -128,7 +128,7 @@ let mockBadges = [
         badgeName: "미로 챔피언",
         badgeIsLocked: true,
         badgeImage: "star.circle",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -137,7 +137,7 @@ let mockBadges = [
         badgeName: "탈출의 대가",
         badgeIsLocked: false,
         badgeImage: "crown",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -146,7 +146,7 @@ let mockBadges = [
         badgeName: "탈출 신동",
         badgeIsLocked: true,
         badgeImage: "bolt",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -155,7 +155,7 @@ let mockBadges = [
         badgeName: "끝판왕 탈출",
         badgeIsLocked: false,
         badgeImage: "flag.checkered",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -164,7 +164,7 @@ let mockBadges = [
         badgeName: "빵 나눔의 대가",
         badgeIsLocked: false,
         badgeImage: "star",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -173,7 +173,7 @@ let mockBadges = [
         badgeName: "모두의 빵 친구",
         badgeIsLocked: true,
         badgeImage: "person.3",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     ),
@@ -182,7 +182,7 @@ let mockBadges = [
         badgeName: "빵 공유 마스터",
         badgeIsLocked: false,
         badgeImage: "hands.sparkles",
-        hashTags: nil,
+        hashTags: [],
         achievementCondition: nil,
         reward: nil
     )

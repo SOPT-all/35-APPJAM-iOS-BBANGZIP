@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct TodayStudyView: View {
     @StateObject private var viewModel: TodayStudyViewModel
@@ -68,26 +69,109 @@ struct TodayStudyView: View {
                     }
                     .padding(
                         .bottom,
-                        80
+                        136
                     )
                 }
-                .padding(
-                    .bottom,
-                    80
-                )
                 .ignoresSafeArea(edges: .top)
                 
                 if viewModel.isDeleteMode && viewModel.isDeleteButtonEnable {
                     deleteButton
                         .padding(
                             .bottom,
-                            80
+                            56
                         )
                 }
                 
                 revertBottomSheet
                 
                 filterBottomSheet
+                
+                BottomSheet(
+                    isShowing: .constant(!viewModel.badges.isEmpty),
+                    height: 530) {
+                        VStack {
+                            CustomText(
+                                "배지를 획득했어요!",
+                                fontType: .heading2Bold,
+                                color: Color(.labelNeutral)
+                            )
+                            .padding(
+                                .bottom,
+                                32
+                            )
+                            
+                            TabView {
+                                ForEach(viewModel.badges) { badge in
+                                    VStack(
+                                        alignment: .center,
+                                        spacing: 0
+                                    ) {
+                                        KFImage(URL(string: badge.image))
+                                            .resizable()
+                                            .cornerRadius(
+                                                48,
+                                                corners: .allCorners
+                                            )
+                                            .frame(
+                                                width: 160,
+                                                height: 160
+                                            )
+                                            .padding(
+                                                .bottom,
+                                                8
+                                            )
+                                        
+                                        CustomText(
+                                            badge.name,
+                                            fontType: .heading1Bold,
+                                            color: Color(.labelNormal)
+                                        )
+                                        .padding(
+                                            .bottom,
+                                            24
+                                        )
+                                        
+                                        VStack(
+                                            alignment: .center,
+                                            spacing: 0
+                                        ) {
+                                            ForEach(badge.hashTags, id: \.self) { hashTag in
+                                                CustomText(
+                                                    String(hashTag),
+                                                    fontType: .body2Bold,
+                                                    color: Color(.labelAssistive)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .tabViewStyle(.page(indexDisplayMode: viewModel.badges.count > 1 ? .always : .never))
+                            
+                            Button {
+                                viewModel.badges.removeAll()
+                            } label: {
+                                CustomText(
+                                    "닫기",
+                                    fontType: .body1Bold,
+                                    color: Color(.staticWhite)
+                                )
+                            }
+                            .buttonStyle(SolidButton())
+                            .padding(
+                                .horizontal,
+                                20
+                            )
+                            .padding(
+                                .bottom,
+                                16
+                            )
+                        }
+                    }
+                    .onChange(of: viewModel.badges) { newValue in
+                        isBottomSheetShowing = newValue.count > 0
+                    }
+                
             }
             .task {
                 await viewModel.fetchData()
