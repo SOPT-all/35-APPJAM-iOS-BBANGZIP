@@ -14,54 +14,19 @@ struct SubjectCard: View {
         self.subjectCardData = subjectCardData
     }
     
+    private var firstStudy: SubjectStudyModel? {
+        
+        return subjectCardData.studyList.first
+    }
+    
     var body: some View {
         ZStack {
             backgroundView
             
-            HStack(alignment: .center) {
-                VStack(
-                    alignment: .leading,
-                    spacing: 4
-                ) {
-                    CustomText(
-                        subjectCardData.subjectName,
-                        fontType: .body1Bold,
-                        color: Color(.labelNormal)
-                    )
-                    .lineLimit(1)
-                    
-                    CustomText(
-                        subjectCardData.studyList[0].examName,
-                        fontType: .label2Bold,
-                        color: Color(.labelNeutral)
-                    )
-                    
-                    Chip(type: .daysLeftBlack(subjectCardData.studyList[0].examDDay))
-                    
-                    Spacer()
-                    
-                    delayedStudyView
-                    
-                    inProgressStudyView
-                }
-                .padding(
-                    .vertical,
-                    16
-                )
-                .padding(
-                    .leading,
-                    16
-                )
-                
-                Spacer()
-                
-                Image(.chevronRightThickSmall)
-                    .renderingMode(.template)
-                    .foregroundStyle(Color(.labelAssistive))
-                    .padding(
-                        .trailing,
-                        6
-                    )
+            if let study = firstStudy {
+                normalStateView(study: study)
+            } else {
+                emptyStateView
             }
         }
         .frame(height: 190)
@@ -80,10 +45,10 @@ struct SubjectCard: View {
             )
     }
     
-    private var delayedStudyView: some View {
+    private func delayedStudyView(study: SubjectStudyModel) -> some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.studyList[0].pendingCount,
+                number: study.pendingCount,
                 type: .orange
             )
             
@@ -95,10 +60,10 @@ struct SubjectCard: View {
         }
     }
     
-    private var inProgressStudyView: some View {
+    private func inProgressStudyView(study: SubjectStudyModel) -> some View {
         HStack(spacing: 4) {
             PushIcon(
-                number: subjectCardData.studyList[0].inProgressCount,
+                number: study.inProgressCount,
                 type: .black
             )
             
@@ -109,19 +74,9 @@ struct SubjectCard: View {
             )
         }
     }
-    
-    var cardContent: some View {
-        Group {
-            if subjectCardData.studyList.isEmpty {
-                emptyStateView
-            } else {
-                normalStateView
-            }
-        }
-    }
 
-    var emptyStateView: some View {
-        HStack(alignment: .center) {
+    private var emptyStateView: some View {
+        HStack {
             VStack(
                 alignment: .leading,
                 spacing: 4
@@ -132,6 +87,12 @@ struct SubjectCard: View {
                     color: Color(.labelNormal)
                 )
                 .lineLimit(1)
+                
+                CustomText(
+                    "공부를 추가해주세요",
+                    fontType: .label2Bold,
+                    color: Color(.labelNeutral)
+                )
                 
                 Spacer()
             }
@@ -148,7 +109,9 @@ struct SubjectCard: View {
             
             Image(.chevronRightThickSmall)
                 .renderingMode(.template)
+                .resizable()
                 .foregroundStyle(Color(.labelAssistive))
+                .frame(width: 16, height: 16)
                 .padding(
                     .trailing,
                     6
@@ -156,7 +119,7 @@ struct SubjectCard: View {
         }
     }
 
-    var normalStateView: some View {
+    private func normalStateView(study: SubjectStudyModel) -> some View {
         HStack(alignment: .center) {
             VStack(
                 alignment: .leading,
@@ -170,18 +133,18 @@ struct SubjectCard: View {
                 .lineLimit(1)
                 
                 CustomText(
-                    subjectCardData.studyList[0].examName,
+                    study.examName,
                     fontType: .label2Bold,
                     color: Color(.labelNeutral)
                 )
                 
-                Chip(type: .daysLeftBlack(subjectCardData.studyList[0].examDDay))
+                Chip(type: .daysLeftBlack(study.examDDay))
                 
                 Spacer()
                 
-                delayedStudyView
+                delayedStudyView(study: study)
                 
-                inProgressStudyView
+                inProgressStudyView(study: study)
             }
             .padding(
                 .vertical,
@@ -196,7 +159,9 @@ struct SubjectCard: View {
             
             Image(.chevronRightThickSmall)
                 .renderingMode(.template)
+                .resizable()
                 .foregroundStyle(Color(.labelAssistive))
+                .frame(width: 16, height: 16)
                 .padding(
                     .trailing,
                     6
