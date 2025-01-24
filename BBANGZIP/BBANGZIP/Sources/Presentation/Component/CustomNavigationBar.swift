@@ -96,7 +96,9 @@ extension CustomNavigationBar {
             NavigationLink(
                 destination: AddMotivationMessageView(
                     viewModel: AddMotivationMessageViewModel(
-                        changeNameUseCase: DefaultChangeNameUseCase(repository: DefaultMessageRepository()),
+                        changeNameUseCase: DefaultChangeNameUseCase(
+                            repository: DefaultMessageRepository()
+                        ),
                         parentViewModel: SubjectDetailViewModel(
                             filterExamUseCase: DefaultFilterExamUseCase(
                                 examRepository: DefaultExamRepository()
@@ -114,7 +116,20 @@ extension CustomNavigationBar {
             }
             .buttonStyle(PressedButtonStyle())
                                
-            NavigationLink(destination: ChangeSubjectNameView()) {
+            NavigationLink(
+                destination: ChangeSubjectNameView(
+                    viewModel: ChangeSubjectNameViewModel(
+                        changeNameUseCase: DefaultChangeNameUseCase(
+                            repository: DefaultMessageRepository()),
+                        parentViewModel: SubjectDetailViewModel(
+                                filterExamUseCase: DefaultFilterExamUseCase(
+                                    examRepository: DefaultExamRepository()
+                                ),
+                                subjectId: viewModel.subjectId
+                        )
+                    ), subjectName: viewModel.subjectName
+                )
+            ) {
                 CustomText(
                     "과목명 수정하기",
                     fontType: .body1Bold,
