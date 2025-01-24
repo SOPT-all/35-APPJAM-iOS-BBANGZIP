@@ -8,4 +8,6 @@
 
 struct AddSubjectResponseDTO: Decodable {
     let code: ResponseCodeDTO
+    let message: String?
 }
+
