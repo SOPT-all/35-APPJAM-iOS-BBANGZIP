@@ -24,13 +24,11 @@ struct TodayStudyView: View {
     var body: some View {
         if viewModel.isLoading {
             ProgressView()
-                .onAppear {
-                    Task { @MainActor in
-                        await viewModel.fetchData()
-                    }
+                .task {
+                    await viewModel.fetchData()
                 }
-        }
-        else {
+                .background(Color(.red))
+        } else {
             ZStack {
                 ScrollView {
                     VStack(spacing: 0) {

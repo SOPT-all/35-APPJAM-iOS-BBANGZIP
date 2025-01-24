@@ -23,7 +23,18 @@ struct CustomTabView: View {
             Group {
                 switch selected {
                 case .subjectManage:
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
+                    SubjectManageView(
+                        viewModel: SubjectManageViewModel(
+                            fetchSubjectUseCase: DefaultFetchSubjectUseCase(
+                                subjectRepository: DefaultSubjectRepository()
+                            ),
+                            deleteSubjectUseCase: DefaultDeleteSubjectUseCase(
+                                repository: DefaultSubjectRepository()
+                            )
+                        ),
+                        isBottomSheetShowing: $isBottomSheetShowing,
+                        isCustomTabBarHidden: $isCustomTabBarHidden
+                    )
                 case .todo:
                     TodayStudyView(
                         viewModel: TodayStudyViewModel(

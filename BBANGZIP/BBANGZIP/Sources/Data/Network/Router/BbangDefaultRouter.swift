@@ -143,7 +143,7 @@ extension BbangDefaultRouter: Router {
                 .aquireBadge,
                 .badgeDetail,
                 .fetchBadgeDetail,
-                .fetchAddTodayStudy:
+                .fetchAddTodayStudy,
                 .fetchSubject:
             return .get
             
@@ -205,6 +205,7 @@ extension BbangDefaultRouter: Router {
         case .fetchBadgeDetail:
             return [:]
         case .fetchAddTodayStudy(let dto):
+            return dto.asDictionary()
         case .examFiltering(_, _):
             return nil
         case .fetchSubject(let dto):
