@@ -1,33 +1,40 @@
 import SwiftUI
 
-public struct ContainerView: View {
-    @StateObject private var viewModel = KakaoLoginViewModel(
-        useCase: DefaultKakaoLoginUseCase(
-            repository: DefaultUserRepository()
-        )
-    )
-    @State private var isSplashComplete: Bool = false
-    @State private var isOnboardingComplete: Bool = true
+final class ContainerViewModel: ObservableObject {
+    @Published var isSplashComplete: Bool = false
+    @Published var isOnboardingComplete: Bool = true
+    @Published var isLogin: Bool = false
+}
+
+struct ContainerView: View {
+    @StateObject private var viewModel = ContainerViewModel()
     
-    public var body: some View {
+    var body: some View {
         ZStack {
-            if !isSplashComplete {
+            if !viewModel.isSplashComplete {
                 SplashView()
                     .onAppear {
                         Task {
                             try await Task.sleep(nanoseconds: 2_000_000_000)
-                            isSplashComplete = true
+                            viewModel.isSplashComplete = true
                         }
                     }
             } else {
                 if viewModel.isLogin {
-                    if isOnboardingComplete {
+                    if viewModel.isOnboardingComplete {
                         CustomTabView()
                     } else {
-                        OnboardingView(isOnboardingComplete: $isOnboardingComplete)
+                        OnboardingView(isOnboardingComplete: $viewModel.isOnboardingComplete)
                     }
                 } else {
-                    LoginView(viewModel: viewModel)
+                    LoginView(
+                        viewModel: KakaoLoginViewModel(
+                            useCase: DefaultKakaoLoginUseCase(
+                                repository: DefaultUserRepository()
+                            )
+                        ),
+                        isLogin: $viewModel.isLogin
+                    )
                 }
             }
         }

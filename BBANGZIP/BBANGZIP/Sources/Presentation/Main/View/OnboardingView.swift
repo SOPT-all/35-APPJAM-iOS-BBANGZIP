@@ -8,6 +8,392 @@
 
 import SwiftUI
 
+enum NewOnboardingStage {
+    case start
+    case nickname
+    case semester
+    case subject
+    case end
+    
+    var buttonTitle: String {
+        switch self {
+        case .start:
+            "빵집 오픈하러 가기"
+        case .end:
+            "빵점 탈출하러 가기"
+        default:
+            "다음으로"
+        }
+    }
+    
+    var step: Step {
+        switch self {
+        case .start:
+                .first
+        case .nickname:
+                .first
+        case .semester:
+                .second
+        case .subject:
+                .third
+        case .end:
+                .third
+        }
+    }
+}
+
+final class NewOnboardingViewModel: ObservableObject {
+    private let onboardingUseCase: OnboardingUseCase
+    
+    // 뷰 이동
+    @Published var isOnboardingComplete: Bool = false
+    
+    // UseCase에 필요
+    @Published var nickname: String = ""
+    @Published var year: Int = 2025
+    @Published var semester: Semester = .first
+    @Published var subjectName: String = ""
+    
+    // 단계
+    @Published var stage: NewOnboardingStage = .start
+    @Published var progressBarStep: Step = .first
+    
+    // TextField State
+    @Published var nicknameTextFieldState: TextFieldState = .defaultState
+    @Published var subjectTextFieldState: TextFieldState = .defaultState
+    
+    // TextField Alert Case
+    @Published var nicknameTextFieldAlertCase: NicknameTextFieldAlertCase = .alert
+    @Published var subjectTextFieldAlertCase: SubjectTextFieldAlertCase = .alert
+    
+    // NextButton Disable
+    @Published var isNextButtonDisabled: Bool = false
+    
+    init(onboardingUseCase: OnboardingUseCase) {
+        self.onboardingUseCase = onboardingUseCase
+    }
+    
+    func onBoard() async {
+        do {
+            try await onboardingUseCase.execute(
+                nickname: nickname,
+                year: year,
+                semester: semester.rawValue,
+                subjectName: subjectName
+            )
+            isOnboardingComplete = true
+        } catch {
+            dump(error)
+        }
+    }
+    
+    @MainActor
+    func goNextStage() async {
+        switch stage {
+        case .start:
+            stage = .nickname
+        case .nickname:
+            stage = .semester
+        case .semester:
+            stage = .subject
+        case .subject:
+            stage = .end
+        case .end:
+            Task {
+                await onBoard()
+            }
+        }
+        validateNextButton()
+        progressBarStep = stage.step
+    }
+    
+    func goPrevStage() {
+        switch stage {
+        case .start:
+            print("처음엔 뒤로 못 감")
+            break
+        case .nickname:
+            stage = .start
+        case .semester:
+            stage = .nickname
+        case .subject:
+            stage = .semester
+        case .end:
+            stage = .subject
+        }
+        validateNextButton()
+        progressBarStep = stage.step
+    }
+    
+    // focus가 들어왔을 때 기존의 state 기준으로 state와 alert 변경
+    func setNicknameState(isNicknameFocused: Bool) {
+        switch nicknameTextFieldState {
+        case .defaultState:
+            nicknameTextFieldState = isNicknameFocused ? .placeholder : .defaultState
+        case .placeholder:
+            nicknameTextFieldState = isNicknameFocused ? .placeholder : .defaultState
+        case .typing:
+            nicknameTextFieldState = isNicknameFocused ? .typing : .field
+        case .alert:
+            break
+        case .field:
+            nicknameTextFieldState = isNicknameFocused ? .typing : .field
+        }
+        setAlertCase()
+    }
+    
+    // state를 기준으로 alert 업데이트
+    func setAlertCase() {
+        switch nicknameTextFieldState {
+        case .defaultState, .placeholder, .alert:
+            nicknameTextFieldAlertCase = .alert
+        default:
+            nicknameTextFieldAlertCase = .enable
+        }
+    }
+    
+    // 닉네임 변경시 호출
+    func handleNickname(
+        oldNickname: String,
+        newNickname: String
+    ) {
+        print(#function, "old: \(oldNickname) | new: \(newNickname)")
+        // 문자열 입력 최대 차단
+        if newNickname.count > 10 {
+            nickname = String(oldNickname.prefix(10))
+        }
+        if nickname.isEmpty {
+            nicknameTextFieldState = .placeholder
+        } else if nickname.isValidNickname {
+            nicknameTextFieldState = .typing
+        } else {
+            nicknameTextFieldState = .alert
+        }
+        
+        setAlertCase()
+        validateNextButton()
+    }
+    
+    func handleSubject() {
+        print("subject 로직")
+        validateNextButton()
+    }
+    
+    func validateNextButton() {
+        switch stage {
+        case .start:
+            isNextButtonDisabled = false
+        case .nickname:
+            if nicknameTextFieldAlertCase == .alert {
+                isNextButtonDisabled = true
+            } else {
+                isNextButtonDisabled = false
+            }
+        case .semester:
+            break
+        case .subject:
+            break
+        case .end:
+            isNextButtonDisabled = false
+        }
+    }
+}
+
+struct NewOnboardingView: View {
+    @ObservedObject private var viewModel: NewOnboardingViewModel
+    @Binding private var isOnboardingComplete: Bool
+    
+    // Focus
+    @FocusState var isNicknameFocused: Bool
+    @FocusState var isSubjectFocused: Bool
+    
+    init(
+        viewModel: NewOnboardingViewModel,
+        isOnboardingComplete: Binding<Bool>
+    ) {
+        self.viewModel = viewModel
+        _isOnboardingComplete = isOnboardingComplete
+    }
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            switch viewModel.stage {
+            case .start:
+                firstView
+            case .nickname:
+                backButton
+                progressBar
+                nameInputView
+            case .semester:
+                backButton
+                progressBar
+                Text("A")
+            case .subject:
+                backButton
+                progressBar
+                Text("A")
+            case .end:
+                backButton
+                Text("A")
+            }
+            
+            nextButton
+        }
+        .onChange(of: viewModel.isOnboardingComplete) { newValue in
+            isOnboardingComplete = newValue
+        }
+        .onTapGesture {
+//            viewModel.focusOff()
+        }
+    }
+    
+    
+    
+    private var firstView: some View {
+        ZStack {
+            Image(.onboarding)
+                .frame(
+                    width: 320,
+                    height: 360
+                )
+                .padding(
+                    .top,
+                    44
+                )
+            
+            Spacer()
+            
+            VStack {
+                HStack {
+                    CustomText(
+                        "제 과제 빵점에 오신 것을\n환영합니다!",
+                        fontType: .title2Bold,
+                        color: Color(.labelNormal)
+                    )
+                    .padding(
+                        .top,
+                        121
+                    )
+                    .padding(
+                        .bottom,
+                        36
+                    )
+                    
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    private var nextButton: some View {
+        Button {
+            Task {
+                await viewModel.goNextStage()
+            }
+        } label: {
+            Text(viewModel.stage.buttonTitle)
+        }
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronRightThickSmall),
+                !viewModel.isNextButtonDisabled
+            )
+        )
+        .disabled(viewModel.isNextButtonDisabled)
+        .padding(
+            .horizontal,
+            20
+        )
+    }
+    
+    private var backButton: some View {
+        Button(action: viewModel.goPrevStage) {
+            Image(.chevronLeftThickSmall)
+                .renderingMode(.template)
+                .foregroundStyle(Color(.labelAlternative))
+            Spacer()
+        }
+        .padding(16)
+    }
+    
+    private var progressBar: some View {
+        ProgressBar(
+            type: .withCircle(
+                category: viewModel.progressBarStep
+            )
+        )
+        .padding(
+            .horizontal,
+            44
+        )
+        .padding(
+            .bottom,
+            48
+        )
+    }
+    
+    private var nameInputView: some View {
+        VStack(spacing: 32) {
+            nameMainDescription
+            
+            nicknameTextField
+            
+            Spacer()
+        }
+        .padding(
+            .horizontal,
+            20
+        )
+    }
+    
+    private var nameMainDescription: some View {
+        HStack {
+            CustomText(
+                "사장님의 이름을\n알려주세요",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            .padding(
+                .top,
+                30
+            )
+            
+            Spacer()
+        }
+    }
+    
+    private var nicknameTextField: some View {
+        TextField(
+            "예) 탁구왕김제빵",
+            text: $viewModel.nickname
+        )
+        .focused($isNicknameFocused)
+        .textFieldStyle(
+            CustomTextFieldStyle(
+                text: $viewModel.nickname,
+                style: .nickname,
+                state: viewModel.nicknameTextFieldState,
+                alertText: viewModel.nicknameTextFieldAlertCase
+            )
+        )
+        .onChange(of: isNicknameFocused) { newValue in
+            viewModel.setNicknameState(isNicknameFocused: newValue)
+        }
+        .onChange(of: viewModel.nickname) { [nickname = viewModel.nickname] newNickname in
+            viewModel.handleNickname(
+                oldNickname: nickname,
+                newNickname: newNickname
+            )
+        }
+    }
+}
+
+
 struct OnboardingView: View {
     @StateObject private var viewModel: OnboardingViewModel
     @FocusState private var isNicknameFocused: Bool
@@ -47,11 +433,11 @@ struct OnboardingView: View {
                 }
             }
             .ignoresSafeArea(.keyboard)
-//            .onChange(of: viewModel.navigateToCustomTabView) { navigate in
-//                if navigate {
-//                    CustomTabView()
-//                }
-//            }
+            //            .onChange(of: viewModel.navigateToCustomTabView) { navigate in
+            //                if navigate {
+            //                    CustomTabView()
+            //                }
+            //            }
         }
         .onChange(of: viewModel.navigateToCustomTabView) { newValue in
             isOnboardingComplete = newValue
@@ -144,14 +530,17 @@ struct OnboardingView: View {
     }
     
     private var nameInputView: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 32) {
-                nameMainDescription
-                nicknameTextField
-                Spacer()
-            }
-            .padding(.horizontal, 20)
+        VStack(spacing: 32) {
+            nameMainDescription
+            
+            nicknameTextField
+            
+            Spacer()
         }
+        .padding(
+            .horizontal,
+            20
+        )
     }
     
     private var nameMainDescription: some View {
@@ -362,6 +751,13 @@ struct OnboardingView: View {
     }
 }
 
-//#Preview {
-//    OnboardingView()
-//}
+#Preview {
+    NewOnboardingView(
+        viewModel: NewOnboardingViewModel(
+            onboardingUseCase: DefaultOnboardingUseCase(
+                repository: DefaultUserRepository()
+            )
+        ),
+        isOnboardingComplete: .constant(false)
+    )
+}

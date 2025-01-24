@@ -10,9 +10,11 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject private var viewModel: KakaoLoginViewModel
+    @Binding private var isLogin: Bool
     
-    init(viewModel: KakaoLoginViewModel) {
+    init(viewModel: KakaoLoginViewModel, isLogin: Binding<Bool>) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _isLogin = isLogin
     }
     
     var body: some View {
@@ -24,6 +26,9 @@ struct LoginView: View {
             loginSection
             
             Spacer()
+        }
+        .onChange(of: viewModel.isLogin) { newValue in
+            isLogin = newValue
         }
     }
     
