@@ -22,61 +22,67 @@ struct CustomTabView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
-                switch selected {
-                case .subjectManage:
-                    SubjectManageView(
-                        viewModel: SubjectManageViewModel(
-                            fetchSubjectUseCase: DefaultFetchSubjectUseCase(
-                                subjectRepository: DefaultSubjectRepository()
+            ZStack {
+                Group {
+                    switch selected {
+                    case .subjectManage:
+                        SubjectManageView(
+                            viewModel: SubjectManageViewModel(
+                                fetchSubjectUseCase: DefaultFetchSubjectUseCase(
+                                    subjectRepository: DefaultSubjectRepository()
+                                ),
+                                deleteSubjectUseCase: DefaultDeleteSubjectUseCase(
+                                    repository: DefaultSubjectRepository()
+                                )
                             ),
-                            deleteSubjectUseCase: DefaultDeleteSubjectUseCase(
-                                repository: DefaultSubjectRepository()
-                            )
-                        ),
-                        isBottomSheetShowing: $isBottomSheetShowing,
-                        isCustomTabBarHidden: $isCustomTabBarHidden
-                    )
-                case .todo:
-                    TodayStudyView(
-                        viewModel: TodayStudyViewModel(
-                            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
-                                studyRepository: DefaultStudyRepository()
+                            isBottomSheetShowing: $isBottomSheetShowing,
+                            isCustomTabBarHidden: $isCustomTabBarHidden
+                        )
+                    case .todo:
+                        TodayStudyView(
+                            viewModel: TodayStudyViewModel(
+                                fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                                    studyRepository: DefaultStudyRepository()
+                                ),
+                                completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                    repository: DefaultStudyRepository()
+                                ),
+                                revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                    repository: DefaultStudyRepository()
+                                ),
+                                removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
+                                    repository: DefaultStudyRepository()
+                                )
                             ),
-                            completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
-                                repository: DefaultStudyRepository()
+                            isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                        )
+                    case .networking:
+                        Text("이웃 목록")
+                    case .mypage:
+                        MyPageMainView(
+                            viewModel: MyPageMainViewModel(
+                                level: 2,
+                                currentScore: 40,
+                                badgeCount: 8,
+                                maxScore: 200,
+                                title: "가판대",
+                                badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
                             ),
-                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
-                                repository: DefaultStudyRepository()
-                            ),
-                            removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
-                                repository: DefaultStudyRepository()
-                            )
-                        ),
-                        isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
-                    )
-                case .networking:
-                    Text("이웃 목록")
-                case .mypage:
-                    MyPageMainView(
-                        viewModel: MyPageMainViewModel(
-                            level: 2,
-                            currentScore: 40,
-                            badgeCount: 8,
-                            maxScore: 200,
-                            title: "가판대",
-                            badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
-                        ),
-                        isCustomTabBarHidden: $isCustomTabBarHidden
-                    )
+                            isCustomTabBarHidden: $isCustomTabBarHidden
+                        )
+                    }
                 }
-            }
-            .overlay(alignment: .bottom) {
+                
                 if !isBottomSheetShowing &&
                     !isTodayStudyViewBottomSheetShowing &&
                     !isCustomTabBarHidden {
-                    CustomTabBar(selected: $selected)
+                    VStack(alignment: .center) {
+                        Spacer()
+                        
+                        CustomTabBar(selected: $selected)
+                    }
                 }
+                
             }
         }
     }

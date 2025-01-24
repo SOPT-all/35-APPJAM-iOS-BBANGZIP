@@ -72,6 +72,7 @@ final class OnboardingViewModel: ObservableObject {
         self.onboardingUseCase = onboardingUseCase
     }
     
+    @MainActor
     func onBoard() async {
         do {
             try await onboardingUseCase.execute(
