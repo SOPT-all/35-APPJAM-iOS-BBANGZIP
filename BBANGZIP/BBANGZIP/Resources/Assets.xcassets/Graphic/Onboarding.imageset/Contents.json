@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "graphic-onboarding-Bf.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "graphic-onboarding-Bf@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "graphic-onboarding-Bf@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
