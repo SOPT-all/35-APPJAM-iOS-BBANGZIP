@@ -1,21 +1,38 @@
-# 35-APPJAM-iOS-BBANGZIP
+![image](https://github.com/user-attachments/assets/4b8dde5c-c1ec-4de8-80ab-7449302fa8ba)
 
-이번 학기는 진짜 제대로 공부하려 했는데, 또 어김없이 미루기만 하고 있다면? </br>
-미루기는 이제 그만! 🥐 제 과제 빵점 🥨 에서 미리미리 꾸준히 공부하는 습관을 형성해봐요 </br>
+# 🥐 제 과제 빵점
+### 제 과제 빵점 사장님은 이번 학기 백점 💯
+```
+저희 학교에 제과제빵학과는 없는데, 왜 제 과제는 빵점일까요?
+시험 직전, 미리 미리 공부하지 않은 지난 날을 후회하는 대학생들.
+밈을 활용해 고통스러운 시험기간을 재치있게 승화시키는 모습에서 영감을 얻은,
+미룬이 대학생을 위한 스터디 플래너 ‘제 과제 빵점'입니다.
+```
 </br>
+
+| 프로젝트 설명 | IT 벤처 창업 동아리 SOPT APPJAM |
+| :---: | :---: |
+| 프로젝트 기간 | 2024.12. ~ 2025.01. |
+<br>
 
 # 🧑‍🍳 iOS Developer
-|🔖 송여경</br>[@0gonge](https://github.com/0gonge)|🔖 조성민</br>[@SungMinCho-Kor](https://github.com/SungMinCho-Kor)|🔖 최유빈</br>[@choiyoubin](https://github.com/choiyoubin)|🔖 김송희</br>[@hongseekim](https://github.com/hongseekim)|
-|:---:|:---:|:---:|:---:|
-|<img src = "https://github.com/0gonge.png" width ="250">|<img src = "https://github.com/SungMinCho-Kor.png" width ="250">|<img src = "https://github.com/choiyoubin.png" width ="250">|<img src = "https://github.com/hongseekim.png" width ="250">|
-|`프로젝트 세팅` `로그인` `마이페이지`|`오늘의 할일` `친구 목록`|`과목 관리하기` `시험 관리하기`|`온보딩` `과목 페이지 나누기`|
-</br>
+| <img src="https://github.com/user-attachments/assets/4f259728-3f7d-44f6-b7bb-316459a65a23" width ="250"><br><br>**🥖 송여경** <br>[@0gonge](https://github.com/0gonge)<br><br>`프로젝트 세팅` `로그인` `마이페이지` | <img src="https://github.com/user-attachments/assets/5f24f426-1c69-4a23-897d-de90ea482cca" width ="250"><br><br>**🥖 조성민** <br>[@SungMinCho-Kor](https://github.com/SungMinCho-Kor)<br><br>`오늘의 할일` `친구 목록` |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/4a323edc-fdaa-4dd8-b108-38a8f56c7e9b" width ="250"><br><br>**🥖 최유빈** <br>[@choiyoubin](https://github.com/choiyoubin)<br><br>`과목 관리` `시험 관리` | <img src="https://github.com/user-attachments/assets/82c439dd-1fd8-4bd3-af96-0eaec6a3cb70" width ="250"><br><br>**🥖 김송희** <br>[@hongseekim](https://github.com/hongseekim)<br><br>`온보딩` `공부 추가` |
+<br>
+
+# 🥯 Demonstration
+| 과목 관리 | 오늘 할 일 | 학습 관리 | 배지 도감 |
+| :---: | :---: | :---: | :---: |
+| - | - | - | - |
+<br>
 
 # 🥖 Dependency
 |Library|Description|Version|
 |:---:|:---:|:---:|
 |**Alamofire**|추상화된 네트워크 레이어 사용|```5.10.2```|
 |**KakaoOpenSDK**|카카오톡 간편로그인 연동|```2.23.0```|
+|**Kingfisher**|이미지 처리|```2.23.0```|
 <div>
   <img src="https://img.shields.io/badge/Xcode-16.0-007ACC?style=for-the-badge&logo=Xcode&logoColor=white" style="display:inline-block;">
   <img src="https://img.shields.io/badge/swift-6.0-F54A2A?style=for-the-badge&logo=swift&logoColor=white" style="display:inline-block;">
