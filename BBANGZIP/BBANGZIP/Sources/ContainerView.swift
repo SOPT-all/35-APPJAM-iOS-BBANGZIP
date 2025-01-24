@@ -2,7 +2,7 @@ import SwiftUI
 
 final class ContainerViewModel: ObservableObject {
     @Published var isSplashComplete: Bool = false
-    @Published var isOnboardingComplete: Bool = true
+    @Published var isOnboardingComplete: Bool = false
     @Published var isLogin: Bool = false
 }
 
@@ -24,7 +24,14 @@ struct ContainerView: View {
                     if viewModel.isOnboardingComplete {
                         CustomTabView()
                     } else {
-                        OnboardingView(isOnboardingComplete: $viewModel.isOnboardingComplete)
+                        OnboardingView(
+                            viewModel: OnboardingViewModel(
+                                onboardingUseCase: DefaultOnboardingUseCase(
+                                    repository: DefaultUserRepository()
+                                )
+                            ),
+                            isOnboardingComplete: $viewModel.isOnboardingComplete
+                        )
                     }
                 } else {
                     LoginView(
@@ -33,7 +40,8 @@ struct ContainerView: View {
                                 repository: DefaultUserRepository()
                             )
                         ),
-                        isLogin: $viewModel.isLogin
+                        isLogin: $viewModel.isLogin,
+                        isOnboardingComplete: $viewModel.isOnboardingComplete
                     )
                 }
             }
