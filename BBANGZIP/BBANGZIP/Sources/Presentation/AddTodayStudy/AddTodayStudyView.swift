@@ -144,13 +144,14 @@ struct AddTodayStudyView: View {
             spacing: 8
         ) {
             CustomText(
-                "시작이 빵이다!",
+                viewModel.isPending ? "이제는 미룰 수 없다" : "시작이 빵이다!",
                 fontType: .body1Bold,
                 color: Color(.labelAlternative)
             )
             
             CustomText(
-                "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
+                viewModel.isPending ? "아직 늦지 않았어요!\n밀린 공부를 시작해 봐요!" :
+                    "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
                 fontType: .title3Bold,
                 color: Color(.labelNormal)
             )
@@ -239,7 +240,11 @@ struct AddTodayStudyView: View {
             ),
             addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
                 repository: DefaultStudyRepository()
-            )
+            ),
+            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                studyRepository: DefaultStudyRepository()
+            ),
+            isPending: true
         )
     )
 }

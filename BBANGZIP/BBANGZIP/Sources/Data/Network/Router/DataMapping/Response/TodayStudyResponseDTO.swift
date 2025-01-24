@@ -12,8 +12,8 @@ struct TodayStudyResponseDTO: Decodable {
 }
 
 struct TodayStudyResponseDataDTO: Decodable {
-    let todayCount: Int
-    let completeCount: Int
+    let todayCount: Int?
+    let completeCount: Int?
     let pendingCount: Int
     let todoPiecesList: [ToDoPieceDTO]
     

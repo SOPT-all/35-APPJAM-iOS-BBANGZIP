@@ -168,9 +168,21 @@ struct TodayStudyView: View {
     }
     
     private var delayedStudyButton: some View {
-        Button {
-            // TODO: 밀린 공부 View 이동
-            print("밀린 공부 버튼 Tapped")
+        NavigationLink {
+            AddTodayStudyView(
+                viewModel: AddTodayStudyViewModel(
+                    fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
+                        repository: DefaultStudyRepository()
+                    ),
+                    addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
+                        repository: DefaultStudyRepository()
+                    ),
+                    fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                        studyRepository: DefaultStudyRepository()
+                    ),
+                    isPending: true
+                )
+            )
         } label: {
             HStack(spacing: 5) {
                 CustomText(
@@ -311,7 +323,11 @@ struct TodayStudyView: View {
                     ),
                     addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
                         repository: DefaultStudyRepository()
-                    )
+                    ),
+                    fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                        studyRepository: DefaultStudyRepository()
+                    ),
+                    isPending: false
                 )
             )
         } label: {

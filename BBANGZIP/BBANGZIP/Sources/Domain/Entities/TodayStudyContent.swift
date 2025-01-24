@@ -7,8 +7,8 @@
 //
 
 struct TodayStudyContent {
-    let todayCount: Int
-    let completeCount: Int
+    let todayCount: Int?
+    let completeCount: Int?
     let pendingCount: Int
     let todoPiecesList: [StudyPiece]
 }
