@@ -24,13 +24,11 @@ struct TodayStudyView: View {
     var body: some View {
         if viewModel.isLoading {
             ProgressView()
-                .onAppear {
-                    Task { @MainActor in
-                        await viewModel.fetchData()
-                    }
+                .task {
+                    await viewModel.fetchData()
                 }
-        }
-        else {
+                .background(Color(.red))
+        } else {
             ZStack {
                 ScrollView {
                     VStack(spacing: 0) {
@@ -302,8 +300,14 @@ struct TodayStudyView: View {
     }
     
     private var addTodayStudyButton: some View {
-        Button {
-            print("오늘 할 공부 추가하기 Tapped")
+        NavigationLink {
+            AddTodayStudyView(
+                viewModel: AddTodayStudyViewModel(
+                    fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
+                        repository: DefaultStudyRepository()
+                    )
+                )
+            )
         } label: {
             CustomText(
                 "오늘 할 공부 추가하기",

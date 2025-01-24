@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct SubjectAddCard: View {
-    // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
-    private let borderPadding: CGFloat = 3
     
     var body: some View {
         ZStack {
@@ -31,7 +29,7 @@ struct SubjectAddCard: View {
             }
         }
         .frame(height: 190)
-        .padding(borderPadding)
+        .padding(2)
     }
     
     private var backgroundView: some View {

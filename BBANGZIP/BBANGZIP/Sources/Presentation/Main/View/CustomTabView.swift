@@ -10,26 +10,32 @@ import SwiftUI
 
 struct CustomTabView: View {
     @State private var selected: Tab = .subjectManage
-    @State private var isBottomSheetShowing: Bool
-    @State private var isTodayStudyViewBottomSheetShowing: Bool
+    @State private var isBottomSheetShowing: Bool = false
+    @State private var isTodayStudyViewBottomSheetShowing: Bool = false
     @State private var isCustomTabBarHidden = false
     
-    init(
-        isBottomSheetShowing: Bool = false,
-        isTodayStudyViewBottomSheetShowing: Bool = false
-    ) {
-        self.isBottomSheetShowing = isBottomSheetShowing
-        self.isTodayStudyViewBottomSheetShowing = isTodayStudyViewBottomSheetShowing
+    init() {
         UIScrollView.appearance().bounces = false
     }
     
     var body: some View {
-        ZStack {
-            NavigationStack {
-                TabView(selection: $selected) {
-                    SubjectManageView(isBottomSheetShowing: $isBottomSheetShowing, isCustomTabBarHidden: $isCustomTabBarHidden)
-                        .tag(Tab.subjectManage)
-                    
+        NavigationStack {
+            Group {
+                switch selected {
+                case .subjectManage:
+                    SubjectManageView(
+                        viewModel: SubjectManageViewModel(
+                            fetchSubjectUseCase: DefaultFetchSubjectUseCase(
+                                subjectRepository: DefaultSubjectRepository()
+                            ),
+                            deleteSubjectUseCase: DefaultDeleteSubjectUseCase(
+                                repository: DefaultSubjectRepository()
+                            )
+                        ),
+                        isBottomSheetShowing: $isBottomSheetShowing,
+                        isCustomTabBarHidden: $isCustomTabBarHidden
+                    )
+                case .todo:
                     TodayStudyView(
                         viewModel: TodayStudyViewModel(
                             fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
@@ -44,16 +50,12 @@ struct CustomTabView: View {
                             removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
                                 repository: DefaultStudyRepository()
                             )
-                        ), isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                        ),
+                        isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
                     )
-                    .tag(Tab.todo)
-                    
-                    Text("오늘 할 일")
-                        .tag(Tab.todo)
-                
+                case .networking:
                     Text("이웃 목록")
-                        .tag(Tab.networking)
-                
+                case .mypage:
                     MyPageMainView(
                         viewModel: MyPageMainViewModel(
                             level: 2,
@@ -65,13 +67,9 @@ struct CustomTabView: View {
                         ),
                         isCustomTabBarHidden: $isCustomTabBarHidden
                     )
-                    .tag(Tab.mypage)
                 }
             }
-            
-            VStack {
-                Spacer()
-                
+            .overlay(alignment: .bottom) {
                 if !isBottomSheetShowing &&
                     !isTodayStudyViewBottomSheetShowing &&
                     !isCustomTabBarHidden {
@@ -80,8 +78,4 @@ struct CustomTabView: View {
             }
         }
     }
-}
-
-#Preview {
-    CustomTabView()
 }

@@ -94,4 +94,30 @@ final class DefaultStudyRepository: StudyRepository {
             throw error
         }
     }
+    
+    func fetchAddTodayStudy(
+        year: Int,
+        semester: Semester,
+        sortOption: FetchTodayStudySortOption
+    ) async throws -> AddTodayStudyData {
+        let response = await API.session.request(
+            BbangDefaultRouter.fetchAddTodayStudy(
+                dto: FetchAddTodayStudyRequestDTO(
+                    year: year,
+                    semester: semester,
+                    sortOption: sortOption
+                )
+            )
+        )
+            .serializingDecodable(FetchAddTodayStudyResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let resultDTO):
+            dump(resultDTO)
+            return resultDTO.data.toDomain()
+        case .failure(let error):
+            throw error
+        }
+    }
 }

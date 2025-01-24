@@ -48,6 +48,7 @@ struct StudyCard: View {
                         lineWidth: model.state.borderWidth
                   )
             )
+            .customShadow(.emphasize)
     }
     
     var StudyDataArea: some View {
