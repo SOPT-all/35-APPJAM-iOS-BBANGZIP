@@ -7,7 +7,6 @@ public struct ContainerView: View {
         )
     )
     @State private var isSplashComplete: Bool = false
-    @State private var isOnboardingComplete: Bool = false
     
     public var body: some View {
         ZStack {
@@ -21,10 +20,10 @@ public struct ContainerView: View {
                     }
             } else {
                 if viewModel.isLogin {
-                    if isOnboardingComplete {
+                    if viewModel.isOnboardingComplete {
                         CustomTabView()
                     } else {
-                        OnboardingView(isOnboardingComplete: $isOnboardingComplete)
+                        OnboardingView()
                     }
                 } else {
                     LoginView(viewModel: viewModel)

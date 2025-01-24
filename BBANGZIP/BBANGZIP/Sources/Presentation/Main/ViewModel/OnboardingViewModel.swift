@@ -25,8 +25,12 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isNicknameValid: Bool = false
     @Published var isSemesterValid: Bool = true
     @Published var isSubjectValid: Bool = false
-
+    @Published var navigateToCustomTabView: Bool
+    
+    private let onboardingUseCase: OnboardingUseCase
+    
     init(
+        onboardingUseCase: OnboardingUseCase,
         currentState: OnboardingState = .start,
         currentStep: Step = .first,
         isForward: Bool = true,
@@ -37,8 +41,10 @@ final class OnboardingViewModel: ObservableObject {
         nicknameState: TextFieldState = .defaultState,
         subject: String = "",
         subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
-        subjectState: TextFieldState = .defaultState
+        subjectState: TextFieldState = .defaultState,
+        navigateToCustomTabView: Bool = false
     ) {
+        self.onboardingUseCase = onboardingUseCase
         self.currentState = currentState
         self.currentStep = currentStep
         self.isForward = isForward
@@ -50,6 +56,7 @@ final class OnboardingViewModel: ObservableObject {
         self.subject = subject
         self.subjectAnnounceState = subjectAnnounceState
         self.subjectState = subjectState
+        self.navigateToCustomTabView = navigateToCustomTabView
     }
     
     func goBack() {
@@ -115,10 +122,6 @@ final class OnboardingViewModel: ObservableObject {
                 currentStep = .third
             default:
                 break
-            }
-            
-            if(currentState == .start) {
-                // TODO: nickname, year, semester, subjectName 서버 전달
             }
         }
     }
@@ -234,4 +237,20 @@ final class OnboardingViewModel: ObservableObject {
             isSubjectValid = false
         }
     }
+    
+    @MainActor
+    func onboard() async {
+        do{
+            try await onboardingUseCase.execute(
+                nickname: nickname,
+                year: year,
+                semester: semester.rawValue,
+                subjectName: subject
+            )
+            navigateToCustomTabView = true
+        } catch {
+            print("Error during onboarding: \(error)")
+        }
+    }
 }
+
