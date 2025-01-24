@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
-    @StateObject private var badgeCategoryViewModel: BadgeCategoryViewModel
     @State private var showLevelUpView = false
     @Binding var isCustomTabBarHidden: Bool
     
@@ -19,12 +18,6 @@ struct MyPageMainView: View {
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _isCustomTabBarHidden = isCustomTabBarHidden
-        _badgeCategoryViewModel = StateObject(
-            wrappedValue: BadgeCategoryViewModel(
-                badges: mockBadges,
-                userID: "유나짱"
-            )
-        )
     }
     
     var body: some View {
@@ -32,7 +25,7 @@ struct MyPageMainView: View {
             VStack(spacing: 0) {
                 HeaderView(
                     viewModel: viewModel,
-                    badgeCategoryViewModel: badgeCategoryViewModel
+                    badgeCategoryViewModel: BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
                 )
                 
                 GridView(isCustomTabBarHidden: $isCustomTabBarHidden)

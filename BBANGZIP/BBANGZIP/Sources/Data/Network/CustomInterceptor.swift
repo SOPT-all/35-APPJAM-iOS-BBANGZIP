@@ -1,5 +1,5 @@
 //
-//  Intercepter.swift
+//  CustomInterceptor.swift
 //  BBANGZIP
 //
 //  Created by 송여경 on 1/24/25.
@@ -10,7 +10,7 @@ import Foundation
 
 import Alamofire
 
-final class Intercepter: RequestInterceptor {
+final class CustomInterceptor: RequestInterceptor {
     func adapt(
         _ urlRequest: URLRequest,
         for session: Session,

@@ -26,7 +26,6 @@ enum BbangDefaultRouter {
     case addDelayedTodoToToday
     case hideTodo
     case myPageStatus
-    case aquireBadge
     case badgeDetail(badgeID: Float)
     
     //성민
@@ -39,7 +38,7 @@ enum BbangDefaultRouter {
     //여경
     case fetchBadgeDetail(badgeName: String)
     case signIn(dto: SignInRequestDTO)
-
+    case getBadgeList
     
     //유빈
     case examFiltering(subjectId: Int, examName: String)
@@ -99,8 +98,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces"
         case .myPageStatus:
             return "/api/v1/mypage/status"
-        case .aquireBadge:
-            return "/api/v1/mypage/badge"
+        case .getBadgeList:
+            return "/api/v1/mypage/badges"
         case .badgeDetail(let badgeID):
             return "/api/v1/badges/\(badgeID)"
         case .completeStudy(let pieceID, _):
@@ -140,11 +139,11 @@ extension BbangDefaultRouter: Router {
                 .fetchSortedTodoList,
                 .sortedDelayedTodoList,
                 .myPageStatus,
-                .aquireBadge,
                 .badgeDetail,
                 .fetchBadgeDetail,
                 .fetchAddTodayStudy,
-                .fetchSubject:
+                .fetchSubject,
+                .getBadgeList:
             return .get
             
         case
@@ -194,6 +193,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .fetchBadgeDetail:
             return [:]
+        case .getBadgeList:
+            return [:]
         case .fetchAddTodayStudy(let dto):
             return dto.asDictionary()
         case .examFiltering(_, _):
@@ -212,13 +213,13 @@ extension BbangDefaultRouter: Router {
     var encoding: ParameterEncoding? {
         switch self {
 
-        case .signIn, .fetchSortedTodoList:
+        case .signIn :
             return URLEncoding.queryString
 
-        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
+        case .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
           
-        case .fetchBadgeDetail, .examFiltering:
+        case .fetchBadgeDetail, .examFiltering, .getBadgeList:
             return nil
           
         default:
