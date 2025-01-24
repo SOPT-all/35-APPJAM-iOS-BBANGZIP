@@ -64,7 +64,8 @@ struct CustomTabView: View {
                             maxScore: 200,
                             title: "가판대",
                             badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
-                        )
+                        ),
+                        isCustomTabBarHidden: $isCustomTabBarHidden
                     )
                 }
             }

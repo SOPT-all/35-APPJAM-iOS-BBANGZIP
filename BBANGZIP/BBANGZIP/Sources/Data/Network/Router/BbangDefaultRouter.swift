@@ -11,7 +11,6 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case signup(dto: signInRequestDTO)
     case getRefreshToken
     case logout
     case withDraw
@@ -40,6 +39,8 @@ enum BbangDefaultRouter {
     
     //여경
     case fetchBadgeDetail(badgeName: String)
+    case signIn(dto: SignInRequestDTO)
+
     
     //유빈
     case examFiltering(subjectId: Int, examName: String)
@@ -56,7 +57,7 @@ extension BbangDefaultRouter: Router {
     
     var path: String {
         switch self {
-        case .signup(let signInRequest):
+        case .signIn:
             return "/api/v1/user/auth/signin"
         case .logout:
             return "/api/v1/user/auth/siginout"
@@ -120,7 +121,7 @@ extension BbangDefaultRouter: Router {
     var method: HTTPMethod {
         switch self {
         case
-                .signup,
+                .signIn,
                 .getRefreshToken,
                 .onBoarding,
                 .addSubject,
@@ -163,23 +164,16 @@ extension BbangDefaultRouter: Router {
     
     var headers: [String : String]? {
         switch self {
-        case .signup(let signInRequest):
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer \(signInRequest.authorization)"
-            ]
         default:
-            return [
-                "Content-Type": "application/json",
-                "Authorization": "Bearer "
-            ]
+            return [:]
         }
     }
     
     var parameters: [String : any Sendable]? {
         switch self {
-        case .signup(let dto):
-            return dto.asDictionary()
+        case .signIn(let dto):
+//            return dto.asDictionary()
+            return ["code": dto.code]
         case .testSelect(let subjectID):
             return ["subjectID": subjectID]
         case .motivationMessage(
@@ -221,10 +215,16 @@ extension BbangDefaultRouter: Router {
     
     var encoding: ParameterEncoding? {
         switch self {
+
+        case .signIn, .fetchSortedTodoList:
+            return URLEncoding.queryString
+
         case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
+          
         case .fetchBadgeDetail, .examFiltering:
             return nil
+          
         default:
             return JSONEncoding.default
         }

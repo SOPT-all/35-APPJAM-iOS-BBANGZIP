@@ -62,7 +62,9 @@ struct BalloonWithout: View {
                         )
                 }
                 
+                bottomBalloonTip
             }
+            
             .padding(
                 .vertical,
                 8
@@ -117,4 +119,11 @@ struct BalloonWithout: View {
         .scaleEffect(x: 1, y: -1)
     }
 
+}
+
+#Preview {
+    BalloonWithout(
+        text: "5초만에 빵집 사장님 되기",
+        balloonMode: .bottom
+    )
 }
