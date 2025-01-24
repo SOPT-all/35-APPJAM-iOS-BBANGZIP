@@ -1,9 +1,10 @@
+//  Created by 송여경 on 1/20/25.
+//  Copyright © 2025 com.bbangzip. All rights reserved.
 // MyPageMainView.swift
 //  BBANGZIP
 //
 //  Created by 송여경 on 1/20/25.
 //  Copyright © 2025 com.bbangzip. All rights reserved.
-//
 
 import SwiftUI
 
@@ -11,6 +12,8 @@ struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
     @State private var showLevelUpView = false
     @Binding var isCustomTabBarHidden: Bool
+    @State private var showLogoutSheet = false
+    @State private var showDeleteAccountSheet = false
     
     init(
         viewModel: MyPageMainViewModel,
@@ -21,27 +24,232 @@ struct MyPageMainView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                HeaderView(
-                    viewModel: viewModel,
-                    badgeCategoryViewModel: BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
-                )
-                
-                GridView(isCustomTabBarHidden: $isCustomTabBarHidden)
+        ZStack {
+            ScrollView {
+                VStack(spacing: 0) {
+                    HeaderView(
+                        viewModel: viewModel,
+                        badgeCategoryViewModel: BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
+                    )
+                    
+                    GridView(
+                        isCustomTabBarHidden: $isCustomTabBarHidden,
+                        onLogoutTap: { showLogoutSheet = true },
+                        onDeleteAccountTap: { showDeleteAccountSheet = true }
+                    )
                     .padding(.top, 75)
+                }
+                
+                Spacer()
+            }
+            .scrollIndicators(.hidden)
+            .navigationBarHidden(true)
+            .edgesIgnoringSafeArea(.top)
+            
+            if showLogoutSheet || showDeleteAccountSheet {
+                Color.black.opacity(0.5)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        showLogoutSheet = false
+                        showDeleteAccountSheet = false
+                    }
             }
             
-            Spacer()
+            if showLogoutSheet {
+                BottomSheet(
+                    isShowing: $showLogoutSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "로그아웃 하시겠어요?",
+                        primaryButtonTitle: "로그아웃 하기",
+                        primaryButtonAction: {
+                            print("로그아웃 실행")
+                            // TODO: 로그아웃 기능 추가
+                            showLogoutSheet = false
+                        },
+                        isBottonSheetShowing: $showLogoutSheet
+                    )
+                }
+                
+            }
+            
+            if showDeleteAccountSheet {
+                BottomSheet(
+                    isShowing: $showDeleteAccountSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "정말 탈퇴하시겠어요?",
+                        primaryButtonTitle: "탈퇴하기",
+                        primaryButtonAction: {
+                            print("탈퇴 실행")
+                            // TODO: 계정 탈퇴 기능 추가
+                            showDeleteAccountSheet = false
+                        },
+                        isBottonSheetShowing: $showDeleteAccountSheet
+                    )
+                }
+            }
         }
-        .scrollIndicators(.hidden)
-        
-        .navigationBarHidden(true)
-        .edgesIgnoringSafeArea(.top)
     }
-    
 }
 
+struct GridView: View {
+    let items = [
+        "프로필 설정",
+        "공지사항",
+        "개인정보 처리방침",
+        "서비스 이용약관",
+        "로그아웃",
+        "계정 탈퇴"
+    ]
+    
+    @State private var selectedItem: String? = nil
+    @Binding var isCustomTabBarHidden: Bool
+    var onLogoutTap: () -> Void
+    var onDeleteAccountTap: () -> Void
+    
+    init(
+        isCustomTabBarHidden: Binding<Bool>,
+        onLogoutTap: @escaping () -> Void,
+        onDeleteAccountTap: @escaping () -> Void
+    ) {
+        _isCustomTabBarHidden = isCustomTabBarHidden
+        self.onLogoutTap = onLogoutTap
+        self.onDeleteAccountTap = onDeleteAccountTap
+    }
+    
+    var body: some View {
+        LazyVStack(spacing: 0) {
+            ForEach(items.indices, id: \ .self) { index in
+                Button(action: {
+                    handleItemTap(index: index)
+                }) {
+                    HStack {
+                        CustomText(
+                            items[index],
+                            fontType: .body1Bold,
+                            color: Color(.labelNormal)
+                        )
+                        .padding(.leading, 8)
+                        Spacer()
+                        Image(.rightIcon)
+                            .frame(width: 20, height: 20)
+                    }
+                    .frame(width: 335, height: 56)
+                    .background(Color.clear)
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                if index == 0 || index == 3 {
+                    Divider()
+                        .background(Color(.lineNormal))
+                        .padding(.vertical, 16)
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 80)
+    }
+    
+    private func handleItemTap(index: Int) {
+        switch items[index] {
+        case "로그아웃":
+            onLogoutTap()
+        case "계정 탈퇴":
+            onDeleteAccountTap()
+        default:
+            print("\(items[index]) 선택됨")
+            // TODO: 다른 항목 처리 추가
+        }
+        
+    }
+}
+
+struct BadgeSection: View {
+    let badgeCount: Int
+    let onBadgeSettingTap: () -> Void
+    let onBadgeCollectionTap: () -> Void
+    @ObservedObject var badgeCategoryViewModel: BadgeCategoryViewModel
+    @State private var navigateToBadgeCategory = false
+    
+    var body: some View {
+        HStack(
+            alignment: .bottom,
+            spacing: 73.5
+        ) {
+            VStack(spacing: 6) {
+                Button(action: onBadgeSettingTap) {
+                    Image(.badge)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 80, height: 80)
+                }
+                
+                CustomText(
+                    "뱃지 설정하기",
+                    fontType: .caption2Medium,
+                    color: Color(.labelAssistive)
+                )
+            }
+            
+            VStack(spacing: 6) {
+                Button(action: {
+                    navigateToBadgeCategory = true
+                    onBadgeCollectionTap()
+                }) {
+                    VStack {
+                        Spacer()
+                        
+                        HStack(spacing: 2) {
+                            CustomText(
+                                "\(badgeCount)",
+                                fontType: .title2Bold,
+                                color: Color(.labelNormal)
+                            )
+                            
+                            CustomText(
+                                "개",
+                                fontType: .caption2Medium,
+                                color: Color(.label)
+                            )
+                            
+                            Image(.chevronRightThickSmall)
+                                .foregroundColor(Color(.labelAssistive))
+                                .frame(width: 24, height: 24)
+                        }
+                        
+                        Spacer()
+                    }
+                    .frame(height: 80)
+                }
+                
+                CustomText(
+                    "배지 도감",
+                    fontType: .caption2Medium,
+                    color: Color(.labelAssistive)
+                )
+            }
+        }
+        .padding(.vertical, 24)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 40)
+                .fill(Color(.staticWhite))
+                .shadow(
+                    color: .gray.opacity(0.3),
+                    radius: 4,
+                    x: 0,
+                    y: 2
+                )
+        )
+        .padding(.horizontal, 20)
+        .navigationDestination(isPresented: $navigateToBadgeCategory) {
+            BadgeCategoryView(viewModel: badgeCategoryViewModel)
+        }
+    }
+}
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
@@ -63,7 +271,7 @@ struct HeaderView: View {
                         badgeCount: viewModel.badgeCount,
                         onBadgeSettingTap: {
                             print("뱃지 설정하기 클릭")
-                            //TODO: 화면 전환 필요
+                            // TODO: 화면 전환 필요
                         },
                         onBadgeCollectionTap: {
                             print("뱃지 도감 클릭")
@@ -76,8 +284,8 @@ struct HeaderView: View {
             }
         }
         .edgesIgnoringSafeArea(.top)
-        
     }
+    
     
     var backgroundView: some View {
         NavigationLink {
@@ -132,219 +340,3 @@ struct HeaderView: View {
         .padding(.horizontal, 40)
     }
 }
-
-struct BadgeSection: View {
-    private let badgeCount: Int
-    private let onBadgeSettingTap: () -> Void
-    private let onBadgeCollectionTap: () -> Void
-    private let badgeCategoryViewModel: BadgeCategoryViewModel
-    
-    init(
-        badgeCount: Int,
-        onBadgeSettingTap: @escaping () -> Void,
-        onBadgeCollectionTap: @escaping () -> Void,
-        badgeCategoryViewModel: BadgeCategoryViewModel
-    ) {
-        self.badgeCount = badgeCount
-        self.onBadgeSettingTap = onBadgeSettingTap
-        self.onBadgeCollectionTap = onBadgeCollectionTap
-        self.badgeCategoryViewModel = badgeCategoryViewModel
-    }
-    
-    var body: some View {
-        HStack(
-            alignment: .bottom,
-            spacing: 73.5
-        ) {
-            VStack(spacing: 6) {
-                Button(action: onBadgeSettingTap) {
-                    Image(.badge)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                }
-                
-                CustomText(
-                    "뱃지 설정하기",
-                    fontType: .caption1Medium,
-                    color: Color(.labelAssistive)
-                )
-            }
-            
-            VStack(spacing: 6) {
-                NavigationLink(destination: BadgeCategoryView(viewModel: badgeCategoryViewModel)) {
-                    VStack {
-                        Spacer()
-                        
-                        HStack(spacing: 2) {
-                            CustomText(
-                                "\(badgeCount)",
-                                fontType: .title2Bold,
-                                color: Color(.labelNormal)
-                            )
-                            
-                            CustomText(
-                                "개",
-                                fontType: .body1Medium,
-                                color: Color(.labelNormal)
-                            )
-                            
-                            Image(.chevronRightThickSmall)
-                        }
-                        
-                        Spacer()
-                    }
-                    .frame(height: 80)
-                }
-                
-                CustomText(
-                    "배지 도감",
-                    fontType: .caption1Medium,
-                    color: Color(.labelAssistive)
-                )
-            }
-        }
-        .padding(.vertical, 24)
-        .frame(maxWidth: .infinity)
-        .background(
-            RoundedRectangle(cornerRadius: 40)
-                .fill(Color(.backgroundNormal))
-                .shadow(
-                    color: .gray.opacity(0.3),
-                    radius: 4,
-                    x: 0,
-                    y: 2
-                )
-        )
-        .padding(.horizontal, 20)
-    }
-}
-
-struct GridView: View {
-    let items = [
-        "프로필 설정",
-        "공지사항",
-        "개인정보 처리방침",
-        "서비스 이용약관",
-        "로그아웃",
-        "계정 탈퇴"
-    ]
-    
-    @State private var selectedItem: String? = nil
-    @State private var showLogoutSheet = false
-    @State private var showDeleteAccountSheet = false
-    @Binding var isCustomTabBarHidden: Bool
-    
-    init(isCustomTabBarHidden: Binding<Bool>) {
-        _isCustomTabBarHidden = isCustomTabBarHidden
-    }
-    
-    var body: some View {
-        ZStack {
-            LazyVStack(spacing: 0) {
-                ForEach(items.indices, id: \.self) { index in
-                    Button(action: {
-                        handleItemTap(index: index)
-                    }) {
-                        HStack {
-                            CustomText(
-                                items[index],
-                                fontType: .body1Bold,
-                                color: Color(.labelNormal)
-                            )
-                            .padding(.leading, 8)
-                            Spacer()
-                            Image(.rightIcon)
-                                .frame(width: 20, height: 20)
-                        }
-                        .frame(width: 335, height: 56)
-                        .background(Color.clear)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    
-                    if index == 0 || index == 3 {
-                        Divider()
-                            .background(Color(.lineNormal))
-                            .padding(.vertical, 16)
-                    }
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 80)
-            
-            
-            if showDeleteAccountSheet {
-                BottomSheet(isShowing: $showDeleteAccountSheet, height: 265
-                ) {
-                    MyPageBottomSheet(
-                        title: "정말 탈퇴하시겠어요?",
-                        primaryButtonTitle: "탈퇴하기",
-                        primaryButtonAction: {
-                            print("탈퇴 실행 ")
-                            //TODO: 여기서 탈퇴 추가
-                            showDeleteAccountSheet = false
-                        },
-                        isBottonSheetShowing: $showDeleteAccountSheet
-                    )
-                }
-                .onAppear {
-                    isCustomTabBarHidden = true
-                }
-                .onAppear {
-                    isCustomTabBarHidden = false
-                }
-            }
-            
-            
-            if showLogoutSheet {
-                BottomSheet(
-                    isShowing: $showLogoutSheet,
-                    height: 265
-                ) {
-                    MyPageBottomSheet(
-                        title: "로그아웃 하시겠어요?",
-                        primaryButtonTitle: "로그아웃 하기",
-                        primaryButtonAction: {
-                            print("로그아웃 실행")
-                            // TODO: 로그아웃 기능 추가
-                            showLogoutSheet = false
-                        },
-                        isBottonSheetShowing: $showLogoutSheet
-                    )
-                }
-                .onAppear {
-                    isCustomTabBarHidden = true
-                }
-                .onDisappear {
-                    isCustomTabBarHidden = false
-                }
-            }
-        }
-    }
-    
-    private func handleItemTap(index: Int) {
-        switch items[index] {
-        case "로그아웃":
-            showLogoutSheet = true
-        case "계정 탈퇴":
-            showDeleteAccountSheet = true
-        default:
-            print("\(items[index]) 선택됨")
-            // TODO: 다른 항목 처리 추가
-        }
-    }
-}
-
-//#Preview {
-//    MyPageMainView(
-//        viewModel: MyPageMainViewModel(
-//            level: 1,
-//            currentScore: 40,
-//            badgeCount: 8,
-//            maxScore: 200,
-//            titleView: "가판대",
-//            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
-//        )
-//        , is
-//    )
-//}
