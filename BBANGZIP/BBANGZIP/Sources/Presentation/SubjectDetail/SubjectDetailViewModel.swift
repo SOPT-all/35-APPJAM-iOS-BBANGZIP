@@ -11,9 +11,12 @@ import SwiftUI
 final class SubjectDetailViewModel: ObservableObject {
     private let filterExamUseCase: FilterExamUseCase
     private let deleteStudyPieceUseCase: DeleteStudyPieceUseCase
+    private let completeTodayStudyUseCase: CompleteTodayStudyUseCase
+    private let revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
     
     let subjectName: String
     let subjectId: Int
+    @Published var revertTargetPieceID: Int? = nil
     @Published var selectedPieceIds: Set<Int> = []
     @Published var currentExam: String = "중간고사"
     @Published var motivationMessage: String = ""
@@ -31,11 +34,15 @@ final class SubjectDetailViewModel: ObservableObject {
     init(
         filterExamUseCase: FilterExamUseCase,
         deleteStudyPieceUseCase: DeleteStudyPieceUseCase,
+        completeTodayStudyUseCase: CompleteTodayStudyUseCase,
+        revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase,
         subjectName: String = "",
         subjectId: Int
     ) {
         self.filterExamUseCase = filterExamUseCase
         self.deleteStudyPieceUseCase = deleteStudyPieceUseCase
+        self.completeTodayStudyUseCase = completeTodayStudyUseCase
+        self.revertCompleteTodayStudyUseCase = revertCompleteTodayStudyUseCase
         self.subjectName = subjectName
         self.subjectId = subjectId
     }
@@ -128,12 +135,49 @@ final class SubjectDetailViewModel: ObservableObject {
         isDeleteButtonEnable = !selectedPieceIds.isEmpty
     }
     
-    func completeStudyPiece() {
-        // TODO: 공부 조각 완료하기 API 연동 필요
+    @MainActor
+    func completeStudy(pieceID: Int) async {
+        do {
+            _ = try await completeTodayStudyUseCase.execute(pieceID: pieceID)
+            
+            toast = Toast(
+                "공부 완료!",
+                startFrom: 20
+            )
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
-    func notCompleteStudyPiece() {
-        // TODO: 공부 조각 미완료 체크하기 API 연동 필요
+    @MainActor
+    func revertStudyPiece() async {
+        guard let revertTargetPieceID = revertTargetPieceID else {
+            print("revertTargetPieceID Wrong")
+            return
+        }
+        do {
+            try await revertCompleteTodayStudyUseCase.execute(pieceID: revertTargetPieceID)
+            guard let revertedPieceIndex = modelList.firstIndex(where: {$0.pieceId == revertTargetPieceID}) else {
+                print("서버에서는 revert 됐는데 list에서 못 찾는 경우")
+                return
+            }
+            
+            modelList[revertedPieceIndex] = FilterExamList(
+                pieceId: modelList[revertedPieceIndex].pieceId,
+                studyContents: modelList[revertedPieceIndex].studyContents,
+                startPage: modelList[revertedPieceIndex].startPage,
+                finishPage: modelList[revertedPieceIndex].finishPage,
+                deadline: modelList[revertedPieceIndex].deadline,
+                remainingDays: modelList[revertedPieceIndex].remainingDays,
+                isFinished: modelList[revertedPieceIndex].isFinished,
+                state: .cardDefault
+            )
+        
+        } catch {
+            dump(error)
+            print(error)
+        }
     }
     
     func checkCompleteOrNot() {

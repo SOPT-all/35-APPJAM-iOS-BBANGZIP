@@ -219,6 +219,12 @@ struct SubjectManageView: View {
                                     deleteStudyPieceUseCase: DefaultDeleteStudyPieceUseCase(
                                         repository: DefaultExamRepository()
                                     ),
+                                    completeTodayStudyUseCase: DefaultCompleteTodayStudyUseCase(
+                                        repository: DefaultStudyRepository()
+                                    ),
+                                    revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                        repository: DefaultStudyRepository()
+                                    ),
                                     subjectName: model.subjectName,
                                     subjectId: model.subjectId
                                 ),

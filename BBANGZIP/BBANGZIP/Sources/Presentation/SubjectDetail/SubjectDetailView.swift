@@ -130,22 +130,15 @@ struct SubjectDetailView: View {
                             .navigationBarHidden(true)
                         }
                         .scrollIndicators(.hidden)
-                        .bottomSheet(
-                            isShowing: $viewModel.isShowingBottomSheet,
-                            height: 265
-                        ) {
-                            if let type = selectedBottomSheetType {
-                                type.contentView(
-                                    isPresented: $viewModel.isShowingBottomSheet
-                                )
-                            }
-                        }
                         
                         if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
                             deleteButton
                         }
                     }
                 }
+            }
+            if viewModel.isShowingBottomSheet {
+                revertBottomSheet
             }
         }
         .onAppear {
@@ -253,20 +246,23 @@ struct SubjectDetailView: View {
                     if viewModel.isDeleteMode {
                         if model.state == .selectable {
                             model.state = .selected
-                            viewModel.toggleSelection(pieceId: model.pieceId)  // ID 추가
+                            viewModel.toggleSelection(pieceId: model.pieceId)
                         } else if model.state == .selected {
                             model.state = .selectable
-                            viewModel.toggleSelection(pieceId: model.pieceId)  // ID 제거
+                            viewModel.toggleSelection(pieceId: model.pieceId)  
                         }
                     } else {
                         if model.state == .cardDefault {
                             model.state = .complete
-                            viewModel.completeStudyPiece()
+                            Task {
+                                await viewModel.completeStudy(pieceID: model.pieceId)
+                            }
                         } else if model.state == .complete {
                             if viewModel.isDeleteMode {
                                 print("Toast Present")
                             } else {
-                                viewModel.checkCompleteOrNot()
+                                viewModel.revertTargetPieceID = model.pieceId
+                                viewModel.isShowingBottomSheet = true
                             }
                         }
                     }
@@ -342,6 +338,69 @@ struct SubjectDetailView: View {
                 .horizontal,
                 20
             )
+        }
+    }
+    
+    private var revertBottomSheet: some View {
+        BottomSheet(
+            isShowing: $viewModel.isShowingBottomSheet,
+            height: 265
+        ) {
+            VStack(spacing: 0) {
+                CustomText(
+                    "미완료 상태로 되돌릴까요?",
+                    fontType: .headline1Bold,
+                    color: Color(.labelNeutral)
+                )
+                .padding(
+                    .top,
+                    15
+                )
+                .padding(
+                    .bottom,
+                    31
+                )
+                
+                Button {
+                    Task {
+                        await viewModel.revertStudyPiece()
+                    }
+                    viewModel.isShowingBottomSheet = false
+                    viewModel.toast = Toast(
+                        "미완료 상태로 되돌렸어요!",
+                        startFrom: 20
+                    )
+                } label: {
+                    CustomText(
+                        "되돌리기",
+                        fontType: .body1Bold,
+                        color: Color(.staticWhite)
+                    )
+                }
+                .buttonStyle(SolidButton(true))
+                .padding(
+                    .bottom,
+                    8
+                )
+                
+                Button {
+                    viewModel.isShowingBottomSheet = false
+                } label: {
+                    CustomText(
+                        "취소",
+                        fontType: .body1Bold,
+                        color: Color(.primaryNormal)
+                    )
+                }
+                .buttonStyle(OutlinedLargeButton())
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+        .onChange(of: viewModel.isShowingBottomSheet) { newValue in
+            isBottomSheetShowing =   newValue
         }
     }
 }
