@@ -25,7 +25,7 @@ final class OnboardingViewModel: ObservableObject {
     @Published var isNicknameValid: Bool = false
     @Published var isSemesterValid: Bool = true
     @Published var isSubjectValid: Bool = false
-    @Published var navigateToCustomTabView: Bool = false
+    @Published var navigateToCustomTabView: Bool
     
     private let onboardingUseCase: OnboardingUseCase
     
@@ -41,7 +41,8 @@ final class OnboardingViewModel: ObservableObject {
         nicknameState: TextFieldState = .defaultState,
         subject: String = "",
         subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
-        subjectState: TextFieldState = .defaultState
+        subjectState: TextFieldState = .defaultState,
+        navigateToCustomTabView: Bool = false
     ) {
         self.onboardingUseCase = onboardingUseCase
         self.currentState = currentState
@@ -55,6 +56,7 @@ final class OnboardingViewModel: ObservableObject {
         self.subject = subject
         self.subjectAnnounceState = subjectAnnounceState
         self.subjectState = subjectState
+        self.navigateToCustomTabView = navigateToCustomTabView
     }
     
     func goBack() {

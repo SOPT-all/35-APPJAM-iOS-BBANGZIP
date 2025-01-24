@@ -13,11 +13,17 @@ struct OnboardingView: View {
     @FocusState private var isNicknameFocused: Bool
     @FocusState private var isSubjectFocused: Bool
     private let years = Array(2025...2028)
+    @Binding private var isOnboardingComplete: Bool
     
-    init() {
+    init(isOnboardingComplete: Binding<Bool>) {
         let repository = DefaultUserRepository()
         let useCase = DefaultOnboardingUseCase(repository: repository)
-        _viewModel = StateObject(wrappedValue: OnboardingViewModel(onboardingUseCase: useCase))
+        _viewModel = StateObject(
+            wrappedValue: OnboardingViewModel(
+                onboardingUseCase: useCase
+            )
+        )
+        _isOnboardingComplete = isOnboardingComplete
     }
     
     var body: some View {
@@ -46,6 +52,9 @@ struct OnboardingView: View {
 //                    CustomTabView()
 //                }
 //            }
+        }
+        .onChange(of: viewModel.navigateToCustomTabView) { newValue in
+            isOnboardingComplete = newValue
         }
         .onTapGesture {
             hideKeyboard()
@@ -353,6 +362,6 @@ struct OnboardingView: View {
     }
 }
 
-#Preview {
-    OnboardingView()
-}
+//#Preview {
+//    OnboardingView()
+//}

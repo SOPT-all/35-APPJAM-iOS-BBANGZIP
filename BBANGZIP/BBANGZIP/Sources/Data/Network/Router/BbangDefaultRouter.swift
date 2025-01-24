@@ -207,8 +207,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .deleteSubject(let dto):
             return dto.asDictionary()
-        case .onboardingCheck:
-            return [:]
+        case .onboardingCheck(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }
@@ -222,7 +222,7 @@ extension BbangDefaultRouter: Router {
         case .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
             
-        case .fetchBadgeDetail, .examFiltering, .onboardingCheck:
+        case .fetchBadgeDetail, .examFiltering:
             return nil
         default:
             return JSONEncoding.default
