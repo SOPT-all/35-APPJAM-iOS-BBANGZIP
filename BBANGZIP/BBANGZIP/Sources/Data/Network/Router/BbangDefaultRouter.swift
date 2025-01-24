@@ -11,21 +11,6 @@ import Foundation
 import Alamofire
 
 enum BbangDefaultRouter {
-    case getRefreshToken
-    case logout
-    case withDraw
-    case testSelect(subjectID: Int)
-    case addStudyScope
-    case studyCompleteCheck(pieceID: Float)
-    case notCompletedCheck(pieceID: Float)
-    case sortedDelayedTodoList
-    case addTodoList
-    case addTodo
-    case addDelayedTodoToToday
-    case hideTodo
-    case myPageStatus
-    case badgeDetail(badgeID: Float)
-    
     //성민
     case fetchSortedTodoList(dto: TodayStudyRequestDTO)
     case completeStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
@@ -59,50 +44,22 @@ extension BbangDefaultRouter: Router {
         switch self {
         case .signIn:
             return "/api/v1/user/auth/signin"
-        case .logout:
-            return "/api/v1/user/auth/siginout"
-        case .getRefreshToken:
-            return "/api/v1/user/auth/re-issue"
-        case .withDraw:
-            return "/api/v1/user/auth/withdraw"
         case .onboardingCheck:
             return "/api/v1/user/auth/signup"
         case .examFiltering(let subjectId, let examName):
             return "/api/v1/exams/\(subjectId)/\(examName)"
-        case .testSelect(let subjectID):
-            return "/api/v1/exam/\(subjectID)"
         case .addSubject:
             return "/api/v1/subjects"
         case .changeName(let subjectId, let options, _):
             return "/api/v1/subjects/\(subjectId)/\(options)"
-        case .addStudyScope:
-            return "/api/v1/studies"
         case .deleteStudyPiece:
             return "/api/v1/studies/pieces"
         case .deleteSubject:
             return "/api/v1/subjects"
-        case .studyCompleteCheck(let pieceID):
-            return "/api/v1/pieces/\(pieceID)/mark-done"
-        case .notCompletedCheck(let pieceID):
-            return "/api/v1/pieces/\(pieceID)/mark-undone"
         case .fetchSortedTodoList:
             return "/api/v1/pieces/today/orders"
-        case .sortedDelayedTodoList:
-            return "/api/v1/pieces/pending"
-        case .addTodoList:
-            return "/api/v1/pieces/todo"
-        case .addTodo:
-            return "/api/v1/pieces/assign-to-today"
-        case .addDelayedTodoToToday:
-            return "/api/v1/pieces/assign-to-today"
-        case .hideTodo:
-            return "/api/v1/pieces"
-        case .myPageStatus:
-            return "/api/v1/mypage/status"
         case .getBadgeList:
             return "/api/v1/mypage/badges"
-        case .badgeDetail(let badgeID):
-            return "/api/v1/badges/\(badgeID)"
         case .completeStudy(let pieceID, _):
             return "/api/v1/pieces/\(pieceID)/mark-done"
         case .revertCompleteStudy(let pieceID, _):
@@ -124,12 +81,7 @@ extension BbangDefaultRouter: Router {
         switch self {
         case
                 .signIn,
-                .getRefreshToken,
                 .addSubject,
-                .addStudyScope,
-                .addTodoList,
-                .addTodo,
-                .addDelayedTodoToToday,
                 .completeStudy,
                 .revertCompleteStudy,
                 .removeTodayStudy,
@@ -138,11 +90,7 @@ extension BbangDefaultRouter: Router {
             
         case
                 .examFiltering,
-                .testSelect,
                 .fetchSortedTodoList,
-                .sortedDelayedTodoList,
-                .myPageStatus,
-                .badgeDetail,
                 .fetchBadgeDetail,
                 .fetchAddTodayStudy,
                 .fetchSubject,
@@ -150,19 +98,16 @@ extension BbangDefaultRouter: Router {
             return .get
             
         case
-                .logout,
-                .withDraw,
                 .deleteStudyPiece,
-                .deleteSubject,
-                .hideTodo:
+                .deleteSubject:
             return .delete
             
-        case .studyCompleteCheck,
-                .notCompletedCheck,
+        case
                 .onboardingCheck:
             return .patch
             
-        case .changeName:
+        case
+                .changeName:
             return .put
         }
     }
@@ -177,15 +122,9 @@ extension BbangDefaultRouter: Router {
     var parameters: [String : any Sendable]? {
         switch self {
         case .signIn(let dto):
-            return ["code": dto.code]
-        case .testSelect(let subjectID):
-            return ["subjectID": subjectID]
+            return dto.asDictionary()
         case .changeName(_, _, let dto):
             return dto.asDictionary()
-        case .studyCompleteCheck(let pieceID), .notCompletedCheck(let pieceID):
-            return ["pieceID": pieceID]
-        case .badgeDetail(let badgeID):
-            return ["badgeID": badgeID]
         case .fetchSortedTodoList(let dto):
             return dto.asDictionary()
         case .completeStudy(_, let dto):
@@ -214,20 +153,32 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .onboardingCheck(let dto):
             return dto.asDictionary()
-        default:
-            return nil
         }
     }
     
     var encoding: ParameterEncoding? {
         switch self {
-        case .signIn, .fetchSortedTodoList:
+        case
+                .signIn,
+                .fetchSortedTodoList,
+                .fetchSubject,
+                .fetchAddTodayStudy:
             return URLEncoding.queryString
-        case .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject, .fetchAddTodayStudy, .fetchSubject:
-            return URLEncoding.default
-        case .fetchBadgeDetail, .examFiltering, .getBadgeList:
+        case
+                .fetchBadgeDetail,
+                .examFiltering:
             return nil
-        default:
+        case
+                .getBadgeList,
+                .completeStudy,
+                .revertCompleteStudy,
+                .removeTodayStudy,
+                .addTodayStudy,
+                .onboardingCheck,
+                .addSubject,
+                .deleteSubject,
+                .changeName,
+                .deleteStudyPiece:
             return JSONEncoding.default
         }
     }
