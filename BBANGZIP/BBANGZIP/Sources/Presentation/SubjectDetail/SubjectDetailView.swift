@@ -23,126 +23,136 @@ struct SubjectDetailView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            CustomNavigationBar(
-                showBackButton: true,
-                showMenu: true,
-                title: "경제통계학",
-                backgroundColor: Color(.backgroundAccent)
-            )
-            
-            ZStack {
-                ScrollView {
+        Group {
+            if viewModel.isLoading {
+                ProgressView()
+                    .navigationBarHidden(true)
+            } else {
+                VStack(spacing: 0) {
+                    CustomNavigationBar(
+                        showBackButton: true,
+                        showMenu: true,
+                        title: viewModel.subjectName,
+                        backgroundColor: Color(.backgroundAccent)
+                    )
+                    .environmentObject(viewModel)
+                    
                     ZStack {
-                        VStack {
-                            Color(.backgroundAccent)
-                                .frame(
-                                    height: 153
-                                )
-                                .cornerRadius(
-                                    32,
-                                    corners: [
-                                        .bottomLeft,
-                                        .bottomRight
-                                    ]
-                                )
-                                .ignoresSafeArea(
-                                    .all,
-                                    edges: .top
-                                )
-                            
-                            Spacer()
-                        }
-                        
-                        
-                        VStack(spacing: 16) {
-                            backgroundView
-                                .padding(
-                                    .top,
-                                    25
-                                )
-                            
-                            MenuTab(
-                                tabNames: [
-                                    "중간고사",
-                                    "기말고사"
-                                ]
-                            )
-                            .padding(
-                                .top,
-                                28
-                            )
-                            .padding(
-                                .horizontal,
-                                20
-                            )
-                            
-                            HStack(spacing: 8) {
-                                Chip(type: .daysLeftWithText(-24))
+                        ScrollView {
+                            ZStack {
+                                VStack {
+                                    Color(.backgroundAccent)
+                                        .frame(
+                                            height: 153
+                                        )
+                                        .cornerRadius(
+                                            32,
+                                            corners: [
+                                                .bottomLeft,
+                                                .bottomRight
+                                            ]
+                                        )
+                                        .ignoresSafeArea(
+                                            .all,
+                                            edges: .top
+                                        )
+                                    
+                                    Spacer()
+                                }
                                 
-                                CustomText(
-                                    "2025년 5월 13일",
-                                    fontType: .label1Bold,
-                                    color: Color(.labelAlternative)
+                                
+                                VStack(spacing: 16) {
+                                    backgroundView
+                                        .padding(
+                                            .top,
+                                            25
+                                        )
+                                    
+                                    MenuTab(
+                                        tabNames: [
+                                            "중간고사",
+                                            "기말고사"
+                                        ]
+                                    ) { selectedTab in
+                                        Task {
+                                            await viewModel.updateExam(selectedTab)
+                                        }
+                                    }
+                                    .padding(
+                                        .top,
+                                        28
+                                    )
+                                    .padding(
+                                        .horizontal,
+                                        20
+                                    )
+                                    
+                                    // 시작점
+                                    if viewModel.modelList.isEmpty {
+                                        emptyView
+                                    } else {
+                                        HStack(spacing: 8) {
+                                            Chip(type: .daysLeftWithText(-24))
+                                            
+                                            CustomText(
+                                                "2025년 5월 13일",
+                                                fontType: .label1Bold,
+                                                color: Color(.labelAlternative)
+                                            )
+                                        }
+                                        
+                                        studyListHeaderView
+                                            .padding(
+                                                .top,
+                                                32
+                                            )
+                                            .padding(
+                                                .horizontal,
+                                                20
+                                            )
+                                        
+                                        studyPieceList
+                                            .padding(
+                                                .horizontal,
+                                                20
+                                            )
+                                            .padding(
+                                                .bottom,
+                                                16
+                                            )
+                                    }
+                                    
+                                    if viewModel.isDeleteMode {
+                                        Spacer()
+                                            .frame(height: 56)
+                                    }
+                                }
+                            }
+                            .navigationBarHidden(true)
+                        }
+                        .scrollIndicators(.hidden)
+                        .bottomSheet(
+                            isShowing: $viewModel.isShowingBottomSheet,
+                            height: 265
+                        ) {
+                            if let type = selectedBottomSheetType {
+                                type.contentView(
+                                    isPresented: $viewModel.isShowingBottomSheet
                                 )
                             }
-                            
-                            studyListHeaderView
-                                .padding(
-                                    .top,
-                                    32
-                                )
-                                .padding(
-                                    .horizontal,
-                                    20
-                                )
-                            
-                            studyPieceList
-                                .padding(
-                                    .horizontal,
-                                    20
-                                )
+                        }
+                        
+                        if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
+                            deleteButton
                         }
                     }
-                    .navigationBarHidden(true)
+                    .toastView(toast: $viewModel.toast)
                 }
-                .bottomSheet(
-                    isShowing: $viewModel.isShowingBottomSheet,
-                    height: 265
-                ) {
-                    if let type = selectedBottomSheetType {
-                        type.contentView(
-                            isPresented: $viewModel.isShowingBottomSheet
-                        )
-                    }
-                }
-                
-                if viewModel.isDeleteMode {
-                    let title = viewModel.selectedItemCount == 0 ? "삭제하기" : "\(viewModel.selectedItemCount)개 삭제하기"
-                    
-                    VStack {
-                        Spacer()
-                        Button(title) {
-                            viewModel.deleteStudyPiece()
-                            viewModel.makeStudyPieceSelectable()
-                        }
-                        .buttonStyle(
-                            SolidIconButton(
-                                buttonImage: Image(.trash),
-                                viewModel.selectedItemCount > 0
-                            )
-                        )
-                        .padding(
-                            .horizontal,
-                            20
-                        )
-                        .padding(
-                            .bottom,
-                            8
-                        )
-                        .disabled(viewModel.selectedItemCount == 0)
-                    }
-                }
+            }
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchData()
             }
         }
     }
@@ -150,9 +160,9 @@ struct SubjectDetailView: View {
     var backgroundView: some View {
         HStack {
             CustomText(
-                "사장님의 각오 한 마디를 작성해 보세요",
+                viewModel.motivationMessage.isEmpty ? "사장님의 각오 한 마디를 작성해 보세요" : viewModel.motivationMessage,
                 fontType: .heading2Bold,
-                color: Color(.labelAssistive)
+                color: viewModel.motivationMessage.isEmpty ? Color(.labelAssistive) : Color(.labelNeutral)
             )
             .lineLimit(2)
             .padding(
@@ -163,6 +173,7 @@ struct SubjectDetailView: View {
                 .trailing,
                 151
             )
+            .frame(height: 56)
             
             Spacer()
         }
@@ -233,12 +244,11 @@ struct SubjectDetailView: View {
         }
     }
     
-    
     var studyPieceList: some View {
         VStack(spacing: 16) {
             ForEach(
                 $viewModel.modelList,
-                id: \.pieceID
+                id: \.pieceId
             ) { $model in
                 Button {
                     if model.state == .cardDefault {
@@ -266,6 +276,67 @@ struct SubjectDetailView: View {
                 .buttonStyle(PressedButtonStyle())
                 .customShadow(.normal)
             }
+            
+            // TODO: 공부 추가 화면으로 이동
+            if !viewModel.isDeleteMode {
+                NavigationLink(destination: Text("공부추가")){
+                    AddStudyCard()
+                }
+                .buttonStyle(PressedButtonStyle())
+            }
+        }
+    }
+    
+    var deleteButton: some View {
+        let title = "\(viewModel.selectedItemCount)개 삭제하기"
+        
+        return VStack {
+            Spacer()
+            
+            Button(title) {
+                viewModel.deleteStudyPiece()
+                viewModel.makeStudyPieceSelectable()
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.trash)
+                )
+            )
+            .padding(
+                .horizontal,
+                20
+            )
+            .padding(
+                .bottom,
+                8
+            )
+        }
+    }
+    
+    var emptyView: some View {
+        VStack(spacing: 16) {
+            Image(.graphicEmptyStudy)
+                .frame(
+                    width: 320,
+                    height: 296
+                )
+            
+            NavigationLink (destination: AddStudyView()){
+                CustomText(
+                    "공부할 내용 추가하기",
+                    fontType: .body1Bold,
+                    color: Color(.staticWhite)
+                )
+            }
+            .buttonStyle(
+                SolidIconButton(
+                    buttonImage: Image(.plus)
+                )
+            )
+            .padding(
+                .horizontal,
+                20
+            )
         }
     }
 }

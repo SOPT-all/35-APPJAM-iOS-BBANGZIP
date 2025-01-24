@@ -9,25 +9,50 @@
 import SwiftUI
 
 final class SubjectDetailViewModel: ObservableObject {
-    @Published var modelList: [StudyPieceModel]
+    private let filterExamUseCase: FilterExamUseCase
+    
+    let subjectName: String
+    let subjectId: Int
+    @Published var currentExam: String = "중간고사"
+    @Published var motivationMessage: String = ""
+    @Published var modelList: [FilterExamList] = []
     @Published var isDeleteMode: Bool = false
+    @Published var isLoading: Bool = true
     @Published var isDeleteButtonEnable: Bool = false
     @Published var isShowingBottomSheet: Bool = false
+    @Published var toast: Toast?
     
     var selectedItemCount: Int {
         modelList.filter { $0.state == .selected }.count
     }
     
-    init(modelList: [StudyPieceModel]) {
-        self.modelList = modelList
+    init(
+        filterExamUseCase: FilterExamUseCase,
+        subjectName: String = "",
+        subjectId: Int
+    ) {
+        self.filterExamUseCase = filterExamUseCase
+        self.subjectName = subjectName
+        self.subjectId = subjectId
+    }
+    
+    func convertExamNameToAPI(_ examName: String) -> String {
+        switch examName {
+        case "중간고사":
+            return "mid"
+        case "기말고사":
+            return "fin"
+        default:
+            return "mid"
+        }
     }
     
     func makeStudyPieceSelectable() {
         isDeleteMode.toggle()
         modelList = modelList.map(
             {
-                StudyPieceModel(
-                    pieceID: $0.pieceID,
+                FilterExamList(
+                    pieceId: $0.pieceId,
                     studyContents: $0.studyContents,
                     startPage: $0.startPage,
                     finishPage: $0.finishPage,
@@ -38,6 +63,29 @@ final class SubjectDetailViewModel: ObservableObject {
                 )
             }
         )
+    }
+    
+    @MainActor
+    func fetchData() async {
+        do {
+            let examContent = try await filterExamUseCase.execute(
+                subjectId: subjectId,
+                examName: convertExamNameToAPI(currentExam)
+            )
+            modelList = examContent.studyList
+            motivationMessage = examContent.motivationMessage
+            isLoading = false
+        } catch {
+            dump(error)
+            print(error)
+            isLoading = false
+        }
+    }
+    
+    @MainActor
+    func updateExam(_ examName: String) async {
+        currentExam = examName
+        await fetchData()
     }
     
     func deleteStudyPiece() {

@@ -11,29 +11,44 @@ struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
     @StateObject private var badgeCategoryViewModel: BadgeCategoryViewModel
     @State private var showLevelUpView = false
+    @Binding var isCustomTabBarHidden: Bool
     
-    init(viewModel: MyPageMainViewModel) {
+    init(
+        viewModel: MyPageMainViewModel,
+        isCustomTabBarHidden: Binding<Bool>
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        _badgeCategoryViewModel = StateObject(wrappedValue: BadgeCategoryViewModel(badges: mockBadges, userID: "유나짱"))
+        _isCustomTabBarHidden = isCustomTabBarHidden
+        _badgeCategoryViewModel = StateObject(
+            wrappedValue: BadgeCategoryViewModel(
+                badges: mockBadges,
+                userID: "유나짱"
+            )
+        )
     }
     
     var body: some View {
-        NavigationStack {
+        ScrollView {
             VStack(spacing: 0) {
-                NavigationLink {
-                    LevelUpView(viewModel: viewModel)
-                } label: {
-                    HeaderView(
-                        viewModel: viewModel,
-                        badgeCategoryViewModel: badgeCategoryViewModel
-                    )
-                }
+                HeaderView(
+                    viewModel: viewModel,
+                    badgeCategoryViewModel: badgeCategoryViewModel
+                )
+                
+                GridView(isCustomTabBarHidden: $isCustomTabBarHidden)
+                    .padding(.top, 75)
             }
             
             Spacer()
         }
+        .scrollIndicators(.hidden)
+        
+        .navigationBarHidden(true)
+        .edgesIgnoringSafeArea(.top)
     }
+    
 }
+
 
 struct HeaderView: View {
     @ObservedObject var viewModel: MyPageMainViewModel
@@ -71,16 +86,21 @@ struct HeaderView: View {
     }
     
     var backgroundView: some View {
-        Color(.backgroundAccent)
-            .cornerRadius(
-                32,
-                corners: [
-                    .bottomLeft,
-                    .bottomRight
-                ]
-            )
-            .frame(height: 416)
+        NavigationLink {
+            LevelUpView(viewModel: viewModel)
+        } label: {
+            Color(.backgroundAccent)
+                .cornerRadius(
+                    32,
+                    corners: [
+                        .bottomLeft,
+                        .bottomRight
+                    ]
+                )
+                .frame(height: 416)
+        }
     }
+    
     
     var experienceView: some View {
         VStack(
@@ -207,15 +227,124 @@ struct BadgeSection: View {
     }
 }
 
-#Preview {
-    MyPageMainView(
-        viewModel: MyPageMainViewModel(
-            level: 1,
-            currentScore: 40,
-            badgeCount: 8,
-            maxScore: 200,
-            title: "가판대",
-            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
-        )
-    )
+struct GridView: View {
+    let items = [
+        "프로필 설정",
+        "공지사항",
+        "개인정보 처리방침",
+        "서비스 이용약관",
+        "로그아웃",
+        "계정 탈퇴"
+    ]
+    
+    @State private var selectedItem: String? = nil
+    @State private var showLogoutSheet = false
+    @State private var showDeleteAccountSheet = false
+    @Binding var isCustomTabBarHidden: Bool
+    
+    init(isCustomTabBarHidden: Binding<Bool>) {
+        _isCustomTabBarHidden = isCustomTabBarHidden
+    }
+    
+    var body: some View {
+        ZStack {
+            LazyVStack(spacing: 0) {
+                ForEach(items.indices, id: \.self) { index in
+                    Button(action: {
+                        handleItemTap(index: index)
+                    }) {
+                        HStack {
+                            CustomText(
+                                items[index],
+                                fontType: .body1Bold,
+                                color: Color(.labelNormal)
+                            )
+                            .padding(.leading, 8)
+                            Spacer()
+                            Image(.rightIcon)
+                                .frame(width: 20, height: 20)
+                        }
+                        .frame(width: 335, height: 56)
+                        .background(Color.clear)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    if index == 0 || index == 3 {
+                        Divider()
+                            .background(Color(.lineNormal))
+                            .padding(.vertical, 16)
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+            
+            if showLogoutSheet {
+                BottomSheet(
+                    isShowing: $showLogoutSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "로그아웃 하시겠어요?",
+                        primaryButtonTitle: "로그아웃 하기",
+                        primaryButtonAction: {
+                            print("로그아웃 실행")
+                            // TODO: 로그아웃 기능 추가
+                            showLogoutSheet = false
+                        },
+                        isBottonSheetShowing: $showLogoutSheet
+                    )
+                }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+            }
+            
+            if showDeleteAccountSheet {
+                BottomSheet(
+                    isShowing: $showDeleteAccountSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "정말 계정을 삭제하시겠습니까?",
+                        primaryButtonTitle: "계정 삭제",
+                        primaryButtonAction: {
+                            print("계정 탈퇴 실행")
+                            // TODO: 계정 탈퇴 기능 추가
+                            showDeleteAccountSheet = false
+                        },
+                        isBottonSheetShowing: $showDeleteAccountSheet
+                    )
+                }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+            }
+        }
+    }
+    
+    private func handleItemTap(index: Int) {
+        switch items[index] {
+        case "로그아웃":
+            showLogoutSheet = true
+        case "계정 탈퇴":
+            showDeleteAccountSheet = true
+        default:
+            print("\(items[index]) 선택됨")
+            // TODO: 다른 항목 처리 추가
+        }
+    }
 }
+
+//#Preview {
+//    MyPageMainView(
+//        viewModel: MyPageMainViewModel(
+//            level: 1,
+//            currentScore: 40,
+//            badgeCount: 8,
+//            maxScore: 200,
+//            titleView: "가판대",
+//            badgeStatement: "빵집을 시작한지 얼마 안된 \n 사장님의 첫 빵집이에요"
+//        )
+//        , is
+//    )
+//}

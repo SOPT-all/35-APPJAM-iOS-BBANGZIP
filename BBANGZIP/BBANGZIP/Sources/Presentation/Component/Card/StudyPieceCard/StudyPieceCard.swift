@@ -11,12 +11,12 @@ import SwiftUI
 struct StudyPieceCard: View {
     private let state: StudyPieceCardState
     // TODO: 수정필요
-    private let StudyPieceCardData: StudyPieceModel
+    private let StudyPieceCardData: FilterExamList
     private let borderPadding: CGFloat = 2
     
     init(
         state: StudyPieceCardState,
-        StudyPieceCardData: StudyPieceModel = StudyPieceModel.mockList[0]
+        StudyPieceCardData: FilterExamList
     ) {
         self.state = state
         self.StudyPieceCardData = StudyPieceCardData
@@ -35,13 +35,10 @@ struct StudyPieceCard: View {
                 StudyCheckBox(state: state)
             }
             .padding(
-                .vertical,
-                10
-            )
-            .padding(
                 .horizontal,
                 16
             )
+            .frame(height: 86)
         }
     }
     
@@ -62,18 +59,6 @@ struct StudyPieceCard: View {
             alignment: .leading,
             spacing: 2
         ) {
-            
-//            CustomText(
-//                "\(StudyPieceCardData.subjectName) / \(StudyPieceCardData.examName)",
-//                fontType: .caption2Medium,
-//                color: Color(.labelAssistive)
-//            )
-//            .padding(
-//                .leading,
-//                4
-//            )
-            
-            
             CustomText(
                 StudyPieceCardData.studyContents,
                 fontType: .caption1Medium,

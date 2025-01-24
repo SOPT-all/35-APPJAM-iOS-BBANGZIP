@@ -14,7 +14,7 @@ struct AddMotivationMessageView: View {
     @FocusState private var isMessageFocused: Bool
     
     init(
-        viewModel: AddMotivationMessageViewModel = AddMotivationMessageViewModel()
+        viewModel: AddMotivationMessageViewModel
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -52,9 +52,9 @@ struct AddMotivationMessageView: View {
                 Spacer()
                 
                 Button("등록하기") {
-                    print("click")
-                    viewModel.changeMotivationMessage()
-                    dismiss()
+                    Task {
+                        await viewModel.changeMotivationMessage()
+                    }
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
                 .disabled(!viewModel.isButtonEnabled)
@@ -67,6 +67,12 @@ struct AddMotivationMessageView: View {
             .ignoresSafeArea(edges: .bottom)
         }
         .navigationBarHidden(true)
+        .onChange(of: viewModel.shouldDismiss) {
+            shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
     }
     
     var inputSection: some View {

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum Semester: String, CaseIterable {
+enum Semester: String, CaseIterable, Codable {
     case first = "1학기"
     case second = "2학기"
     case summer = "여름학기"

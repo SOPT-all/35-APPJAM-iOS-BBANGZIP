@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BadgeCategoryView: View {
     @StateObject private var viewModel: BadgeCategoryViewModel
-    
+    @State private var selectedBadge: Badge?
     init(viewModel: BadgeCategoryViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
         UIScrollView.appearance().bounces = false
@@ -26,21 +26,41 @@ struct BadgeCategoryView: View {
             )
             .navigationBarHidden(true)
             
-            ScrollView {
-                HeaderView
-                
-                ForEach(
-                    viewModel.orderedCategories,
-                    id: \.self
-                ) { category in
-                    if let badges = viewModel.groupedBadges[category] {
-                        SectionView(
-                            title: category,
-                            subtitle: viewModel.subtitle(for: category),
-                            badges: badges
-                        ) { badge in
-                            print("Badge tapped: \(badge.badgeName)")
+            ZStack {
+                ScrollView {
+                    HeaderView
+                    
+                    ForEach(
+                        viewModel.orderedCategories,
+                        id: \.self
+                    ) { category in
+                        if let badges = viewModel.groupedBadges[category] {
+                            SectionView(
+                                title: category,
+                                subtitle: viewModel.subtitle(for: category),
+                                badges: badges
+                            ) { badge in
+                                viewModel.selectedBadge = badge
+                                viewModel.isBottomSheetShowing = true
+                            }
                         }
+                    }
+                }
+                .scrollIndicators(.hidden)
+                
+                if let badgeName = viewModel.selectedBadge?.badgeName {
+                    BottomSheet(
+                        isShowing:
+                            $viewModel.isBottomSheetShowing,
+                        height: 659
+                    ) {
+                        BadgeDetailView(
+                            viewModel: BadgeDetailViewModel(
+                                fetchBadgeDetialUseCase: DefaultFetchDetailUseCase(repository: DefaultBadgeRepository()),
+                                badgeName: badgeName
+                            ),
+                            isBottomSheetShowing: $viewModel.isBottomSheetShowing
+                        )
                     }
                 }
             }
