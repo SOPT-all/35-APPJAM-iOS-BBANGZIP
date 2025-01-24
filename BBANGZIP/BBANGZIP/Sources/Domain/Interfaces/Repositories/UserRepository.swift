@@ -15,4 +15,6 @@ protocol UserRepository: Sendable {
         semester: String,
         subjectName: String
     ) async throws
+    func logout() async throws
+    func withdraw() async throws
 }
