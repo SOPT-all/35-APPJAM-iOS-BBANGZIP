@@ -15,7 +15,7 @@ final class DefaultExamRepository: ExamRepository {
             BbangDefaultRouter.examFiltering(
                 subjectId: subjectId,
                 examName: examName
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(FilterExamResponseDTO.self)
             .response
