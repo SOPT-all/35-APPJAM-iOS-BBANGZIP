@@ -36,7 +36,9 @@ enum TextFieldStyleCase {
     
     var maxLength: Int? {
         switch self {
-        case .nickname, .friend:
+        case .nickname:
+            10
+        case .friend:
             8
         case .date, .studyRange:
             4

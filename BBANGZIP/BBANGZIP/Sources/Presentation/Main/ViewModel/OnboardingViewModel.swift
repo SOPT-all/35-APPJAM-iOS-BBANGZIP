@@ -2,255 +2,254 @@
 //  OnboardingViewModel.swift
 //  BBANGZIP
 //
-//  Created by 김송희 on 1/20/25.
-//  Copyright © 2025 com.bbangzip. All rights reserved.
+//  Created by 조성민 on 1/25/25.
 //
 
 import SwiftUI
 
-final class OnboardingViewModel: ObservableObject {
-    @Published var currentState: OnboardingState
-    @Published var currentStep: Step
-    @Published var isForward: Bool
-    @Published var year: Int
-    @Published var semester: Semester
-    @Published var subject: String
-    @Published var subjectAnnounceState: SubjectTextFieldAlertCase?
-    @Published var subjectState: TextFieldState
-    @Published var nickname: String
-    @Published var nicknameAnnounceState: NicknameTextFieldAlertCase?
-    @Published var nicknameState: TextFieldState
-    @Published var isNicknameFocused: Bool = false
-    @Published var isSubjectFocused: Bool = false
-    @Published var isNicknameValid: Bool = false
-    @Published var isSemesterValid: Bool = true
-    @Published var isSubjectValid: Bool = false
-    @Published var navigateToCustomTabView: Bool
+enum OnboardingStage {
+    case start
+    case nickname
+    case semester
+    case subject
+    case end
     
+    var buttonTitle: String {
+        switch self {
+        case .start:
+            "빵집 오픈하러 가기"
+        case .end:
+            "빵점 탈출하러 가기"
+        default:
+            "다음으로"
+        }
+    }
+    
+    var step: Step {
+        switch self {
+        case .start:
+                .first
+        case .nickname:
+                .first
+        case .semester:
+                .second
+        case .subject:
+                .third
+        case .end:
+                .third
+        }
+    }
+}
+
+final class OnboardingViewModel: ObservableObject {
     private let onboardingUseCase: OnboardingUseCase
     
-    init(
-        onboardingUseCase: OnboardingUseCase,
-        currentState: OnboardingState = .start,
-        currentStep: Step = .first,
-        isForward: Bool = true,
-        year: Int = 2025,
-        semester: Semester = .first,
-        nickname: String = "",
-        nicknameAnnounceState: NicknameTextFieldAlertCase? = .alert,
-        nicknameState: TextFieldState = .defaultState,
-        subject: String = "",
-        subjectAnnounceState: SubjectTextFieldAlertCase? = .alert,
-        subjectState: TextFieldState = .defaultState,
-        navigateToCustomTabView: Bool = false
-    ) {
+    // 뷰 이동
+    @Published var isOnboardingComplete: Bool = false
+    
+    // UseCase에 필요
+    @Published var nickname: String = ""
+    @Published var year: Int = 2025
+    @Published var semester: Semester = .first
+    @Published var subject: String = ""
+    
+    // 단계
+    @Published var stage: OnboardingStage = .start
+    @Published var progressBarStep: Step = .first
+    
+    // TextField State
+    @Published var nicknameTextFieldState: TextFieldState = .defaultState
+    @Published var subjectTextFieldState: TextFieldState = .defaultState
+    
+    // TextField Alert Case
+    @Published var nicknameTextFieldAlertCase: NicknameTextFieldAlertCase = .alert
+    @Published var subjectTextFieldAlertCase: SubjectTextFieldAlertCase = .alert
+    
+    // NextButton Disable
+    @Published var isNextButtonDisabled: Bool = false
+    
+    init(onboardingUseCase: OnboardingUseCase) {
         self.onboardingUseCase = onboardingUseCase
-        self.currentState = currentState
-        self.currentStep = currentStep
-        self.isForward = isForward
-        self.year = year
-        self.semester = semester
-        self.nickname = nickname
-        self.nicknameAnnounceState = nicknameAnnounceState
-        self.nicknameState = nicknameState
-        self.subject = subject
-        self.subjectAnnounceState = subjectAnnounceState
-        self.subjectState = subjectState
-        self.navigateToCustomTabView = navigateToCustomTabView
-    }
-    
-    func goBack() {
-        withAnimation {
-            isForward = false
-            
-            switch currentState {
-            case .nameInput:
-                currentState = .start
-            case .semesterInput:
-                currentState = .nameInput
-            case .subjectInput:
-                currentState = .semesterInput
-            case .complete:
-                currentState = .subjectInput
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .nameInput:
-                currentStep = .first
-            case .semesterInput:
-                currentStep = .second
-            default:
-                break
-            }
-        }
-    }
-    
-    func goNext() {
-        withAnimation {
-            isForward = true
-            
-            switch currentState {
-            case .nameInput:
-                nickname = nickname.trimmingCharacters(in: .whitespaces)
-            case .subjectInput:
-                subject = subject.trimmingCharacters(in: .whitespaces)
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .start:
-                currentState = .nameInput
-            case .nameInput:
-                currentState = .semesterInput
-            case .semesterInput:
-                currentState = .subjectInput
-            case .subjectInput:
-                currentState = .complete
-            default:
-                break
-            }
-            
-            switch currentState {
-            case .nameInput:
-                currentStep = .first
-            case .semesterInput:
-                currentStep = .second
-            case .subjectInput:
-                currentStep = .third
-            default:
-                break
-            }
-        }
-    }
-    
-    func verifyNickname(
-        newText: String,
-        isNicknameFocused: Bool
-    ) {
-        if isNicknameFocused {
-            nicknameState = .typing
-            
-            if newText.isEmpty {
-                nicknameState = .defaultState
-                nicknameAnnounceState = .alert
-                isNicknameValid = false
-            } else {
-                if newText.isValidNickname {
-                    nicknameState = .typing
-                    nicknameAnnounceState = .enable
-                    isNicknameValid = true
-                } else {
-                    nicknameState = .alert
-                    nicknameAnnounceState = .alert
-                    isNicknameValid = false
-                }
-            }
-        } else if newText.isEmpty {
-            nicknameState = .defaultState
-            nicknameAnnounceState = .alert
-            isNicknameValid = false
-        }
-    }
-    
-    func verifySemester() {
-        if year == 2025 && semester == .first {
-            isSemesterValid = true
-        } else {
-            isSemesterValid = false
-        }
-    }
-    
-    func verifySubject(
-        newText: String,
-        isSubjectFocused: Bool
-    ) {
-        if isSubjectFocused {
-            subjectState = .typing
-            
-            if newText.isEmpty {
-                subjectState = .defaultState
-                subjectAnnounceState = .alert
-                isSubjectValid = false
-            } else {
-                if newText.isValidSubject {
-                    subjectState = .typing
-                    subjectAnnounceState = .enable
-                    isSubjectValid = true
-                } else {
-                    subjectState = .alert
-                    subjectAnnounceState = .alert
-                    isSubjectValid = false
-                }
-            }
-        } else if newText.isEmpty {
-            subjectState = .defaultState
-            subjectAnnounceState = .alert
-            isSubjectValid = false
-        }
-    }
-    
-    func handleNicknameFocusChange(
-        newText: String,
-        isNicknameFocused: Bool
-    ) {
-        if !isNicknameFocused {
-            if newText.isEmpty {
-                nicknameState = .defaultState
-                isNicknameValid = false
-            } else if newText.isValidNickname {
-                nicknameState = .field
-                nicknameAnnounceState = .enable
-                isNicknameValid = true
-            } else {
-                nicknameState = .alert
-                nicknameAnnounceState = .alert
-                isNicknameValid = false
-            }
-        } else {
-            nicknameState = .placeholder
-            isNicknameValid = false
-        }
-    }
-    
-    func handleSubjectFocusChange(
-        newText: String,
-        isSubjectFocused: Bool
-    ) {
-        if !isSubjectFocused {
-            if newText.isEmpty {
-                subjectState = .defaultState
-                isSubjectValid = false
-            } else if newText.isValidSubject {
-                subjectState = .field
-                subjectAnnounceState = .enable
-                isSubjectValid = true
-            } else {
-                subjectState = .alert
-                subjectAnnounceState = .alert
-                isSubjectValid = false
-            }
-        } else {
-            subjectState = .placeholder
-            isSubjectValid = false
-        }
     }
     
     @MainActor
-    func onboard() async {
-        do{
+    func onBoard() async {
+        do {
             try await onboardingUseCase.execute(
                 nickname: nickname,
                 year: year,
                 semester: semester.rawValue,
                 subjectName: subject
             )
-            navigateToCustomTabView = true
+            isOnboardingComplete = true
         } catch {
-            print("Error during onboarding: \(error)")
+            dump(error)
+        }
+    }
+    
+    @MainActor
+    func goNextStage() async {
+        switch stage {
+        case .start:
+            stage = .nickname
+        case .nickname:
+            stage = .semester
+        case .semester:
+            stage = .subject
+        case .subject:
+            stage = .end
+        case .end:
+            Task {
+                await onBoard()
+            }
+        }
+        validateNextButton()
+        progressBarStep = stage.step
+    }
+    
+    func goPrevStage() {
+        switch stage {
+        case .start:
+            print("처음엔 뒤로 못 감")
+            break
+        case .nickname:
+            stage = .start
+        case .semester:
+            stage = .nickname
+        case .subject:
+            stage = .semester
+        case .end:
+            stage = .subject
+        }
+        validateNextButton()
+        progressBarStep = stage.step
+    }
+    
+    // focus가 들어왔을 때 기존의 state 기준으로 state와 alert 변경
+    func setNicknameState(isNicknameFocused: Bool) {
+        switch nicknameTextFieldState {
+        case .defaultState:
+            nicknameTextFieldState = isNicknameFocused ? .placeholder : .defaultState
+        case .placeholder:
+            nicknameTextFieldState = isNicknameFocused ? .placeholder : .defaultState
+        case .typing:
+            nicknameTextFieldState = isNicknameFocused ? .typing : .field
+        case .alert:
+            break
+        case .field:
+            nicknameTextFieldState = isNicknameFocused ? .typing : .field
+        }
+        setNicknameAlertCase()
+    }
+    
+    // state를 기준으로 nickname alert 업데이트
+    func setNicknameAlertCase() {
+        switch nicknameTextFieldState {
+        case .defaultState, .placeholder, .alert:
+            nicknameTextFieldAlertCase = .alert
+        default:
+            nicknameTextFieldAlertCase = .enable
+        }
+    }
+    
+    // 닉네임 변경시 호출
+    func handleNickname(
+        oldNickname: String,
+        newNickname: String
+    ) {
+        print(#function, "old: \(oldNickname) | new: \(newNickname)")
+        // 문자열 입력 최대 차단
+        if newNickname.count > 10 {
+            nickname = String(oldNickname.prefix(10))
+        }
+        if nickname.isEmpty {
+            nicknameTextFieldState = .placeholder
+        } else if nickname.isValidNickname {
+            nicknameTextFieldState = .typing
+        } else {
+            nicknameTextFieldState = .alert
+        }
+        
+        setNicknameAlertCase()
+        validateNextButton()
+    }
+    
+    // subject 변경시 호출
+    func handleSubject(
+        oldSubject: String,
+        newSubject: String
+    ) {
+        if newSubject.count > 10 {
+            subject = String(oldSubject.prefix(10))
+        }
+        if subject.isEmpty {
+            subjectTextFieldState = .placeholder
+        } else if subject.isValidSubject {
+            subjectTextFieldState = .typing
+        } else {
+            subjectTextFieldState = .alert
+        }
+        
+        setSubjectAlertCase()
+        validateNextButton()
+    }
+    
+    // state를 기준으로 subject alert 업데이트
+    func setSubjectAlertCase() {
+        switch subjectTextFieldState {
+        case .defaultState, .placeholder, .alert:
+            subjectTextFieldAlertCase = .alert
+        default:
+            subjectTextFieldAlertCase = .enable
+        }
+    }
+    
+    // focus가 들어왔을 때 기존의 state 기준으로 state와 alert 변경
+    func setSubjectState(isSubjectFocused: Bool) {
+        switch subjectTextFieldState {
+        case .defaultState:
+            subjectTextFieldState = isSubjectFocused ? .placeholder : .defaultState
+        case .placeholder:
+            subjectTextFieldState = isSubjectFocused ? .placeholder : .defaultState
+        case .typing:
+            subjectTextFieldState = isSubjectFocused ? .typing : .field
+        case .alert:
+            break
+        case .field:
+            subjectTextFieldState = isSubjectFocused ? .typing : .field
+        }
+        setSubjectAlertCase()
+    }
+    
+    func handleSubject() {
+        print("subject 로직")
+        validateNextButton()
+    }
+    
+    func validateNextButton() {
+        switch stage {
+        case .start:
+            isNextButtonDisabled = false
+        case .nickname:
+            if nicknameTextFieldAlertCase == .alert {
+                isNextButtonDisabled = true
+            } else {
+                isNextButtonDisabled = false
+            }
+        case .semester:
+            if year == 2025 && semester == .first {
+                isNextButtonDisabled = false
+            } else {
+                isNextButtonDisabled = true
+            }
+        case .subject:
+            if subjectTextFieldAlertCase == .alert {
+                isNextButtonDisabled = true
+            } else {
+                isNextButtonDisabled = false
+            }
+        case .end:
+            isNextButtonDisabled = false
         }
     }
 }
-

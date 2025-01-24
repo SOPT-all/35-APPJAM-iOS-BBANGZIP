@@ -180,12 +180,12 @@ extension BbangDefaultRouter: Router {
             return URLEncoding.queryString
         case
                 .fetchBadgeDetail,
+                .getBadgeList,
                 .examFiltering,
                 .logout,
                 .withdraw:
             return nil
         case
-                .getBadgeList,
                 .completeStudy,
                 .revertCompleteStudy,
                 .removeTodayStudy,

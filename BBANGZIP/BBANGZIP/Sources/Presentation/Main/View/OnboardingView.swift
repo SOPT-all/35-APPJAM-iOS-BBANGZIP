@@ -9,51 +9,47 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @StateObject private var viewModel: OnboardingViewModel
-    @FocusState private var isNicknameFocused: Bool
-    @FocusState private var isSubjectFocused: Bool
-    private let years = Array(2025...2028)
+    @ObservedObject private var viewModel: OnboardingViewModel
     @Binding private var isOnboardingComplete: Bool
     
-    init(isOnboardingComplete: Binding<Bool>) {
-        let repository = DefaultUserRepository()
-        let useCase = DefaultOnboardingUseCase(repository: repository)
-        _viewModel = StateObject(
-            wrappedValue: OnboardingViewModel(
-                onboardingUseCase: useCase
-            )
-        )
+    // Focus
+    @FocusState var isNicknameFocused: Bool
+    @FocusState var isSubjectFocused: Bool
+    
+    init(
+        viewModel: OnboardingViewModel,
+        isOnboardingComplete: Binding<Bool>
+    ) {
+        self.viewModel = viewModel
         _isOnboardingComplete = isOnboardingComplete
     }
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                switch viewModel.currentState {
-                case .start:
-                    OnboardingStartView()
-                    startButton
-                    
-                case .complete:
-                    backButton
-                    OnboardingCompleteView()
-                    completeButton
-                    
-                default:
-                    backButton
-                    progressBar
-                    inputView
-                    nextButton
-                }
+        VStack(spacing: 0) {
+            switch viewModel.stage {
+            case .start:
+                firstView
+            case .nickname:
+                backButton
+                progressBar
+                nameInputView
+            case .semester:
+                backButton
+                progressBar
+                semesterInputView
+            case .subject:
+                backButton
+                progressBar
+                subjectInputView
+            case .end:
+                backButton
+                finishView
             }
-            .ignoresSafeArea(.keyboard)
-//            .onChange(of: viewModel.navigateToCustomTabView) { navigate in
-//                if navigate {
-//                    CustomTabView()
-//                }
-//            }
+            
+            nextButton
         }
-        .onChange(of: viewModel.navigateToCustomTabView) { newValue in
+        .background(Color(.staticWhite))
+        .onChange(of: viewModel.isOnboardingComplete) { newValue in
             isOnboardingComplete = newValue
         }
         .onTapGesture {
@@ -61,8 +57,70 @@ struct OnboardingView: View {
         }
     }
     
+    private var firstView: some View {
+        ZStack {
+            Image(.onboarding)
+                .frame(
+                    width: 320,
+                    height: 360
+                )
+                .padding(
+                    .top,
+                    44
+                )
+            
+            Spacer()
+            
+            VStack {
+                HStack {
+                    CustomText(
+                        "제 과제 빵점에 오신 것을\n환영합니다!",
+                        fontType: .title2Bold,
+                        color: Color(.labelNormal)
+                    )
+                    .padding(
+                        .top,
+                        121
+                    )
+                    .padding(
+                        .bottom,
+                        36
+                    )
+                    
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                20
+            )
+        }
+    }
+    
+    private var nextButton: some View {
+        Button {
+            Task {
+                await viewModel.goNextStage()
+            }
+        } label: {
+            Text(viewModel.stage.buttonTitle)
+        }
+        .buttonStyle(
+            SolidIconButton(
+                buttonImage: Image(.chevronRightThickSmall),
+                !viewModel.isNextButtonDisabled
+            )
+        )
+        .disabled(viewModel.isNextButtonDisabled)
+        .padding(
+            .horizontal,
+            20
+        )
+    }
     private var backButton: some View {
-        Button(action: viewModel.goBack) {
+        Button(action: viewModel.goPrevStage) {
             Image(.chevronLeftThickSmall)
                 .renderingMode(.template)
                 .foregroundStyle(Color(.labelAlternative))
@@ -72,88 +130,34 @@ struct OnboardingView: View {
     }
     
     private var progressBar: some View {
-        ProgressBar(type: .withCircle(category: viewModel.currentStep))
-            .padding(.horizontal, 44)
-            .padding(.bottom, 48)
-    }
-    
-    private var startButton: some View {
-        Button(
-            "빵집 오픈하러 가기",
-            action: viewModel.goNext
-        )
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRightThickSmall)
+        ProgressBar(
+            type: .withCircle(
+                category: viewModel.progressBarStep
             )
         )
-        .padding(.horizontal, 20)
-    }
-    
-    private var nextButton: some View {
-        Button(
-            "다음으로",
-            action: viewModel.goNext
+        .padding(
+            .horizontal,
+            44
         )
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRightThickSmall),
-                (viewModel.currentState == .nameInput) ? viewModel.isNicknameValid
-                : (viewModel.currentState == .subjectInput) ? viewModel.isSubjectValid
-                : (viewModel.currentState == .semesterInput) ? viewModel.isSemesterValid
-                : true
-            )
+        .padding(
+            .bottom,
+            48
         )
-        .disabled(
-            (viewModel.currentState == .nameInput) ? !viewModel.isNicknameValid
-            : (viewModel.currentState == .subjectInput) ? !viewModel.isSubjectValid
-            : (viewModel.currentState == .semesterInput) ? !viewModel.isSemesterValid
-            : false
-        )
-        .padding(.horizontal, 20)
-    }
-    
-    private var completeButton: some View {
-        Button(
-            "빵점 탈출하러 가기",
-            action: {
-                Task {
-                    await viewModel.onboard()
-                }
-            }
-        )
-        .buttonStyle(
-            SolidIconButton(
-                buttonImage: Image(.chevronRightThickSmall)
-            )
-        )
-        .padding(.horizontal, 20)
-    }
-    
-    private var inputView: some View {
-        ZStack {
-            if viewModel.currentState == .nameInput {
-                nameInputView
-            } else if viewModel.currentState == .semesterInput {
-                semesterInputView
-            } else if viewModel.currentState == .subjectInput {
-                subjectInputView
-            }
-        }
-        .animation(.bouncy, value: viewModel.currentState)
     }
     
     private var nameInputView: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 32) {
-                nameMainDescription
-                nicknameTextField
-                Spacer()
-            }
-            .padding(.horizontal, 20)
+        VStack(spacing: 32) {
+            nameMainDescription
+            
+            nicknameTextField
+            
+            Spacer()
         }
+        .padding(
+            .horizontal,
+            20
+        )
     }
-    
     private var nameMainDescription: some View {
         HStack {
             CustomText(
@@ -161,11 +165,14 @@ struct OnboardingView: View {
                 fontType: .title2Bold,
                 color: Color(.labelNormal)
             )
-            .padding(.top, 30)
+            .padding(
+                .top,
+                30
+            )
+            
             Spacer()
         }
     }
-    
     private var nicknameTextField: some View {
         TextField(
             "예) 탁구왕김제빵",
@@ -176,24 +183,17 @@ struct OnboardingView: View {
             CustomTextFieldStyle(
                 text: $viewModel.nickname,
                 style: .nickname,
-                state: viewModel.nicknameState,
-                alertText: viewModel.nicknameAnnounceState
+                state: viewModel.nicknameTextFieldState,
+                alertText: viewModel.nicknameTextFieldAlertCase
             )
         )
-        .onChange(of: viewModel.nickname) { newNickname in
-            if newNickname.count > 10 {
-                viewModel.nickname = String(newNickname.prefix(10))
-            }
-            
-            viewModel.verifyNickname(
-                newText: newNickname,
-                isNicknameFocused: isNicknameFocused
-            )
+        .onChange(of: isNicknameFocused) { newValue in
+            viewModel.setNicknameState(isNicknameFocused: newValue)
         }
-        .onChange(of: isNicknameFocused) { isNicknameFocused in
-            viewModel.handleNicknameFocusChange(
-                newText: viewModel.nickname,
-                isNicknameFocused: isNicknameFocused
+        .onChange(of: viewModel.nickname) { [nickname = viewModel.nickname] newNickname in
+            viewModel.handleNickname(
+                oldNickname: nickname,
+                newNickname: newNickname
             )
         }
     }
@@ -214,7 +214,6 @@ struct OnboardingView: View {
             .padding(.horizontal, 20)
         }
     }
-    
     private var semesterHeaderDescription: some View {
         HStack {
             CustomText(
@@ -226,7 +225,6 @@ struct OnboardingView: View {
         }
         .padding(.bottom, 8)
     }
-    
     private var semesterMainDescription: some View {
         HStack {
             CustomText(
@@ -238,14 +236,18 @@ struct OnboardingView: View {
         }
         .padding(.bottom, 32)
     }
-    
     private var yearPicker: some View {
         Picker(
             "Year",
             selection: $viewModel.year
         ) {
             ForEach(
-                years,
+                [
+                    2025,
+                    2026,
+                    2027,
+                    2028
+                ],
                 id: \.self
             ) { year in
                 CustomText(
@@ -258,13 +260,18 @@ struct OnboardingView: View {
         }
         .pickerStyle(WheelPickerStyle())
         .onChange(of: viewModel.year) { _ in
-            viewModel.verifySemester()
+            viewModel.validateNextButton()
         }
-        .padding(.leading, -5)
-        .padding(.trailing, -15)
+        .padding(
+            .leading,
+            -5
+        )
+        .padding(
+            .trailing,
+            -15
+        )
         .clipped()
     }
-    
     private var semesterPicker: some View {
         Picker(
             "Semester",
@@ -284,7 +291,7 @@ struct OnboardingView: View {
         }
         .pickerStyle(WheelPickerStyle())
         .onChange(of: viewModel.semester) { _ in
-            viewModel.verifySemester()
+            viewModel.validateNextButton()
         }
         .padding(.leading, -15)
         .padding(.trailing, -5)
@@ -293,16 +300,13 @@ struct OnboardingView: View {
     
     private var subjectInputView: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 0) {
-                subjectHeaderDescription
-                subjectMainDescription
-                subjectTextField
-                Spacer()
-            }
-            .padding(.horizontal, 20)
+            subjectHeaderDescription
+            subjectMainDescription
+            subjectTextField
+            Spacer()
         }
+        .padding(.horizontal, 20)
     }
-    
     private var subjectHeaderDescription: some View {
         HStack(spacing: 0) {
             CustomText(
@@ -314,19 +318,16 @@ struct OnboardingView: View {
         }
         .padding(.bottom, 8)
     }
-    
     private var subjectMainDescription: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                CustomText(
-                    "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
-                    fontType: .title2Bold,
-                    color: Color(.labelNormal)
-                )
-                Spacer()
-            }
-            .padding(.bottom, 33)
+        HStack(spacing: 0) {
+            CustomText(
+                "수강하는 과목 중\n한 가지만 먼저 입력해 볼까요?",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            Spacer()
         }
+        .padding(.bottom, 33)
     }
     
     private var subjectTextField: some View {
@@ -339,29 +340,66 @@ struct OnboardingView: View {
             CustomTextFieldStyle(
                 text: $viewModel.subject,
                 style: .subject,
-                state: viewModel.subjectState,
-                alertText: viewModel.subjectAnnounceState
+                state: viewModel.subjectTextFieldState,
+                alertText: viewModel.subjectTextFieldAlertCase
             )
         )
-        .onChange(of: viewModel.subject) { newSubject in
-            if newSubject.count > 10 {
-                viewModel.subject = String(newSubject.prefix(10))
-            }
-            
-            viewModel.verifySubject(
-                newText: newSubject,
-                isSubjectFocused: isSubjectFocused
+        .onChange(of: isSubjectFocused) { newValue in
+            viewModel.setSubjectState(isSubjectFocused: newValue)
+        }
+        .onChange(of: viewModel.subject) { [subject = viewModel.subject] newSubject in
+            viewModel.handleSubject(
+                oldSubject: subject,
+                newSubject: newSubject
             )
         }
-        .onChange(of: isSubjectFocused) { isFocused in
-            viewModel.handleSubjectFocusChange(
-                newText: viewModel.subject,
-                isSubjectFocused: isSubjectFocused
+    }
+    
+    private var finishView: some View {
+        ZStack {
+            Image(.onboardingFinish)
+                .frame(width: 320, height: 360)
+                .padding(.top, 44)
+            VStack {
+                HStack {
+                    CustomText(
+                        "제 과제 빵점 오픈을\n축하합니다!",
+                        fontType: .title2Bold,
+                        color: Color(.labelNormal)
+                    )
+                    .padding(
+                        .top,
+                        81
+                    )
+                    .padding(
+                        .bottom,
+                        36
+                    )
+                    
+                    Spacer()
+                }
+                .padding(
+                    .leading,
+                    4
+                )
+                
+                Spacer()
+            }
+            .padding(
+                .horizontal,
+                16
             )
         }
     }
 }
 
-//#Preview {
-//    OnboardingView()
-//}
+#Preview {
+    OnboardingView(
+        viewModel: OnboardingViewModel(
+            onboardingUseCase: DefaultOnboardingUseCase(
+                repository: DefaultUserRepository()
+            )
+        ),
+        isOnboardingComplete: .constant(false)
+    )
+}

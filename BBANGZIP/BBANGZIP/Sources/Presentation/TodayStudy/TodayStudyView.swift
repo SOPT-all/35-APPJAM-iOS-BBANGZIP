@@ -90,8 +90,9 @@ struct TodayStudyView: View {
                 
                 BottomSheet(
                     isShowing: .constant(!viewModel.badges.isEmpty),
-                    height: 530) {
-                        VStack {
+                    height: 530
+                ) {
+                    VStack(spacing: 0) {
                             CustomText(
                                 "배지를 획득했어요!",
                                 fontType: .heading2Bold,
