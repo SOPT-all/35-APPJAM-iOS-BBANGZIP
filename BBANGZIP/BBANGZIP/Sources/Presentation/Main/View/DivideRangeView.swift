@@ -38,11 +38,13 @@ struct PieceList: Encodable {
 struct DivideRangeView: View {
     @SwiftUI.Environment(\.dismiss) var dismiss
     @StateObject var viewModel: DivideRangeViewModel
+    @ObservedObject var addStudyViewModel: AddStudyViewModel
+    
     @FocusState private var startFocusedField: FocusField?
     @FocusState private var endFocusedField: FocusField?
     @State private var selectedPieceIndex: Int? = nil
 
-    @State private var studyRange: StudyRange =
+    @State private var studyRange: StudyRange? =
         StudyRange(
             studyContents: "",
             examDate: "",
@@ -50,6 +52,8 @@ struct DivideRangeView: View {
         )
 
     init(
+        viewModel: DivideRangeViewModel,
+        addStudyViewModel: AddStudyViewModel,
         pieceCount: Int,
         startPage: Int,
         endPage: Int,
@@ -63,6 +67,7 @@ struct DivideRangeView: View {
                 totalDays: totalDays
             )
         )
+        self.addStudyViewModel = addStudyViewModel
     }
 
     var body: some View {
@@ -310,13 +315,12 @@ struct DivideRangeView: View {
     private func saveStudyRange() {
         let inputDateFormatter = DateFormatter()
         inputDateFormatter.dateFormat = "yyyy년 M월 d일 까지"
-        inputDateFormatter.locale = Locale(identifier: "ko_KR") // 한국어 로케일 설정
+        inputDateFormatter.locale = Locale(identifier: "ko_KR")
 
         let outputDateFormatter = DateFormatter()
-        outputDateFormatter.dateFormat = "yyyy-MM-dd" // 이게 찐 날짜값
+        outputDateFormatter.dateFormat = "yyyy-MM-dd"
 
         let updatedPieceList = (0..<viewModel.pieces.count).compactMap { index -> PieceList? in
-
             guard let startPage = Int(viewModel.startRangeStrings[index].dropLast()),
                   let endPage = Int(viewModel.endRangeStrings[index].dropLast()) else {
                 return nil
@@ -340,7 +344,7 @@ struct DivideRangeView: View {
 
         let formattedExamDate = outputDateFormatter.string(from: viewModel.fixedExamDate)
         studyRange = StudyRange(
-            studyContents: "",
+            studyContents: addStudyViewModel.studyContent,
             examDate: formattedExamDate,
             pieceList: updatedPieceList
         )
@@ -350,7 +354,25 @@ struct DivideRangeView: View {
     private var registerButton: some View {
         Button("저장하기") {
             saveStudyRange()
-            printStudyRange()
+            printStudyRange()  // 주석 해제
+            Task {
+                if let studyRange = self.studyRange {
+                    print("StudyRange Data:")
+                    print("studyContents: \(studyRange.studyContents)")
+                    print("examDate: \(studyRange.examDate)")
+                    print("pieceList count: \(studyRange.pieceList.count)")
+                    
+                    // 각 piece의 상세 정보 출력
+                    for (index, piece) in studyRange.pieceList.enumerated() {
+                        print("Piece \(index + 1):")
+                        print("  startPage: \(piece.startPage)")
+                        print("  finishPage: \(piece.finishPage)")
+                        print("  deadline: \(piece.deadline)")
+                    }
+                    
+                    await addStudyViewModel.addStudyPiece(with: studyRange)
+                }
+            }
             dismiss()
         }
         .buttonStyle(
@@ -360,4 +382,5 @@ struct DivideRangeView: View {
         )
         .disabled(viewModel.allRangesValid)
     }
+
 }

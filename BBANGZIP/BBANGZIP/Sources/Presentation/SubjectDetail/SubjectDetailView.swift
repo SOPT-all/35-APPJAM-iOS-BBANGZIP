@@ -279,8 +279,18 @@ struct SubjectDetailView: View {
             
             // TODO: 공부 추가 화면으로 이동
             if !viewModel.isDeleteMode {
-                NavigationLink(destination: Text("공부추가")){
-                    AddStudyCard()
+                NavigationLink(
+                        destination: AddStudyView(
+                            viewModel: AddStudyViewModel(
+                                addStudyPieceUseCase: DefaultAddStudyPieceUseCase(
+                                    repository: DefaultStudyPieceRepository()
+                                ),
+                                // 필요한 UseCase 주입
+                                subjectId: viewModel.subjectId,
+                                examName: viewModel.currentExam
+                            )
+                        )
+                ){AddStudyCard()
                 }
                 .buttonStyle(PressedButtonStyle())
             }
@@ -322,7 +332,18 @@ struct SubjectDetailView: View {
                     height: 296
                 )
             
-            NavigationLink (destination: AddStudyView()){
+            NavigationLink(
+                destination: AddStudyView(
+                    viewModel: AddStudyViewModel(
+                        addStudyPieceUseCase: DefaultAddStudyPieceUseCase(
+                            repository: DefaultStudyPieceRepository()
+                        ),
+                        // 필요한 UseCase 주입
+                        subjectId: viewModel.subjectId,
+                        examName: viewModel.currentExam
+                    )
+                )
+            ) {
                 CustomText(
                     "공부할 내용 추가하기",
                     fontType: .body1Bold,

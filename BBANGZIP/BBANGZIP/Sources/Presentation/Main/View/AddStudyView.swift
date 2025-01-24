@@ -15,7 +15,7 @@ struct AddStudyView: View {
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
     
-    init(viewModel: AddStudyViewModel = AddStudyViewModel(),
+    init(viewModel: AddStudyViewModel,
          isBottomSheetPresented: Bool = false,
          isButtonTapped: Bool = false
     ) {
@@ -95,19 +95,10 @@ struct AddStudyView: View {
                 ) {
                     SetPieceBottomSheet(
                         isPresented: $viewModel.isDividerPresented,
-                        startPage: Int(
-                            viewModel.startRangeString.replacingOccurrences(
-                                of: "p",
-                                with: ""
-                            )
-                        ) ?? 0,
-                        endPage: Int(
-                            viewModel.endRangeString.replacingOccurrences(
-                                of: "p",
-                                with: ""
-                            )
-                        ) ?? 0,
-                        totalDays: viewModel.daysUntilExam
+                        startPage: Int(viewModel.startRangeString.dropLast()) ?? 0,
+                        endPage: Int(viewModel.endRangeString.dropLast()) ?? 0,
+                        totalDays: viewModel.daysUntilExam,
+                        addStudyViewModel: viewModel
                     )
                 }
             }

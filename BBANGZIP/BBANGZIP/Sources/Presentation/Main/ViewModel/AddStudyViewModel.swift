@@ -39,8 +39,9 @@ final class AddStudyViewModel: ObservableObject {
     @Published var selectedDay: Int
     @Published var isButtonTapped: Bool = false
     @Published var daysUntilExam: Int = 0
-    @Published var dividedExamDate: String = ""
-    @Published var dividedPieceList: [AddStudyPieceDTO] = []
+    let subjectId: Int
+    let examName: String
+    @Published var studyRange: StudyRange?
         
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -63,7 +64,9 @@ final class AddStudyViewModel: ObservableObject {
         startRangeState: TextFieldState = .defaultState,
         startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert,
+        subjectId: Int,
+        examName: String
     ) {
         self.addStudyPieceUseCase = addStudyPieceUseCase
         self.date = date
@@ -85,25 +88,11 @@ final class AddStudyViewModel: ObservableObject {
         self.selectedYear = calendar.component(.year, from: currentDate)
         self.selectedMonth = calendar.component(.month, from: currentDate)
         self.selectedDay = calendar.component(.day, from: currentDate)
-        self.isButtonTapped = isButtonTapped
+        
+        self.subjectId = subjectId
+        self.examName = examName
         
         calculateDaysUntilExam()
-    }
-    
-    @MainActor
-    func addStudyPiece() async {
-        do {
-            try await addStudyPieceUseCase.execute(
-                subjectId: 74,
-                examName: "내가",
-                studyContents: studyContent,
-                examDate: dividedExamDate,
-                pieceList: dividedPieceList
-            )
-            // ... 성공 처리
-        } catch {
-            // ... 에러 처리
-        }
     }
     
     private func calculateDaysUntilExam() {
@@ -118,6 +107,51 @@ final class AddStudyViewModel: ObservableObject {
         daysUntilExam = max(components.day ?? 0, 0)
     }
     
+    @MainActor
+    func addStudyPiece(with studyRange: StudyRange) async {
+        do {
+            let pieceList = studyRange.pieceList.map { piece in
+                AddStudyPieceDTO(
+                    startPage: piece.startPage,
+                    finishPage: piece.finishPage,
+                    deadline: piece.deadline
+                )
+            }
+            let newStudyPiece = try await addStudyPieceUseCase.execute(
+                subjectId: self.subjectId,
+                examName: self.examName,
+                studyContents: studyRange.studyContents,
+                examDate: studyRange.examDate,
+                pieceList: pieceList
+            )
+        } catch {
+            
+        }
+    }
+    
+//    @MainActor
+//    func changeMotivationMessage() async {
+//        do {
+//            let _: () = try await changeNameUseCase.execute(
+//                subjectId: parentViewModel.subjectId,
+//                options: "motivationMessage",
+//                value: message
+//            )
+//            
+//            await parentViewModel.fetchData()
+//                    
+//            parentViewModel.toast = Toast(
+//                "각오 한 마디 작성 완료!",
+//                startFrom: 20
+//            )
+//                    
+//            self.shouldDismiss = true
+//            
+//        } catch {
+//            dump(error)
+//            print(error)
+//        }
+//    }
     func verifyStudyContent(
         newText: String,
         isStudyContentFocused: Bool
