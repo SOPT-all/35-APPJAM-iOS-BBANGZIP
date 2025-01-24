@@ -103,8 +103,4 @@ final class SubjectManageViewModel: ObservableObject {
     func validateDeleteButton() {
         isDeleteButtonEnable = !selectedSubjectIds.isEmpty
     }
-    
-    func fetchSubjectData() {
-        modelList = SubjectCardModel.mockList
-    }
 }

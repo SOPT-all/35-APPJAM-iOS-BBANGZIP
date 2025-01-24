@@ -29,6 +29,7 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var isDeleteButtonEnable: Bool = false
     @Published var isShowingBottomSheet: Bool = false
     @Published var toast: Toast?
+    @Published var badges: [StudyCompleteBadge] = []
     
     var selectedItemCount: Int {
         return selectedPieceIds.count

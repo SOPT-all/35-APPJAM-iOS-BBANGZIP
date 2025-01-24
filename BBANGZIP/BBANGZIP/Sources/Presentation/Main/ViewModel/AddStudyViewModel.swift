@@ -9,6 +9,7 @@
 import SwiftUI
 
 final class AddStudyViewModel: ObservableObject {
+    private let addStudyPieceUseCase: AddStudyPieceUseCase
     @Published var date: Date? {
         didSet {
             calculateDaysUntilExam()
@@ -38,6 +39,11 @@ final class AddStudyViewModel: ObservableObject {
     @Published var selectedDay: Int
     @Published var isButtonTapped: Bool = false
     @Published var daysUntilExam: Int = 0
+    let subjectId: Int
+    let examName: String
+    @Published var studyRange: StudyRange?
+    @SwiftUI.Environment(\.dismiss) private var dismiss
+    @Published var badges: [AddStudyPieceBadge] = []
         
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -48,6 +54,7 @@ final class AddStudyViewModel: ObservableObject {
     }
     
     init(
+        addStudyPieceUseCase: AddStudyPieceUseCase,
         pieceCount: Int = 1,
         date: Date? = nil,
         studyContent: String = "",
@@ -59,8 +66,11 @@ final class AddStudyViewModel: ObservableObject {
         startRangeState: TextFieldState = .defaultState,
         startRangeAnnounceState: StudyRangeTextFieldAlertCase? = .startAlert,
         endRangeState: TextFieldState = .defaultState,
-        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert
+        endRangeAnnounceState: StudyRangeTextFieldAlertCase? = .endAlert,
+        subjectId: Int,
+        examName: String
     ) {
+        self.addStudyPieceUseCase = addStudyPieceUseCase
         self.date = date
         self.studyContent = studyContent
         self.startRange = startRange
@@ -80,7 +90,9 @@ final class AddStudyViewModel: ObservableObject {
         self.selectedYear = calendar.component(.year, from: currentDate)
         self.selectedMonth = calendar.component(.month, from: currentDate)
         self.selectedDay = calendar.component(.day, from: currentDate)
-        self.isButtonTapped = isButtonTapped
+        
+        self.subjectId = subjectId
+        self.examName = examName
         
         calculateDaysUntilExam()
     }
@@ -97,6 +109,29 @@ final class AddStudyViewModel: ObservableObject {
         daysUntilExam = max(components.day ?? 0, 0)
     }
     
+//    @MainActor
+//    func changeMotivationMessage() async {
+//        do {
+//            let _: () = try await changeNameUseCase.execute(
+//                subjectId: parentViewModel.subjectId,
+//                options: "motivationMessage",
+//                value: message
+//            )
+//            
+//            await parentViewModel.fetchData()
+//                    
+//            parentViewModel.toast = Toast(
+//                "각오 한 마디 작성 완료!",
+//                startFrom: 20
+//            )
+//                    
+//            self.shouldDismiss = true
+//            
+//        } catch {
+//            dump(error)
+//            print(error)
+//        }
+//    }
     func verifyStudyContent(
         newText: String,
         isStudyContentFocused: Bool
@@ -311,6 +346,34 @@ final class AddStudyViewModel: ObservableObject {
             
             endRangeState = .placeholder
             isEndRangeValid = false
+        }
+    }
+    
+    func updateStudyRange(_ newRange: StudyRange) {
+        self.studyRange = newRange
+    }
+        
+    @MainActor
+    func addStudyPiece(with studyRange: StudyRange) async {
+        do {
+            let completeResult = try await addStudyPieceUseCase.execute(
+                subjectId: subjectId,
+                examName: examName,
+                studyContents: studyRange.studyContents,
+                examDate: studyRange.examDate,
+                pieceList: studyRange.pieceList.map { piece in
+                    AddStudyPieceDTO(
+                        startPage: piece.startPage,
+                        finishPage: piece.finishPage,
+                        deadline: piece.deadline
+                    )
+                }
+            )
+            
+            badges.append(contentsOf: completeResult)
+        } catch {
+            // 에러 처리...
+            print("Error adding study piece: \(error)")
         }
     }
 }

@@ -20,40 +20,15 @@ struct SubjectStudyModel: Sendable, Hashable {
     let inProgressCount: Int
 }
 
+extension SubjectStudyModel {
+    var isValidExam: Bool {
+        return examDDay != 999
+    }
+}
+
 extension SubjectCardModel {
-    static let mockList: [Self] = [
-        .init(
-            state: SubjectCardState.cardDefault,
-            subjectId: 1,
-            subjectName: "경제통계학",
-            studyList: [SubjectStudyModel(
-                examName: "중간고사",
-                examDDay: 14,
-                pendingCount: 2,
-                inProgressCount: 1
-            )]
-        ),
-        .init(
-            state: SubjectCardState.cardDefault,
-            subjectId: 2,
-            subjectName: "컴퓨터프로그래밍1",
-            studyList: [SubjectStudyModel(
-                examName: "중간고사",
-                examDDay: 20,
-                pendingCount: 1,
-                inProgressCount: 4
-            )]
-        ),
-        .init(
-            state: SubjectCardState.cardDefault,
-            subjectId: 3,
-            subjectName: "한국사와문학",
-            studyList: [SubjectStudyModel(
-                examName: "기말고사",
-                examDDay: 3,
-                pendingCount: 0,
-                inProgressCount: 0
-            )]
-        )
-    ]
+    var hasValidStudy: Bool {
+        guard let firstStudy = studyList.first else { return false }
+        return firstStudy.isValidExam
+    }
 }

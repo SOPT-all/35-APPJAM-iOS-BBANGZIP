@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SetPieceBottomSheet: View {
     @Binding private var isPresented: Bool
+    @ObservedObject var addStudyViewModel: AddStudyViewModel
     
     @State private var startPage: Int
     @State private var endPage: Int
@@ -21,12 +22,14 @@ struct SetPieceBottomSheet: View {
         isPresented: Binding<Bool>,
         startPage: Int,
         endPage: Int,
-        totalDays: Int
+        totalDays: Int,
+        addStudyViewModel: AddStudyViewModel
     ) {
         self._isPresented = isPresented
         self.startPage = startPage
         self.endPage = endPage
         self.totalDays = totalDays
+        self.addStudyViewModel = addStudyViewModel
     }
     
     var body: some View {
@@ -44,6 +47,13 @@ struct SetPieceBottomSheet: View {
             ForEach(pieces, id: \.self) { num in
                 NavigationLink(
                     destination: DivideRangeView(
+                        viewModel: DivideRangeViewModel(
+                            pieceCount: num,
+                            startPage: startPage,
+                            endPage: endPage,
+                            totalDays: totalDays
+                        ),
+                        addStudyViewModel: addStudyViewModel,
                         pieceCount: num,
                         startPage: startPage,
                         endPage: endPage,

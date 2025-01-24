@@ -14,8 +14,9 @@ struct AddStudyView: View {
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
-    init(viewModel: AddStudyViewModel = AddStudyViewModel(),
+    init(viewModel: AddStudyViewModel,
          isBottomSheetPresented: Bool = false,
          isButtonTapped: Bool = false
     ) {
@@ -95,19 +96,10 @@ struct AddStudyView: View {
                 ) {
                     SetPieceBottomSheet(
                         isPresented: $viewModel.isDividerPresented,
-                        startPage: Int(
-                            viewModel.startRangeString.replacingOccurrences(
-                                of: "p",
-                                with: ""
-                            )
-                        ) ?? 0,
-                        endPage: Int(
-                            viewModel.endRangeString.replacingOccurrences(
-                                of: "p",
-                                with: ""
-                            )
-                        ) ?? 0,
-                        totalDays: viewModel.daysUntilExam
+                        startPage: Int(viewModel.startRangeString.dropLast()) ?? 0,
+                        endPage: Int(viewModel.endRangeString.dropLast()) ?? 0,
+                        totalDays: viewModel.daysUntilExam,
+                        addStudyViewModel: viewModel
                     )
                 }
             }
@@ -116,10 +108,12 @@ struct AddStudyView: View {
     
     // TODO: 뒤로가기 버튼 ToolBar로 리팩토링 필요
     private var backButton: some View {
-        HStack {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
+        Button {
+        } label: { HStack {
+                Image(.chevronLeftThickSmall)
+                    .renderingMode(.template)
+                    .foregroundStyle(Color(.labelAlternative))
+            }
         }
     }
     
@@ -329,19 +323,28 @@ struct AddStudyView: View {
             hideKeyboard()
             viewModel.isDividerPresented = true
         }
-        .buttonStyle(
-            OutlinedMediumButton(
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
-            )
-        )
+        .applyFont(font: .body2Bold)
+        .foregroundStyle(Color(.primaryNormal))
         .padding(
-            .bottom,
-            8
+            .vertical,
+            9
+        )
+        .frame(maxWidth: .infinity)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(
+                    Color(.lineStrong),
+                    lineWidth: 1
+                )
         )
         .disabled(
             !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
         .buttonStyle(PressedButtonStyle())
+        .padding(.vertical, 8)
+        
+        
     }
     
     private var tipText: some View {
@@ -358,7 +361,26 @@ struct AddStudyView: View {
     
     private var registerButton: some View {
         Button("공부 내용 등록하기") {
-            // TODO: 화면 전환해야 할 다음 뷰로 연결
+            Task {
+                if let studyRange = viewModel.studyRange {  // AddStudyViewModel에 studyRange 속성 필요
+                    print("StudyRange Data:")
+                    print("studyContents: \(studyRange.studyContents)")
+                    print("examDate: \(studyRange.examDate)")
+                    print("pieceList count: \(studyRange.pieceList.count)")
+                    
+                    // 각 piece의 상세 정보 출력
+                    for (index, piece) in studyRange.pieceList.enumerated() {
+                        print("Piece \(index + 1):")
+                        print("  startPage: \(piece.startPage)")
+                        print("  finishPage: \(piece.finishPage)")
+                        print("  deadline: \(piece.deadline)")
+                    }
+                    
+                    await viewModel.addStudyPiece(with: studyRange)
+                    
+                    dismiss()
+                }
+            }
         }
         .buttonStyle(
             SolidIconButton(

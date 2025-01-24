@@ -27,7 +27,8 @@ enum BottomSheetType: Int {
         selectedMonth: Binding<Int>? = .constant(1),
         selectedDay: Binding<Int>? = .constant(1),
         isButtonTapped: Binding<Bool> = .constant(false),
-        fixedExamDate: Date = Date()
+        fixedExamDate: Date = Date(),
+        addStudyViewModel: AddStudyViewModel? = nil
     ) -> some View {
         switch self {
         case .examDate:
@@ -55,12 +56,17 @@ enum BottomSheetType: Int {
                 selectedSemester: .constant("1학기")
             )
         case .divideStudy:
-            SetPieceBottomSheet(
-                isPresented: isPresented,
-                startPage: 0,
-                endPage: 0,
-                totalDays: 0
-            )
+            if let viewModel = addStudyViewModel {  // nil 체크
+                SetPieceBottomSheet(
+                    isPresented: isPresented,
+                    startPage: 0,
+                    endPage: 0,
+                    totalDays: 0,
+                    addStudyViewModel: viewModel
+                )
+            } else {
+                Text("AddStudyViewModel이 필요합니다.")
+            }
         case .completeCheck:
             CompleteCheckBottomSheet(
                 isPresented: isPresented
