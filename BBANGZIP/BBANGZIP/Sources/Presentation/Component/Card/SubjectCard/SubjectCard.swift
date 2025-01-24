@@ -2,9 +2,11 @@ import SwiftUI
 
 struct SubjectCard: View {
     private var state: CardState
-    // TODO: API 연결 후 주입 값 형식 변경, 현재는 필요한 값을 struct로 묶어 주입하는 형식
     private let subjectCardData: SubjectCardModel
     private let borderPadding: CGFloat = 2
+    private var shouldShowEmptyState: Bool {
+        return !subjectCardData.hasValidStudy
+    }
     
     init(
         state: CardState,
@@ -23,10 +25,10 @@ struct SubjectCard: View {
         ZStack {
             backgroundView
             
-            if let study = firstStudy {
-                normalStateView(study: study)
-            } else {
+            if shouldShowEmptyState {
                 emptyStateView
+            } else if let study = firstStudy {
+                normalStateView(study: study)
             }
         }
         .frame(height: 190)
