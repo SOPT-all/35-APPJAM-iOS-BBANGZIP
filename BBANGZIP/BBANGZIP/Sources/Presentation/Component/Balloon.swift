@@ -71,11 +71,7 @@ struct Balloon: View {
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color(.staticWhite))
-                    .shadow(
-                        color: Color(.staticBlack).opacity(0.25),
-                        radius: 4,
-                        y: 4
-                    )
+                    .customShadow(.emphasize)
             )
             .padding(
                 .horizontal
