@@ -38,19 +38,21 @@ struct TodayStudyView: View {
                             
                             headerView
                         }
-                        .padding(
-                            .bottom,
-                            48
-                        )
                         
                         if viewModel.todayCount + viewModel.completeCount == 0 {
-                            emptyView
-                                .padding(
-                                    .bottom,
-                                    16
-                                )
-                            
-                            addTodayStudyButton
+                            VStack{
+                                Image(.mirunEmpty)
+                                    .padding(
+                                        .top,
+                                        71
+                                    )
+                                
+                                addTodayStudyButton
+                                    .padding(
+                                        .bottom,
+                                        77
+                                    )
+                            }
                         } else {
                             announceTextView
                                 .padding(
@@ -188,7 +190,7 @@ struct TodayStudyView: View {
     }
     
     private var backgroundView: some View {
-        VStack {
+        ZStack {
             Color(.backgroundAccent)
                 .cornerRadius(
                     32,
@@ -201,6 +203,10 @@ struct TodayStudyView: View {
                     .bottom,
                     24
                 )
+            HStack {
+                viewModel.pendingCount > 0 ? Image(.mirunBooks) : Image(.mirunWink)
+            }
+            .padding(.top, 70)
         }
     }
     
@@ -217,23 +223,23 @@ struct TodayStudyView: View {
                     Spacer()
                 }
                 
-                HStack {
-                    if viewModel.pendingCount > 0 {
-                        delayedStudyButton
-                    } else {
-                        CustomText(
-                            "사장님의 밀린 공부는 빵 개!",
-                            fontType: .headline1Bold,
-                            color: Color(.labelAlternative)
-                        )
-                        .padding(
-                            .leading,
-                            8
-                        )
+                    HStack {
+                        if viewModel.pendingCount > 0 {
+                            delayedStudyButton
+                        } else {
+                            CustomText(
+                                "사장님의 밀린 공부는 빵 개!",
+                                fontType: .headline1Bold,
+                                color: Color(.labelAlternative)
+                            )
+                            .padding(
+                                .leading,
+                                8
+                            )
+                        }
+                        
+                        Spacer()
                     }
-                    
-                    Spacer()
-                }
             }
             .padding(
                 .leading,
@@ -248,10 +254,6 @@ struct TodayStudyView: View {
                 text: "사장님의 과제 빵점 탈출을 응원해요!",
                 leftIcon: Image(.announcement),
                 balloonMode: .top
-            )
-            .padding(
-                .horizontal,
-                20
             )
         }
     }
@@ -430,6 +432,10 @@ struct TodayStudyView: View {
         .padding(
             .horizontal,
             20
+        )
+        .padding(
+            .bottom,
+            77
         )
     }
     
