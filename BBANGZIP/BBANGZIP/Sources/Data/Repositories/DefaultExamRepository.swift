@@ -26,7 +26,7 @@ final class DefaultExamRepository: ExamRepository {
         switch response.result {
         case .success(let resultDTO):
             dump(resultDTO)
-            return resultDTO.data.toDomain()
+            return resultDTO.toDomain()
         case .failure(let error):
             throw error
         }

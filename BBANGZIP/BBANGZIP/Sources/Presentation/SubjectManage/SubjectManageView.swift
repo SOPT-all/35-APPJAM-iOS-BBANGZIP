@@ -225,7 +225,6 @@ struct SubjectManageView: View {
                                     revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
                                         repository: DefaultStudyRepository()
                                     ),
-                                    subjectName: model.subjectName,
                                     subjectId: model.subjectId
                                 ),
                                 isBottomSheetShowing: $isBottomSheetShowing

@@ -8,21 +8,39 @@
 
 struct FilterExamResponseDTO: Decodable {
     let code: String
-    let data: FilterExamDTO
+    let data: FilterExamDTO?
+    let message: String?
+    
+    func toDomain() -> FilterExamContent {
+        if let data = data {
+            return data.toDomain()
+        } else {
+            // data가 없을 경우 기본값 반환
+            return FilterExamContent(
+                motivationMessage: "",
+                examDday: 0,
+                examDate: "",
+                subjectName: "",
+                studyList: []
+            )
+        }
+    }
 }
 
 struct FilterExamDTO: Decodable {
     let motivationMessage: String?
     let examDday: Int
     let examDate: String
-    let studyList: [ExamListDTO]
+    let subjectName: String
+    let studyList: [ExamListDTO]?
     
     func toDomain() -> FilterExamContent {
         FilterExamContent(
             motivationMessage: motivationMessage ?? "",
             examDday: examDday,
             examDate: examDate,
-            studyList: studyList.map { $0.toDomain() }
+            subjectName: subjectName,
+            studyList: studyList?.map { $0.toDomain() } ?? []
         )
     }
 }

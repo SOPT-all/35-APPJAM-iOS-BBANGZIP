@@ -57,8 +57,8 @@ struct ChangeSubjectNameView: View {
                 Button("등록하기") {
                     Task {
                         await viewModel.changeSubjectName()
+                        dismiss()
                     }
-                    dismiss()
                 }
                 .buttonStyle(SolidButton(viewModel.isButtonEnabled))
                 .disabled(!viewModel.isButtonEnabled)

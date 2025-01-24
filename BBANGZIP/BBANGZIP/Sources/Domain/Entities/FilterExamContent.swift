@@ -10,6 +10,7 @@ struct FilterExamContent {
     let motivationMessage: String
     let examDday: Int
     let examDate: String
+    let subjectName: String
     let studyList: [FilterExamList]
 }
 

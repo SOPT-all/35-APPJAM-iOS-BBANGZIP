@@ -13,8 +13,7 @@ final class SubjectDetailViewModel: ObservableObject {
     private let deleteStudyPieceUseCase: DeleteStudyPieceUseCase
     private let completeTodayStudyUseCase: CompleteTodayStudyUseCase
     private let revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase
-    
-    let subjectName: String
+
     let subjectId: Int
     @Published var revertTargetPieceID: Int? = nil
     @Published var selectedPieceIds: Set<Int> = []
@@ -23,6 +22,7 @@ final class SubjectDetailViewModel: ObservableObject {
     @Published var examDday: Int = 0
     @Published var examChipType: ChipType = .daysLeftBlack(0)
     @Published var examDate: String = ""
+    @Published var subjectName: String = ""
     @Published var modelList: [FilterExamList] = []
     @Published var isDeleteMode: Bool = false
     @Published var isLoading: Bool = true
@@ -39,14 +39,12 @@ final class SubjectDetailViewModel: ObservableObject {
         deleteStudyPieceUseCase: DeleteStudyPieceUseCase,
         completeTodayStudyUseCase: CompleteTodayStudyUseCase,
         revertCompleteTodayStudyUseCase: RevertCompleteTodayStudyUseCase,
-        subjectName: String = "",
         subjectId: Int
     ) {
         self.filterExamUseCase = filterExamUseCase
         self.deleteStudyPieceUseCase = deleteStudyPieceUseCase
         self.completeTodayStudyUseCase = completeTodayStudyUseCase
         self.revertCompleteTodayStudyUseCase = revertCompleteTodayStudyUseCase
-        self.subjectName = subjectName
         self.subjectId = subjectId
     }
     
@@ -98,6 +96,7 @@ final class SubjectDetailViewModel: ObservableObject {
             examDday = examContent.examDday
             examChipType = examDday > 0 ? .delayedDate(examDday) : .daysLeftWithText(examDday)
             examDate = examContent.examDate
+            subjectName = examContent.subjectName
             isLoading = false
         } catch {
             dump(error)

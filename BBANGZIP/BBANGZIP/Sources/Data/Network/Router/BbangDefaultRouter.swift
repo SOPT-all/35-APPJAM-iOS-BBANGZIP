@@ -17,7 +17,6 @@ enum BbangDefaultRouter {
     case onBoarding
     case testSelect(subjectID: Int)
     case addStudyScope
-    case deleteStudyScope
     case studyCompleteCheck(pieceID: Float)
     case notCompletedCheck(pieceID: Float)
     case sortedDelayedTodoList
@@ -47,6 +46,7 @@ enum BbangDefaultRouter {
     case addSubject(dto: AddSubjectRequestDTO)
     case deleteSubject(dto: DeleteSubjectRequestDTO)
     case changeName(subjectID: Int, options: String, dto: ChangeNameRequestDTO)
+    case deleteStudyPiece(dto: DeleteStudyPieceRequestDTO)
     
 }
 
@@ -77,7 +77,7 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/subjects/\(subjectId)/\(options)"
         case .addStudyScope:
             return "/api/v1/studies"
-        case .deleteStudyScope:
+        case .deleteStudyPiece:
             return "/api/v1/studies/pieces"
         case .deleteSubject:
             return "/api/v1/subjects"
@@ -150,7 +150,7 @@ extension BbangDefaultRouter: Router {
         case
                 .logout,
                 .withDraw,
-                .deleteStudyScope,
+                .deleteStudyPiece,
                 .deleteSubject,
                 .hideTodo:
             return .delete
@@ -204,6 +204,8 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .deleteSubject(let dto):
             return dto.asDictionary()
+        case .deleteStudyPiece(let dto):
+            return dto.asDictionary()
         default:
             return nil
         }
@@ -215,7 +217,7 @@ extension BbangDefaultRouter: Router {
         case .signIn, .fetchSortedTodoList:
             return URLEncoding.queryString
 
-        case .signup, .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
+        case .fetchSortedTodoList, .fetchAddTodayStudy, .fetchSubject:
             return URLEncoding.default
           
         case .fetchBadgeDetail, .examFiltering:
