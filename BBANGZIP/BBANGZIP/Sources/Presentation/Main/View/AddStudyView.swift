@@ -14,6 +14,7 @@ struct AddStudyView: View {
     @FocusState private var isStudyContentFocused: Bool
     @FocusState private var isStartRangeFocused: Bool
     @FocusState private var isEndRangeFocused: Bool
+    @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(viewModel: AddStudyViewModel,
          isBottomSheetPresented: Bool = false,
@@ -107,10 +108,12 @@ struct AddStudyView: View {
     
     // TODO: 뒤로가기 버튼 ToolBar로 리팩토링 필요
     private var backButton: some View {
-        HStack {
-            Image(.chevronLeftThickSmall)
-                .renderingMode(.template)
-                .foregroundStyle(Color(.labelAlternative))
+        Button {
+        } label: { HStack {
+                Image(.chevronLeftThickSmall)
+                    .renderingMode(.template)
+                    .foregroundStyle(Color(.labelAlternative))
+            }
         }
     }
     
@@ -320,19 +323,28 @@ struct AddStudyView: View {
             hideKeyboard()
             viewModel.isDividerPresented = true
         }
-        .buttonStyle(
-            OutlinedMediumButton(
-                viewModel.isStudyContentValid && viewModel.isEndRangeValid && viewModel.isStartRangeValid && !isEndRangeFocused && !isStartRangeFocused && !isStudyContentFocused
-            )
-        )
+        .applyFont(font: .body2Bold)
+        .foregroundStyle(Color(.primaryNormal))
         .padding(
-            .bottom,
-            8
+            .vertical,
+            9
+        )
+        .frame(maxWidth: .infinity)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(
+                    Color(.lineStrong),
+                    lineWidth: 1
+                )
         )
         .disabled(
             !viewModel.isStudyContentValid && !viewModel.isEndRangeValid && !viewModel.isStartRangeValid && isEndRangeFocused && isStartRangeFocused && isStudyContentFocused
         )
         .buttonStyle(PressedButtonStyle())
+        .padding(.vertical, 8)
+        
+        
     }
     
     private var tipText: some View {
@@ -365,6 +377,8 @@ struct AddStudyView: View {
                     }
                     
                     await viewModel.addStudyPiece(with: studyRange)
+                    
+                    dismiss()
                 }
             }
         }

@@ -246,7 +246,6 @@ struct SubjectManageView: View {
                     }
                 }
                 .buttonStyle(PressedButtonStyle())
-                .customShadow(.normal)
             }
             
             if !viewModel.isDeleteMode {

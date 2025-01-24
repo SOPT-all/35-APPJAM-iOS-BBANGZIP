@@ -122,6 +122,10 @@ struct DivideRangeView: View {
                 )
             }
         }
+        .onDisappear {
+            addStudyViewModel.isDividerPresented = false
+        }
+        // TODO: 이전 바 되돌아갈떄 바텀시트 다시 안나오도록 
     }
 
     private var entireRange: some View {
@@ -275,28 +279,41 @@ struct DivideRangeView: View {
         for dateRange: String,
         index: Int
     ) -> some View {
-        Button(
-            action: {
-                selectedPieceIndex = index
-                viewModel.isDatePickerPresented = true
+            
+            Button(
+                action: {
+                    selectedPieceIndex = index
+                    viewModel.isDatePickerPresented = true
+                }
+            ) {
+                HStack {
+                    Image(.calenderSmall)
+                    Text(dateRange)
+                }
             }
-        ) {
-            HStack {
-                Image(.calenderSmall)
-                Text(dateRange)
+            .applyFont(font: .body2Bold)
+            .foregroundStyle(Color(.primaryNormal))
+            .padding(
+                .vertical,
+                8
+            )
+            .frame(maxWidth: .infinity)
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(
+                        Color(.lineStrong),
+                        lineWidth: 1
+                    )
+            )
+            .buttonStyle(PressedButtonStyle())
+            .onChange(of: viewModel.isDatePickerPresented) { isPresented in
+                if !isPresented, viewModel.isButtonTapped[index] {
+                    viewModel.deadlineDates[index] = "\(viewModel.selectedYears[index])년 \(viewModel.selectedMonths[index])월 \(viewModel.selectedDays[index])일 까지"
+                }
             }
-        }
-        .buttonStyle(OutlinedMediumButton())
-        .padding(
-            .bottom,
-            8
-        )
-        .buttonStyle(PressedButtonStyle())
-        .onChange(of: viewModel.isDatePickerPresented) { isPresented in
-            if !isPresented, viewModel.isButtonTapped[index] {
-                viewModel.deadlineDates[index] = "\(viewModel.selectedYears[index])년 \(viewModel.selectedMonths[index])월 \(viewModel.selectedDays[index])일 까지"
-            }
-        }
+            
+        
     }
 
     private func printStudyRange() {

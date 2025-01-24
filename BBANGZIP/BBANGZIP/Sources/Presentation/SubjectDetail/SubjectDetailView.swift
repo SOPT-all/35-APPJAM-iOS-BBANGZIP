@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct SubjectDetailView: View {
     @StateObject private var viewModel: SubjectDetailViewModel
@@ -131,6 +132,98 @@ struct SubjectDetailView: View {
                         }
                         .scrollIndicators(.hidden)
                         
+                        // TODO: BottomSheet 로직 확인
+                        BottomSheet(
+                            isShowing: .constant(!viewModel.badges.isEmpty),
+                            height: 530) {
+                                VStack {
+                                    CustomText(
+                                        "배지를 획득했어요!",
+                                        fontType: .heading2Bold,
+                                        color: Color(.labelNeutral)
+                                    )
+                                    .padding(
+                                        .top,
+                                        48
+                                    )
+                                    .padding(
+                                        .bottom,
+                                        32
+                                    )
+                                    
+                                    TabView {
+                                        ForEach(viewModel.badges) { badge in
+                                            VStack(
+                                                alignment: .center,
+                                                spacing: 0
+                                            ) {
+                                                KFImage(URL(string: badge.image))
+                                                    .resizable()
+                                                    .cornerRadius(
+                                                        48,
+                                                        corners: .allCorners
+                                                    )
+                                                    .frame(
+                                                        width: 160,
+                                                        height: 160
+                                                    )
+                                                    .padding(
+                                                        .bottom,
+                                                        8
+                                                    )
+                                                
+                                                CustomText(
+                                                    badge.name,
+                                                    fontType: .heading1Bold,
+                                                    color: Color(.labelNormal)
+                                                )
+                                                .padding(
+                                                    .bottom,
+                                                    24
+                                                )
+                                                
+                                                VStack(
+                                                    alignment: .center,
+                                                    spacing: 0
+                                                ) {
+                                                    ForEach(badge.hashTags, id: \.self) { hashTag in
+                                                        CustomText(
+                                                            String(hashTag),
+                                                            fontType: .body2Bold,
+                                                            color: Color(.labelAssistive)
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .tabViewStyle(PageTabViewStyle())
+                                    .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
+                                    
+                                    Button {
+                                        viewModel.badges.removeAll()
+                                    } label: {
+                                        CustomText(
+                                            "닫기",
+                                            fontType: .body1Bold,
+                                            color: Color(.staticWhite)
+                                        )
+                                    }
+                                    .buttonStyle(SolidButton())
+                                    .padding(
+                                        .horizontal,
+                                        20
+                                    )
+                                    .padding(
+                                        .bottom,
+                                        16
+                                    )
+                                }
+                            }
+                            .onChange(of: viewModel.badges) { newValue in
+                                isBottomSheetShowing = newValue.count > 0
+                            }
+                        
                         if viewModel.isDeleteMode && viewModel.selectedItemCount > 0 {
                             deleteButton
                         }
@@ -219,9 +312,19 @@ struct SubjectDetailView: View {
                             .foregroundStyle(Color(.labelAlternative))
                     }
                     
-                    Button {
-                        
-                    } label: {
+                    NavigationLink(
+                            destination: AddStudyView(
+                                viewModel: AddStudyViewModel(
+                                    addStudyPieceUseCase: DefaultAddStudyPieceUseCase(
+                                        repository: DefaultStudyPieceRepository()
+                                    ),
+                                    // 필요한 UseCase 주입
+                                    subjectId: viewModel.subjectId,
+                                    examName: viewModel.currentExam
+                                )
+                            )
+                            .navigationBarHidden(true)
+                    ){
                         Image(.plus)
                             .renderingMode(.template)
                             .resizable()
@@ -231,6 +334,7 @@ struct SubjectDetailView: View {
                             )
                             .foregroundStyle(Color(.labelAlternative))
                     }
+                    
                 }
             }
         }
@@ -290,7 +394,9 @@ struct SubjectDetailView: View {
                                 examName: viewModel.currentExam
                             )
                         )
-                ){AddStudyCard()
+                        .navigationBarHidden(true)
+                ){
+                    AddStudyCard()
                 }
                 .buttonStyle(PressedButtonStyle())
             }
@@ -343,6 +449,7 @@ struct SubjectDetailView: View {
                         examName: viewModel.currentExam
                     )
                 )
+                .navigationBarHidden(true)
             ) {
                 CustomText(
                     "공부할 내용 추가하기",

@@ -43,6 +43,7 @@ final class AddStudyViewModel: ObservableObject {
     let examName: String
     @Published var studyRange: StudyRange?
     @SwiftUI.Environment(\.dismiss) private var dismiss
+    @Published var badges: [AddStudyPieceBadge] = []
         
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -352,10 +353,10 @@ final class AddStudyViewModel: ObservableObject {
         self.studyRange = newRange
     }
         
-        @MainActor
+    @MainActor
     func addStudyPiece(with studyRange: StudyRange) async {
         do {
-            _ = try await addStudyPieceUseCase.execute(
+            let completeResult = try await addStudyPieceUseCase.execute(
                 subjectId: subjectId,
                 examName: examName,
                 studyContents: studyRange.studyContents,
@@ -369,8 +370,7 @@ final class AddStudyViewModel: ObservableObject {
                 }
             )
             
-            dismiss()
-            
+            badges.append(contentsOf: completeResult)
         } catch {
             // 에러 처리...
             print("Error adding study piece: \(error)")

@@ -45,6 +45,7 @@ struct SubjectCard: View {
                         lineWidth: state.borderWidth
                     )
             )
+            .customShadow(.normal)
     }
     
     private func delayedStudyView(study: SubjectStudyModel) -> some View {
@@ -140,7 +141,7 @@ struct SubjectCard: View {
                     color: Color(.labelNeutral)
                 )
                 
-                Chip(type: .daysLeftBlack(study.examDDay))
+                Chip(type: .daysLeftBlack(-study.examDDay))
                 
                 Spacer()
                 
