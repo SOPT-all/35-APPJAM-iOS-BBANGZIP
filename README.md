@@ -16,10 +16,9 @@
 <br>
 
 # 🧑‍🍳 iOS Developer
-| <img src="https://github.com/user-attachments/assets/4f259728-3f7d-44f6-b7bb-316459a65a23" width ="250"><br><br>**🥖 송여경** <br>[@0gonge](https://github.com/0gonge)<br><br>`프로젝트 세팅` `로그인` `마이페이지` | <img src="https://github.com/user-attachments/assets/5f24f426-1c69-4a23-897d-de90ea482cca" width ="250"><br><br>**🥖 조성민** <br>[@SungMinCho-Kor](https://github.com/SungMinCho-Kor)<br><br>`오늘의 할일` `친구 목록` |
-| :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/4a323edc-fdaa-4dd8-b108-38a8f56c7e9b" width ="250"><br><br>**🥖 최유빈** <br>[@choiyoubin](https://github.com/choiyoubin)<br><br>`과목 관리` `시험 관리` | <img src="https://github.com/user-attachments/assets/82c439dd-1fd8-4bd3-af96-0eaec6a3cb70" width ="250"><br><br>**🥖 김송희** <br>[@hongseekim](https://github.com/hongseekim)<br><br>`온보딩` `공부 추가` |
-<br>
+| <img src="https://github.com/user-attachments/assets/4f259728-3f7d-44f6-b7bb-316459a65a23" width ="250"><br><br>**🥖 송여경** <br>[@0gonge](https://github.com/0gonge)<br><br>프로젝트 세팅 로그인 마이페이지 | <img src="https://github.com/user-attachments/assets/5f24f426-1c69-4a23-897d-de90ea482cca" width ="250"><br><br>**🥖 조성민** <br>[@SungMinCho-Kor](https://github.com/SungMinCho-Kor)<br><br>오늘의 할일 친구 목록 | <img src="https://github.com/user-attachments/assets/4a323edc-fdaa-4dd8-b108-38a8f56c7e9b" width ="250"><br><br>**🥖 최유빈** <br>[@choiyoubin](https://github.com/choiyoubin)<br><br>과목 관리 시험 관리 | <img src="https://github.com/user-attachments/assets/82c439dd-1fd8-4bd3-af96-0eaec6a3cb70" width ="250"><br><br>**🥖 김송희** <br>[@hongseekim](https://github.com/hongseekim)<br><br>온보딩 공부 추가 |
+| :---: | :---: | :---: | :---: |
+
 
 # 🥯 Demonstration
 | 과목 관리 | 오늘 할 일 | 학습 관리 | 배지 도감 |
