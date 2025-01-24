@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Graphic_Empty_Study.png",
+      "filename" : "PreviewDivide.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Graphic_Empty_Study@2x.png",
+      "filename" : "PreviewDivide@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Graphic_Empty_Study@3x.png",
+      "filename" : "PreviewDivide@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

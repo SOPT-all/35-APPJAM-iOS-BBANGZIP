@@ -316,7 +316,7 @@ struct SubjectDetailView: View {
     
     var emptyView: some View {
         VStack(spacing: 16) {
-            Image(.graphicEmptyStudy)
+            Image(.mirunEmpty)
                 .frame(
                     width: 320,
                     height: 296
