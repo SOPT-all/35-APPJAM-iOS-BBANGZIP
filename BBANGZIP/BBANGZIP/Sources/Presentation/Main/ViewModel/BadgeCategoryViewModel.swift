@@ -25,11 +25,15 @@ final class BadgeCategoryViewModel: ObservableObject {
     }
     
     @MainActor
-    func fetchData() async throws {
+    func fetchData() async {
         guard let getBadgeListUseCase = getBadgeListUseCase else { return }
-        let result = try await getBadgeListUseCase.execute()
-        badgeList = result.badgeCategoryList
-        nickname = result.nickname
+        do {
+            let result = try await getBadgeListUseCase.execute()
+            badgeList = result.badgeCategoryList
+            nickname = result.nickname
+        } catch {
+            dump(error)
+        }
     }
     
     func subtitle(for category: String) -> String {

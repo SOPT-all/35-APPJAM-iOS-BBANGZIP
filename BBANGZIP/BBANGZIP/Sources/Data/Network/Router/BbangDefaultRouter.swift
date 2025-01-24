@@ -166,10 +166,11 @@ extension BbangDefaultRouter: Router {
             return URLEncoding.queryString
         case
                 .fetchBadgeDetail,
-                .examFiltering:
+                .examFiltering,
+                .getBadgeList:
             return nil
         case
-                .getBadgeList,
+                
                 .completeStudy,
                 .revertCompleteStudy,
                 .removeTodayStudy,

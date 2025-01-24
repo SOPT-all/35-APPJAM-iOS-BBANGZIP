@@ -12,6 +12,8 @@ import Kingfisher
 
 struct BadgeCategoryView: View {
     @StateObject private var viewModel: BadgeCategoryViewModel
+    @State private var isBottomSheetShowing: Bool = false
+    @State private var selectedBadge: BadgeModel? = nil // 선택된 배지 정보
     
     init(viewModel: BadgeCategoryViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -41,58 +43,81 @@ struct BadgeCategoryView: View {
                         HeaderView
                         
                         ForEach(viewModel.badgeList, id: \.self) { badgeListModel in
-                            
                             let category = badgeListModel.badgeCategry
                             let list = badgeListModel.badgeList
                             
-                            VStack {
-                                CustomText(
-                                    category.rawValue,
-                                    fontType: .title3Bold,
-                                    color: Color(.labelNormal)
-                                )
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    CustomText(
+                                        category.rawValue,
+                                        fontType: .title3Bold,
+                                        color: Color(.labelNormal)
+                                    )
+                                    
+                                    CustomText(
+                                        category.subtitle,
+                                        fontType: .label1Bold,
+                                        color: Color(.labelAlternative)
+                                    )
+                                }.padding(.leading, 20)
                                 
-                                CustomText(
-                                    category.subtitle,
-                                    fontType: .label1Bold,
-                                    color: Color(.labelAlternative)
-                                )
+                                Spacer()
                             }
                             
                             LazyVGrid(
                                 columns: Array(
                                     repeating: GridItem(
-                                        .flexible(),
-                                        spacing: 30
+                                        spacing: 32
                                     ),
                                     count: 3
                                 ),
-                                spacing: 20
+                                spacing: 32
                             ) {
-                                ForEach(badgeListModel.badgeList, id: \.self) { badge in
+                                ForEach(list, id: \.self) { badge in
                                     Button {
-                                        print("\(badge.badgeName) ㅎㅎ")
+                                        selectedBadge = badge
+                                        isBottomSheetShowing = true
                                     } label: {
                                         BadgeItemView(
                                             badgeImage: badge.badgeImage,
                                             isLocked: badge.badgeIsLocked,
                                             badgeName: badge.badgeName
                                         )
+                                        .frame(width: 80, height: 80)
+                                        .padding(.top, 24)
                                     }
                                 }
                             }
                             .padding(.horizontal, 36)
                             .padding(.bottom, 64)
-                            
+                        }
+                    }
+                    if let selectedBadge = selectedBadge {
+                        BottomSheet(
+                            isShowing: $isBottomSheetShowing,
+                            height: 662
+                        ) {
+                            BadgeDetailView(
+                                viewModel: BadgeDetailViewModel(
+                                    fetchBadgeDetialUseCase: DefaultFetchDetailUseCase(repository: DefaultBadgeRepository()),
+                                    badgeName: selectedBadge.badgeName
+                                ),
+                                isBottomSheetShowing: $isBottomSheetShowing
+                            )
                         }
                     }
                 }
             }
         }
     }
+    
     private var HeaderView: some View {
         ZStack {
-            Image(.badgeGroup)
+            HStack(spacing: 0) {
+                Spacer()
+                Image(.badgeGroup)
+                    .padding(.trailing, 23)
+            }
             HStack {
                 CustomText(
                     "\(viewModel.nickname) 사장님이\n열심히 모은 배지예요",
@@ -101,91 +126,17 @@ struct BadgeCategoryView: View {
                 )
                 .padding(.leading, 28)
                 .padding(.bottom, 48)
-                
                 Spacer()
             }
         }
-            .frame(maxWidth: .infinity)
-            .frame(height: 224)
-            .background(Color(.backgroundAccent))
-            .cornerRadius(
-                32,
-                corners: [
-                    .bottomLeft,
-                    .bottomRight
-                ]
-            )
-            .padding(.bottom, 48)
+        .ignoresSafeArea()
+        .frame(maxWidth: .infinity)
+        .frame(height: 127)
+        .background(Color(.backgroundAccent))
+        .cornerRadius(32, corners: [.bottomLeft, .bottomRight])
+        .padding(.bottom, 48)
     }
-    //                            if let badges = viewModel.badgeList?.badgeCategory[category] {
-    //                                SectionView(
-    //                                    title: category,
-    //                                    subtitle: viewModel.subtitle(for: category),
-    //                                    badges: badges
-    //                                ) { badge in
-    //                                    viewModel.selectedBadge = badge
-    //                                    viewModel.isBottomSheetShowing = true
-    //                                }
-    //                            }
-    //                        }
-    //                    }
-    //                    .scrollIndicators(.hidden)
-    //
-    //                    if let badgeName = viewModel.selectedBadge?.badgeName {
-    //                        BottomSheet(
-    //                            isShowing: $viewModel.isBottomSheetShowing,
-    //                            height: 659
-    //                        ) {
-    //                            BadgeDetailView(
-    //                                viewModel: BadgeDetailViewModel(
-    //                                    fetchBadgeDetialUseCase: DefaultFetchDetailUseCase(repository: DefaultBadgeRepository()),
-    //                                    badgeName: badgeName
-    //                                ),
-    //                                isBottomSheetShowing: $viewModel.isBottomSheetShowing
-    //                            )
-    //                        }
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //
     
-    
-    //
-    //struct SectionView: View {
-    //    let title: String
-    //    let subtitle: String
-    ////    let badges: [Badge]
-    ////    let onBadgeTap: (Badge) -> Void
-    //
-    //    var body: some View {
-    //        VStack(alignment: .leading, spacing: 16) {
-    //            SectionHeaderView(title: title, subtitle: subtitle)
-    //
-    //            LazyVGrid(
-    //                columns: Array(repeating: GridItem(.flexible(), spacing: 30), count: 3),
-    //                spacing: 20
-    //            ) {
-    //                ForEach(badges, id: \ .badgeName) { badge in
-    //                    Button(action: {
-    //                        onBadgeTap(badge)
-    //                        print("Badge tapped: \(badge.badgeName)")
-    //                    }) {
-    //                        BadgeItemView(
-    //                            badgeImage: badge.badgeImage,
-    //                            isLocked: badge.badgeIsLocked,
-    //                            badgeName: badge.badgeName
-    //                        )
-    //                    }
-    //                }
-    //            }
-    //            .padding(.horizontal, 36)
-    //            .padding(.bottom, 64)
-    //        }
-    //    }
-    //}
-    //
     private struct BadgeItemView: View {
         let badgeImage: String
         let isLocked: Bool
@@ -193,39 +144,29 @@ struct BadgeCategoryView: View {
         
         var body: some View {
             ZStack {
-                Image(systemName: badgeImage)
+                KFImage(URL(string: badgeImage))
+                    .resizable()
                     .frame(width: 80, height: 80)
                     .blur(radius: isLocked ? 3 : 0)
+                    .cornerRadius(24)
+                
                 if isLocked {
                     Image(.privateWhite)
-                        .scaledToFit()
+                        .resizable()
+                        .frame(width: 20, height: 26)
                 }
             }
             .frame(width: 80, height: 80)
         }
     }
-    //
-    //private struct SectionHeaderView: View {
-    //    var title: String
-    //    var subtitle: String
-    //
-    //    var body: some View {
-    //        HStack {
-    //            VStack(alignment: .leading, spacing: 0) {
-    //                CustomText(title, fontType: .title3Bold, color: Color(.labelNormal))
-    //                CustomText(subtitle, fontType: .label1Bold, color: Color(.labelAlternative))
-    //            }
-    //            .padding(.leading, 28)
-    //        }
-    //    }
-    //}
-    
-    #Preview {
-        let mockViewModel: BadgeCategoryViewModel = {
-            let viewModel = BadgeCategoryViewModel(useMockData: true)
-            return viewModel
-        }()
-        
-        BadgeCategoryView(viewModel: mockViewModel)
-    }
 }
+
+//
+//#Preview {
+//    let mockViewModel: BadgeCategoryViewModel = {
+//        let viewModel = BadgeCategoryViewModel(useMockData: true)
+//        return viewModel
+//    }()
+//
+//    BadgeCategoryView(viewModel: mockViewModel)
+//}
