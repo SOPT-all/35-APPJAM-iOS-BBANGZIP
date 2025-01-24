@@ -65,10 +65,8 @@ struct AddSubjectView: View {
                 Button("추가하기") {
                     Task {
                         await viewModel.addSubject(subjectName: viewModel.subject)
-                        if viewModel.shouldDismiss {
-                            dismiss()
-                        }
                     }
+                    dismiss()
                 }
                 .buttonStyle(
                     SolidIconButton(
