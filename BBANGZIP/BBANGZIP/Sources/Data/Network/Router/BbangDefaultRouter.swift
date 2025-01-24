@@ -34,6 +34,10 @@ enum BbangDefaultRouter {
     case deleteStudyPiece(dto: DeleteStudyPieceRequestDTO)
     case addStudyPiece(dto: AddStudyPieceRequestDTO)
     
+    //송희
+    case logout
+    case withdraw
+    
 }
 
 extension BbangDefaultRouter: Router {
@@ -75,6 +79,10 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/subjects/filter"
         case .addTodayStudy:
             return "/api/v1/pieces/assign-to-today"
+        case .logout:
+            return "/api/v1/user/auth/siginout"
+        case .withdraw:
+            return "/api/v1/user/auth/withdraw"
         case .addStudyPiece:
             return "/api/v1/studies"
         }
@@ -103,7 +111,9 @@ extension BbangDefaultRouter: Router {
             
         case
                 .deleteStudyPiece,
-                .deleteSubject:
+                .deleteSubject,
+                .logout,
+                .withdraw:
             return .delete
             
         case
@@ -159,6 +169,10 @@ extension BbangDefaultRouter: Router {
             return dto.asDictionary()
         case .addStudyPiece(let dto):
             return dto.asDictionary()
+        case .logout:
+            return [:]
+        case .withdraw:
+            return [:]
         }
     }
     
@@ -172,7 +186,9 @@ extension BbangDefaultRouter: Router {
             return URLEncoding.queryString
         case
                 .fetchBadgeDetail,
-                .examFiltering:
+                .examFiltering,
+                .logout,
+                .withdraw:
             return nil
         case
                 .getBadgeList,

@@ -67,11 +67,7 @@ struct CustomTabBar: View {
                         )
                     )
                 )
-                .shadow(
-                    color: Color(.staticBlack).opacity(0.25),
-                    radius: 4,
-                    y: -4
-                )
+                .customShadow(.emphasizeInverse)
                 .edgesIgnoringSafeArea(.bottom)
         )
     }

@@ -40,24 +40,27 @@ struct SubjectDetailView: View {
                     
                     ZStack {
                         ScrollView {
-                            ZStack {
+                            ZStack {                                
                                 VStack {
-                                    Color(.backgroundAccent)
-                                        .frame(
-                                            height: 153
-                                        )
-                                        .cornerRadius(
-                                            32,
-                                            corners: [
-                                                .bottomLeft,
-                                                .bottomRight
-                                            ]
-                                        )
-                                        .ignoresSafeArea(
-                                            .all,
-                                            edges: .top
-                                        )
-                                    
+                                    ZStack {
+                                        Color(.backgroundAccent)
+                                            .frame(
+                                                height: 153
+                                            )
+                                            .cornerRadius(
+                                                32,
+                                                corners: [
+                                                    .bottomLeft,
+                                                    .bottomRight
+                                                ]
+                                            )
+                                            .ignoresSafeArea(
+                                                .all,
+                                                edges: .top
+                                            )
+                                        
+                                        Image(.mirunBigEyes)
+                                    }
                                     Spacer()
                                 }
                                 
@@ -353,7 +356,7 @@ struct SubjectDetailView: View {
                             viewModel.toggleSelection(pieceId: model.pieceId)
                         } else if model.state == .selected {
                             model.state = .selectable
-                            viewModel.toggleSelection(pieceId: model.pieceId)  
+                            viewModel.toggleSelection(pieceId: model.pieceId)
                         }
                     } else {
                         if model.state == .cardDefault {
@@ -381,7 +384,6 @@ struct SubjectDetailView: View {
                 .customShadow(.normal)
             }
             
-            // TODO: 공부 추가 화면으로 이동
             if !viewModel.isDeleteMode {
                 NavigationLink(
                         destination: AddStudyView(
@@ -432,7 +434,9 @@ struct SubjectDetailView: View {
     
     var emptyView: some View {
         VStack(spacing: 16) {
-            Image(.graphicEmptyStudy)
+            Spacer()
+            
+            Image(.mirunEmpty)
                 .frame(
                     width: 320,
                     height: 296
@@ -465,6 +469,10 @@ struct SubjectDetailView: View {
             .padding(
                 .horizontal,
                 20
+            )
+            .padding(
+                .bottom,
+                76
             )
         }
     }

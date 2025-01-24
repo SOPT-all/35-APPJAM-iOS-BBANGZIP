@@ -86,4 +86,38 @@ final class DefaultUserRepository: UserRepository {
             throw error
         }
     }
+    
+    func logout() async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.logout,
+            interceptor: CustomInterceptor()
+        )
+            .serializingDecodable(OnlyCodeResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let dto):
+            dump(dto)
+        case .failure(let error):
+            throw error
+        }
+    }
+    
+    func withdraw() async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.withdraw,
+            interceptor: CustomInterceptor()
+        )
+            .serializingDecodable(OnlyCodeResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let dto):
+            dump(dto)
+        case .failure(let error):
+            throw error
+        }
+        
+        // TODO: 서버에 저장된 유저의 정보와 유저의 refreshToken 을 제거
+    }
 }
