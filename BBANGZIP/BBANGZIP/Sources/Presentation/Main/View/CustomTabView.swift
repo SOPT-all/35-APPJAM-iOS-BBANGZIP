@@ -68,9 +68,29 @@ struct CustomTabView: View {
                                 title: "가판대",
                                 badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
                             ),
-                            isCustomTabBarHidden: $isCustomTabBarHidden
-                        )
-                    }
+                            revertCompleteTodayStudyUseCase: DefaultRevertCompleteTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            ),
+                            removeTodayStudyUseCase: DefaultRemoveTodayStudyUseCase(
+                                repository: DefaultStudyRepository()
+                            )
+                        ),
+                        isBottomSheetShowing: $isTodayStudyViewBottomSheetShowing
+                    )
+                case .networking:
+                    FriendListView()
+                case .mypage:
+                    MyPageMainView(
+                        viewModel: MyPageMainViewModel(
+                            level: 2,
+                            currentScore: 40,
+                            badgeCount: 8,
+                            maxScore: 200,
+                            title: "가판대",
+                            badgeStatement: "빵집을 시작한지 얼마 안된\n사장님의 첫 빵집이에요"
+                        ),
+                        isCustomTabBarHidden: $isCustomTabBarHidden
+                    )
                 }
                 
                 if !isBottomSheetShowing &&

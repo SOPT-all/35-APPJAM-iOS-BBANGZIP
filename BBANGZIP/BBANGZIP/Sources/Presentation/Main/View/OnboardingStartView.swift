@@ -11,7 +11,7 @@ import SwiftUI
 struct OnboardingStartView: View {
     var body: some View {
         ZStack{
-            Image(.onboarding)
+            Image(.onboardingStart)
                 .frame(width: 320, height: 360)
                 .padding(.top, 44)
             Spacer() 

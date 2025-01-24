@@ -75,7 +75,7 @@ struct SubjectManageView: View {
                                         ]
                                     )
                                 
-                                Image(.graphicStudyManage)
+                                Image(.mirunReading)
                                     .padding(.top, 47)
                             }
                         )
@@ -304,7 +304,7 @@ struct SubjectManageView: View {
     
     var emptyView: some View {
         VStack(spacing: 16) {
-            Image(.graphicEmptySubject)
+            Image(.mirunEmpty)
                 .frame(
                     width: 320,
                     height: 296
