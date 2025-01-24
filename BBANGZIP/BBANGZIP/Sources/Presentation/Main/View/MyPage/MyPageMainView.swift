@@ -90,6 +90,12 @@ struct MyPageMainView: View {
                         isBottonSheetShowing: $showDeleteAccountSheet
                     )
                 }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+                .onDisappear {
+                    isCustomTabBarHidden = false
+                }
             }
         }
     }
