@@ -349,7 +349,24 @@ struct AddStudyView: View {
     
     private var registerButton: some View {
         Button("공부 내용 등록하기") {
-            // TODO: 화면 전환해야 할 다음 뷰로 연결
+            Task {
+                if let studyRange = viewModel.studyRange {  // AddStudyViewModel에 studyRange 속성 필요
+                    print("StudyRange Data:")
+                    print("studyContents: \(studyRange.studyContents)")
+                    print("examDate: \(studyRange.examDate)")
+                    print("pieceList count: \(studyRange.pieceList.count)")
+                    
+                    // 각 piece의 상세 정보 출력
+                    for (index, piece) in studyRange.pieceList.enumerated() {
+                        print("Piece \(index + 1):")
+                        print("  startPage: \(piece.startPage)")
+                        print("  finishPage: \(piece.finishPage)")
+                        print("  deadline: \(piece.deadline)")
+                    }
+                    
+                    await viewModel.addStudyPiece(with: studyRange)
+                }
+            }
         }
         .buttonStyle(
             SolidIconButton(

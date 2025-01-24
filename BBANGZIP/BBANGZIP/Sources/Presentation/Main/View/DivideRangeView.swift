@@ -348,31 +348,40 @@ struct DivideRangeView: View {
             examDate: formattedExamDate,
             pieceList: updatedPieceList
         )
+        
+        studyRange = StudyRange(
+                studyContents: addStudyViewModel.studyContent,
+                examDate: formattedExamDate,
+                pieceList: updatedPieceList
+        )
+            
+        if let range = studyRange {
+            addStudyViewModel.updateStudyRange(range)
+        }
     }
 
 
     private var registerButton: some View {
         Button("저장하기") {
             saveStudyRange()
-            printStudyRange()  // 주석 해제
-            Task {
-                if let studyRange = self.studyRange {
-                    print("StudyRange Data:")
-                    print("studyContents: \(studyRange.studyContents)")
-                    print("examDate: \(studyRange.examDate)")
-                    print("pieceList count: \(studyRange.pieceList.count)")
-                    
-                    // 각 piece의 상세 정보 출력
-                    for (index, piece) in studyRange.pieceList.enumerated() {
-                        print("Piece \(index + 1):")
-                        print("  startPage: \(piece.startPage)")
-                        print("  finishPage: \(piece.finishPage)")
-                        print("  deadline: \(piece.deadline)")
-                    }
-                    
-                    await addStudyViewModel.addStudyPiece(with: studyRange)
+            printStudyRange()
+            
+            if let range = self.studyRange {
+                addStudyViewModel.updateStudyRange(range)
+                print("StudyRange Data:")
+                print("studyContents: \(range.studyContents)")
+                print("examDate: \(range.examDate)")
+                print("pieceList count: \(range.pieceList.count)")
+                
+                // 각 piece의 상세 정보 출력
+                for (index, piece) in range.pieceList.enumerated() {
+                    print("Piece \(index + 1):")
+                    print("  startPage: \(piece.startPage)")
+                    print("  finishPage: \(piece.finishPage)")
+                    print("  deadline: \(piece.deadline)")
                 }
             }
+                    
             dismiss()
         }
         .buttonStyle(

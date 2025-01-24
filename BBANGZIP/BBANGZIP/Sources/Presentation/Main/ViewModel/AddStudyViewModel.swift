@@ -42,6 +42,7 @@ final class AddStudyViewModel: ObservableObject {
     let subjectId: Int
     let examName: String
     @Published var studyRange: StudyRange?
+    @SwiftUI.Environment(\.dismiss) private var dismiss
         
     var formattedDate: String {
         guard let date = date else { return "" }
@@ -105,28 +106,6 @@ final class AddStudyViewModel: ObservableObject {
         
         let components = calendar.dateComponents([.day], from: currentDate, to: examDate)
         daysUntilExam = max(components.day ?? 0, 0)
-    }
-    
-    @MainActor
-    func addStudyPiece(with studyRange: StudyRange) async {
-        do {
-            let pieceList = studyRange.pieceList.map { piece in
-                AddStudyPieceDTO(
-                    startPage: piece.startPage,
-                    finishPage: piece.finishPage,
-                    deadline: piece.deadline
-                )
-            }
-            let newStudyPiece = try await addStudyPieceUseCase.execute(
-                subjectId: self.subjectId,
-                examName: self.examName,
-                studyContents: studyRange.studyContents,
-                examDate: studyRange.examDate,
-                pieceList: pieceList
-            )
-        } catch {
-            
-        }
     }
     
 //    @MainActor
@@ -366,6 +345,35 @@ final class AddStudyViewModel: ObservableObject {
             
             endRangeState = .placeholder
             isEndRangeValid = false
+        }
+    }
+    
+    func updateStudyRange(_ newRange: StudyRange) {
+        self.studyRange = newRange
+    }
+        
+        @MainActor
+    func addStudyPiece(with studyRange: StudyRange) async {
+        do {
+            _ = try await addStudyPieceUseCase.execute(
+                subjectId: subjectId,
+                examName: examName,
+                studyContents: studyRange.studyContents,
+                examDate: studyRange.examDate,
+                pieceList: studyRange.pieceList.map { piece in
+                    AddStudyPieceDTO(
+                        startPage: piece.startPage,
+                        finishPage: piece.finishPage,
+                        deadline: piece.deadline
+                    )
+                }
+            )
+            
+            dismiss()
+            
+        } catch {
+            // 에러 처리...
+            print("Error adding study piece: \(error)")
         }
     }
 }
