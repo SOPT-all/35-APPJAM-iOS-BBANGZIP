@@ -89,6 +89,9 @@ struct TodayStudyView: View {
                 
                 filterBottomSheet
             }
+            .task {
+                await viewModel.fetchData()
+            }
             .toastView(toast: $viewModel.toast)
             // TODO: Badge 여러개 -> Bottom Sheet 여러번 띄우기
             // TODO: NavigationBarBackground 추가
@@ -304,6 +307,9 @@ struct TodayStudyView: View {
             AddTodayStudyView(
                 viewModel: AddTodayStudyViewModel(
                     fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
+                        repository: DefaultStudyRepository()
+                    ),
+                    addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
                         repository: DefaultStudyRepository()
                     )
                 )

@@ -120,4 +120,23 @@ final class DefaultStudyRepository: StudyRepository {
             throw error
         }
     }
+    
+    func addTodayStudy(pieceIds: [Int]) async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.addTodayStudy(
+                dto: AddTodayStudyRequestDTO(
+                    pieceIds: pieceIds
+                )
+            )
+        )
+            .serializingDecodable(OnlyCodeResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let code):
+            dump(code)
+        case .failure(let error):
+            throw error
+        }
+    }
 }

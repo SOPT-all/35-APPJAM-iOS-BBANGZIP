@@ -37,6 +37,7 @@ enum BbangDefaultRouter {
     case revertCompleteStudy(pieceID: Int, dto: StudyCompleteRequestDTO)
     case removeTodayStudy(dto: RemoveTodayStudyDTO)
     case fetchAddTodayStudy(dto: FetchAddTodayStudyRequestDTO)
+    case addTodayStudy(dto: AddTodayStudyRequestDTO)
     
     //여경
     case fetchBadgeDetail(badgeName: String)
@@ -114,6 +115,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/pieces/todo"
         case .fetchSubject:
             return "/api/v1/subjects/filter"
+        case .addTodayStudy:
+            return "/api/v1/pieces/assign-to-today"
         }
     }
     
@@ -130,7 +133,8 @@ extension BbangDefaultRouter: Router {
                 .addDelayedTodoToToday,
                 .completeStudy,
                 .revertCompleteStudy,
-                .removeTodayStudy:
+                .removeTodayStudy,
+                .addTodayStudy:
             return .post
             
         case
@@ -171,7 +175,7 @@ extension BbangDefaultRouter: Router {
         default:
             return [
                 "Content-Type": "application/json",
-                "Authorization": "Bearer "
+                "Authorization": "Bearer"
             ]
         }
     }
@@ -213,6 +217,8 @@ extension BbangDefaultRouter: Router {
         case .addSubject(let dto):
             return dto.asDictionary()
         case .deleteSubject(let dto):
+            return dto.asDictionary()
+        case .addTodayStudy(let dto):
             return dto.asDictionary()
         default:
             return nil

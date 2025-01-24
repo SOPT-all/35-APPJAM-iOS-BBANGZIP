@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct AddTodayStudyView: View {
-    @StateObject private var viewModel: AddTodayStudyViewModel
+    @ObservedObject private var viewModel: AddTodayStudyViewModel
     @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(viewModel: AddTodayStudyViewModel) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -71,6 +71,9 @@ struct AddTodayStudyView: View {
                     }
                 }
 
+            }
+            .task {
+                await viewModel.fetchData()
             }
             .bottomSheet(
                 isShowing: $viewModel.isFilterBottomSheetPresent,
@@ -209,8 +212,10 @@ struct AddTodayStudyView: View {
     
     private var addStudyButton: some View {
         Button {
-            print("API 연결 -> 결과 오면 dismiss")
-            // TODO: API 연결 -> 결과 오면 dismiss
+            Task {
+                await viewModel.addStudy()
+                dismiss()
+            }
         } label: {
             CustomText(
                 "오늘 할 공부 추가하기",
@@ -230,6 +235,9 @@ struct AddTodayStudyView: View {
     AddTodayStudyView(
         viewModel: AddTodayStudyViewModel(
             fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
+                repository: DefaultStudyRepository()
+            ),
+            addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
                 repository: DefaultStudyRepository()
             )
         )
