@@ -9,11 +9,11 @@
 import SwiftUI
 
 struct AddTodayStudyView: View {
-    @StateObject private var viewModel: AddTodayStudyViewModel
+    @ObservedObject private var viewModel: AddTodayStudyViewModel
     @SwiftUI.Environment(\.dismiss) private var dismiss
     
     init(viewModel: AddTodayStudyViewModel) {
-        self._viewModel = StateObject(wrappedValue: viewModel)
+        self._viewModel = ObservedObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -71,6 +71,9 @@ struct AddTodayStudyView: View {
                     }
                 }
 
+            }
+            .task {
+                await viewModel.fetchData()
             }
             .bottomSheet(
                 isShowing: $viewModel.isFilterBottomSheetPresent,
@@ -141,13 +144,14 @@ struct AddTodayStudyView: View {
             spacing: 8
         ) {
             CustomText(
-                "시작이 빵이다!",
+                viewModel.isPending ? "이제는 미룰 수 없다" : "시작이 빵이다!",
                 fontType: .body1Bold,
                 color: Color(.labelAlternative)
             )
             
             CustomText(
-                "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
+                viewModel.isPending ? "아직 늦지 않았어요!\n밀린 공부를 시작해 봐요!" :
+                    "오늘부터 하나씩!\n공부할 내용을 선택해 보세요",
                 fontType: .title3Bold,
                 color: Color(.labelNormal)
             )
@@ -209,8 +213,10 @@ struct AddTodayStudyView: View {
     
     private var addStudyButton: some View {
         Button {
-            print("API 연결 -> 결과 오면 dismiss")
-            // TODO: API 연결 -> 결과 오면 dismiss
+            Task {
+                await viewModel.addStudy()
+                dismiss()
+            }
         } label: {
             CustomText(
                 "오늘 할 공부 추가하기",
@@ -231,7 +237,14 @@ struct AddTodayStudyView: View {
         viewModel: AddTodayStudyViewModel(
             fetchAddTodayStudyUseCase: DefaultFetchAddTodayStudyUseCase(
                 repository: DefaultStudyRepository()
-            )
+            ),
+            addTodayStudyUseCase: DefaultAddTodayStudyUseCase(
+                repository: DefaultStudyRepository()
+            ),
+            fetchTodayStudyUseCase: DefaultFetchTodayStudyUseCase(
+                studyRepository: DefaultStudyRepository()
+            ),
+            isPending: true
         )
     )
 }

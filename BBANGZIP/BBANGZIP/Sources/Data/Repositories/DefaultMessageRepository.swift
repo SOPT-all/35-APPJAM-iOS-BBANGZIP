@@ -20,7 +20,7 @@ final class DefaultMessageRepository: MessageRepository {
                 subjectID: subjectId,
                 options: options,
                 dto: ChangeNameRequestDTO(value: value)
-            )
+            ), interceptor: CustomInterceptor()
         )
             .serializingDecodable(ChangeNameResponseDTO.self)
             .response

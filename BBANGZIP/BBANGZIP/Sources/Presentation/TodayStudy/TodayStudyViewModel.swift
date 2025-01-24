@@ -53,8 +53,8 @@ final class TodayStudyViewModel: ObservableObject {
                 semester: .first, // TODO: 스프린트에서 변경 예정
                 sortOption: sortOption
             )
-            todayCount = todayStudyContent.todayCount
-            completeCount = todayStudyContent.completeCount
+            todayCount = todayStudyContent.todayCount ?? 0
+            completeCount = todayStudyContent.completeCount ?? 0
             pendingCount = todayStudyContent.pendingCount
             todoPiecesList = todayStudyContent.todoPiecesList
             reloadCompleteAnnounceText()

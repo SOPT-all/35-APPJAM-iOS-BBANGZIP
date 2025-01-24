@@ -21,4 +21,5 @@ protocol StudyRepository: Sendable {
         semester: Semester,
         sortOption: FetchTodayStudySortOption
     ) async throws -> AddTodayStudyData
+    func addTodayStudy(pieceIds: [Int]) async throws
 }

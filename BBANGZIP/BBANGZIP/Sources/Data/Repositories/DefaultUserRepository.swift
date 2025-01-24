@@ -42,17 +42,46 @@ final class DefaultUserRepository: UserRepository {
     
     func signIn(accessToken: String) async throws -> SignInData {
         let response = await API.session
-            .request(BbangDefaultRouter.signIn(dto: SignInRequestDTO(code: accessToken)))
-            .responseString { result in
-                print("##1##")
-                dump(result)
-            } 
+            .request(
+                BbangDefaultRouter.signIn(dto: SignInRequestDTO(code: accessToken)),
+                interceptor: CustomInterceptor()
+            )
             .serializingDecodable(SignInResponseDTO.self)
             .response
         
         switch response.result {
         case .success(let dto):
+            KeychainManager.shared.create(token: .AccessToken, value: dto.data.accessToken)
+            KeychainManager.shared.create(token: .RefreshToken, value: dto.data.refreshToken)
             return dto.data.toDomain()
+        case .failure(let error):
+            throw error
+        }
+    }
+    
+    func onboard(
+        nickname: String,
+        year: Int,
+        semester: String,
+        subjectName: String
+    ) async throws {
+        let response = await API.session.request(
+            BbangDefaultRouter.onboardingCheck(
+                dto: OnboardingRequestDTO(
+                    nickname: nickname,
+                    year: year,
+                    semester: semester,
+                    subjectName: subjectName
+                )
+            ),
+            interceptor: CustomInterceptor()
+        )
+            .serializingDecodable(OnBoardingResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let dto):
+            dump(dto)
         case .failure(let error):
             throw error
         }
