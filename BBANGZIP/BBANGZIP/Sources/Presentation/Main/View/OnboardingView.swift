@@ -190,13 +190,18 @@ final class NewOnboardingViewModel: ObservableObject {
                 isNextButtonDisabled = false
             }
         case .semester:
-            break
+            if year == 2025 && semester == .first {
+                isNextButtonDisabled = false
+            } else {
+                isNextButtonDisabled = true
+            }
         case .subject:
             break
         case .end:
             isNextButtonDisabled = false
         }
     }
+    
 }
 
 struct NewOnboardingView: View {
@@ -227,7 +232,7 @@ struct NewOnboardingView: View {
             case .semester:
                 backButton
                 progressBar
-                Text("A")
+                semesterInputView
             case .subject:
                 backButton
                 progressBar
@@ -290,6 +295,7 @@ struct NewOnboardingView: View {
             )
         }
     }
+    
     private var nextButton: some View {
         Button {
             Task {
@@ -310,7 +316,6 @@ struct NewOnboardingView: View {
             20
         )
     }
-    
     private var backButton: some View {
         Button(action: viewModel.goPrevStage) {
             Image(.chevronLeftThickSmall)
@@ -320,7 +325,7 @@ struct NewOnboardingView: View {
         }
         .padding(16)
     }
-    
+
     private var progressBar: some View {
         ProgressBar(
             type: .withCircle(
@@ -350,7 +355,6 @@ struct NewOnboardingView: View {
             20
         )
     }
-    
     private var nameMainDescription: some View {
         HStack {
             CustomText(
@@ -366,7 +370,6 @@ struct NewOnboardingView: View {
             Spacer()
         }
     }
-    
     private var nicknameTextField: some View {
         TextField(
             "예) 탁구왕김제빵",
@@ -390,6 +393,106 @@ struct NewOnboardingView: View {
                 newNickname: newNickname
             )
         }
+    }
+    
+    private var semesterInputView: some View {
+        VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                semesterHeaderDescription
+                semesterMainDescription
+                
+                HStack(spacing: 0) {
+                    yearPicker
+                    semesterPicker
+                }
+                
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+    private var semesterHeaderDescription: some View {
+        HStack {
+            CustomText(
+                "\(viewModel.nickname) 사장님, 안녕하세요!",
+                fontType: .body2Bold,
+                color: Color(.labelAlternative)
+            )
+            Spacer()
+        }
+        .padding(.bottom, 8)
+    }
+    private var semesterMainDescription: some View {
+        HStack {
+            CustomText(
+                "현재 재학 중인\n학기를 알려주세요",
+                fontType: .title2Bold,
+                color: Color(.labelNormal)
+            )
+            Spacer()
+        }
+        .padding(.bottom, 32)
+    }
+    private var yearPicker: some View {
+        Picker(
+            "Year",
+            selection: $viewModel.year
+        ) {
+            ForEach(
+                [
+                    2025,
+                    2026,
+                    2027,
+                    2028
+                ],
+                id: \.self
+            ) { year in
+                CustomText(
+                    "\(year)년",
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(year)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .onChange(of: viewModel.year) { _ in
+            viewModel.validateNextButton()
+        }
+        .padding(
+            .leading,
+            -5
+        )
+        .padding(
+            .trailing,
+            -15
+        )
+        .clipped()
+    }
+    private var semesterPicker: some View {
+        Picker(
+            "Semester",
+            selection: $viewModel.semester
+        ) {
+            ForEach(
+                Semester.allCases,
+                id: \.self
+            ) { semester in
+                CustomText(
+                    semester.rawValue,
+                    fontType: .heading2Bold,
+                    color: Color(.labelStrong)
+                )
+                .tag(semester)
+            }
+        }
+        .pickerStyle(WheelPickerStyle())
+        .onChange(of: viewModel.semester) { _ in
+            viewModel.validateNextButton()
+        }
+        .padding(.leading, -15)
+        .padding(.trailing, -5)
+        .clipped()
     }
 }
 
