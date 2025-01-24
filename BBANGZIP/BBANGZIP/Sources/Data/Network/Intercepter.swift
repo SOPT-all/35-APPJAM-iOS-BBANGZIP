@@ -10,7 +10,7 @@ import Foundation
 
 import Alamofire
 
-final class Intercepter: RequestInterceptor {
+final class CustomInterceptor: RequestInterceptor {
     func adapt(
         _ urlRequest: URLRequest,
         for session: Session,

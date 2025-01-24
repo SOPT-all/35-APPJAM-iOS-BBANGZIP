@@ -12,11 +12,12 @@ struct OnboardingView: View {
     @StateObject private var viewModel: OnboardingViewModel
     @FocusState private var isNicknameFocused: Bool
     @FocusState private var isSubjectFocused: Bool
-    @State private var isPickerPresented: Bool = false
     private let years = Array(2025...2028)
     
-    init(viewModel: OnboardingViewModel = OnboardingViewModel()) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    init() {
+        let repository = DefaultUserRepository()
+        let useCase = DefaultOnboardingUseCase(repository: repository)
+        _viewModel = StateObject(wrappedValue: OnboardingViewModel(onboardingUseCase: useCase))
     }
     
     var body: some View {
@@ -25,26 +26,26 @@ struct OnboardingView: View {
                 switch viewModel.currentState {
                 case .start:
                     OnboardingStartView()
-                    
                     startButton
                     
                 case .complete:
                     backButton
-                    
                     OnboardingCompleteView()
-                    
                     completeButton
+                    
                 default:
                     backButton
-                    
                     progressBar
-                    
                     inputView
-                    
                     nextButton
                 }
             }
             .ignoresSafeArea(.keyboard)
+//            .onChange(of: viewModel.navigateToCustomTabView) { navigate in
+//                if navigate {
+//                    CustomTabView()
+//                }
+//            }
         }
         .onTapGesture {
             hideKeyboard()
@@ -63,14 +64,8 @@ struct OnboardingView: View {
     
     private var progressBar: some View {
         ProgressBar(type: .withCircle(category: viewModel.currentStep))
-            .padding(
-                .horizontal,
-                44
-            )
-            .padding(
-                .bottom,
-                48
-            )
+            .padding(.horizontal, 44)
+            .padding(.bottom, 48)
     }
     
     private var startButton: some View {
@@ -112,7 +107,11 @@ struct OnboardingView: View {
     private var completeButton: some View {
         Button(
             "빵점 탈출하러 가기",
-            action: viewModel.goNext
+            action: {
+                Task {
+                    await viewModel.onboard()
+                }
+            }
         )
         .buttonStyle(
             SolidIconButton(
@@ -132,25 +131,17 @@ struct OnboardingView: View {
                 subjectInputView
             }
         }
-        .animation(
-            .bouncy,
-            value: viewModel.currentState
-        )
+        .animation(.bouncy, value: viewModel.currentState)
     }
     
     private var nameInputView: some View {
         VStack(spacing: 0) {
             VStack(spacing: 32) {
                 nameMainDescription
-                
                 nicknameTextField
-                
                 Spacer()
             }
-            .padding(
-                .horizontal,
-                20
-            )
+            .padding(.horizontal, 20)
         }
     }
     
@@ -161,11 +152,7 @@ struct OnboardingView: View {
                 fontType: .title2Bold,
                 color: Color(.labelNormal)
             )
-            .padding(
-                .top,
-                30
-            )
-            
+            .padding(.top, 30)
             Spacer()
         }
     }
@@ -192,7 +179,7 @@ struct OnboardingView: View {
             viewModel.verifyNickname(
                 newText: newNickname,
                 isNicknameFocused: isNicknameFocused
-            )            
+            )
         }
         .onChange(of: isNicknameFocused) { isNicknameFocused in
             viewModel.handleNicknameFocusChange(
@@ -201,26 +188,21 @@ struct OnboardingView: View {
             )
         }
     }
-
+    
     private var semesterInputView: some View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 semesterHeaderDescription
-                
                 semesterMainDescription
                 
                 HStack(spacing: 0) {
                     yearPicker
-                    
                     semesterPicker
                 }
                 
                 Spacer()
             }
-            .padding(
-                .horizontal,
-                20
-            )
+            .padding(.horizontal, 20)
         }
     }
     
@@ -231,13 +213,9 @@ struct OnboardingView: View {
                 fontType: .body2Bold,
                 color: Color(.labelAlternative)
             )
-            
             Spacer()
         }
-        .padding(
-            .bottom,
-            8
-        )
+        .padding(.bottom, 8)
     }
     
     private var semesterMainDescription: some View {
@@ -247,13 +225,9 @@ struct OnboardingView: View {
                 fontType: .title2Bold,
                 color: Color(.labelNormal)
             )
-            
             Spacer()
         }
-        .padding(
-            .bottom,
-            32
-        )
+        .padding(.bottom, 32)
     }
     
     private var yearPicker: some View {
@@ -276,15 +250,9 @@ struct OnboardingView: View {
         .pickerStyle(WheelPickerStyle())
         .onChange(of: viewModel.year) { _ in
             viewModel.verifySemester()
-            }
-        .padding(
-            .leading,
-            -5
-        )
-        .padding(
-            .trailing,
-            -15
-        )
+        }
+        .padding(.leading, -5)
+        .padding(.trailing, -15)
         .clipped()
     }
     
@@ -308,15 +276,9 @@ struct OnboardingView: View {
         .pickerStyle(WheelPickerStyle())
         .onChange(of: viewModel.semester) { _ in
             viewModel.verifySemester()
-            }
-        .padding(
-            .leading,
-            -15
-        )
-        .padding(
-            .trailing,
-            -5
-        )
+        }
+        .padding(.leading, -15)
+        .padding(.trailing, -5)
         .clipped()
     }
     
@@ -324,17 +286,11 @@ struct OnboardingView: View {
         VStack(spacing: 0) {
             VStack(spacing: 0) {
                 subjectHeaderDescription
-                
                 subjectMainDescription
-                
                 subjectTextField
-                
                 Spacer()
             }
-            .padding(
-                .horizontal,
-                20
-            )
+            .padding(.horizontal, 20)
         }
     }
     
@@ -345,13 +301,9 @@ struct OnboardingView: View {
                 fontType: .body2Bold,
                 color: Color(.labelAlternative)
             )
-            
             Spacer()
         }
-        .padding(
-            .bottom,
-            8
-        )
+        .padding(.bottom, 8)
     }
     
     private var subjectMainDescription: some View {
@@ -364,10 +316,7 @@ struct OnboardingView: View {
                 )
                 Spacer()
             }
-            .padding(
-                .bottom,
-                33
-            )
+            .padding(.bottom, 33)
         }
     }
     
