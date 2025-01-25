@@ -21,10 +21,12 @@
 
 
 # 🥯 Demonstration
-| 과목 관리 | 오늘 할 일 | 학습 관리 | 배지 도감 |
-| :---: | :---: | :---: | :---: |
-| - | - | - | - |
+| 학습 관리 | 오늘 할 일 | 배지 도감 |
+| :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/015aec09-65c2-4757-8f10-5760197bbd1f" width="300"> | <img src="https://github.com/user-attachments/assets/c89a2cf9-b565-4456-957d-a4b31a0007e7" width="300"> | <img src="https://github.com/user-attachments/assets/4fc07fbd-abb5-4172-8943-201ffd5be2d7" width="300"> |
 <br>
+
+
 
 # 🥖 Dependency
 |Library|Description|Version|
