@@ -12,6 +12,18 @@ struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
     @State private var showLevelUpView = false
     @Binding var isCustomTabBarHidden: Bool
+    @State private var selectedItem: String? = nil
+    @State private var showLogoutSheet = false
+    @State private var showDeleteAccountSheet = false
+    
+    let items = [
+        "프로필 설정",
+        "공지사항",
+        "개인정보 처리방침",
+        "서비스 이용약관",
+        "로그아웃",
+        "계정 탈퇴"
+    ]
     
     init(
         viewModel: MyPageMainViewModel,
@@ -22,29 +34,132 @@ struct MyPageMainView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                HeaderView(
-                    viewModel: viewModel,
-                    badgeCategoryViewModel: BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
+        ZStack {
+            ScrollView {
+                VStack(spacing: 0) {
+                    HeaderView(
+                        viewModel: viewModel,
+                        badgeCategoryViewModel: BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
+                    )
+                    
+                    gridView
+                        .padding(.top, 75)
+                }
+                .padding(
+                    .bottom,
+                    80
                 )
+                .onAppear {
+                    Task {
+                        await viewModel.fetchData()
+                    }
+                }
                 
-                GridView(isCustomTabBarHidden: $isCustomTabBarHidden)
-                    .padding(.top, 75)
+                Spacer()
             }
             .onAppear {
-                Task {
-                    await viewModel.fetchData()
+                isCustomTabBarHidden = false
+            }
+            .scrollIndicators(.hidden)
+            
+            if showLogoutSheet {
+                BottomSheet(
+                    isShowing: $showLogoutSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "로그아웃 하시겠어요?",
+                        primaryButtonTitle: "로그아웃 하기",
+                        primaryButtonAction: {
+                            print("로그아웃 실행")
+                            // TODO: 로그아웃 기능 추가
+                            showLogoutSheet = false
+                        },
+                        isBottonSheetShowing: $showLogoutSheet
+                    )
+                }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+                .onDisappear {
+                    isCustomTabBarHidden = false
                 }
             }
             
-            Spacer()
+            if showDeleteAccountSheet {
+                BottomSheet(
+                    isShowing: $showDeleteAccountSheet,
+                    height: 265
+                ) {
+                    MyPageBottomSheet(
+                        title: "정말 계정을 삭제하시겠습니까?",
+                        primaryButtonTitle: "계정 삭제",
+                        primaryButtonAction: {
+                            print("계정 탈퇴 실행")
+                            // TODO: 계정 탈퇴 기능 추가
+                            showDeleteAccountSheet = false
+                        },
+                        isBottonSheetShowing: $showDeleteAccountSheet
+                    )
+                }
+                .onAppear {
+                    isCustomTabBarHidden = true
+                }
+                .onDisappear {
+                    isCustomTabBarHidden = false
+                }
+            }
         }
-        .scrollIndicators(.hidden)
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
     }
     
+    private var gridView: some View {
+        ZStack {
+            LazyVStack(spacing: 0) {
+                ForEach(items.indices, id: \.self) { index in
+                    Button(action: {
+                        handleItemTap(index: index)
+                    }) {
+                        HStack {
+                            CustomText(
+                                items[index],
+                                fontType: .body1Bold,
+                                color: Color(.labelNormal)
+                            )
+                            .padding(.leading, 8)
+                            Spacer()
+                            Image(.rightIcon)
+                                .frame(width: 20, height: 20)
+                        }
+                        .frame(width: 335, height: 56)
+                        .background(Color.clear)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    if index == 0 || index == 3 {
+                        Divider()
+                            .background(Color(.lineNormal))
+                            .padding(.vertical, 16)
+                    }
+                }
+                
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    private func handleItemTap(index: Int) {
+        switch items[index] {
+        case "로그아웃":
+            showLogoutSheet = true
+        case "계정 탈퇴":
+            showDeleteAccountSheet = true
+        default:
+            print("\(items[index]) 선택됨")
+            // TODO: 다른 항목 처리 추가
+        }
+    }
 }
 
 
@@ -86,6 +201,7 @@ struct HeaderView: View {
     var backgroundView: some View {
         NavigationLink {
             LevelUpView(viewModel: viewModel)
+            
         } label: {
             ZStack {
                 Color(.backgroundAccent)
@@ -233,113 +349,115 @@ struct BadgeSection: View {
     }
 }
 
-struct GridView: View {
-    let items = [
-        "프로필 설정",
-        "공지사항",
-        "개인정보 처리방침",
-        "서비스 이용약관",
-        "로그아웃",
-        "계정 탈퇴"
-    ]
-    
-    @State private var selectedItem: String? = nil
-    @State private var showLogoutSheet = false
-    @State private var showDeleteAccountSheet = false
-    @Binding var isCustomTabBarHidden: Bool
-    
-    init(isCustomTabBarHidden: Binding<Bool>) {
-        _isCustomTabBarHidden = isCustomTabBarHidden
-    }
-    
-    var body: some View {
-        ZStack {
-            LazyVStack(spacing: 0) {
-                ForEach(items.indices, id: \.self) { index in
-                    Button(action: {
-                        handleItemTap(index: index)
-                    }) {
-                        HStack {
-                            CustomText(
-                                items[index],
-                                fontType: .body1Bold,
-                                color: Color(.labelNormal)
-                            )
-                            .padding(.leading, 8)
-                            Spacer()
-                            Image(.rightIcon)
-                                .frame(width: 20, height: 20)
-                        }
-                        .frame(width: 335, height: 56)
-                        .background(Color.clear)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    
-                    if index == 0 || index == 3 {
-                        Divider()
-                            .background(Color(.lineNormal))
-                            .padding(.vertical, 16)
-                    }
-                }
-            }
-            .padding(.horizontal, 20)
-            
-            if showLogoutSheet {
-                BottomSheet(
-                    isShowing: $showLogoutSheet,
-                    height: 265
-                ) {
-                    MyPageBottomSheet(
-                        title: "로그아웃 하시겠어요?",
-                        primaryButtonTitle: "로그아웃 하기",
-                        primaryButtonAction: {
-                            print("로그아웃 실행")
-                            // TODO: 로그아웃 기능 추가
-                            showLogoutSheet = false
-                        },
-                        isBottonSheetShowing: $showLogoutSheet
-                    )
-                }
-                .onAppear {
-                    isCustomTabBarHidden = true
-                }
-            }
-            
-            if showDeleteAccountSheet {
-                BottomSheet(
-                    isShowing: $showDeleteAccountSheet,
-                    height: 265
-                ) {
-                    MyPageBottomSheet(
-                        title: "정말 계정을 삭제하시겠습니까?",
-                        primaryButtonTitle: "계정 삭제",
-                        primaryButtonAction: {
-                            print("계정 탈퇴 실행")
-                            // TODO: 계정 탈퇴 기능 추가
-                            showDeleteAccountSheet = false
-                        },
-                        isBottonSheetShowing: $showDeleteAccountSheet
-                    )
-                }
-                .onAppear {
-                    isCustomTabBarHidden = true
-                }
-            }
-        }
-    }
-    
-    private func handleItemTap(index: Int) {
-        switch items[index] {
-        case "로그아웃":
-            showLogoutSheet = true
-        case "계정 탈퇴":
-            showDeleteAccountSheet = true
-        default:
-            print("\(items[index]) 선택됨")
-            // TODO: 다른 항목 처리 추가
-        }
-    }
-}
+//struct GridView: View {
+//
+//    let items = [
+//        "프로필 설정",
+//        "공지사항",
+//        "개인정보 처리방침",
+//        "서비스 이용약관",
+//        "로그아웃",
+//        "계정 탈퇴"
+//    ]
+//    
+//    @State private var selectedItem: String? = nil
+//    @State private var showLogoutSheet = false
+//    @State private var showDeleteAccountSheet = false
+//    @Binding var isCustomTabBarHidden: Bool
+//    
+//    init(isCustomTabBarHidden: Binding<Bool>) {
+//        _isCustomTabBarHidden = isCustomTabBarHidden
+//    }
+//    
+//    var body: some View {
+//        ZStack {
+//            LazyVStack(spacing: 0) {
+//                ForEach(items.indices, id: \.self) { index in
+//                    Button(action: {
+//                        handleItemTap(index: index)
+//                    }) {
+//                        HStack {
+//                            CustomText(
+//                                items[index],
+//                                fontType: .body1Bold,
+//                                color: Color(.labelNormal)
+//                            )
+//                            .padding(.leading, 8)
+//                            Spacer()
+//                            Image(.rightIcon)
+//                                .frame(width: 20, height: 20)
+//                        }
+//                        .frame(width: 335, height: 56)
+//                        .background(Color.clear)
+//                    }
+//                    .buttonStyle(PlainButtonStyle())
+//                    
+//                    if index == 0 || index == 3 {
+//                        Divider()
+//                            .background(Color(.lineNormal))
+//                            .padding(.vertical, 16)
+//                    }
+//                }
+//                
+//            }
+//            .padding(.horizontal, 20)
+//            
+//            if showLogoutSheet {
+//                BottomSheet(
+//                    isShowing: $showLogoutSheet,
+//                    height: 265
+//                ) {
+//                    MyPageBottomSheet(
+//                        title: "로그아웃 하시겠어요?",
+//                        primaryButtonTitle: "로그아웃 하기",
+//                        primaryButtonAction: {
+//                            print("로그아웃 실행")
+//                            // TODO: 로그아웃 기능 추가
+//                            showLogoutSheet = false
+//                        },
+//                        isBottonSheetShowing: $showLogoutSheet
+//                    )
+//                }
+//                .onAppear {
+//                    isCustomTabBarHidden = true
+//                }
+//            }
+//            
+//            if showDeleteAccountSheet {
+//                BottomSheet(
+//                    isShowing: $showDeleteAccountSheet,
+//                    height: 265
+//                ) {
+//                    MyPageBottomSheet(
+//                        title: "정말 계정을 삭제하시겠습니까?",
+//                        primaryButtonTitle: "계정 삭제",
+//                        primaryButtonAction: {
+//                            print("계정 탈퇴 실행")
+//                            // TODO: 계정 탈퇴 기능 추가
+//                            showDeleteAccountSheet = false
+//                        },
+//                        isBottonSheetShowing: $showDeleteAccountSheet
+//                    )
+//                }
+//                .onAppear {
+//                    isCustomTabBarHidden = true
+//                }
+//            }
+//        }
+//    }
+//    
+//    private func handleItemTap(index: Int) {
+//        switch items[index] {
+//        case "로그아웃":
+//            showLogoutSheet = true
+//        case "계정 탈퇴":
+//            showDeleteAccountSheet = true
+//        default:
+//            print("\(items[index]) 선택됨")
+//            // TODO: 다른 항목 처리 추가
+//        }
+//    }
+//}
 
 //#Preview {
 //    MyPageMainView(
