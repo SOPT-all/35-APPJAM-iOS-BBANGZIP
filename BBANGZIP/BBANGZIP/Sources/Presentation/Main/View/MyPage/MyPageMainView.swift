@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct MyPageMainView: View {
     @StateObject private var viewModel: MyPageMainViewModel
@@ -31,11 +32,15 @@ struct MyPageMainView: View {
                 GridView(isCustomTabBarHidden: $isCustomTabBarHidden)
                     .padding(.top, 75)
             }
+            .onAppear {
+                Task {
+                    await viewModel.fetchData()
+                }
+            }
             
             Spacer()
         }
         .scrollIndicators(.hidden)
-        
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
     }
@@ -82,15 +87,23 @@ struct HeaderView: View {
         NavigationLink {
             LevelUpView(viewModel: viewModel)
         } label: {
-            Color(.backgroundAccent)
-                .cornerRadius(
-                    32,
-                    corners: [
-                        .bottomLeft,
-                        .bottomRight
-                    ]
-                )
-                .frame(height: 416)
+            ZStack {
+                Color(.backgroundAccent)
+                    .cornerRadius(
+                        32,
+                        corners: [
+                            .bottomLeft,
+                            .bottomRight
+                        ]
+                    )
+                    .frame(height: 416)
+                KFImage(URL(string: viewModel.profileThumbnail))
+                    .resizable()
+                    .frame(
+                        width: 300,
+                        height: 300
+                    )
+            }
         }
     }
     

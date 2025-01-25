@@ -17,4 +17,5 @@ protocol UserRepository: Sendable {
     ) async throws
     func logout() async throws
     func withdraw() async throws
+    func fetchMyPage() async throws -> FetchMyPageResponseData
 }

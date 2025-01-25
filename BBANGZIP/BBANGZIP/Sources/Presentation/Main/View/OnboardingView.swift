@@ -48,6 +48,7 @@ struct OnboardingView: View {
             
             nextButton
         }
+        .ignoresSafeArea(.keyboard)
         .background(Color(.staticWhite))
         .onChange(of: viewModel.isOnboardingComplete) { newValue in
             isOnboardingComplete = newValue

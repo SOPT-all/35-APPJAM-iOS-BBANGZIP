@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct LevelUpView: View {
     @StateObject var viewModel: MyPageMainViewModel
@@ -42,15 +43,21 @@ struct LevelUpView: View {
             Color(.backgroundAccent)
             
             TabView(selection: $selectedIndex) {
-                ForEach(
-                    0..<viewModel.levelStateCount,
-                    id: \ .self
-                ) { index in
-                    BbangZipView(badgeLevel: index + 1)
-                        .tag(index)
+                ForEach(viewModel.allLevel, id: \.self) { level in
+                    KFImage(URL(string: level.levelImage))
+                        .resizable()
+                        .frame(
+                            width: 300,
+                            height: 300
+                        )
+                        .tag(level.level - 1)
+                    
                 }
+                
             }
-            .tabViewStyle(.page(indexDisplayMode: .always))
+            .tabViewStyle(PageTabViewStyle())
+            .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))
+        
         }
         .frame(height: 416)
         .cornerRadius(
@@ -82,7 +89,7 @@ struct LevelUpView: View {
             Chip(type: .level(selectedIndex + 1))
             
             CustomText(
-                viewModel.title,
+                viewModel.allLevel[selectedIndex].levelName,
                 fontType: .body1Bold,
                 color: Color(.labelNormal)
             )
@@ -95,7 +102,7 @@ struct LevelUpView: View {
     private var levelContent: some View {
         if selectedIndex + 1 <= viewModel.level {
             CustomText(
-                viewModel.badgeStatement,
+                viewModel.allLevel[selectedIndex].levelDescription,
                 fontType: .headline2Bold,
                 color: Color(.labelNormal)
             )

@@ -120,4 +120,20 @@ final class DefaultUserRepository: UserRepository {
         
         // TODO: 서버에 저장된 유저의 정보와 유저의 refreshToken 을 제거
     }
+    
+    func fetchMyPage() async throws -> FetchMyPageResponseData {
+        let response = await API.session.request(
+            BbangDefaultRouter.fetchMyPage,
+            interceptor: CustomInterceptor()
+        )
+            .serializingDecodable(FetchMyPageResponseDTO.self)
+            .response
+        
+        switch response.result {
+        case .success(let dto):
+            return dto.data.toDomain()
+        case .failure(let error):
+            throw error
+        }
+    }
 }

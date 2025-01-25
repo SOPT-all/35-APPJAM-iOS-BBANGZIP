@@ -24,6 +24,7 @@ enum BbangDefaultRouter {
     case signIn(dto: SignInRequestDTO)
     case getBadgeList
     case onboardingCheck(dto: OnboardingRequestDTO)
+    case fetchMyPage
     
     //유빈
     case examFiltering(subjectId: Int, examName: String)
@@ -85,6 +86,8 @@ extension BbangDefaultRouter: Router {
             return "/api/v1/user/auth/withdraw"
         case .addStudyPiece:
             return "/api/v1/studies"
+        case .fetchMyPage:
+            return "/api/v1/mypage"
         }
     }
     
@@ -106,7 +109,8 @@ extension BbangDefaultRouter: Router {
                 .fetchBadgeDetail,
                 .fetchAddTodayStudy,
                 .fetchSubject,
-                .getBadgeList:
+                .getBadgeList,
+                .fetchMyPage:
             return .get
             
         case
@@ -173,6 +177,8 @@ extension BbangDefaultRouter: Router {
             return [:]
         case .withdraw:
             return [:]
+        case .fetchMyPage:
+            return [:]
         }
     }
     
@@ -189,7 +195,8 @@ extension BbangDefaultRouter: Router {
                 .getBadgeList,
                 .examFiltering,
                 .logout,
-                .withdraw:
+                .withdraw,
+                .fetchMyPage:
             return nil
         case
                 .completeStudy,
