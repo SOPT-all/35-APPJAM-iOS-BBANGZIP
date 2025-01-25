@@ -23,7 +23,7 @@ struct BadgeCategoryView: View {
             ProgressView()
                 .onAppear {
                     Task {
-                        try await viewModel.fetchData()
+                        await viewModel.fetchData()
                     }
                 }
         } else {
@@ -41,23 +41,33 @@ struct BadgeCategoryView: View {
                         HeaderView
                         
                         ForEach(viewModel.badgeList, id: \.self) { badgeListModel in
-                            
                             let category = badgeListModel.badgeCategry
-                            let list = badgeListModel.badgeList
-                            
-                            VStack {
-                                CustomText(
-                                    category.rawValue,
-                                    fontType: .title3Bold,
-                                    color: Color(.labelNormal)
-                                )
-                                
-                                CustomText(
-                                    category.subtitle,
-                                    fontType: .label1Bold,
-                                    color: Color(.labelAlternative)
-                                )
+                            VStack(alignment: .leading) {
+                                HStack {
+                                    CustomText(
+                                        category.rawValue,
+                                        fontType: .title3Bold,
+                                        color: Color(.labelNormal)
+                                    )
+                                    Spacer()
+                                }
+                                HStack {
+                                    CustomText(
+                                        category.subtitle,
+                                        fontType: .label1Bold,
+                                        color: Color(.labelAlternative)
+                                    )
+                                    Spacer()
+                                }
                             }
+                            .padding(
+                                .leading,
+                                28
+                            )
+                            .padding(
+                                .bottom,
+                                24
+                            )
                             
                             LazyVGrid(
                                 columns: Array(
@@ -88,6 +98,7 @@ struct BadgeCategoryView: View {
                     }
                 }
             }
+            .toolbar(.hidden)
         }
     }
     private var HeaderView: some View {
@@ -193,11 +204,18 @@ struct BadgeCategoryView: View {
         
         var body: some View {
             ZStack {
-                Image(systemName: badgeImage)
-                    .frame(width: 80, height: 80)
-                    .blur(radius: isLocked ? 3 : 0)
+                KFImage(URL(string: badgeImage))
+                    .resizable()
+                    .frame(
+                        width: 80,
+                        height: 80
+                    )
+                    .cornerRadius(24)
+                    .blur(radius: isLocked ? 7 : 0)
                 if isLocked {
                     Image(.privateWhite)
+                        .resizable()
+                        .frame(width: 24, height: 32)
                         .scaledToFit()
                 }
             }
@@ -222,7 +240,7 @@ struct BadgeCategoryView: View {
     
     #Preview {
         let mockViewModel: BadgeCategoryViewModel = {
-            let viewModel = BadgeCategoryViewModel(useMockData: true)
+            let viewModel = BadgeCategoryViewModel(getBadgeListUseCase: DefaultGetBadgeListUseCase(repository: DefaultBadgeRepository()))
             return viewModel
         }()
         

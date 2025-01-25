@@ -12,7 +12,7 @@ struct GetBadgeListResponseDTO: Decodable {
 }
 
 struct BadgeListResponseDTO: Decodable {
-    let nickName: String
+    let nickname: String
     let badgeList: [GetBadgeDTO]
     func toDomain() -> BadgeDictionaryModel {
         let badgeList = badgeList.map { $0.toDomain() }
@@ -24,7 +24,7 @@ struct BadgeListResponseDTO: Decodable {
         }
         
         return BadgeDictionaryModel(
-            nickname: nickName,
+            nickname: nickname,
             badgeCategoryList: badgeCategoryList
         )
     }

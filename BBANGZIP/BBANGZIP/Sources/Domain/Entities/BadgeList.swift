@@ -11,7 +11,7 @@ enum BadgeCategory: String, CaseIterable, Hashable {
     case escape = "미룬이 탈출"
     case almostEscape = "미룬이 겨우 탈출"
     case insider = "인싸 사장님"
-    case none = "서버가 잘못했어"
+    case none = ""
     
     var subtitle: String {
         switch self {
@@ -24,7 +24,7 @@ enum BadgeCategory: String, CaseIterable, Hashable {
         case .insider:
             "빵 한 쪽도 나눠 먹는 사이!"
         case .none:
-            "서버가 잘못했으니까 가서 따질게~"
+            ""
         }
     }
 }

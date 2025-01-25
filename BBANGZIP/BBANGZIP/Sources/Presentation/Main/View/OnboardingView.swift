@@ -59,7 +59,7 @@ struct OnboardingView: View {
     
     private var firstView: some View {
         ZStack {
-            Image(.onboarding)
+            Image(.onboardingStart)
                 .frame(
                     width: 320,
                     height: 360
