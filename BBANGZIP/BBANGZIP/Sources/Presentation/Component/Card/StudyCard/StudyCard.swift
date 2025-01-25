@@ -77,7 +77,7 @@ struct StudyCard: View {
             )
             
             CustomText(
-                "\(model.startPage)p - \(model.finishPage)",
+                "\(model.startPage)p - \(model.finishPage)p",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )

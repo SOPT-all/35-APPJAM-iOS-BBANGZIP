@@ -70,7 +70,7 @@ struct StudyPieceCard: View {
             )
             
             CustomText(
-                "\(StudyPieceCardData.startPage)p - \(StudyPieceCardData.finishPage)",
+                "\(StudyPieceCardData.startPage)p - \(StudyPieceCardData.finishPage)p",
                 fontType: .label1Bold,
                 color: Color(.labelNormal)
             )
