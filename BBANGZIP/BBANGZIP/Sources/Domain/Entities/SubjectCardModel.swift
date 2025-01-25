@@ -28,7 +28,9 @@ extension SubjectStudyModel {
 
 extension SubjectCardModel {
     var hasValidStudy: Bool {
-        guard let firstStudy = studyList.first else { return false }
-        return firstStudy.isValidExam
+        
+        return studyList.contains { study in
+            (study.examName == "중간고사" || study.examName == "기말고사") && study.isValidExam
+        }
     }
 }

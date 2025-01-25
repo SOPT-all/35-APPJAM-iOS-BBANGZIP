@@ -4,9 +4,6 @@ struct SubjectCard: View {
     private var state: CardState
     private let subjectCardData: SubjectCardModel
     private let borderPadding: CGFloat = 2
-    private var shouldShowEmptyState: Bool {
-        return !subjectCardData.hasValidStudy
-    }
     
     init(
         state: CardState,
@@ -16,9 +13,23 @@ struct SubjectCard: View {
         self.subjectCardData = subjectCardData
     }
     
-    private var firstStudy: SubjectStudyModel? {
+    private var shouldShowEmptyState: Bool {
         
-        return subjectCardData.studyList.first
+        return priorityStudy == nil
+    }
+
+    private var priorityStudy: SubjectStudyModel? {
+        let midtermStudy = subjectCardData.studyList.filter { $0.examName == "중간고사" && $0.isValidExam }
+        let finalStudy = subjectCardData.studyList.filter { $0.examName == "기말고사" && $0.isValidExam }
+        
+        if !midtermStudy.isEmpty {
+            return midtermStudy.first
+        }
+        if !finalStudy.isEmpty {
+            return finalStudy.first
+        }
+        
+        return nil
     }
     
     var body: some View {
@@ -27,7 +38,7 @@ struct SubjectCard: View {
             
             if shouldShowEmptyState {
                 emptyStateView
-            } else if let study = firstStudy {
+            } else if let study = priorityStudy {
                 normalStateView(study: study)
             }
         }
