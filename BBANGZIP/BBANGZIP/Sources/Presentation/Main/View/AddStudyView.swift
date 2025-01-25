@@ -109,6 +109,7 @@ struct AddStudyView: View {
     // TODO: 뒤로가기 버튼 ToolBar로 리팩토링 필요
     private var backButton: some View {
         Button {
+            dismiss()
         } label: { HStack {
                 Image(.chevronLeftThickSmall)
                     .renderingMode(.template)
