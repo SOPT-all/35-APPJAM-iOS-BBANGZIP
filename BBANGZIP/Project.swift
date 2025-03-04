@@ -52,7 +52,7 @@ let project = Project.makeModule(
     name: moduleName,
     destinations: [.iPhone],
     product: .app,
-    bundleId: "io.tuist.BBANGZIP",
+    bundleId: "io.tuist.BBANGZIP.app",
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["BBANGZIP/Sources/**"],
     resources: ["BBANGZIP/Resources/**"],
